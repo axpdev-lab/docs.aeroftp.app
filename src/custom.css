@@ -21,9 +21,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 16px 16px;
-  border-bottom: 1px solid var(--sidebar-border);
-  margin-bottom: 8px;
+  padding: 20px 16px 12px;
+  margin-bottom: 4px;
 }
 
 .sidebar-logo img {
@@ -46,7 +45,7 @@
 }
 
 .sidebar {
-  border-right: 1px solid var(--sidebar-border);
+  border-right: none;
 }
 
 /* ── Section titles (# headers in SUMMARY.md) ── */
@@ -58,14 +57,15 @@
   letter-spacing: 1.2px;
   color: var(--sidebar-section-text);
   padding: 16px 16px 6px;
-  margin-top: 8px;
-  border-top: 1px solid var(--sidebar-border);
+  margin-top: 4px;
+  border-top: none;
   pointer-events: none;
 }
 
-.sidebar ol.chapter li.part-title:first-child {
+/* ── Introduction link (affix) ── */
+.sidebar .chapter-item.affix {
   border-top: none;
-  margin-top: 0;
+  border-bottom: none;
 }
 
 /* ── Chapter links ── */
