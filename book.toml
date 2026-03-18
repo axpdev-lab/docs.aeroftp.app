@@ -14,3 +14,4 @@ git-repository-url = "https://github.com/axpnet/docs.aeroftp.app"
 edit-url-template = "https://github.com/axpnet/docs.aeroftp.app/edit/main/src/{path}"
 site-url = "https://docs.aeroftp.app/"
 additional-css = ["src/custom.css"]
+additional-js = ["src/custom.js"]
