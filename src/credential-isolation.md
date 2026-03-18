@@ -1,6 +1,6 @@
 # AI Agent Credential Isolation
 
-AeroFTP is the only file manager that lets AI coding agents interact with remote servers across 23 protocols without ever exposing credentials.
+As of March 2026, AeroFTP is the only file manager that lets AI coding agents interact with remote servers across 23 protocols without ever exposing credentials.
 
 ## The Problem
 
