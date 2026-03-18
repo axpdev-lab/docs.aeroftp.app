@@ -49,10 +49,12 @@
   function initCollapsible() {
     var partTitles = document.querySelectorAll('.sidebar .part-title');
     partTitles.forEach(function(title) {
-      // Find the next sibling items until the next part-title
+      // Find the next sibling items until the next part-title or separator
       var items = [];
       var next = title.nextElementSibling;
-      while (next && !next.classList.contains('part-title')) {
+      while (next && !next.classList.contains('part-title') && !next.classList.contains('spacer')) {
+        // Stop at affix items that are not inside a section (like About & Credits)
+        if (next.classList.contains('chapter-item') && next.classList.contains('affix')) break;
         items.push(next);
         next = next.nextElementSibling;
       }
