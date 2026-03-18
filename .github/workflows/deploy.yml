@@ -20,22 +20,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install mdBook
-        run: |
-          mkdir -p ~/.local/bin
-          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.44/mdbook-v0.4.44-x86_64-unknown-linux-gnu.tar.gz | tar -xz -C ~/.local/bin
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build
-        run: mdbook build
+        run: npm run docs:build
 
       - name: Add CNAME
-        run: echo "docs.aeroftp.app" > book/CNAME
+        run: echo "docs.aeroftp.app" > .vitepress/dist/CNAME
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: book
+          path: .vitepress/dist
 
   deploy:
     environment:
