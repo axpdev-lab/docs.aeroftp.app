@@ -1,24 +1,70 @@
 # CLI Installation
 
-The `aeroftp-cli` binary is a standalone command-line interface built from the same Rust codebase as the desktop application. It provides scriptable access to all 22 protocols without requiring a graphical environment.
+The `aeroftp` command-line interface is a standalone Rust binary built from the same codebase as the AeroFTP desktop application. It provides full scriptable access to all 22 supported protocols — FTP, FTPS, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Azure Blob, 4shared, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, and OpenDrive — without requiring a graphical environment.
 
-## Included with Desktop App
+## Included with Every Desktop Package
 
-The CLI binary ships inside every AeroFTP desktop package. After installing the desktop app, `aeroftp-cli` is available at:
+The CLI binary ships inside every AeroFTP desktop package. No separate installation step is required. After installing the desktop app, the binary is available at the following paths:
 
-| Platform | Path |
-|----------|------|
-| Linux (.deb/.rpm) | `/usr/bin/aeroftp-cli` |
-| Linux (AppImage) | Bundled inside the AppImage (not in PATH by default) |
-| Linux (Snap) | `/snap/aeroftp/current/usr/bin/aeroftp-cli` |
-| Windows (.msi) | `C:\Program Files\AeroFTP\aeroftp-cli.exe` |
-| macOS (.dmg) | `/Applications/AeroFTP.app/Contents/MacOS/aeroftp-cli` |
+| Package Format | Binary Path | In PATH |
+|----------------|-------------|---------|
+| Linux `.deb` | `/usr/bin/aeroftp-cli` | Yes |
+| Linux `.rpm` | `/usr/bin/aeroftp-cli` | Yes |
+| Linux `.snap` | `/snap/aeroftp/current/usr/bin/aeroftp-cli` | Yes (via snap alias) |
+| Linux `.AppImage` | Bundled inside the AppImage | No |
+| Windows `.msi` | `C:\Program Files\AeroFTP\aeroftp-cli.exe` | Depends on installer options |
+| Windows `.exe` (NSIS) | `C:\Program Files\AeroFTP\aeroftp-cli.exe` | Depends on installer options |
+| macOS `.dmg` | `/Applications/AeroFTP.app/Contents/MacOS/aeroftp-cli` | No |
 
-> **Tip:** On Linux .deb and .rpm installs, the binary is already in your PATH. For other package formats, you may need to create a symlink or add the directory to your PATH.
+The binary name is `aeroftp-cli`. On `.deb` and `.rpm` installs, a symlink `aeroftp` pointing to `aeroftp-cli` is created in `/usr/bin/`, so both names work interchangeably:
+
+```bash
+# Both are equivalent on .deb/.rpm installs
+aeroftp --version
+aeroftp-cli --version
+```
+
+For package formats where the binary is not in PATH (AppImage, macOS `.dmg`), create a symlink manually:
+
+```bash
+# macOS
+sudo ln -s /Applications/AeroFTP.app/Contents/MacOS/aeroftp-cli /usr/local/bin/aeroftp
+
+# AppImage — extract first, then symlink
+./AeroFTP-x86_64.AppImage --appimage-extract
+sudo ln -s "$(pwd)/squashfs-root/usr/bin/aeroftp-cli" /usr/local/bin/aeroftp
+```
+
+## Verify Installation
+
+After installing, confirm the CLI is working:
+
+```bash
+aeroftp --version
+# Output: aeroftp-cli 3.0.1
+
+aeroftp --help
+# Output: full command listing with descriptions
+```
+
+The `--help` flag works on every subcommand:
+
+```bash
+aeroftp ls --help
+aeroftp sync --help
+aeroftp batch --help
+```
 
 ## Build from Source
 
-If you prefer to build the CLI independently:
+### Prerequisites
+
+- **Rust toolchain** 1.75 or later (install via [rustup.rs](https://rustup.rs))
+- **System libraries** (Linux only):
+  - `libssl-dev` (or `openssl-devel` on Fedora/RHEL)
+  - `pkg-config`
+
+### Build Commands
 
 ```bash
 git clone https://github.com/axpnet/aeroftp.git
@@ -26,30 +72,85 @@ cd aeroftp/src-tauri
 cargo build --release --bin aeroftp-cli
 ```
 
-The compiled binary will be at `target/release/aeroftp-cli`.
-
-## Verify Installation
+The compiled binary will be at `target/release/aeroftp-cli` (or `target\release\aeroftp-cli.exe` on Windows). Copy it to a directory in your PATH:
 
 ```bash
-aeroftp-cli --version
-aeroftp-cli --help
+sudo cp target/release/aeroftp-cli /usr/local/bin/aeroftp
 ```
 
-## Color and TTY Behavior
+### Build Only the CLI (Skip Desktop App)
 
-The CLI automatically detects whether it is running in an interactive terminal:
+The CLI is defined as a separate `[[bin]]` target in `Cargo.toml`. The `cargo build --bin aeroftp-cli` command compiles only the CLI binary and its dependencies, without pulling in Tauri or any GUI-related crates.
 
-- **TTY detected** — colored output and progress bars are enabled by default.
-- **Piped output** — colors and progress bars are automatically disabled.
-- **`NO_COLOR` env var** — set `NO_COLOR=1` to force plain output in any context. This follows the [no-color.org](https://no-color.org) standard.
-- **`--no-color` flag** — equivalent to `NO_COLOR=1` for a single invocation.
+## Color, TTY, and Pipe Behavior
+
+The CLI automatically adapts its output based on the terminal environment:
+
+| Condition | Colors | Progress Bars | Summary Lines |
+|-----------|--------|---------------|---------------|
+| Interactive TTY | Enabled | Enabled | stdout |
+| Piped to file/program | Disabled | Hidden | stderr |
+| `NO_COLOR=1` env var | Disabled | Hidden | stderr |
+| `CLICOLOR=0` env var | Disabled | Hidden | stderr |
+| `--no-color` flag | Disabled | Hidden | stderr |
+
+### NO_COLOR Standard
+
+AeroFTP follows the [no-color.org](https://no-color.org) convention. Setting the `NO_COLOR` environment variable (to any value) disables all ANSI color codes and progress bar rendering:
 
 ```bash
-# Force plain output
-NO_COLOR=1 aeroftp-cli ls sftp://user@host/
+# Disable colors globally
+export NO_COLOR=1
+aeroftp ls sftp://user@host/
 
 # Or per-command
-aeroftp-cli ls sftp://user@host/ --no-color
+NO_COLOR=1 aeroftp ls sftp://user@host/
 ```
 
-> **Note:** When colors are disabled, progress bars for file transfers are also hidden. Use `--json` output for machine-readable progress in scripts.
+The `CLICOLOR` variable is also respected. When `CLICOLOR=0`, colors are suppressed.
+
+### Progress Bar Behavior
+
+File transfer progress bars (powered by the `indicatif` crate) are shown only when:
+1. stdout is connected to a TTY
+2. Colors are not disabled
+
+In CI/CD environments or when piping output, use `--json` for machine-readable progress instead.
+
+## SIGPIPE Handling
+
+On Unix systems, the CLI installs a `SIGPIPE` handler at startup via `libc::signal(SIGPIPE, SIG_DFL)`. This ensures proper pipe compliance — if you pipe output to a program that closes early (e.g., `head`), the CLI terminates cleanly instead of printing a broken pipe error:
+
+```bash
+# Works correctly — CLI exits when head has enough lines
+aeroftp ls sftp://user@host/ --json | head -5
+```
+
+This follows POSIX convention and matches the behavior of standard Unix tools like `ls`, `cat`, and `find`.
+
+## Exit Codes
+
+The CLI uses semantic exit codes for scripting:
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success |
+| 1 | Connection error |
+| 2 | File/directory not found |
+| 3 | Permission denied |
+| 4 | Transfer error |
+| 5 | Configuration error |
+| 6 | Authentication failure |
+| 7 | Operation not supported |
+| 8 | Timeout |
+| 99 | Unknown error |
+| 130 | Interrupted (Ctrl+C) |
+
+```bash
+aeroftp connect sftp://user@host
+echo $?  # 0 if successful, 1 if unreachable, 6 if auth failed
+```
+
+## Double Ctrl+C
+
+The first `Ctrl+C` sends a graceful cancellation signal, allowing in-progress transfers to clean up. A second `Ctrl+C` within 2 seconds forces immediate exit with code 130. This prevents the CLI from hanging if a server is unresponsive during shutdown.
