@@ -1,0 +1,26 @@
+{
+  "name": "docs.aeroftp.app",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axpnet/docs.aeroftp.app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/axpnet/docs.aeroftp.app/issues"
+  },
+  "homepage": "https://github.com/axpnet/docs.aeroftp.app#readme",
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}
