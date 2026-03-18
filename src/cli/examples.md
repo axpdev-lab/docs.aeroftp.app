@@ -1,70 +1,185 @@
 # CLI Examples
 
-Practical recipes for common AeroFTP CLI workflows.
+Practical recipes for common AeroFTP CLI workflows, covering basic operations, advanced patterns, CI/CD integration, and multi-protocol usage.
+
+## Connection URL Format
+
+All CLI commands use URL-based connection strings:
+
+```
+protocol://user[:password]@host[:port]/path
+```
+
+| Component | Required | Example |
+|-----------|----------|---------|
+| Protocol | Yes | `sftp://`, `ftp://`, `ftps://`, `s3://`, `webdav://`, `gdrive://` |
+| Username | Yes | `user@` |
+| Password | No (prompted if needed) | `:secret@` |
+| Host | Yes | `host.example.com` |
+| Port | No (uses default) | `:2222` |
+| Path | No (defaults to `/`) | `/var/www/html/` |
+
+> **Warning:** Embedding passwords in URLs is discouraged — they appear in shell history and process listings. The CLI will warn unconditionally when a password is detected in the URL. Use SSH keys for SFTP, or let the CLI prompt interactively.
 
 ## Basic File Operations
 
-```bash
-# Download a single file
-aeroftp-cli get sftp://user@host/reports/quarterly.pdf
+### Download Files
 
-# Upload a file to a specific directory
-aeroftp-cli put sftp://user@host/uploads/ ./invoice.pdf
+```bash
+# Download a single file to the current directory
+aeroftp get sftp://user@host/reports/quarterly.pdf
+
+# Download to a specific local path
+aeroftp get sftp://user@host/reports/quarterly.pdf -o ./downloads/q1.pdf
+
+# Recursive download of an entire directory
+aeroftp get sftp://user@host/project/src/ -r -o ./local-src/
+```
+
+### Upload Files
+
+```bash
+# Upload a single file
+aeroftp put sftp://user@host/uploads/ ./invoice.pdf
 
 # Upload all CSV files using glob pattern
-aeroftp-cli put sftp://user@host/data/ "*.csv"
+aeroftp put sftp://user@host/data/ "./*.csv"
 
-# View a remote config file
-aeroftp-cli cat sftp://user@host/etc/nginx/nginx.conf
+# Recursive upload of a directory
+aeroftp put sftp://user@host/var/www/ ./dist/ -r
+```
+
+### Glob Pattern Transfers
+
+The CLI supports glob patterns (powered by the `globset` crate) for both uploads and downloads:
+
+```bash
+# Upload all CSV files from current directory
+aeroftp put sftp://user@host/data/ "*.csv"
+
+# Upload all images recursively
+aeroftp put sftp://user@host/media/ "**/*.{jpg,png,gif}" -r
+
+# Download all log files
+aeroftp get sftp://user@host/var/log/ -r -o ./logs/ --include "*.log"
+```
+
+### List, View, and Manage
+
+```bash
+# List files with details (size, date, permissions)
+aeroftp ls sftp://user@host/var/www/ --long
+
+# View a remote file without downloading
+aeroftp cat sftp://user@host/etc/nginx/nginx.conf
+
+# Get file metadata
+aeroftp stat sftp://user@host/data/export.csv
 
 # Rename a file on the server
-aeroftp-cli mv sftp://user@host/docs/draft.md sftp://user@host/docs/published.md
+aeroftp mv sftp://user@host/docs/draft.md sftp://user@host/docs/published.md
+
+# Delete a remote file
+aeroftp rm sftp://user@host/tmp/old-backup.tar.gz
+
+# Create a remote directory
+aeroftp mkdir sftp://user@host/var/www/new-project/
 ```
 
 ## Directory Operations
 
 ```bash
-# List files with details
-aeroftp-cli ls sftp://user@host/var/www/ --long
-
-# Create a directory
-aeroftp-cli mkdir sftp://user@host/var/www/new-project/
-
-# Recursive download
-aeroftp-cli get sftp://user@host/project/src/ -r -o ./local-src/
-
 # Show directory tree (3 levels deep)
-aeroftp-cli tree sftp://user@host/var/www/ -d 3
+aeroftp tree sftp://user@host/var/www/ -d 3
 
-# Find all log files
-aeroftp-cli find sftp://user@host/var/log/ "*.log"
+# Find all log files recursively
+aeroftp find sftp://user@host/var/log/ "*.log"
+
+# Find files modified in the last 7 days
+aeroftp find sftp://user@host/data/ "*.csv" --newer 7d
+
+# Check storage quota and disk usage
+aeroftp df sftp://user@host/
+
+# Synchronize directories
+aeroftp sync sftp://user@host/var/www/html/ ./dist/
 ```
 
 ## JSON Output for Scripting
 
-All commands support `--json` for machine-readable output.
+Every command supports the `--json` flag for machine-readable structured output. In JSON mode, results go to stdout and errors go to stderr as JSON objects, keeping piped output clean.
 
 ```bash
 # List files as JSON and filter with jq
-aeroftp-cli ls sftp://user@host/ --json | jq '.[] | select(.size > 1048576)'
+aeroftp ls sftp://user@host/ --json | jq '.[] | select(.size > 1048576) | .name'
 
 # Get file metadata as JSON
-aeroftp-cli stat sftp://user@host/data/export.csv --json
+aeroftp stat sftp://user@host/data/export.csv --json
+# Output: {"name":"export.csv","size":4521984,"modified":"2026-03-15T14:30:00Z","permissions":"rw-r--r--"}
 
-# Check storage quota
-aeroftp-cli df s3://key@s3.amazonaws.com/my-bucket/ --json | jq '.used_percent'
+# Check storage quota programmatically
+aeroftp df s3://key@s3.amazonaws.com/my-bucket/ --json | jq '.used_percent'
+
+# List and count files per extension
+aeroftp ls sftp://user@host/data/ --json | jq -r '.[].name' | awk -F. '{print $NF}' | sort | uniq -c | sort -rn
+
+# Parse errors in JSON mode (errors go to stderr)
+aeroftp get sftp://user@host/missing.txt --json 2>error.json
 ```
-
-> **Note:** In `--json` mode, errors are written to stderr as JSON objects while stdout contains only the structured result. This keeps piped output clean.
 
 ## Directory Synchronization
 
 ```bash
 # Mirror local website to remote server
-aeroftp-cli sync sftp://user@host/var/www/html/ ./dist/
+aeroftp sync sftp://user@host/var/www/html/ ./dist/
 
-# Sync from S3 bucket
-aeroftp-cli sync s3://AKIA...@s3.eu-west-1.amazonaws.com/assets/ ./local-assets/
+# Sync from S3 bucket to local directory
+aeroftp sync s3://AKIAIOSFODNN7@s3.eu-west-1.amazonaws.com/assets/ ./local-assets/
+
+# Sync with checksum verification
+aeroftp sync sftp://user@host/data/ ./data/ --verify full
+
+# Dry run — show what would change without transferring
+aeroftp sync sftp://user@host/www/ ./dist/ --dry-run
+```
+
+## Working with Different Protocols
+
+The same commands work identically across all supported protocols:
+
+```bash
+# SFTP (SSH)
+aeroftp ls sftp://user@host/var/www/
+
+# FTP with explicit TLS
+aeroftp ls ftps://user@ftp.example.com/
+
+# Plain FTP (not recommended — credentials sent in cleartext)
+aeroftp ls ftp://user@ftp.example.com/
+
+# WebDAV (Nextcloud)
+aeroftp ls webdav://user@cloud.example.com/remote.php/dav/files/user/
+
+# WebDAV (Seafile)
+aeroftp ls webdav://user@seafile.example.com/seafdav/
+
+# S3 (AWS)
+aeroftp ls s3://AKIAIOSFODNN7@s3.us-east-1.amazonaws.com/my-bucket/
+
+# S3-compatible (MinIO)
+aeroftp ls s3://minioadmin:minioadmin@localhost:9000/my-bucket/
+
+# S3-compatible (Cloudflare R2)
+aeroftp ls s3://key@account-id.r2.cloudflarestorage.com/bucket/
+
+# Google Drive (requires prior OAuth setup in desktop app)
+aeroftp ls gdrive://me@drive/
+
+# Dropbox (requires prior OAuth setup)
+aeroftp ls dropbox://me@dropbox/
+
+# OneDrive (requires prior OAuth setup)
+aeroftp ls onedrive://me@onedrive/
 ```
 
 ## CI/CD Integration
@@ -72,69 +187,174 @@ aeroftp-cli sync s3://AKIA...@s3.eu-west-1.amazonaws.com/assets/ ./local-assets/
 ### GitHub Actions Deployment
 
 ```yaml
-- name: Deploy to production
-  run: |
-    aeroftp-cli sync sftp://${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}/var/www/html/ ./dist/
-  env:
-    NO_COLOR: 1
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: npm ci && npm run build
+
+      - name: Install AeroFTP CLI
+        run: |
+          wget -q https://github.com/axpnet/aeroftp/releases/latest/download/aeroftp_amd64.deb
+          sudo dpkg -i aeroftp_amd64.deb
+          aeroftp --version
+
+      - name: Deploy via SFTP
+        run: |
+          aeroftp sync \
+            sftp://${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}/var/www/html/ \
+            ./dist/ \
+            --json
+        env:
+          NO_COLOR: 1
+
+      - name: Verify deployment
+        run: |
+          aeroftp ls sftp://${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}/var/www/html/ --json | jq length
 ```
 
 ### GitLab CI
 
 ```yaml
-deploy:
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
   script:
-    - aeroftp-cli put sftp://${DEPLOY_USER}@${DEPLOY_HOST}/releases/ ./build/app.tar.gz
-    - aeroftp-cli ls sftp://${DEPLOY_USER}@${DEPLOY_HOST}/releases/ --json
+    - npm ci && npm run build
+  artifacts:
+    paths:
+      - dist/
+
+deploy:
+  stage: deploy
+  image: ubuntu:22.04
+  before_script:
+    - apt-get update && apt-get install -y wget
+    - wget -q https://github.com/axpnet/aeroftp/releases/latest/download/aeroftp_amd64.deb
+    - dpkg -i aeroftp_amd64.deb
+  script:
+    - aeroftp put sftp://${DEPLOY_USER}@${DEPLOY_HOST}/releases/ ./dist/app.tar.gz
+    - aeroftp ls sftp://${DEPLOY_USER}@${DEPLOY_HOST}/releases/ --json
+  environment:
+    name: production
 ```
 
 ### Connection Testing in CI
 
 ```bash
 #!/bin/bash
-aeroftp-cli connect sftp://ci@staging.example.com
-if [ $? -ne 0 ]; then
-  echo "Server unreachable, aborting deploy"
+# pre-deploy-check.sh — Verify server is reachable before deploying
+
+aeroftp connect sftp://ci@staging.example.com
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -ne 0 ]; then
+  echo "Server unreachable (exit code: $EXIT_CODE), aborting deploy"
   exit 1
 fi
-aeroftp-cli sync sftp://ci@staging.example.com/www/ ./dist/
+
+echo "Server reachable, proceeding with deploy..."
+aeroftp sync sftp://ci@staging.example.com/www/ ./dist/
 ```
 
-## Batch Script: Weekly Site Backup
+### Monitoring: Storage Quota Alert
 
 ```bash
-# site-backup.aeroftp
-SET server=sftp://backup@prod.example.com
-SET timestamp=2026-03-18
+#!/bin/bash
+# quota-check.sh — Alert when storage exceeds 80%
+
+USAGE=$(aeroftp df s3://key@s3.amazonaws.com/my-bucket/ --json | jq -r '.used_percent')
+
+if (( $(echo "$USAGE > 80" | bc -l) )); then
+  echo "WARNING: Storage at ${USAGE}% — consider cleanup"
+  # Send alert via webhook, email, etc.
+  curl -X POST "$SLACK_WEBHOOK" -d "{\"text\":\"Storage alert: ${USAGE}% used\"}"
+fi
+```
+
+## Batch Script: Multi-Server Deployment
+
+```bash
+# deploy-all.aeroftp — Deploy to staging + production
+# Run: aeroftp batch deploy-all.aeroftp
+
+SET build=./dist
+SET app=/var/www/app
+
+SET staging=sftp://deploy@staging.example.com
+SET prod_eu=sftp://deploy@eu.prod.example.com
+SET prod_us=sftp://deploy@us.prod.example.com
 
 ON_ERROR FAIL
-ECHO Starting weekly backup...
-SYNC $server/var/www/html/ ./backups/$timestamp/www/
-GET $server/var/backups/db.sql.gz -o ./backups/$timestamp/db.sql.gz
+
+ECHO [1/3] Deploying to staging...
+SYNC $staging$app/ $build/
+ECHO Staging deploy complete.
+
+ECHO [2/3] Deploying to EU production...
+SYNC $prod_eu$app/ $build/
+ECHO EU deploy complete.
+
+ECHO [3/3] Deploying to US production...
+SYNC $prod_us$app/ $build/
+ECHO US deploy complete.
+
+ECHO All servers deployed.
+```
+
+```bash
+aeroftp batch deploy-all.aeroftp
+```
+
+## Batch Script: Database Backup Rotation
+
+```bash
+# db-backup.aeroftp — Download DB dump and rotate old backups
+
+SET server=sftp://backup@db.example.com
+SET remote_dump=/var/backups/pg-latest.sql.gz
+SET local_dir=./backups
+
+ON_ERROR FAIL
+ECHO Downloading latest database dump...
+GET $server$remote_dump -o $local_dir/pg-latest.sql.gz
 
 ON_ERROR CONTINUE
-GET $server/var/log/access.log -o ./backups/$timestamp/access.log
-ECHO Backup finished.
+ECHO Cleaning up old remote dumps...
+RM $server/var/backups/pg-7days-ago.sql.gz
+
+ECHO Checking server disk space...
+DF $server/
+
+ECHO Backup complete.
 ```
 
-```bash
-aeroftp-cli batch site-backup.aeroftp
-```
+## Tips and Best Practices
 
-## Working with Different Protocols
+1. **Always test with `connect` first** — verify credentials before running long operations. Connection failures return exit code 1.
 
-```bash
-# FTP with explicit TLS
-aeroftp-cli ls ftps://user@ftp.example.com/
+2. **Use `--json` in scripts** — structured output is stable across versions and safe to parse.
 
-# WebDAV (Nextcloud)
-aeroftp-cli ls webdav://user@cloud.example.com/remote.php/dav/files/user/
+3. **Set `NO_COLOR=1` in CI** — prevents ANSI escape codes from polluting log files.
 
-# S3-compatible (MinIO)
-aeroftp-cli ls s3://minioadmin:minioadmin@localhost:9000/my-bucket/
+4. **Prefer SFTP over FTP** — SFTP encrypts both credentials and data. FTP sends passwords in cleartext.
 
-# Google Drive (requires prior OAuth setup in desktop app)
-aeroftp-cli ls gdrive://me@drive/
-```
+5. **Use batch scripts for multi-step operations** — they provide error handling, variables, and reproducibility that shell scripts require extra effort to achieve.
 
-> **Tip:** Use `aeroftp-cli connect <url>` first to verify credentials before running longer operations. Connection failures return exit code 1, making them easy to catch in scripts.
+6. **Pipe JSON to jq for filtering** — `aeroftp ls --json | jq '.[] | select(.size > 1000000)'` is more reliable than parsing human-readable output.
+
+7. **Check exit codes** — every CLI command returns a semantic exit code (0 for success, 1-8 for specific failure categories, 99 for unknown errors).
+
+> **Note:** For the complete list of exit codes and their meanings, see the [Installation](installation.md) page.

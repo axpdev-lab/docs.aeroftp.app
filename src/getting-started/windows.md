@@ -13,13 +13,13 @@ The MSI installer is the recommended way to install AeroFTP on Windows:
 
 The MSI installer:
 
-- Registers file associations (`.aerovault` files)
+- Registers file associations (`.aerovault` encrypted containers)
 - Adds a Start Menu shortcut
 - Supports standard Add/Remove Programs uninstallation
 
 ## .exe Portable
 
-For users who prefer not to install:
+For users who prefer not to use the MSI format:
 
 1. Download `AeroFTP_3.0.1_x64-setup.exe` from [GitHub Releases](https://github.com/axpnet/aeroftp/releases)
 2. Run the executable directly
