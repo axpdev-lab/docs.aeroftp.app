@@ -10,7 +10,7 @@ build-dir = "book"
 [output.html]
 default-theme = "navy"
 preferred-dark-theme = "navy"
-git-repository-url = "https://github.com/axpnet/docs.aeroftp.app"
+git-repository-url = "https://github.com/axpnet/aeroftp"
 edit-url-template = "https://github.com/axpnet/docs.aeroftp.app/edit/main/src/{path}"
 site-url = "https://docs.aeroftp.app/"
 additional-css = ["src/custom.css"]
