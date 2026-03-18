@@ -7,7 +7,9 @@
   var link = document.createElement('link');
   link.rel = 'icon';
   link.type = 'image/svg+xml';
-  link.href = 'favicon.svg';
+  var baseEl = document.querySelector('base');
+  var baseUrl = baseEl ? baseEl.getAttribute('href') : '/';
+  link.href = baseUrl + 'favicon.svg';
   document.head.appendChild(link);
 
   // Inject logo into sidebar
@@ -20,7 +22,10 @@
     logoDiv.className = 'sidebar-logo';
 
     var img = document.createElement('img');
-    img.src = 'logo.png';
+    // Resolve path relative to site root, not current page
+    var base = document.querySelector('base');
+    var baseHref = base ? base.getAttribute('href') : '/';
+    img.src = baseHref + 'logo.png';
     img.alt = 'AeroFTP';
 
     var text = document.createElement('span');
