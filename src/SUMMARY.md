@@ -71,3 +71,7 @@
 
 - [Build from Source](contributing/build.md)
 - [Architecture](contributing/architecture.md)
+
+---
+
+[About & Credits](about.md)
