@@ -1,181 +1,220 @@
 # CLI Commands
 
-Complete reference for all 13 `aeroftp-cli` commands. Every command accepts a connection URL and supports `--json` output.
+Complete reference for the `aeroftp-cli` binary. It shares the same Rust backend as the desktop app, supporting 23 protocols through 14 subcommands with consistent behavior, structured JSON output, and Unix pipeline compatibility.
 
-## Connection URL Format
+## Connection Methods
+
+### URL Format
 
 ```
 protocol://user:password@host:port/path
 ```
 
-| Component | Required | Default | Example |
-|-----------|----------|---------|---------|
-| Protocol | Yes | — | `sftp`, `ftp`, `ftps`, `s3`, `webdav` |
-| User | Yes | — | `admin` |
-| Password | No | prompted | `secret` |
-| Host | Yes | — | `myserver.com` |
-| Port | No | protocol default | `2222` |
-| Path | No | `/` | `/var/www` |
+14 protocols support direct URL connections:
+
+| Protocol | URL Scheme | Auth Method |
+| -------- | ---------- | ----------- |
+| FTP | `ftp://` | Password |
+| FTPS | `ftps://` | Password + TLS |
+| SFTP | `sftp://` | Password / SSH Key |
+| WebDAV | `webdav://` / `webdavs://` | Password |
+| S3 | `s3://` | Access Key + Secret |
+| MEGA.nz | `mega://` | Password (E2E) |
+| Azure Blob | `azure://` | HMAC / SAS Token |
+| Filen | `filen://` | Password (E2E) |
+| Internxt | `internxt://` | Password (E2E) |
+| Jottacloud | `jottacloud://` | Bearer Token |
+| FileLu | `filelu://` | API Key |
+| Koofr | `koofr://` | OAuth2 Token |
+| OpenDrive | `opendrive://` | Password |
+| GitHub | `github://` | PAT / Device Flow |
+
+9 OAuth providers (Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, kDrive) require `--profile` — authorize once in the GUI, then reuse in the CLI.
+
+### Server Profiles (`--profile`)
+
+Connect to any saved server from the encrypted vault with zero credentials exposed in shell history or process lists.
 
 ```bash
-# SFTP with default port (22)
-aeroftp-cli ls sftp://admin@myserver.com/
+# List all saved profiles
+aeroftp profiles
 
-# FTP with explicit port
-aeroftp-cli ls ftp://user:pass@ftp.example.com:21/pub/
+# Connect by name (fuzzy substring matching)
+aeroftp ls --profile "My Server" /path/
 
-# S3 bucket (access key as user, secret key as password)
-aeroftp-cli ls s3://AKIAIOSFODNN:secret@s3.amazonaws.com/my-bucket/
+# Connect by index number
+aeroftp ls --profile 3 /
 ```
 
-> **Warning:** Embedding passwords in URLs is convenient but insecure. The CLI always prints a warning when a URL-embedded password is detected. Prefer interactive password prompts or environment variables for production use.
+Profile matching order: exact name (case-insensitive), exact ID (UUID), substring match (auto-selects if unique, lists candidates if ambiguous).
+
+### Password Handling
+
+In order of preference:
+
+1. **stdin** (most secure): `echo "$PASS" | aeroftp --password-stdin connect sftp://user@host`
+2. **Environment variable**: `AEROFTP_TOKEN=mytoken aeroftp connect jottacloud://user@host`
+3. **Interactive prompt**: Hidden TTY input when no password provided
+4. **URL** (least secure): `sftp://user:password@host` — warning always displayed
+
+Master password for vault: set `AEROFTP_MASTER_PASSWORD` env var or enter interactively.
+
+## Commands
+
+### connect
+
+Test connectivity, display server info, and disconnect.
+
+```bash
+aeroftp connect sftp://user@host
+aeroftp connect sftp://user@host --key ~/.ssh/id_ed25519
+aeroftp connect ftp://user@host --tls explicit --insecure
+```
+
+### ls
+
+```bash
+aeroftp ls sftp://user@host /var/www/ -l          # Long format
+aeroftp ls sftp://user@host / --sort size --reverse
+aeroftp ls --profile "NAS" / --all --json
+```
+
+### get / put
+
+```bash
+# Download with glob pattern
+aeroftp get sftp://user@host "/data/*.csv"
+
+# Recursive download
+aeroftp get sftp://user@host /var/www/ ./backup/ -r
+
+# Upload with glob
+aeroftp put sftp://user@host "./*.json" /data/
+
+# Recursive upload
+aeroftp put sftp://user@host ./dist/ /var/www/dist/ -r
+```
+
+### mkdir / rm / mv
+
+```bash
+aeroftp mkdir sftp://user@host /var/www/new-folder
+aeroftp rm sftp://user@host /tmp/old-dir/ -rf
+aeroftp mv sftp://user@host /docs/draft.md /docs/final.md
+```
+
+### cat / stat / find / df / tree
+
+```bash
+aeroftp cat sftp://user@host /etc/config.ini | grep DB_HOST
+aeroftp stat sftp://user@host /var/www/index.html --json
+aeroftp find sftp://user@host /var/www/ "*.php"
+aeroftp df sftp://user@host
+aeroftp tree sftp://user@host /var/www/ -d 2
+```
+
+### sync
+
+```bash
+aeroftp sync sftp://user@host ./local/ /remote/ --dry-run
+aeroftp sync sftp://user@host ./local/ /remote/ --delete   # Mirror mode
+```
+
+### batch
+
+Execute `.aeroftp` script files with 17 commands, shell-like variable substitution, and error policies.
+
+```bash
+aeroftp batch deploy.aeroftp
+```
+
+```bash
+# deploy.aeroftp
+SET SERVER=sftp://deploy@prod.example.com:2222
+SET ON_ERROR=stop
+
+CONNECT ${SERVER}
+PUT ./dist/app.js /var/www/app.js
+PUT ./dist/index.html /var/www/index.html
+STAT /var/www/index.html
+ECHO Deployment complete
+DISCONNECT
+```
+
+Batch commands: SET, ECHO, CONNECT, DISCONNECT, LS, GET, PUT, MKDIR, RM, MV, CAT, STAT, FIND, DF, TREE, SYNC, SLEEP, EXIT. Variables use `${VAR}` syntax with single-pass expansion (injection-safe). Error policies: `stop` (default), `continue`.
+
+## GitHub Protocol
+
+Every upload and delete creates a real Git commit. Branch-aware with automatic working branch creation for protected branches.
+
+```bash
+aeroftp ls github://token:PAT@owner/repo@develop /src/ -l
+aeroftp put github://token:PAT@owner/repo ./fix.py /src/fix.py
+aeroftp cat github://token:PAT@owner/repo /README.md
+```
 
 ## Global Flags
 
 | Flag | Description |
-|------|-------------|
-| `--json` | Output structured JSON to stdout |
-| `--verbose` / `-v` | Enable verbose logging |
-| `--no-color` | Disable colored output |
+| ---- | ----------- |
+| `--profile <name>` / `-P` | Use saved server profile from encrypted vault |
+| `--master-password <pw>` | Vault master password (env: `AEROFTP_MASTER_PASSWORD`) |
+| `--json` / `--format json` | Structured JSON output to stdout |
+| `--quiet` / `-q` | Suppress info messages (errors only) |
+| `--verbose` / `-v` | Debug output (`-vv` for trace) |
+| `--password-stdin` | Read password from stdin pipe |
+| `--key <path>` | SSH private key file |
+| `--token <token>` | Bearer/API token (env: `AEROFTP_TOKEN`) |
+| `--tls <mode>` | FTP TLS: `none`, `explicit`, `implicit`, `explicit_if_available` |
+| `--insecure` | Skip TLS certificate verification |
+| `--trust-host-key` | Trust unknown SSH host keys |
+| `--two-factor <code>` | 2FA code for Filen/Internxt (env: `AEROFTP_2FA`) |
+| `--limit-rate <speed>` | Speed limit (e.g., `1M`, `500K`) |
+| `--bucket <name>` | S3 bucket name |
+| `--region <region>` | S3/Azure region |
+| `--container <name>` | Azure container name |
 
-## Commands
+## Output Hygiene
 
-### `connect`
-
-Test connectivity to a remote server. Performs authentication and immediately disconnects.
-
-```bash
-aeroftp-cli connect sftp://admin@myserver.com
-```
-
-### `ls`
-
-List directory contents. Default output is a formatted table.
-
-```bash
-aeroftp-cli ls sftp://user@host/var/www/
-aeroftp-cli ls sftp://user@host/ --long        # Detailed listing with permissions
-aeroftp-cli ls sftp://user@host/ --json        # JSON array output
-```
-
-> **Note:** Summary lines (file count, total size) are printed to stderr, keeping stdout clean for piping.
-
-### `get`
-
-Download files or directories from a remote server.
+The CLI follows Unix conventions: **stdout** carries data only (file listings, content, JSON), **stderr** carries messages (progress bars, summaries, connection status). This makes piping safe:
 
 ```bash
-aeroftp-cli get sftp://user@host/path/file.txt
-aeroftp-cli get sftp://user@host/path/file.txt -o ./local-copy.txt
-aeroftp-cli get sftp://user@host/backups/ -r                        # Recursive download
-aeroftp-cli get sftp://user@host/logs/ -r --include "*.log"         # Glob filter
+aeroftp ls sftp://user@host / --json 2>/dev/null | jq '.entries[].name'
+aeroftp cat sftp://user@host /data.csv > output.csv 2>/dev/null
 ```
 
-### `put`
-
-Upload files to a remote server. Supports glob patterns for batch uploads.
-
-```bash
-aeroftp-cli put sftp://user@host/uploads/ ./report.pdf
-aeroftp-cli put sftp://user@host/data/ "*.csv"                      # Glob upload
-aeroftp-cli put sftp://user@host/project/ ./src/ -r                 # Recursive upload
-```
-
-### `mkdir`
-
-Create a directory on the remote server.
-
-```bash
-aeroftp-cli mkdir sftp://user@host/var/www/new-site/
-```
-
-### `rm`
-
-Remove files or directories. Use `-r` for recursive deletion.
-
-```bash
-aeroftp-cli rm sftp://user@host/tmp/old-file.txt
-aeroftp-cli rm sftp://user@host/tmp/old-dir/ -r
-```
-
-### `mv`
-
-Move or rename a file on the remote server.
-
-```bash
-aeroftp-cli mv sftp://user@host/docs/draft.md sftp://user@host/docs/final.md
-```
-
-### `cat`
-
-Display the contents of a remote file to stdout.
-
-```bash
-aeroftp-cli cat sftp://user@host/etc/config.yaml
-aeroftp-cli cat sftp://user@host/data/report.json | jq .
-```
-
-### `find`
-
-Search for files by name pattern on the remote server.
-
-```bash
-aeroftp-cli find sftp://user@host/ "*.log"
-aeroftp-cli find sftp://user@host/src/ "*.rs" --json
-```
-
-### `stat`
-
-Show metadata for a remote file (size, modification time, permissions).
-
-```bash
-aeroftp-cli stat sftp://user@host/var/www/index.html
-```
-
-### `df`
-
-Display storage quota and disk usage for the connected server.
-
-```bash
-aeroftp-cli df sftp://user@host/
-aeroftp-cli df s3://key@s3.amazonaws.com/my-bucket/ --json
-```
-
-### `tree`
-
-Display a recursive directory tree with Unicode box-drawing characters.
-
-```bash
-aeroftp-cli tree sftp://user@host/var/www/
-aeroftp-cli tree sftp://user@host/ -d 3            # Limit depth to 3 levels
-aeroftp-cli tree sftp://user@host/ --json          # JSON with recursive structure
-```
-
-### `sync`
-
-Synchronize a local directory with a remote directory.
-
-```bash
-aeroftp-cli sync sftp://user@host/www/ ./local-www/
-```
+Respects `NO_COLOR`, `CLICOLOR`, and `CLICOLOR_FORCE` environment variables.
 
 ## Exit Codes
 
 | Code | Meaning |
-|------|---------|
+| ---- | ------- |
 | 0 | Success |
-| 1 | Connection failure |
-| 2 | File or directory not found |
+| 1 | Connection / network error |
+| 2 | Not found |
 | 3 | Permission denied |
-| 4 | Transfer error |
-| 5 | Configuration error |
-| 6 | Authentication failure |
-| 7 | Operation not supported |
+| 4 | Transfer failed |
+| 5 | Configuration / usage error |
+| 6 | Authentication failed |
+| 7 | Not supported by protocol |
 | 8 | Timeout |
 | 99 | Unknown error |
 
-Exit codes enable reliable error handling in shell scripts:
+## CI/CD Example
+
+```yaml
+# GitHub Actions deployment
+- name: Deploy to server
+  env:
+    DEPLOY_PASS: ${{ secrets.DEPLOY_PASSWORD }}
+  run: |
+    echo "$DEPLOY_PASS" | aeroftp --password-stdin put \
+      sftp://deploy@prod.example.com ./dist/ /var/www/ -r
+```
+
+For OAuth providers in CI, use `--profile` with the vault pre-configured on the runner:
 
 ```bash
-aeroftp-cli get sftp://user@host/file.txt || echo "Exit code: $?"
+AEROFTP_MASTER_PASSWORD=${{ secrets.VAULT_PW }} \
+  aeroftp sync --profile "Production S3" ./build/ / --delete
 ```

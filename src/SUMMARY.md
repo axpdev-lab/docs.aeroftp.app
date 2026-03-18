@@ -35,6 +35,7 @@
 - [Yandex Disk](protocols/yandex.md)
 - [OpenDrive](protocols/opendrive.md)
 - [Jottacloud](protocols/jottacloud.md)
+- [GitHub](protocols/github.md)
 
 # Features
 
@@ -61,6 +62,10 @@
 - [Encryption](security/encryption.md)
 - [Credential Storage](security/credentials.md)
 - [TOTP 2FA](security/totp.md)
+
+# Credential Isolation
+
+- [AI Agent Credential Isolation](credential-isolation.md)
 
 # Contributing
 
