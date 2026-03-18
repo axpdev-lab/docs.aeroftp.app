@@ -20,7 +20,7 @@
     logoDiv.className = 'sidebar-logo';
 
     var img = document.createElement('img');
-    img.src = 'logo.svg';
+    img.src = 'logo.png';
     img.alt = 'AeroFTP';
 
     var text = document.createElement('span');
