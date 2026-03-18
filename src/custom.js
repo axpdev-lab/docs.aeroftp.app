@@ -10,6 +10,36 @@
   link.href = 'favicon.svg';
   document.head.appendChild(link);
 
+  // Inject logo into sidebar
+  function injectLogo() {
+    var scrollbox = document.querySelector('.sidebar-scrollbox, mdbook-sidebar-scrollbox');
+    if (!scrollbox) return;
+    if (scrollbox.querySelector('.sidebar-logo')) return;
+
+    var logoDiv = document.createElement('div');
+    logoDiv.className = 'sidebar-logo';
+
+    var img = document.createElement('img');
+    img.src = 'logo.svg';
+    img.alt = 'AeroFTP';
+
+    var text = document.createElement('span');
+    text.textContent = 'AeroFTP';
+
+    logoDiv.appendChild(img);
+    logoDiv.appendChild(text);
+
+    // For mdbook 0.5 custom element, use shadowRoot or prepend
+    if (scrollbox.shadowRoot) {
+      var style = document.createElement('style');
+      style.textContent = '.sidebar-logo{display:flex;flex-direction:column;align-items:center;padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:8px;}.sidebar-logo img{width:48px;height:48px;margin-bottom:8px;}.sidebar-logo span{font-size:18px;font-weight:700;color:#e2e8f0;letter-spacing:0.5px;}';
+      scrollbox.shadowRoot.prepend(style);
+      scrollbox.shadowRoot.prepend(logoDiv);
+    } else {
+      scrollbox.prepend(logoDiv);
+    }
+  }
+
   // Collapsible sidebar sections
   function initCollapsible() {
     var partTitles = document.querySelectorAll('.sidebar .part-title');
@@ -78,10 +108,14 @@
   }
 
   // Run after DOM is ready
+  function init() {
+    injectLogo();
+    initCollapsible();
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCollapsible);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    // Small delay to let mdBook render
-    setTimeout(initCollapsible, 100);
+    setTimeout(init, 100);
   }
 })();
