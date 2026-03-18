@@ -1,0 +1,35 @@
+/* AeroFTP Documentation — Custom Theme */
+
+:root {
+  --sidebar-bg: #1a1f36;
+  --aero-blue: #3b82f6;
+}
+
+.sidebar {
+  background-color: var(--sidebar-bg);
+}
+
+a {
+  color: var(--aero-blue);
+}
+
+a:hover {
+  color: #60a5fa;
+}
+
+.menu-bar {
+  border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.sidebar .sidebar-scrollbox {
+  background-color: var(--sidebar-bg);
+}
+
+.sidebar a {
+  color: #cbd5e1;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  color: #ffffff;
+}
