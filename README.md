@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/logo.svg" alt="AeroFTP" width="96" />
+  <img src="/logo.svg" alt="AeroFTP" width="96" />
 </p>
 
 <h1 align="center">AeroFTP Documentation</h1>

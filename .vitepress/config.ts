@@ -110,6 +110,16 @@ export default defineConfig({
           ],
         },
         {
+          text: 'Advanced',
+          collapsed: false,
+          items: [
+            { text: 'AeroVault Crate', link: '/advanced/aerovault-crate' },
+            { text: 'Provider Reference', link: '/advanced/provider-reference' },
+            { text: 'AI Provider Reference', link: '/advanced/ai-providers' },
+            { text: 'Plugin Development', link: '/advanced/plugin-development' },
+          ],
+        },
+        {
           text: 'Security',
           collapsed: false,
           items: [

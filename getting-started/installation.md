@@ -45,10 +45,10 @@ All release artifacts are built by GitHub Actions in a reproducible CI environme
 
 ```bash
 # Linux / macOS
-sha256sum aeroftp_3.0.1_amd64.deb
+sha256sum aeroftp_3.0.3_amd64.deb
 
 # Windows (PowerShell)
-Get-FileHash .\AeroFTP_3.0.1_x64-setup.msi -Algorithm SHA256
+Get-FileHash .\AeroFTP_3.0.3_x64-setup.msi -Algorithm SHA256
 ```
 
 If the checksum matches the value listed on the GitHub Releases page, the file has not been tampered with during download.

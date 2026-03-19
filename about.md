@@ -4,7 +4,7 @@
 
 AeroFTP is a free, open-source, multi-protocol file manager built with Rust and React. It connects to 23 protocols from a single desktop application, with built-in encryption, AI assistance, and a production CLI.
 
-**Current version**: v3.0.1
+**Current version**: v3.0.3
 
 ## Links
 
@@ -112,7 +112,7 @@ OpenAI, Anthropic, Google Gemini, xAI (Grok), OpenRouter, Ollama, Kimi (Moonshot
 
 ## This Documentation
 
-This documentation site is built with [mdBook](https://rust-lang.github.io/mdBook/) and deployed automatically via GitHub Actions to GitHub Pages.
+This documentation site is built with [VitePress](https://vitepress.dev) and deployed automatically via GitHub Actions to GitHub Pages.
 
 - **Source**: [github.com/axpnet/docs.aeroftp.app](https://github.com/axpnet/docs.aeroftp.app)
 - **Domain**: [docs.aeroftp.app](https://docs.aeroftp.app)
