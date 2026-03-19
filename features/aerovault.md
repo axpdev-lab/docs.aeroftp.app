@@ -150,3 +150,9 @@ The `.aerovault` binary format consists of three sections:
 - **Data** — file contents encrypted in 64 KB chunks using AES-256-GCM-SIV (and optionally ChaCha20-Poly1305 in cascade mode)
 
 AeroVault files are registered as a MIME type on all platforms with dedicated icons in 8 PNG sizes (16 px to 512 px), SVG, ICO, and ICNS. Double-clicking a `.aerovault` file opens it directly in AeroFTP via the deep-link handler, with single-instance argv forwarding for already-running instances.
+
+## Standalone Crate
+
+The AeroVault v2 encryption engine is published as a standalone Rust crate on [crates.io](https://crates.io/crates/aerovault), available for use in any Rust project. A companion CLI (`aerovault-cli`) provides 8 commands for creating, listing, adding, extracting, and managing vaults from the terminal.
+
+For Rust API documentation, code examples, and integration guides, see the [AeroVault Crate Reference](/advanced/aerovault-crate.html).

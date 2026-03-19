@@ -30,7 +30,7 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: '/getting-started/installation' },
       { text: 'Protocols', link: '/protocols/overview' },
-      { text: 'Features', link: '/features/aerosync' },
+      { text: 'Features', link: '/features/aerocloud' },
       { text: 'CLI', link: '/cli/installation' },
       {
         text: 'GitHub',
@@ -86,6 +86,8 @@ export default defineConfig({
           text: 'Features',
           collapsed: false,
           items: [
+            { text: 'AeroCloud', link: '/features/aerocloud' },
+            { text: 'AeroFile', link: '/features/aerofile' },
             { text: 'AeroSync', link: '/features/aerosync' },
             { text: 'AeroVault', link: '/features/aerovault' },
             { text: 'AeroAgent', link: '/features/aeroagent' },
