@@ -7,9 +7,14 @@ Real-world capability tests performed with multiple AI providers. All prompts an
 | Component | Details |
 |-----------|---------|
 | AeroFTP Version | v3.0.3 |
-| Providers Tested | Cohere Command A Reasoning, Gemini 3.1 Flash Lite |
+| Primary Provider | **Google Gemini 3.1 Flash Lite Preview** (20 of 25 tests) |
+| Secondary Provider | Cohere Command A Reasoning 08 2025 (5 of 25 tests) |
 | Connection | FTP/TLS (Aruba hosting) |
 | Platform | Ubuntu 24.04.2 LTS, kernel 6.17.0 |
+
+::: tip Provider Performance
+**Gemini 3.1 Flash Lite Preview** completed the vast majority of tests, demonstrating reliable tool calling across file management, archive operations, shell execution, and remote server operations. Cohere Command A Reasoning excelled at multi-step workflows with diff previews and thinking visualization.
+:::
 
 ## Capability Matrix
 
