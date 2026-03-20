@@ -8,10 +8,22 @@
   <strong>Official documentation for <a href="https://www.aeroftp.app">AeroFTP</a> — the open-source, multi-protocol file manager.</strong>
 </p>
 
+<!-- Row 1: Status & Links -->
 <p align="center">
-  <a href="https://docs.aeroftp.app"><img src="https://img.shields.io/badge/docs-docs.aeroftp.app-3b82f6?style=for-the-badge&logo=readthedocs&logoColor=white" alt="Documentation" /></a>
-  <a href="https://github.com/axpnet/aeroftp"><img src="https://img.shields.io/badge/app-AeroFTP-8b5cf6?style=for-the-badge&logo=github&logoColor=white" alt="AeroFTP" /></a>
-  <a href="https://github.com/axpnet/docs.aeroftp.app/actions"><img src="https://img.shields.io/github/actions/workflow/status/axpnet/docs.aeroftp.app/deploy.yml?style=for-the-badge&label=deploy" alt="Deploy Status" /></a>
+  <a href="https://docs.aeroftp.app"><img src="https://img.shields.io/badge/live-docs.aeroftp.app-3b82f6?logo=readthedocs&logoColor=white" alt="Documentation" /></a>
+  <a href="https://github.com/axpnet/aeroftp"><img src="https://img.shields.io/badge/app-AeroFTP-8b5cf6?logo=github&logoColor=white" alt="AeroFTP" /></a>
+  <a href="https://github.com/axpnet/docs.aeroftp.app/actions"><img src="https://img.shields.io/github/actions/workflow/status/axpnet/docs.aeroftp.app/deploy.yml?label=deploy" alt="Deploy Status" /></a>
+  <img src="https://img.shields.io/github/license/axpnet/docs.aeroftp.app" alt="License" />
+</p>
+
+<!-- Row 2: Tech Stack -->
+<p align="center">
+  <img src="https://img.shields.io/badge/VitePress-1.x-646cff?logo=vite&logoColor=white" alt="VitePress" />
+  <img src="https://img.shields.io/badge/Vue.js-3-4fc08d?logo=vuedotjs&logoColor=white" alt="Vue.js" />
+  <img src="https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Markdown-docs-000000?logo=markdown&logoColor=white" alt="Markdown" />
+  <img src="https://img.shields.io/badge/GitHub%20Pages-deployed-222?logo=githubpages&logoColor=white" alt="GitHub Pages" />
+  <img src="https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088ff?logo=githubactions&logoColor=white" alt="GitHub Actions" />
 </p>
 
 ---
