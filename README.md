@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="/logo.svg" alt="AeroFTP" width="96" />
+  <img src="https://raw.githubusercontent.com/axpnet/docs.aeroftp.app/main/public/logo.svg" alt="AeroFTP" width="96" />
 </p>
 
 <h1 align="center">AeroFTP Documentation</h1>
@@ -16,13 +16,38 @@
 
 ---
 
-## 🌐 Live
+## Live
 
 **[docs.aeroftp.app](https://docs.aeroftp.app)**
+
+## What's Inside
+
+Comprehensive documentation for AeroFTP covering:
+
+- **Getting Started** — Installation on Linux (.deb, .rpm, .AppImage, .snap, AUR), macOS (.dmg), and Windows (.msi)
+- **23 Protocols** — FTP, FTPS, SFTP, WebDAV, S3-compatible (10+ presets), Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Azure Blob, 4shared, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, GitHub
+- **AeroSync** — Bidirectional sync with profiles, conflict resolution, bandwidth control, scheduler
+- **AeroVault** — Military-grade AES-256-GCM-SIV encrypted containers with Argon2id KDF
+- **AeroAgent** — AI-powered file management with 47 tools, multi-step autonomous execution, 19 AI providers
+- **AeroPlayer** — Integrated media player with 10-band EQ, 14 visualizer modes, 6 WebGL shaders
+- **AeroTools** — Security toolkit (Hash Forge, CryptoLab, Password Forge) in Cyber theme
+- **AeroFile** — Local file manager with tabs, tags, and Finder-style color labels
+- **CLI** — 14 commands, batch scripting (.aeroftp), glob patterns, JSON output, exit codes
+- **Security** — Universal Vault (AES-256-GCM + Argon2id), TOTP 2FA, SFTP TOFU, credential isolation for AI agents
+- **GitHub Integration** — File browsing, commits, branches, PRs, releases with CHANGELOG import, GitHub Pages monitoring, App co-authoring with dual avatars
+- **Advanced** — Provider reference, AI provider marketplace, plugin development
 
 ## Stack
 
 Built with [VitePress](https://vitepress.dev) and deployed via GitHub Pages.
+
+| Component | Technology |
+|-----------|-----------|
+| Framework | VitePress 1.x |
+| Theme | Custom dark/light with AeroFTP branding |
+| Deployment | GitHub Actions + GitHub Pages |
+| Domain | Custom domain via CNAME (docs.aeroftp.app) |
+| Search | VitePress built-in local search |
 
 ## Local Development
 
@@ -43,15 +68,27 @@ npm run docs:preview
 ## Structure
 
 ```
-├── getting-started/   # Installation & quick start guides
-├── protocols/         # All 23 supported protocols
-├── features/          # AeroSync, AeroVault, AeroAgent, etc.
-├── cli/               # CLI installation, commands & scripting
-├── security/          # Encryption, credentials, TOTP
-├── contributing/      # Build instructions & architecture
-├── public/            # Static assets (logos, icons, images)
-└── .vitepress/        # VitePress config & custom theme
+docs.aeroftp.app/
+├── getting-started/    # Installation & quick start guides
+├── features/           # AeroSync, AeroVault, AeroAgent, AeroPlayer, etc.
+├── cli/                # CLI installation, commands, batch scripting, examples
+├── advanced/           # Provider reference, AI providers, plugins
+├── contributing/       # Build instructions & architecture
+├── security/           # Encryption, credentials, TOTP (redirects to main repo)
+├── public/             # Static assets (logos, icons, screenshots)
+├── .vitepress/         # VitePress config, sidebar, custom theme
+└── .github/workflows/  # GitHub Actions deploy pipeline
 ```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes (VitePress markdown)
+4. Run `npm run docs:dev` to preview locally
+5. Submit a Pull Request
+
+Documentation changes are automatically deployed to [docs.aeroftp.app](https://docs.aeroftp.app) when merged to `main`.
 
 ## License
 
