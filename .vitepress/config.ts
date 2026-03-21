@@ -140,6 +140,10 @@ export default defineConfig({
           ],
         },
         {
+          text: 'Screenshots',
+          link: '/screenshots',
+        },
+        {
           text: 'About',
           link: '/about',
         },
