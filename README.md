@@ -104,4 +104,4 @@ Documentation changes are automatically deployed to [docs.aeroftp.app](https://d
 
 ## License
 
-GPL-3.0 — see the main [AeroFTP repository](https://github.com/axpnet/aeroftp) for details.
+GPL-3.0 - see the main [AeroFTP repository](https://github.com/axpnet/aeroftp) for details.
