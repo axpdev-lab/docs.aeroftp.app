@@ -341,6 +341,128 @@ DF $server/
 ECHO Backup complete.
 ```
 
+## File Inspection & Verification
+
+### View Log Files Remotely
+
+```bash
+# First 50 lines of a log file
+aeroftp head --profile "server" /var/log/app.log -n 50
+
+# Last 100 lines (like tail -f but static)
+aeroftp tail --profile "server" /var/log/nginx/error.log -n 100
+
+# Pipe to grep for filtering
+aeroftp tail --profile "server" /var/log/app.log -n 500 | grep ERROR
+```
+
+### Verify File Integrity
+
+```bash
+# Compute remote file hash
+aeroftp hashsum --profile "server" sha256 /backups/db.sql.gz
+
+# Download and verify locally
+aeroftp get --profile "server" /backups/db.sql.gz ./db.sql.gz
+sha256sum ./db.sql.gz  # Compare with remote hash
+
+# Automated verification: compare local and remote
+LOCAL_HASH=$(sha256sum ./db.sql.gz | cut -d' ' -f1)
+REMOTE_HASH=$(aeroftp hashsum --profile "server" sha256 /backups/db.sql.gz 2>/dev/null | cut -d' ' -f1)
+[ "$LOCAL_HASH" = "$REMOTE_HASH" ] && echo "Integrity OK" || echo "MISMATCH"
+```
+
+### Directory Comparison
+
+```bash
+# Verify deployment: local build matches remote
+aeroftp check --profile "Production" ./dist/ /var/www/html/
+
+# Output: Match: 142  Differ: 0  Missing local: 0  Missing remote: 0
+# Exit code 0 = identical, 4 = differences found
+
+# Checksum-based comparison (slower, more thorough)
+aeroftp check --profile "Production" ./dist/ /var/www/html/ --checksum
+
+# JSON output for CI integration
+aeroftp check --profile "Production" ./dist/ /var/www/ --json 2>/dev/null | jq '.differ_count'
+```
+
+### Create Placeholder Files
+
+```bash
+# Create empty marker file
+aeroftp touch --profile "server" /var/www/.maintenance
+
+# Deploy, then remove marker
+aeroftp put --profile "server" ./dist/ /var/www/ -r
+aeroftp rm --profile "server" /var/www/.maintenance
+```
+
+## Filtering Files
+
+### By Pattern
+
+```bash
+# List only JSON files
+aeroftp ls --profile "server" /data/ --include "*.json"
+
+# Exclude temp and git files
+aeroftp ls --profile "server" /project/ --exclude-global "*.tmp" --exclude-global ".git"
+
+# Load patterns from file
+echo '*.log' > /tmp/excludes.txt
+echo '*.tmp' >> /tmp/excludes.txt
+aeroftp ls --profile "server" /data/ --exclude-from /tmp/excludes.txt
+```
+
+### By Size
+
+```bash
+# Only files larger than 1MB
+aeroftp ls --profile "server" /uploads/ -l --min-size 1M
+
+# Only files smaller than 100KB
+aeroftp ls --profile "server" /data/ -l --max-size 100K
+```
+
+### By Age
+
+```bash
+# Files older than 30 days
+aeroftp ls --profile "server" /logs/ --min-age 30d
+
+# Files modified in the last 24 hours
+aeroftp ls --profile "server" /data/ --max-age 24h
+```
+
+### Combined Filters
+
+```bash
+# Large log files older than a week
+aeroftp ls --profile "server" /var/log/ -l --include "*.log" --min-size 10M --min-age 7d
+```
+
+## Sync Safety
+
+### Dry Run Preview
+
+```bash
+# Always preview before syncing
+aeroftp sync --profile "server" ./build/ /var/www/ --dry-run
+# Shows: UPLOAD, DOWNLOAD, DELETE actions without executing
+```
+
+### Delete Safety
+
+```bash
+# Abort if more than 10 files would be deleted
+aeroftp sync --profile "server" ./build/ /var/www/ --delete --max-delete 10
+
+# Abort if more than 25% of files would be deleted
+aeroftp sync --profile "server" ./build/ /var/www/ --delete --max-delete 25%
+```
+
 ## Tips and Best Practices
 
 1. **Always test with `connect` first** — verify credentials before running long operations. Connection failures return exit code 1.
