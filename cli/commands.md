@@ -1,6 +1,6 @@
 # CLI Commands
 
-Complete reference for the `aeroftp-cli` binary. It shares the same Rust backend as the desktop app, supporting 23 protocols through 14 subcommands with consistent behavior, structured JSON output, and Unix pipeline compatibility.
+Complete reference for the `aeroftp-cli` binary. It shares the same Rust backend as the desktop app, supporting 23 protocols through 19 subcommands with consistent behavior, structured JSON output, and Unix pipeline compatibility.
 
 ## Connection Methods
 
@@ -29,7 +29,7 @@ protocol://user:password@host:port/path
 | OpenDrive | `opendrive://` | Password |
 | GitHub | `github://` | PAT / Device Flow |
 
-9 OAuth providers (Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, kDrive) require `--profile` — authorize once in the GUI, then reuse in the CLI.
+9 OAuth providers (Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, kDrive) require `--profile` — authorize once in the GUI, then reuse in the CLI. 4shared (OAuth 1.0) tokens are automatically loaded from the vault after GUI authorization.
 
 ### Server Profiles (`--profile`)
 
@@ -113,11 +113,73 @@ aeroftp df sftp://user@host
 aeroftp tree sftp://user@host /var/www/ -d 2
 ```
 
+### head / tail
+
+```bash
+# First 5 lines of a remote file
+aeroftp head --profile "server" /var/log/app.log -n 5
+
+# Last 20 lines (default)
+aeroftp tail --profile "server" /var/log/app.log
+
+# JSON output
+aeroftp head --profile "server" /file.txt -n 3 --json
+```
+
+### touch
+
+```bash
+# Create empty file
+aeroftp touch --profile "server" /remote/newfile.txt
+
+# Verify existing file (no error)
+aeroftp touch --profile "server" /remote/existing.txt
+```
+
+### hashsum
+
+Algorithms: `md5`, `sha1`, `sha256`, `sha512`, `blake3`.
+
+```bash
+aeroftp hashsum --profile "server" sha256 /data/file.bin
+aeroftp hashsum sftp://user@host blake3 /path/file.dat --json
+```
+
+Output matches standard `sha256sum` format: `<hash>  <path>`.
+
+### check
+
+Verify that a local directory matches a remote directory.
+
+```bash
+# Compare by size (default)
+aeroftp check --profile "server" /local/dir /remote/dir
+
+# Compare by SHA-256 checksum
+aeroftp check --profile "server" /local/ /remote/ --checksum
+
+# One-way: only check files present locally
+aeroftp check --profile "server" /local/ /remote/ --one-way
+```
+
 ### sync
 
 ```bash
-aeroftp sync sftp://user@host ./local/ /remote/ --dry-run
-aeroftp sync sftp://user@host ./local/ /remote/ --delete   # Mirror mode
+# Preview changes
+aeroftp sync --profile "server" ./local/ /remote/ --dry-run
+
+# Upload only
+aeroftp sync --profile "server" ./local/ /remote/ --direction upload
+
+# Mirror mode (delete orphans)
+aeroftp sync sftp://user@host ./local/ /remote/ --delete
+
+# Exclude patterns
+aeroftp sync --profile "server" ./local/ /remote/ --exclude "*.tmp" --exclude ".git"
+
+# Safety: abort if too many deletes
+aeroftp sync --profile "server" ./local/ /remote/ --delete --max-delete 50
+aeroftp sync --profile "server" ./local/ /remote/ --delete --max-delete 25%
 ```
 
 ### batch
@@ -131,7 +193,7 @@ aeroftp batch deploy.aeroftp
 ```bash
 # deploy.aeroftp
 SET SERVER=sftp://deploy@prod.example.com:2222
-SET ON_ERROR=stop
+ON_ERROR FAIL
 
 CONNECT ${SERVER}
 PUT ./dist/app.js /var/www/app.js
@@ -141,7 +203,7 @@ ECHO Deployment complete
 DISCONNECT
 ```
 
-Batch commands: SET, ECHO, CONNECT, DISCONNECT, LS, GET, PUT, MKDIR, RM, MV, CAT, STAT, FIND, DF, TREE, SYNC, SLEEP, EXIT. Variables use `${VAR}` syntax with single-pass expansion (injection-safe). Error policies: `stop` (default), `continue`.
+Batch commands: SET, ECHO, ON_ERROR, CONNECT, DISCONNECT, LS, GET, PUT, MKDIR, RM, MV, CAT, STAT, FIND, DF, TREE, SYNC. Variables use `${VAR}` syntax with single-pass expansion (injection-safe). Error policies: `ON_ERROR FAIL` (default), `ON_ERROR CONTINUE`.
 
 ## GitHub Protocol
 
@@ -173,6 +235,14 @@ aeroftp cat github://token:PAT@owner/repo /README.md
 | `--bucket <name>` | S3 bucket name |
 | `--region <region>` | S3/Azure region |
 | `--container <name>` | Azure container name |
+| `--include <pattern>` | Include only files matching glob (repeatable) |
+| `--exclude-global <pattern>` | Exclude files matching glob (repeatable) |
+| `--include-from <file>` | Read include patterns from file |
+| `--exclude-from <file>` | Read exclude patterns from file |
+| `--min-size <size>` | Min file size filter (`100k`, `1M`, `1G`) |
+| `--max-size <size>` | Max file size filter |
+| `--min-age <duration>` | Skip files newer than (`7d`, `24h`) |
+| `--max-age <duration>` | Skip files older than |
 
 ## Output Hygiene
 
@@ -218,3 +288,24 @@ For OAuth providers in CI, use `--profile` with the vault pre-configured on the 
 AEROFTP_MASTER_PASSWORD=${{ secrets.VAULT_PW }} \
   aeroftp sync --profile "Production S3" ./build/ / --delete
 ```
+
+## Live Test Results
+
+All commands tested live against 12 providers via `--profile`:
+
+| Provider | Protocol | connect | ls | put/get | head/tail | hashsum | check | touch | tree | df |
+|----------|----------|---------|----|---------|-----------|---------||||------|------|
+| WD MyCloud NAS | SFTP | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| axpdev.it | FTP | PASS | PASS | — | PASS | PASS | — | — | — | — |
+| Playground | GitHub | PASS | PASS | PASS | PASS | PASS | — | PASS | PASS | — |
+| MEGA.nz | MEGA | PASS | PASS | — | — | — | — | — | — | — |
+| OpenDrive | OpenDrive | PASS | PASS | — | — | — | — | — | — | PASS |
+| Filen | Filen (E2E) | PASS | PASS | — | — | — | — | — | — | PASS |
+| Koofr | WebDAV | PASS | PASS | — | — | — | — | — | — | — |
+| Koofr | Native API | PASS | PASS | — | — | — | — | — | — | PASS |
+| WD MyCloud NAS | WebDAV | PASS | PASS | — | — | — | — | — | — | — |
+| Backblaze B2 | S3 | PASS | PASS | — | — | — | — | — | — | — |
+| Azure | Azure Blob | PASS | PASS | — | — | — | — | — | — | — |
+| 4shared | OAuth 1.0 | PASS | PASS | — | — | — | — | — | — | PASS |
+
+Filter system (`--include`, `--exclude-global`, `--min-size`, `--max-size`) and `check` with `hashsum` round-trip verification all passed on SFTP.
