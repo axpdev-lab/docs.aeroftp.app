@@ -5,9 +5,9 @@ AeroFTP CLI includes a built-in batch scripting engine for automating multi-step
 ## Running a Batch Script
 
 ```bash
-aeroftp batch deploy.aeroftp
-aeroftp batch backup.aeroftp --verbose
-aeroftp batch script.aeroftp --json
+aeroftp-cli batch deploy.aeroftp
+aeroftp-cli batch backup.aeroftp --verbose
+aeroftp-cli batch script.aeroftp --json
 ```
 
 When `--json` is specified, all command output within the script is emitted as structured JSON to stdout, with errors going to stderr.
@@ -153,8 +153,8 @@ When a script aborts due to `ON_ERROR FAIL`, the CLI exits with the exit code of
 
 ```bash
 # backup.aeroftp — Nightly backup of production server
-# Run: aeroftp batch backup.aeroftp
-# Cron: 0 2 * * * /usr/bin/aeroftp batch /opt/scripts/backup.aeroftp >> /var/log/aeroftp-backup.log 2>&1
+# Run: aeroftp-cli batch backup.aeroftp
+# Cron: 0 2 * * * /usr/bin/aeroftp-cli batch /opt/scripts/backup.aeroftp >> /var/log/aeroftp-backup.log 2>&1
 
 SET server=sftp://backupuser@prod.example.com
 SET remote=/var/www/html
@@ -187,14 +187,14 @@ Schedule it via cron:
 
 ```bash
 # crontab -e
-0 2 * * * /usr/bin/aeroftp batch /opt/scripts/backup.aeroftp >> /var/log/aeroftp-backup.log 2>&1
+0 2 * * * /usr/bin/aeroftp-cli batch /opt/scripts/backup.aeroftp >> /var/log/aeroftp-backup.log 2>&1
 ```
 
 ## Real-World Example: Multi-Server Deployment
 
 ```bash
 # deploy.aeroftp — Deploy build artifacts to 3 servers
-# Run: aeroftp batch deploy.aeroftp
+# Run: aeroftp-cli batch deploy.aeroftp
 
 SET build_dir=./dist
 SET app_path=/var/www/app
@@ -256,7 +256,7 @@ jobs:
           SCRIPT
 
       - name: Deploy
-        run: aeroftp batch deploy.aeroftp --json
+        run: aeroftp-cli batch deploy.aeroftp --json
         env:
           NO_COLOR: 1
 ```

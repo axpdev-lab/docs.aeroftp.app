@@ -20,7 +20,7 @@ The binary name is `aeroftp-cli`. On `.deb` and `.rpm` installs, a symlink `aero
 
 ```bash
 # Both are equivalent on .deb/.rpm installs
-aeroftp --version
+aeroftp-cli --version
 aeroftp-cli --version
 ```
 
@@ -40,19 +40,19 @@ sudo ln -s "$(pwd)/squashfs-root/usr/bin/aeroftp-cli" /usr/local/bin/aeroftp
 After installing, confirm the CLI is working:
 
 ```bash
-aeroftp --version
+aeroftp-cli --version
 # Output: aeroftp-cli 3.0.1
 
-aeroftp --help
+aeroftp-cli --help
 # Output: full command listing with descriptions
 ```
 
 The `--help` flag works on every subcommand:
 
 ```bash
-aeroftp ls --help
-aeroftp sync --help
-aeroftp batch --help
+aeroftp-cli ls --help
+aeroftp-cli sync --help
+aeroftp-cli batch --help
 ```
 
 ## Build from Source
@@ -101,10 +101,10 @@ AeroFTP follows the [no-color.org](https://no-color.org) convention. Setting the
 ```bash
 # Disable colors globally
 export NO_COLOR=1
-aeroftp ls sftp://user@host/
+aeroftp-cli ls sftp://user@host/
 
 # Or per-command
-NO_COLOR=1 aeroftp ls sftp://user@host/
+NO_COLOR=1 aeroftp-cli ls sftp://user@host/
 ```
 
 The `CLICOLOR` variable is also respected. When `CLICOLOR=0`, colors are suppressed.
@@ -123,7 +123,7 @@ On Unix systems, the CLI installs a `SIGPIPE` handler at startup via `libc::sign
 
 ```bash
 # Works correctly — CLI exits when head has enough lines
-aeroftp ls sftp://user@host/ --json | head -5
+aeroftp-cli ls sftp://user@host/ --json | head -5
 ```
 
 This follows POSIX convention and matches the behavior of standard Unix tools like `ls`, `cat`, and `find`.
@@ -147,7 +147,7 @@ The CLI uses semantic exit codes for scripting:
 | 130 | Interrupted (Ctrl+C) |
 
 ```bash
-aeroftp connect sftp://user@host
+aeroftp-cli connect sftp://user@host
 echo $?  # 0 if successful, 1 if unreachable, 6 if auth failed
 ```
 
