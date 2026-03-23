@@ -257,7 +257,9 @@ A sliding-window token budget (70% of provider max) with automatic summarization
 
 ## Plugin System
 
-Extend AeroAgent with custom tools via JSON manifests and shell scripts. Plugins are discovered from a GitHub-based registry, verified with SHA-256 integrity at install and before each execution, and support event-driven hooks (file:created, transfer:complete, sync:complete). Manage plugins in **AI Settings > Plugins**.
+Extend AeroAgent with custom tools via JSON manifests and shell scripts. Plugins are discovered from a [GitHub-based registry](https://github.com/axpnet/aeroftp-plugins), verified with SHA-256 integrity at install and before each execution, and support event-driven hooks (file:created, transfer:complete, sync:complete). Manage plugins in **AI Settings > Plugins**.
+
+To create your own plugin, see the [Plugin Contributing Guide](https://github.com/axpnet/aeroftp-plugins/blob/main/CONTRIBUTING.md).
 
 The Plugin Browser UI provides three tabs:
 
