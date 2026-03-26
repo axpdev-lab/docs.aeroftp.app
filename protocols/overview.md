@@ -186,7 +186,7 @@ Not all providers expose a trash/recycle bin API. The following table shows whic
 
 ### AeroSync
 
-All 23 protocols are supported by AeroSync for bidirectional synchronization. Server protocols (FTP, FTPS, SFTP, WebDAV, S3) and all cloud providers can be used as sync targets via the AeroCloud background sync engine.
+AeroSync supports bidirectional synchronization across all protocols. AeroCloud background sync classifies protocols by reliability: 11 stable, 8 beta, 2 alpha — with maturity badges visible in the setup wizard.
 
 AeroSync features available across all protocols:
 

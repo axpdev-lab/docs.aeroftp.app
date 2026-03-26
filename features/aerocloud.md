@@ -1,10 +1,16 @@
 # AeroCloud
 
-AeroCloud turns any server into a private personal cloud. Connect to all 23 supported protocols through a unified interface, enable background sync from the system tray, and see native file manager badges showing real-time sync status. AeroCloud is the bridge between AeroFTP's multi-protocol engine and a seamless cloud storage experience.
+AeroCloud turns any server into a private personal cloud. Reliable sync with 11 protocols out of the box, plus 10 additional protocols with known limitations. Background sync from the system tray, native file manager badges, selective sync, file versioning (.aeroversions/), .aeroignore patterns, and protocol maturity badges in the setup wizard.
 
 ## Supported Protocols
 
-AeroCloud works with every protocol that AeroFTP supports — 23 in total, grouped into four categories.
+AeroCloud supports 21 protocols for sync (GitHub and DrimeCloud are excluded — conceptually incompatible with sync). Protocols are classified by sync reliability:
+
+- **Stable (11)**: SFTP, S3, Azure, WebDAV, Google Drive, Dropbox, OneDrive, Jottacloud, kDrive, Koofr, OpenDrive
+- **Beta (8)**: FTP, FTPS, Box, pCloud, Zoho WorkDrive, Yandex Disk, MEGA, Filen, Internxt
+- **Alpha (2)**: FileLu, 4shared
+
+Protocols are grouped into four categories.
 
 ### Server Protocols
 
@@ -57,7 +63,7 @@ Cloud services that use API keys, passwords, or session-based authentication.
 
 ## Background Sync
 
-AeroCloud runs in the system tray and synchronizes files in the background. The cloud provider factory (`cloud_provider_factory.rs`) dispatches connections for all 23 protocols — direct-auth, OAuth 2.0, and OAuth 1.0 — so every provider works identically in background mode.
+AeroCloud runs in the system tray and synchronizes files in the background. The cloud provider factory dispatches connections for all supported protocols — direct-auth, OAuth 2.0, and OAuth 1.0. Protocol maturity badges in the setup wizard indicate sync reliability per provider.
 
 When background sync is active:
 
