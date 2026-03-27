@@ -1,6 +1,6 @@
 # AI Agent Credential Isolation
 
-As of March 2026, AeroFTP is the only file manager that lets AI coding agents interact with remote servers across 23 protocols without ever exposing credentials.
+As of March 2026, AeroFTP provides a credential-isolated workflow for AI coding agents so they can interact with remote servers and cloud providers without ever receiving the raw credentials.
 
 ## The Problem
 
@@ -21,7 +21,7 @@ An AI agent that runs `scp` or sets environment variables places your credential
 AeroFTP introduces a credential isolation boundary between the AI agent and the authentication layer:
 
 1. All credentials are stored in an encrypted vault (AES-256-GCM + Argon2id with 128 MiB memory cost)
-2. The agent calls `aeroftp ls --profile "My Server" /path/` — no password anywhere in the command
+2. The agent calls `aeroftp-cli ls --profile "My Server" /path/` — no password anywhere in the command
 3. The Rust backend opens the vault, authenticates to the remote server, and executes the operation
 4. The agent receives only the result (directory listing, file content, transfer confirmation)
 5. Credentials never appear in: command-line arguments, environment variables, shell history, IPC messages, AI model context, or application logs
@@ -30,22 +30,22 @@ The master password unlocks the vault once per session. After that, every operat
 
 ## CLI: Profile-Based Access
 
-The `aeroftp` CLI resolves credentials from the vault at runtime. The agent never sees them:
+The `aeroftp-cli` binary resolves credentials from the vault at runtime. The agent never sees them:
 
 ```bash
 # List saved profiles (names and protocols only, never passwords)
-aeroftp profiles
+aeroftp-cli profiles
 
 # Standard file operations — credential-free
-aeroftp ls --profile "Production" /var/www/
-aeroftp put --profile "Staging" ./dist/app.js /var/www/app.js
-aeroftp cat --profile "Production" /etc/nginx/nginx.conf
-aeroftp sync --profile "NAS Backup" ./data/ /backups/ --dry-run
+aeroftp-cli ls --profile "Production" /var/www/
+aeroftp-cli put --profile "Staging" ./dist/app.js /var/www/app.js
+aeroftp-cli cat --profile "Production" /etc/nginx/nginx.conf
+aeroftp-cli sync --profile "NAS Backup" ./data/ /backups/ --dry-run
 
 # OAuth providers work identically — authorize once in the GUI, reuse from CLI
-aeroftp ls --profile "Google Drive" /
-aeroftp get --profile "Dropbox" /Documents/report.pdf
-aeroftp put --profile "OneDrive" ./report.xlsx /Work/
+aeroftp-cli ls --profile "Google Drive" /
+aeroftp-cli get --profile "Dropbox" /Documents/report.pdf
+aeroftp-cli put --profile "OneDrive" ./report.xlsx /Work/
 ```
 
 For CI/CD pipelines, a single secret (`AEROFTP_MASTER_PASSWORD`) unlocks the vault and grants access to all configured servers. No per-server secrets to manage.
@@ -77,19 +77,19 @@ Passwords are resolved from the vault **in Rust** — they cross no IPC boundary
 
 ## Protocol Coverage
 
-All 23 protocols supported by AeroFTP work with credential isolation:
+Credential isolation spans AeroFTP's direct-auth, token-based, and browser-authorized providers:
 
 **Direct authentication** (username/password or API key stored in vault):
-FTP, FTPS, SFTP, WebDAV, S3-compatible, GitHub, Azure Blob, MEGA, Filen, Internxt, kDrive, Jottacloud, FileLu, Koofr, OpenDrive, Yandex Disk
+FTP, FTPS, SFTP, WebDAV, S3-compatible storage, GitHub, Azure Blob, MEGA, Filen, Internxt, kDrive, Jottacloud, FileLu, Koofr, OpenDrive, Yandex Disk
 
-**OAuth** (authorize once in the GUI, token stored in vault, reused from CLI and AeroAgent):
-Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, 4shared
+**OAuth and profile-backed API providers** (authorize or configure once in the GUI, then reuse from CLI and AeroAgent):
+Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, 4shared, Drime
 
 ## Practical Workflows
 
 **Web deployment** — An AI agent edits source code locally, then deploys:
 ```bash
-aeroftp put --profile "Production" ./dist/ /var/www/html/ --recursive
+aeroftp-cli put --profile "Production" ./dist/ /var/www/html/ --recursive
 ```
 
 **Multi-server management** — Batch scripts reference profiles by name:
@@ -112,4 +112,4 @@ AeroAgent calls `server_exec` to read the remote file, diffs it locally, and rep
 - **Credential proxy services** (Vault, AWS Secrets Manager) only handle HTTP-based APIs — they cannot authenticate an FTP or SFTP session
 - **SSH agent forwarding** covers only SSH/SFTP, not the other 20+ protocols
 
-AeroFTP handles all 23 protocols natively behind a single encrypted vault with a single unlock mechanism. The AI agent operates through a narrow, well-defined interface: profile name and file path. Nothing else.
+AeroFTP handles its provider backends behind a single encrypted vault with a single unlock mechanism. The AI agent operates through a narrow, well-defined interface: profile name and file path. Nothing else.

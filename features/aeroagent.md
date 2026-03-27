@@ -1,6 +1,6 @@
 # AeroAgent
 
-AeroAgent is AeroFTP's AI-powered assistant for natural language file management, code editing, and server operations. It integrates with 19 AI providers, exposes 47 built-in tools, and operates across all 22 file transfer protocols through a unified backend.
+AeroAgent is AeroFTP's AI-powered assistant for natural language file management, code editing, and server operations. It integrates with 19 AI providers, exposes 47 built-in tools, and operates across local files plus the AeroFTP remote provider backends through a unified backend.
 
 ## Welcome Screen
 
@@ -300,7 +300,7 @@ AeroAgent operates in three modes through a shared trait abstraction layer (`ai_
 | ----- | ------- |
 | `EventSink` | Abstract event emission (Tauri `app.emit()` vs CLI stdout) |
 | `CredentialProvider` | Vault-based credential access without exposing passwords |
-| `RemoteBackend` | Protocol-agnostic remote operations (22 protocols) |
+| `RemoteBackend` | Protocol-agnostic remote operations over the AeroFTP provider backends |
 
 This enables GUI mode (Tauri events), CLI mode (stdout/stderr), and Orchestration mode (JSON-RPC 2.0 over stdin/stdout). MCP compatibility maps naturally: tools become MCP Tools, RAG/vault become Resources, macros/templates become Prompts, and multi-step execution becomes Sampling.
 

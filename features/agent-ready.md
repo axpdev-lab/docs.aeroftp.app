@@ -8,7 +8,7 @@ AeroFTP bridges this gap with two native access modes: a graphical interface for
 
 AI agents like **Claude Code**, **Open Interpreter**, **Cline**, **Aider**, **Devin**, **Codex CLI**, **Cursor Agent**, **Windsurf**, **Goose**, **SWE-agent**, **AutoGPT**, and **CrewAI** operate by executing shell commands and reading their output. **Computer use** agents (Anthropic, OpenAI Operator) go further by controlling the entire desktop. **MCP servers** (Model Context Protocol) expose structured tools to LLMs.
 
-All of these need to move files between local machines, remote servers, and cloud storage. AeroFTP gives them a single command (`aeroftp`) that works across 23 protocols.
+All of these need to move files between local machines, remote servers, and cloud storage. AeroFTP gives them a single command (`aeroftp-cli`) that works across the AeroFTP provider set.
 
 ## How Agents Use AeroFTP
 
@@ -18,24 +18,24 @@ Any tool that can execute shell commands can use the AeroFTP CLI. The key featur
 
 ```bash
 # Agent connects using a profile name. Password stays in the vault.
-aeroftp ls --profile "Production" /var/www/ --json
+aeroftp-cli ls --profile "Production" /var/www/ --json
 
 # Fuzzy matching works
-aeroftp ls --profile "prod" /var/www/ --json
+aeroftp-cli ls --profile "prod" /var/www/ --json
 
 # List all available profiles
-aeroftp profiles --json
+aeroftp-cli profiles --json
 ```
 
 **Structured JSON output**: every command supports `--json`. Data goes to stdout, messages to stderr, so agents can pipe and parse cleanly.
 
 ```bash
 # Output is machine-readable
-aeroftp stat --profile "Server" /var/www/index.html --json
+aeroftp-cli stat --profile "Server" /var/www/index.html --json
 # {"name":"index.html","size":4096,"type":"file","modified":"2026-03-15T10:30:00Z"}
 
 # Pipe-friendly
-aeroftp cat --profile "Server" /config.ini | grep DB_HOST
+aeroftp-cli cat --profile "Server" /config.ini | grep DB_HOST
 ```
 
 **Semantic exit codes**: agents know exactly what failed without parsing text.
@@ -95,23 +95,23 @@ An AI coding agent (Claude Code, Aider, Cline) makes code changes, builds the pr
 ```bash
 # Agent edits code, runs build, then deploys
 npm run build
-aeroftp put --profile "Production" ./dist/ /var/www/html/ --json
+aeroftp-cli put --profile "Production" ./dist/ /var/www/html/ --json
 # Verify deployment
-aeroftp ls --profile "Production" /var/www/html/ --json | jq '.entries | length'
+aeroftp-cli ls --profile "Production" /var/www/html/ --json | jq '.entries | length'
 ```
 
 ### "Back up my project to Google Drive every night"
 
-A scheduled agent (cron + Claude Code, or AutoGPT) compresses a project and uploads it to cloud storage. Works with any of the 23 protocols.
+A scheduled agent (cron + Claude Code, or AutoGPT) compresses a project and uploads it to cloud storage. The same profile-based flow works across FTP/SFTP, cloud drives, and object storage.
 
 ```bash
 # Compress and upload to Google Drive
 tar czf backup-$(date +%F).tar.gz ./project/
-aeroftp put --profile "Google Drive" ./backup-*.tar.gz /backups/
+aeroftp-cli put --profile "Google Drive" ./backup-*.tar.gz /backups/
 # Or sync an entire folder to S3
-aeroftp sync --profile "AWS S3" ~/documents/ /backup/documents/ --json
+aeroftp-cli sync --profile "AWS S3" ~/documents/ /backup/documents/ --json
 # Or to a NAS
-aeroftp sync --profile "NAS" ~/photos/ /media/photos/ --json
+aeroftp-cli sync --profile "NAS" ~/photos/ /media/photos/ --json
 ```
 
 ### "Clone this repo, make changes, commit and push"
@@ -120,11 +120,11 @@ AeroFTP supports GitHub as a storage protocol. An agent can read files, create c
 
 ```bash
 # List repo contents
-aeroftp ls --profile "GitHub" /src/ --json
+aeroftp-cli ls --profile "GitHub" /src/ --json
 # Read a file
-aeroftp cat --profile "GitHub" /src/main.rs
+aeroftp-cli cat --profile "GitHub" /src/main.rs
 # Upload a modified file (creates a commit)
-aeroftp put --profile "GitHub" ./main.rs /src/main.rs
+aeroftp-cli put --profile "GitHub" ./main.rs /src/main.rs
 ```
 
 Inside the GUI, AeroAgent can do the same through natural language: "read the README from my GitHub repo, update the version number, and commit it."
@@ -134,9 +134,9 @@ Inside the GUI, AeroAgent can do the same through natural language: "read the RE
 An agent audits storage usage across every connected service in seconds.
 
 ```bash
-for profile in $(aeroftp profiles --json | jq -r '.[].name'); do
+for profile in $(aeroftp-cli profiles --json | jq -r '.[].name'); do
   echo "=== $profile ==="
-  aeroftp df --profile "$profile" --json 2>/dev/null
+  aeroftp-cli df --profile "$profile" --json 2>/dev/null
 done
 ```
 
@@ -148,10 +148,10 @@ Cross-provider file operations with encryption. The agent moves files between cl
 
 ```bash
 # Download from Dropbox
-aeroftp get --profile "Dropbox" "/contracts/*.pdf"
+aeroftp-cli get --profile "Dropbox" "/contracts/*.pdf"
 # Encrypt locally (AeroVault CLI or any tool)
 # Re-upload to S3
-aeroftp put --profile "AWS S3" ./contracts/ /encrypted-archive/
+aeroftp-cli put --profile "AWS S3" ./contracts/ /encrypted-archive/
 ```
 
 ### "Set up a new developer's environment"
@@ -160,12 +160,12 @@ An onboarding agent provisions a developer's access to multiple servers and sync
 
 ```bash
 # Pull configs from the team's shared WebDAV
-aeroftp get --profile "Team WebDAV" /dev-configs/ ./configs/
+aeroftp-cli get --profile "Team WebDAV" /dev-configs/ ./configs/
 # Deploy SSH configs, editor settings, etc.
 cp ./configs/.bashrc ~/
 cp ./configs/.gitconfig ~/
 # Pull project repos from GitHub
-aeroftp get --profile "GitHub" /src/ ./workspace/
+aeroftp-cli get --profile "GitHub" /src/ ./workspace/
 ```
 
 ### "Monitor my servers and alert me"
@@ -174,11 +174,11 @@ A monitoring agent periodically checks connectivity and disk space.
 
 ```bash
 # Test connectivity (exit code 0 = ok, 1 = down)
-aeroftp connect --profile "Production" --json
+aeroftp-cli connect --profile "Production" --json
 # Check if a critical file exists
-aeroftp stat --profile "Production" /var/www/html/index.html --json
+aeroftp-cli stat --profile "Production" /var/www/html/index.html --json
 # Find large log files
-aeroftp find --profile "Production" /var/log/ --name "*.log" --json
+aeroftp-cli find --profile "Production" /var/log/ --name "*.log" --json
 ```
 
 ### "Migrate files from one cloud to another"
@@ -187,13 +187,13 @@ Moving from Google Drive to a self-hosted Nextcloud (WebDAV). The agent handles 
 
 ```bash
 # List everything on Google Drive
-aeroftp ls --profile "Google Drive" / -r --json > inventory.json
+aeroftp-cli ls --profile "Google Drive" / -r --json > inventory.json
 # Download all files
-aeroftp get --profile "Google Drive" / ./migration/
+aeroftp-cli get --profile "Google Drive" / ./migration/
 # Upload to Nextcloud
-aeroftp put --profile "Nextcloud" ./migration/ / --json
+aeroftp-cli put --profile "Nextcloud" ./migration/ / --json
 # Verify
-aeroftp df --profile "Nextcloud" --json
+aeroftp-cli df --profile "Nextcloud" --json
 ```
 
 ## AeroAgent: The Internal AI Assistant
@@ -211,9 +211,9 @@ AeroAgent chains tool calls autonomously (up to 10 steps in normal mode, 50 in E
 
 ## CLI Command Reference
 
-15 commands, all supporting `--json` and `--profile`:
+Core commands all support `--json` and `--profile`:
 
-`connect` `ls` `get` `put` `mkdir` `rm` `mv` `cat` `find` `stat` `df` `tree` `sync` `batch` `profiles`
+`connect` `ls` `get` `put` `mkdir` `rm` `mv` `cat` `head` `tail` `touch` `hashsum` `check` `stat` `find` `df` `about` `dedupe` `tree` `sync` `batch` `profiles` `agent-info`
 
 All commands work identically across FTP, FTPS, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA, and all other supported protocols. The agent does not need to know which protocol a profile uses.
 

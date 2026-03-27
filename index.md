@@ -3,7 +3,7 @@ layout: home
 hero:
   name: AeroFTP
   text: Multi-Protocol File Manager
-  tagline: Connect to 23 protocols. Transfer, sync, encrypt — from one app.
+  tagline: Connect across AeroFTP's provider set. Transfer, sync, encrypt — from one app.
   image:
     src: /logo.svg
     alt: AeroFTP
@@ -18,8 +18,8 @@ features:
   - icon:
       src: /icons/protocols.svg
       alt: Protocols
-    title: 23 Protocols
-    details: FTP, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA, GitHub & more — all native.
+    title: Multi-Protocol
+    details: FTP, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA, GitHub, and more — all native.
   - icon:
       src: /icons/agent.svg
       alt: AeroAgent

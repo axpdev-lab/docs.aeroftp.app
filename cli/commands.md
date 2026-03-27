@@ -1,6 +1,6 @@
 # CLI Commands
 
-Complete reference for the `aeroftp-cli` binary. It shares the same Rust backend as the desktop app, supporting 23 protocols through 21 subcommands with consistent behavior, structured JSON output, and Unix pipeline compatibility.
+Complete reference for the `aeroftp-cli` binary. It shares the same Rust backend as the desktop app, with direct URL support for core protocols, saved-profile access for GUI-authorized providers, structured JSON output, and Unix pipeline compatibility.
 
 ## Connection Methods
 
@@ -10,7 +10,7 @@ Complete reference for the `aeroftp-cli` binary. It shares the same Rust backend
 protocol://user:password@host:port/path
 ```
 
-14 protocols support direct URL connections:
+These protocols support direct URL connections:
 
 | Protocol | URL Scheme | Auth Method |
 | -------- | ---------- | ----------- |
@@ -29,7 +29,7 @@ protocol://user:password@host:port/path
 | OpenDrive | `opendrive://` | Password |
 | GitHub | `github://` | PAT / Device Flow |
 
-9 OAuth providers (Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, kDrive) require `--profile` — authorize once in the GUI, then reuse in the CLI. 4shared (OAuth 1.0) tokens are automatically loaded from the vault after GUI authorization.
+Saved profiles are the preferred path for browser-authorized and profile-backed API providers such as Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, and Drime. 4shared (OAuth 1.0) tokens are automatically loaded from the vault after GUI authorization.
 
 ### Server Profiles (`--profile`)
 
@@ -174,7 +174,7 @@ aeroftp-cli about --profile "server"
 aeroftp-cli about --profile "server" --json
 ```
 
-Shows provider name, type, server software, protocol version, connection parameters, and storage quota (used/free/total) in a single command.
+Shows provider name, type, server software, protocol version, connection parameters, and storage quota (used/free/total) when available. Some object-storage providers do not expose quota via the upstream API, so `about` and `df` may return provider info without quota fields.
 
 ### dedupe
 

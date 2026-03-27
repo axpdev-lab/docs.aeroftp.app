@@ -92,12 +92,12 @@ AeroFTP lists all branches in the repository and lets you switch between them us
 ![Commit message dialog](/images/github-commit-dialog.png)
 <!-- SCREENSHOT: The commit message dialog that appears when uploading files, showing a text input for the commit message, the list of files being committed, and Commit/Cancel buttons. -->
 
-When uploading multiple files in a single operation, AeroFTP prompts for a commit message once and reuses it across all file uploads. This keeps the commit history clean and avoids per-file commit noise.
+When uploading multiple files in a single operation, AeroFTP prompts for a commit message once and reuses it across the batch. In current builds, batch upload/delete flows can use an atomic GraphQL commit, while single-file writes still go through the normal per-file content APIs.
 
 - A dialog appears showing the files that will be committed.
 - Enter a descriptive commit message.
 - All files are committed with the same message.
-- Each file upload creates a separate commit (GitHub's Contents API limitation), but the consistent message groups them logically.
+- Single-file writes create normal content commits. Batch upload/delete flows can be committed atomically when the GraphQL path is used.
 
 ## Release Asset Management
 
@@ -127,38 +127,38 @@ GitHub repositories are fully accessible from the AeroFTP CLI using saved profil
 
 ```bash
 # List repository root
-aeroftp ls --profile "My GitHub Repo" / -l
+aeroftp-cli ls --profile "My GitHub Repo" / -l
 
 # Browse a subdirectory
-aeroftp ls --profile "My GitHub Repo" /src/components/ -l
+aeroftp-cli ls --profile "My GitHub Repo" /src/components/ -l
 
 # Upload a file (creates a commit)
-aeroftp put --profile "My GitHub Repo" /src/ ./fix.py
+aeroftp-cli put --profile "My GitHub Repo" ./fix.py /src/fix.py
 
 # Download a file
-aeroftp get --profile "My GitHub Repo" /README.md ./
+aeroftp-cli get --profile "My GitHub Repo" /README.md ./
 
 # Delete a file (creates a commit)
-aeroftp rm --profile "My GitHub Repo" /old-file.txt
+aeroftp-cli rm --profile "My GitHub Repo" /old-file.txt
 
 # Directory tree
-aeroftp tree --profile "My GitHub Repo" /src/ -d 3
+aeroftp-cli tree --profile "My GitHub Repo" /src/ -d 3
 
 # Search for files
-aeroftp find --profile "My GitHub Repo" / -n "*.tsx"
+aeroftp-cli find --profile "My GitHub Repo" / -n "*.tsx"
 ```
 
 ### URL Mode
 
 ```bash
 # Browse with a Personal Access Token
-aeroftp ls github://token:YOUR_PAT@owner/repo /src/
+aeroftp-cli ls github://token:YOUR_PAT@owner/repo /src/
 
 # Browse a specific branch
-aeroftp ls github://token:YOUR_PAT@owner/repo@develop /
+aeroftp-cli ls github://token:YOUR_PAT@owner/repo@develop /
 
 # Download from a feature branch
-aeroftp get github://token:YOUR_PAT@owner/repo@feature/new-ui /src/App.tsx ./
+aeroftp-cli get github://token:YOUR_PAT@owner/repo@feature/new-ui /src/App.tsx ./
 ```
 
 The `@branch` suffix selects a specific branch. Without it, the repository's default branch is used.
@@ -167,7 +167,7 @@ The `@branch` suffix selects a specific branch. Without it, the repository's def
 
 | Property | Value |
 | -------- | ----- |
-| API | GitHub REST v3 + GraphQL foundations |
+| API | GitHub REST v3 + GraphQL batch commit support |
 | Rate limit | 5,000 requests/hour (authenticated) |
 | Max file size (repo) | 100 MiB (GitHub Contents API limit) |
 | Max file size (release asset) | 2 GiB |
@@ -180,4 +180,4 @@ The `@branch` suffix selects a specific branch. Without it, the repository's def
 - **Files larger than 100 MiB** must be uploaded as release assets, not repository files. This is a GitHub limitation, not an AeroFTP limitation.
 - **Binary files** are stored as-is in Git (no LFS integration). Large binary files will bloat the repository.
 - **Branch protection rules** are respected -- AeroFTP cannot bypass required reviews, status checks, or signed commit requirements.
-- **Each file upload is a separate commit** -- the GitHub Contents API does not support atomic multi-file commits. Use the Git protocol directly for atomic operations.
+- **Single-file writes and batch flows differ** -- single-file uploads use the Contents API; batch upload/delete flows can use GraphQL `createCommitOnBranch` for atomic commits.
