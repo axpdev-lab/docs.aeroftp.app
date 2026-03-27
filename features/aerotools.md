@@ -11,7 +11,7 @@ The AeroTools panel contains four tabs:
 | **AeroTools** | Security Toolkit | Hashing, encryption, and password generation (Cyber theme only) |
 | **Editor** | Monaco Editor | VS Code engine with syntax highlighting for 50+ languages |
 | **Terminal** | SSH Terminal | Remote shell with 8 terminal themes and multiple tabs |
-| **AI Agent** | AeroAgent | AI assistant with 47 tools across all 23 protocols |
+| **AI Agent** | AeroAgent | AI assistant with 47 tools across local files and AeroFTP provider backends |
 
 The panel is resizable by dragging the separator between the file browser and the tools area. Each tab maintains its own state independently.
 
@@ -39,7 +39,7 @@ For full details, see the [Terminal documentation](terminal.md).
 
 ## AeroAgent
 
-The AI-powered assistant with **47 built-in tools** that work across all 23 protocols. Supports 19 AI providers including OpenAI, Anthropic, Google Gemini, and local models via Ollama.
+The AI-powered assistant with **47 built-in tools** that work across local files and the AeroFTP provider backends. Supports 19 AI providers including OpenAI, Anthropic, Google Gemini, and local models via Ollama.
 
 For full details, see the [AeroAgent documentation](aeroagent.md) and [AeroAgent Test Results](aeroagent-tests.md).
 
