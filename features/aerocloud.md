@@ -6,7 +6,7 @@ AeroCloud turns any server into a private personal cloud. Reliable sync with 11 
 
 AeroCloud supports 21 protocols for sync (GitHub and DrimeCloud are excluded — conceptually incompatible with sync). Protocols are classified by sync reliability:
 
-- **Stable (11)**: SFTP, S3, Azure, WebDAV, Google Drive, Dropbox, OneDrive, Jottacloud, kDrive, Koofr, OpenDrive
+- **Stable (12)**: SFTP, S3, Azure, WebDAV, Google Drive, Dropbox, OneDrive, Jottacloud, kDrive, Koofr, OpenDrive, FeliCloud
 - **Beta (8)**: FTP, FTPS, Box, pCloud, Zoho WorkDrive, Yandex Disk, MEGA, Filen, Internxt
 - **Alpha (2)**: FileLu, 4shared
 
@@ -38,6 +38,7 @@ Cloud services that authenticate via OAuth 2.0. AeroFTP handles the full authori
 | Zoho WorkDrive | 5 GB | OAuth 2.0 | 8 regional endpoints, team labels, versioning |
 | kDrive | 15 GB | OAuth 2.0 | Infomaniak, cursor-based pagination |
 | Koofr | 10 GB | OAuth 2.0 PKCE | EU-based (Slovenia), trash management |
+| FeliCloud | 10 GB | WebDAV + OCS | EU/GDPR, Nextcloud-based, share links, trash |
 | Yandex Disk | 10 GB | OAuth 2.0 | Trash management, public links |
 
 ### API / Token Providers
@@ -82,7 +83,7 @@ The CloudPanel wizard guides you through connecting a new cloud provider in four
 A grid of protocol cards organized into three groups:
 
 - **Servers** — FTP, FTPS, SFTP, WebDAV, S3
-- **Cloud** — Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho, kDrive, Koofr, Yandex, MEGA, 4shared, Filen, Internxt, FileLu, OpenDrive, Jottacloud
+- **Cloud** — Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho, kDrive, Koofr, FeliCloud, Yandex, MEGA, 4shared, Filen, Internxt, FileLu, OpenDrive, Jottacloud
 - **Special** — Azure Blob, GitHub
 
 ### Step 2 — Connection Fields

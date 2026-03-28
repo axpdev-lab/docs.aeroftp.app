@@ -101,6 +101,7 @@ AeroFTP has been continuously reviewed by independent AI auditors throughout its
 21. OpenDrive
 22. Jottacloud
 23. GitHub
+24. FeliCloud
 
 ## AI Providers (19)
 
