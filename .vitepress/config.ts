@@ -126,10 +126,16 @@ export default defineConfig({
           text: 'Security',
           collapsed: false,
           items: [
+            { text: 'Overview', link: '/security/overview' },
             { text: 'Encryption', link: '/security/encryption' },
             { text: 'Credentials', link: '/security/credentials' },
             { text: 'Credential Isolation', link: '/credential-isolation' },
-            { text: 'TOTP', link: '/security/totp' },
+            { text: 'TOTP 2FA', link: '/security/totp' },
+            { text: 'AI Security', link: '/security/ai-security' },
+            { text: 'Supply Chain', link: '/security/supply-chain' },
+            { text: 'Privacy', link: '/security/privacy' },
+            { text: 'Audits', link: '/security/audits' },
+            { text: 'Vulnerability Disclosure', link: '/security/reporting' },
           ],
         },
         {
