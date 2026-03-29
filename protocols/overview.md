@@ -1,6 +1,6 @@
 # Protocol Overview
 
-AeroFTP supports **23 protocols** and cloud storage providers natively. Each protocol is implemented in Rust with full streaming support, credential encryption via the OS keyring, and integration with AeroSync, AeroAgent, and the CLI.
+AeroFTP supports **25 protocols** and cloud storage providers natively. Each protocol is implemented in Rust with full streaming support, credential encryption via the OS keyring, and integration with AeroSync, AeroAgent, and the CLI.
 
 ## Protocol Comparison
 
@@ -201,7 +201,7 @@ AeroSync features available across all protocols:
 
 ### CLI Support
 
-All 23 protocols are accessible from the `aeroftp-cli` command-line tool using URL-based connections:
+All 25 protocols are accessible from the `aeroftp-cli` command-line tool using URL-based connections:
 
 ```bash
 aeroftp ls sftp://user@myserver.com/path/

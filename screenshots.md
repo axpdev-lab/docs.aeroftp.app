@@ -4,7 +4,7 @@ A visual tour of AeroFTP's interface and features.
 
 ## Connection Screen
 
-Connect to 22 protocols from a single interface. Saved servers with protocol badges, search, and one-click connect.
+Connect to 25 protocols from a single interface. Saved servers with protocol badges, search, and one-click connect.
 
 ![Connection Screen](/screenshots/connection-screen-protocols.png)
 

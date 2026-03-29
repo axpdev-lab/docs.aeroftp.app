@@ -120,7 +120,7 @@ The following is a verified report from a real orchestration session conducted o
 **Orchestrating Agent:** Claude Code (Claude Opus 4.6, 1M context)
 **Orchestrated Agent:** AeroAgent via `aeroftp-cli agent`
 **AI Provider Used:** xAI grok-3-mini
-**Environment:** Ubuntu Linux 6.17.0, AeroFTP v3.1.8-dev
+**Environment:** Ubuntu Linux 6.17.0, AeroFTP v3.2.0
 
 #### Who I Am
 

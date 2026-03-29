@@ -2,9 +2,9 @@
 
 ## AeroFTP
 
-AeroFTP is a free, open-source, multi-protocol file manager built with Rust and React. It connects to 23 protocols from a single desktop application, with built-in encryption, AI assistance, and a production CLI.
+AeroFTP is a free, open-source, multi-protocol file manager built with Rust and React. It connects to 25 protocols from a single desktop application, with built-in encryption, AI assistance, and a production CLI.
 
-**Current version**: v3.0.3
+**Current version**: v3.2.0
 
 ## Links
 
@@ -76,7 +76,7 @@ AeroFTP has been continuously reviewed by independent AI auditors throughout its
 - **Dual-engine audit** (v2.9.5) — Claude Opus 4.6 + GPT-5.4, 117 findings
 - **GitHub provider audit** (v3.0.0) — Claude Opus 4.6 + GPT-5.4, all critical resolved
 
-## Protocols (23)
+## Protocols (25)
 
 1. FTP
 2. FTPS
@@ -102,6 +102,7 @@ AeroFTP has been continuously reviewed by independent AI auditors throughout its
 22. Jottacloud
 23. GitHub
 24. FeliCloud
+25. Drime Cloud
 
 ## AI Providers (19)
 
