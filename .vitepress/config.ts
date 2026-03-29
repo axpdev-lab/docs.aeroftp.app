@@ -91,6 +91,7 @@ export default defineConfig({
             { text: 'AeroSync', link: '/features/aerosync' },
             { text: 'AeroVault', link: '/features/aerovault' },
             { text: 'AeroAgent', link: '/features/aeroagent' },
+            { text: 'Agent Orchestration', link: '/features/agent-orchestration' },
             { text: 'Agent-Ready Architecture', link: '/features/agent-ready' },
             { text: 'AeroAgent Tests', link: '/features/aeroagent-tests' },
             { text: 'AeroPlayer', link: '/features/aeroplayer' },
