@@ -1,10 +1,12 @@
 # Protocol Overview
 
+> Last updated: 2026-03-30
+
 AeroFTP supports **25 protocols** and cloud storage providers natively. Each protocol is implemented in Rust with full streaming support, credential encryption via the OS keyring, and integration with AeroSync, AeroAgent, and the CLI.
 
 ## Protocol Comparison
 
-### Server Protocols (5)
+### Server Protocols (6)
 
 | # | Protocol | Auth Method | Encryption | Free Storage |
 |---|----------|-------------|------------|-------------|
@@ -13,39 +15,41 @@ AeroFTP supports **25 protocols** and cloud storage providers natively. Each pro
 | 3 | [SFTP](sftp.md) | Password / SSH Key | SSH | N/A (self-hosted) |
 | 4 | [WebDAV](webdav.md) | Password (Basic + Digest) | HTTPS | Varies by provider |
 | 5 | [S3-Compatible](s3.md) | Access Key + Secret | HTTPS + SSE | Varies by provider |
+| 6 | OpenStack Swift | Username + Password (Keystone v3) | HTTPS | Varies by provider |
 
 ### OAuth Cloud Providers (7)
 
 | # | Protocol | Auth Method | Encryption | Free Storage |
 |---|----------|-------------|------------|-------------|
-| 6 | [Google Drive](google-drive.md) | OAuth2 PKCE | HTTPS + at-rest | 15 GB |
-| 7 | [Dropbox](dropbox.md) | OAuth2 PKCE | HTTPS + at-rest | 2 GB |
-| 8 | [OneDrive](onedrive.md) | OAuth2 PKCE | HTTPS + at-rest | 5 GB |
-| 9 | [Box](box.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
-| 10 | [pCloud](pcloud.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
-| 11 | [Zoho WorkDrive](zoho.md) | OAuth2 PKCE | HTTPS + at-rest | Team plan |
-| 12 | [Koofr](koofr.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
+| 7 | [Google Drive](google-drive.md) | OAuth2 PKCE | HTTPS + at-rest | 15 GB |
+| 8 | [Dropbox](dropbox.md) | OAuth2 PKCE | HTTPS + at-rest | 2 GB |
+| 9 | [OneDrive](onedrive.md) | OAuth2 PKCE | HTTPS + at-rest | 5 GB |
+| 10 | [Box](box.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
+| 11 | [pCloud](pcloud.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
+| 12 | [Zoho WorkDrive](zoho.md) | OAuth2 PKCE | HTTPS + at-rest | Team plan |
+| 13 | [Koofr](koofr.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
 
-### Direct Auth Cloud Providers (10)
+### Direct Auth Cloud Providers (11)
 
 | # | Protocol | Auth Method | Encryption | Free Storage |
 |---|----------|-------------|------------|-------------|
-| 13 | [MEGA](mega.md) | Password | Client-side AES | 20 GB |
-| 14 | [Azure Blob](azure.md) | HMAC / SAS Token | HTTPS + SSE | Pay-as-you-go |
-| 15 | [4shared](4shared.md) | OAuth 1.0 (HMAC-SHA1) | HTTPS | 15 GB |
-| 16 | [Filen](filen.md) | Password (PBKDF2) + optional 2FA | Client-side AES-256-GCM | 10 GB |
-| 17 | [Internxt](internxt.md) | Password (PBKDF2 + BIP39) | Client-side AES-256-CTR | 10 GB |
-| 18 | [kDrive](kdrive.md) | API Token | HTTPS | 15 GB |
-| 19 | [Jottacloud](jottacloud.md) | Personal Login Token | HTTPS | 5 GB |
-| 20 | [FileLu](filelu.md) | API Key | HTTPS | 1 GB |
-| 21 | [Yandex Disk](yandex.md) | OAuth2 Token | HTTPS | 5 GB |
-| 22 | [OpenDrive](opendrive.md) | Session Auth (user/pass) | HTTPS | 5 GB |
+| 14 | [MEGA](mega.md) | Password | Client-side AES | 20 GB |
+| 15 | [Azure Blob](azure.md) | HMAC / SAS Token | HTTPS + SSE | Pay-as-you-go |
+| 16 | [4shared](4shared.md) | OAuth 1.0 (HMAC-SHA1) | HTTPS | 15 GB |
+| 17 | [Filen](filen.md) | Password (PBKDF2) + optional 2FA | Client-side AES-256-GCM | 10 GB |
+| 18 | [Internxt](internxt.md) | Password (PBKDF2 + BIP39) | Client-side AES-256-CTR | 10 GB |
+| 19 | [kDrive](kdrive.md) | API Token | HTTPS | 15 GB |
+| 20 | [Jottacloud](jottacloud.md) | Personal Login Token | HTTPS | 5 GB |
+| 21 | Drime Cloud | API Token (Bearer) | HTTPS | 20 GB |
+| 22 | [FileLu](filelu.md) | API Key | HTTPS | 1 GB |
+| 23 | [Yandex Disk](yandex.md) | OAuth2 Token | HTTPS | 5 GB |
+| 24 | [OpenDrive](opendrive.md) | Session Auth (user/pass) | HTTPS | 5 GB |
 
 ### Developer Platform (1)
 
 | # | Protocol | Auth Method | Encryption | Free Storage |
 |---|----------|-------------|------------|-------------|
-| 23 | [GitHub](github.md) | OAuth2 / PAT / App .pem | HTTPS | Unlimited repos |
+| 25 | [GitHub](github.md) | OAuth2 / PAT / App .pem | HTTPS | Unlimited repos |
 
 ## Protocol Categories
 
@@ -58,6 +62,7 @@ These connect to servers you control. You provide the hostname, port, and creden
 - **SFTP** -- Secure file transfer over SSH. The recommended choice for self-hosted servers. Supports password and SSH key authentication with TOFU host key verification.
 - **WebDAV** -- HTTP-based file access over HTTPS. Used by Nextcloud, Seafile, and many NAS devices. Supports Basic and Digest authentication.
 - **S3-Compatible** -- Object storage using the S3 API. Works with AWS, Wasabi, Backblaze B2, and any S3-compatible endpoint.
+- **OpenStack Swift** -- Object storage using the OpenStack Swift API. Works with Blomp, OVH, Rackspace, and any Swift-compatible endpoint. Authenticates via Keystone v3 or TempAuth.
 
 ### OAuth Cloud Providers
 
@@ -76,6 +81,7 @@ These use API keys, email/password, session tokens, or personal access tokens di
 - **Internxt** -- E2E encrypted with PBKDF2 + BIP39 mnemonic and AES-256-CTR.
 - **kDrive** -- Infomaniak cloud storage with API token authentication.
 - **Jottacloud** -- Norwegian cloud with Personal Login Token authentication.
+- **Drime Cloud** -- 20 GB secure cloud storage (Bedrive platform) with API token authentication. Supports file versioning, server-side copy, and share links.
 - **FileLu** -- API key authentication with file password protection and privacy controls.
 - **Yandex Disk** -- OAuth2 token-based access to Yandex cloud storage.
 - **OpenDrive** -- Session-based authentication with MD5 checksums and zlib compression.
@@ -125,17 +131,20 @@ Not all providers expose a trash/recycle bin API. The following table shows whic
 
 | Protocol | List Trash | Restore | Permanent Delete | Empty Trash |
 |----------|-----------|---------|-----------------|-------------|
-| Google Drive | Yes | Yes | Yes | Yes |
+| Google Drive | Yes | Yes | Yes | No |
 | Dropbox | Yes | Yes | Yes | No |
 | OneDrive | Yes | Yes | Yes | No |
 | Box | Yes | Yes | Yes | No |
+| pCloud | Yes | Yes | Yes | Yes |
 | Zoho WorkDrive | Yes | Yes | Yes | No |
-| Koofr | Yes | Yes | Yes | No |
+| Koofr | Yes | Yes | No | Yes |
+| MEGA | Yes | Yes | Yes | No |
+| kDrive | Yes | Yes | Yes | Yes |
+| Jottacloud | Yes | Yes | Yes | No |
+| Internxt | Yes | No | No | No |
 | FileLu | Yes | Yes | Yes | No |
 | Yandex Disk | Yes | Yes | Yes | Yes |
-| OpenDrive | Yes | Yes | Yes | No |
-| pCloud | No | No | No | No |
-| MEGA | No | No | No | No |
+| OpenDrive | Yes | Yes | Yes | Yes |
 | All others | No | No | No | No |
 
 ### File Versioning
@@ -146,9 +155,12 @@ Not all providers expose a trash/recycle bin API. The following table shows whic
 | Dropbox | Yes | Yes | Yes |
 | OneDrive | Yes | Yes | Yes |
 | Box | Yes | Yes | Yes |
+| pCloud | Yes | Yes | Yes |
 | Zoho WorkDrive | Yes | Yes | Yes |
+| Koofr | Yes | Yes | Yes |
+| kDrive | Yes | Yes | Yes |
+| Drime Cloud | Yes | Yes | Yes |
 | S3-Compatible | Yes (if bucket versioning enabled) | Yes | Yes |
-| Azure Blob | Yes (if versioning enabled) | Yes | No |
 | All others | No | No | No |
 
 ### Share Links
@@ -162,13 +174,17 @@ Not all providers expose a trash/recycle bin API. The following table shows whic
 | pCloud | Yes | No | No |
 | Zoho WorkDrive | Yes | No | No |
 | Koofr | Yes | No | No |
-| 4shared | Yes | No | No |
+| Filen | Yes | No | No |
+| kDrive | Yes | No | No |
+| Jottacloud | Yes | No | No |
+| Drime Cloud | Yes | No | No |
 | FileLu | Yes | No | Yes |
 | Yandex Disk | Yes | No | No |
 | OpenDrive | Yes | Yes (expiring) | No |
 | S3-Compatible | Pre-signed URLs | Yes (time-limited) | No |
 | Azure Blob | SAS tokens | Yes (time-limited) | No |
 | MEGA | Yes | No | No |
+| WebDAV (Nextcloud) | Yes | No | No |
 | GitHub | Permalink URLs | No | No |
 | All others | No | No | No |
 
@@ -186,7 +202,7 @@ Not all providers expose a trash/recycle bin API. The following table shows whic
 
 ### AeroSync
 
-AeroSync supports bidirectional synchronization across all protocols. AeroCloud background sync classifies protocols by reliability: 11 stable, 8 beta, 2 alpha — with maturity badges visible in the setup wizard.
+AeroSync supports bidirectional synchronization across all protocols. AeroCloud background sync classifies protocols by reliability: 11 stable, 8 beta, 2 alpha -- with maturity badges visible in the setup wizard.
 
 AeroSync features available across all protocols:
 
@@ -204,14 +220,14 @@ AeroSync features available across all protocols:
 All 25 protocols are accessible from the `aeroftp-cli` command-line tool using URL-based connections:
 
 ```bash
-aeroftp ls sftp://user@myserver.com/path/
-aeroftp get s3://mybucket/file.txt
-aeroftp put ftp://user@host/upload/ ./local-file.txt
-aeroftp sync ftp://user@host/ ./local-dir/
-aeroftp tree webdav://user@nextcloud.example.com/remote.php/dav/files/user/
+aeroftp-cli ls sftp://user@myserver.com/path/
+aeroftp-cli get s3://mybucket/file.txt
+aeroftp-cli put ftp://user@host/upload/ ./local-file.txt
+aeroftp-cli sync ftp://user@host/ ./local-dir/
+aeroftp-cli tree webdav://user@nextcloud.example.com/remote.php/dav/files/user/
 ```
 
-The CLI supports 13 commands (`connect`, `ls`, `get`, `put`, `mkdir`, `rm`, `mv`, `cat`, `find`, `stat`, `df`, `tree`, `sync`), batch scripting via `.aeroftp` files, glob pattern transfers, and `--json` output for automation.
+The CLI supports 31 commands (`connect`, `ls`, `get`, `put`, `mkdir`, `rm`, `mv`, `cp`, `link`, `edit`, `cat`, `head`, `tail`, `touch`, `hashsum`, `check`, `stat`, `find`, `df`, `about`, `dedupe`, `sync`, `tree`, `batch`, `rcat`, `alias`, `agent`, `completions`, `profiles`, `ai-models`, `agent-info`), batch scripting via `.aeroftp` files, glob pattern transfers, and `--json` output for automation.
 
 ### AeroAgent server_exec
 
@@ -219,9 +235,13 @@ AeroAgent can execute file operations on saved servers through the `server_exec`
 
 | Category | Protocols | server_exec Support |
 |----------|-----------|-------------------|
-| Server Protocols | FTP, FTPS, SFTP, WebDAV, S3 | Yes |
-| Direct Auth Cloud | MEGA, Azure, 4shared, Filen, Internxt, kDrive, Jottacloud, FileLu, Yandex Disk, OpenDrive | Yes |
+| Server Protocols | FTP, FTPS, SFTP, WebDAV, S3, Swift | Yes |
+| Direct Auth Cloud | MEGA, Azure, 4shared, Filen, Internxt, kDrive, Jottacloud, Drime Cloud, FileLu, Yandex Disk, OpenDrive | Yes |
 | OAuth Cloud | Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Koofr | Blocked (requires browser OAuth) |
 | Developer | GitHub | Blocked (requires browser OAuth or manual PAT) |
 
 The `server_exec` tool supports 10 operations: `ls`, `cat`, `get`, `put`, `mkdir`, `rm`, `mv`, `stat`, `find`, and `df`. Server names are matched with fuzzy matching against saved server profiles.
+
+---
+
+> Last updated: 2026-03-30
