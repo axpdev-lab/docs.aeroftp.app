@@ -50,7 +50,7 @@ Cloud services that use API keys, passwords, or session-based authentication.
 | MEGA | 20 GB | Email / Password | E2E encrypted |
 | 4shared | 15 GB | OAuth 1.0 (HMAC-SHA1) | ID-based file system |
 | Filen | 10 GB | Email / Password | E2E encrypted, 2FA passthrough |
-| Internxt | 10 GB | OAuth 2.0 PKCE | Zero-knowledge E2E |
+| Internxt | 1 GB | OAuth 2.0 PKCE | Zero-knowledge E2E |
 | FileLu | 10 GB | API Key | File privacy, password protection, clone |
 | OpenDrive | 5 GB | Session Auth | MD5 checksums, zlib compression |
 | Jottacloud | 5 GB | Username / Password | Norwegian provider |

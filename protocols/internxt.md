@@ -1,6 +1,6 @@
 # Internxt Drive
 
-AeroFTP connects to Internxt Drive, an end-to-end encrypted cloud storage service with a zero-knowledge architecture. Internxt provides 10 GB of free storage.
+AeroFTP connects to Internxt Drive, an end-to-end encrypted cloud storage service with a zero-knowledge architecture. Internxt provides 1 GB of free storage.
 
 ## Connection Settings
 
@@ -22,7 +22,7 @@ OAuth tokens are stored encrypted in the OS keyring.
 
 ## Tips
 
-- Internxt's 10 GB free tier includes full E2E encryption at no additional cost.
+- Internxt's 1 GB free tier includes full E2E encryption at no additional cost.
 - Because all metadata is encrypted, some operations (directory listing, rename) involve additional decryption steps compared to non-encrypted providers.
 - Internxt does not currently expose a trash or file versioning API. Deletions through AeroFTP are permanent.
 - For AeroSync, use the **size** compare mode. Encrypted modification times may not match local timestamps.

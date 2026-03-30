@@ -37,7 +37,7 @@ AeroFTP supports **25 protocols** and cloud storage providers natively. Each pro
 | 15 | [Azure Blob](azure.md) | HMAC / SAS Token | HTTPS + SSE | Pay-as-you-go |
 | 16 | [4shared](4shared.md) | OAuth 1.0 (HMAC-SHA1) | HTTPS | 15 GB |
 | 17 | [Filen](filen.md) | Password (PBKDF2) + optional 2FA | Client-side AES-256-GCM | 10 GB |
-| 18 | [Internxt](internxt.md) | Password (PBKDF2 + BIP39) | Client-side AES-256-CTR | 10 GB |
+| 18 | [Internxt](internxt.md) | Password (PBKDF2 + BIP39) | Client-side AES-256-CTR | 1 GB |
 | 19 | [kDrive](kdrive.md) | API Token | HTTPS | 15 GB |
 | 20 | [Jottacloud](jottacloud.md) | Personal Login Token | HTTPS | 5 GB |
 | 21 | Drime Cloud | API Token (Bearer) | HTTPS | 20 GB |
