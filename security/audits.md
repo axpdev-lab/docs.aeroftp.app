@@ -14,7 +14,7 @@ AeroFTP undergoes regular independent security audits. This page tracks all audi
 | v2.3.0 | 2025 | 5 auditors (4x Claude Opus + GPT 5.3) | Chat history SQLite, FTS, retention | 55+ findings: SQL injection, XSS in FTS, WAL hardening | - |
 | v2.2.4 | 2025 | 5 auditors (4x Claude Opus + GPT 5.3) | TOTP, remote vault, modals | 13 findings resolved | - |
 | v2.0.2 | 2025 | 4x Claude Opus + GPT 5.2 | AeroAgent + AeroFile | 70 findings resolved | A- |
-| Feb 2026 | February 2026 | Aikido Security | Full application, automated | Top 5% benchmark, OWASP Top 10 coverage, 0 open issues | Top 5% |
+| Mar 2026 | March 2026 | Aikido Security | Full application, automated SAST/SCA/secrets/IaC | Top 5% benchmark, OWASP/ISO 27001/CIS/NIS2/GDPR coverage, 0 open issues | Top 5% |
 
 ## v3.1.7 Desktop Security Audit (March 2026)
 
@@ -41,20 +41,21 @@ Seven additional sub-findings (C1-C7) were identified during the external unifie
 
 Full audit documentation is maintained internally in the development roadmap (APPENDIX-L, not published on GitHub).
 
-## Aikido Security Report (February 2026)
+## Aikido Security Report (March 2026)
 
 An independent automated security assessment by [Aikido Security](https://aikido.dev):
 
-- **Benchmark**: Top 5% of scanned repositories
-- **OWASP Top 10**: Full coverage
-- **Open issues**: 0 across all categories
-- **Report**: Available as PDF in the repository (`docs/Security Audit Report axpnet - February 2026.pdf`)
+- **Benchmark**: Top 5% of all Aikido customers, Top 10% for code repositories
+- **Compliance**: OWASP Top 10, ISO 27001:2022, CIS v8.1, NIS2 Directive, GDPR
+- **Open issues**: 0 across all categories (0 critical, 0 high, 0 medium, 0 low)
+- **Monitoring**: 1,156 packages (320 JS + 836 Rust), daily scans for dependencies, SAST, secrets, IaC
+- **Report**: Available as PDF in the repository (`docs/Security Audit Report axpdev-lab - March 2026.pdf`)
 
 ## Cumulative Statistics
 
 Across all audits:
 
-- **300+ individual findings** identified
+- **300+ individual findings** identified across 9 audits
 - **All P0 (critical) and P1 (high) findings** remediated
 - **Grade trajectory**: C+ (initial) to A- (current)
-- **Zero open findings** in the latest audit cycle
+- **Zero open findings** in the latest audit cycle (Aikido March 2026)

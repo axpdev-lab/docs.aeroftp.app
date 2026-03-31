@@ -27,8 +27,8 @@ The Rust backend is the security authority. The web frontend can request operati
 In the landscape of file transfer and cloud management tools, AeroFTP combines protocol breadth (25 protocols) with security depth typically found only in dedicated encryption tools:
 
 - **OpenSSF Best Practices**: 100% passing criteria
-- **Aikido Security**: Top 5% benchmark (February 2026)
-- **300+ security findings** identified and resolved across [8 independent audits](/security/audits)
+- **Aikido Security**: Top 5% benchmark, 0 open issues (March 2026)
+- **300+ security findings** identified and resolved across [9 independent audits](/security/audits)
 - **Zero unresolved CVEs** in application code
 
 ## Reporting Vulnerabilities
