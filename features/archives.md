@@ -1,6 +1,6 @@
 # Archives
 
-AeroFTP includes a full archive management system for browsing, creating, and extracting compressed archives. Both local and remote archives are supported across all 25 protocols. The system handles seven archive formats with optional AES-256 encryption for ZIP and 7z.
+AeroFTP includes a full archive management system for browsing, creating, and extracting compressed archives. Both local and remote archives are supported across all 27 protocols. The system handles seven archive formats with optional AES-256 encryption for ZIP and 7z.
 
 ## Supported Formats
 

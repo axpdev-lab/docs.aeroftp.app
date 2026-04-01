@@ -1,8 +1,8 @@
 # Protocol Overview
 
-> Last updated: 2026-03-30
+> Last updated: 2026-03-31
 
-AeroFTP supports **25 protocols** and cloud storage providers natively. Each protocol is implemented in Rust with full streaming support, credential encryption via the OS keyring, and integration with AeroSync, AeroAgent, and the CLI.
+AeroFTP supports **27 protocols** and cloud storage providers natively. Each protocol is implemented in Rust with full streaming support, credential encryption via the OS keyring, and integration with AeroSync, AeroAgent, and the CLI.
 
 ## Protocol Comparison
 
@@ -45,11 +45,12 @@ AeroFTP supports **25 protocols** and cloud storage providers natively. Each pro
 | 23 | [Yandex Disk](yandex.md) | OAuth2 Token | HTTPS | 5 GB |
 | 24 | [OpenDrive](opendrive.md) | Session Auth (user/pass) | HTTPS | 5 GB |
 
-### Developer Platform (1)
+### Developer Platforms (2)
 
 | # | Protocol | Auth Method | Encryption | Free Storage |
 |---|----------|-------------|------------|-------------|
 | 25 | [GitHub](github.md) | OAuth2 / PAT / App .pem | HTTPS | Unlimited repos |
+| 26 | SourceForge | SSH (SFTP) | SSH | Unlimited projects |
 
 ## Protocol Categories
 
@@ -86,9 +87,10 @@ These use API keys, email/password, session tokens, or personal access tokens di
 - **Yandex Disk** -- OAuth2 token-based access to Yandex cloud storage.
 - **OpenDrive** -- Session-based authentication with MD5 checksums and zlib compression.
 
-### Developer Platform
+### Developer Platforms
 
 - **GitHub** -- Repository file browser and manager. Supports OAuth2, Personal Access Tokens (PAT), and GitHub App `.pem` key authentication. Browse, download, upload, and delete files across unlimited repositories.
+- **SourceForge** -- SFTP preset with SourceForge project paths. Manage file releases and project files via SSH key or password authentication.
 
 ## WebDAV Presets
 
@@ -217,7 +219,7 @@ AeroSync features available across all protocols:
 
 ### CLI Support
 
-All 25 protocols are accessible from the `aeroftp-cli` command-line tool using URL-based connections:
+All 27 protocols are accessible from the `aeroftp-cli` command-line tool using URL-based connections:
 
 ```bash
 aeroftp-cli ls sftp://user@myserver.com/path/
@@ -238,10 +240,10 @@ AeroAgent can execute file operations on saved servers through the `server_exec`
 | Server Protocols | FTP, FTPS, SFTP, WebDAV, S3, Swift | Yes |
 | Direct Auth Cloud | MEGA, Azure, 4shared, Filen, Internxt, kDrive, Jottacloud, Drime Cloud, FileLu, Yandex Disk, OpenDrive | Yes |
 | OAuth Cloud | Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Koofr | Blocked (requires browser OAuth) |
-| Developer | GitHub | Blocked (requires browser OAuth or manual PAT) |
+| Developer | GitHub, SourceForge | GitHub: Blocked (requires browser OAuth or manual PAT). SourceForge: Yes (via SFTP) |
 
 The `server_exec` tool supports 10 operations: `ls`, `cat`, `get`, `put`, `mkdir`, `rm`, `mv`, `stat`, `find`, and `df`. Server names are matched with fuzzy matching against saved server profiles.
 
 ---
 
-> Last updated: 2026-03-30
+> Last updated: 2026-03-31

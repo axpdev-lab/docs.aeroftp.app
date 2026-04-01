@@ -1,6 +1,6 @@
 # AeroSync
 
-AeroSync is AeroFTP's professional file synchronization engine. It supports bidirectional sync across all 25 protocols with conflict resolution, scheduling, bandwidth throttling, transfer journaling, and checkpoint-based resume. AeroSync operates through a two-tab interface: **Quick Sync** for common scenarios and **Advanced** for granular control over every aspect of the sync process.
+AeroSync is AeroFTP's professional file synchronization engine. It supports bidirectional sync across all 27 protocols with conflict resolution, scheduling, bandwidth throttling, transfer journaling, and checkpoint-based resume. AeroSync operates through a two-tab interface: **Quick Sync** for common scenarios and **Advanced** for granular control over every aspect of the sync process.
 
 ## Quick Sync Tab
 

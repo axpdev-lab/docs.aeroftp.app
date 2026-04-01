@@ -32,7 +32,7 @@ Click the **protocol selector** to expand the full protocol grid. Protocols are 
 Each protocol card displays a provider logo and name. Hover over a card to see a brief description. Click a card to select it and load the appropriate connection fields.
 
 ![Protocol selector expanded showing all categories: Servers, Cloud OAuth, S3, WebDAV](/images/quick-start-protocol-selector.png)
-<!-- SCREENSHOT: The protocol selector fully expanded, showing the grid of protocol cards organized by category. All 25 protocols visible with their logos. Dark theme. -->
+<!-- SCREENSHOT: The protocol selector fully expanded, showing the grid of protocol cards organized by category. All 27 protocols visible with their logos. Dark theme. -->
 
 ## 4. Enter Connection Details (SFTP Example)
 
