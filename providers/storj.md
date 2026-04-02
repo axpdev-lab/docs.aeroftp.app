@@ -3,6 +3,8 @@ title: Storj with AeroFTP
 description: Connect Storj to AeroFTP using the built-in S3-compatible preset, choose the right gateway endpoint, and use path-style defaults that match Storj's gateway model.
 ---
 
+# Storj
+
 Storj is a decentralized cloud object storage platform exposed through S3-compatible gateway endpoints. AeroFTP includes a dedicated **Storj preset** so you can connect with the right gateway and default behavior without building the endpoint manually.
 
 ## Why Use AeroFTP with Storj

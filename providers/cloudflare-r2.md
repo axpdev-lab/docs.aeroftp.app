@@ -3,6 +3,8 @@ title: Cloudflare R2 with AeroFTP
 description: Connect Cloudflare R2 to AeroFTP using the dedicated preset, Account ID field, bucket setup, and S3-compatible credentials.
 ---
 
+# Cloudflare R2
+
 Cloudflare R2 is an S3-compatible object storage platform known for zero egress fees. AeroFTP includes a dedicated **Cloudflare R2 preset** with an Account ID field.
 
 ## Why Use AeroFTP with Cloudflare R2

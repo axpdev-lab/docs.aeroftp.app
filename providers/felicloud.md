@@ -3,6 +3,8 @@ title: Felicloud with AeroFTP
 description: Connect Felicloud to AeroFTP using its Nextcloud-style WebDAV path, email-based login, and app-token friendly setup.
 ---
 
+# Felicloud
+
 Felicloud is a hosted cloud storage service built on a Nextcloud-style WebDAV model. AeroFTP can connect to it directly with a dedicated **Felicloud preset** using the standard DAV path pattern.
 
 ## Why Use AeroFTP with Felicloud

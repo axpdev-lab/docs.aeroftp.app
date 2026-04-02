@@ -3,6 +3,8 @@ title: Alibaba Cloud OSS with AeroFTP
 description: Connect Alibaba Cloud OSS to AeroFTP using the built-in S3-compatible preset, regional OSS endpoints, and AccessKey credentials.
 ---
 
+# Alibaba Cloud OSS
+
 Alibaba Cloud OSS is Alibaba's object storage platform with S3-compatible access patterns. AeroFTP includes an **Alibaba Cloud OSS preset** that maps the regional endpoint format automatically.
 
 ## Why Use AeroFTP with Alibaba Cloud OSS

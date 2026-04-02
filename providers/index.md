@@ -1,78 +1,77 @@
 ---
-title: AeroFTP Provider Guides
-description: Provider-specific AeroFTP setup guides with exact endpoints, bucket formats, ports, and login paths for Quotaless, R2, Storj, Oracle Cloud, Nextcloud, FileLu, and more.
+title: AeroFTP Setup Guides
+description: Provider-specific setup guides with endpoints, credentials, ports, and step-by-step instructions for 33 cloud storage and developer services.
 ---
 
-AeroFTP supports a broad mix of storage providers, cloud drives, object storage platforms, WebDAV services, and developer-facing backends. This section focuses on **provider-specific setup** rather than protocol theory.
+AeroFTP supports 51 cloud storage providers, developer platforms, and self-hosted services. These guides cover **provider-specific setup** with exact endpoints, credential paths, and recommended defaults.
 
-These guides are designed for search-driven setup tasks such as finding the right **endpoint URL**, **bucket naming rule**, **port number**, **WebDAV path**, or **recommended preset** for a specific provider.
+For protocol-level technical reference, see [Technical Reference](/protocols/overview).
 
-If you want the general protocol reference, start with:
+## Cloud Storage (OAuth & API)
 
-- [S3-Compatible Storage](/protocols/s3)
-- [WebDAV](/protocols/webdav)
-- [SFTP](/protocols/sftp)
-- [SourceForge](/protocols/sourceforge)
+| Provider | Type | Guide |
+| --- | --- | --- |
+| Google Drive | OAuth | [Setup guide](/providers/google-drive) |
+| OneDrive | OAuth | [Setup guide](/providers/onedrive) |
+| Dropbox | OAuth | [Setup guide](/providers/dropbox) |
+| MEGA | E2E | [Setup guide](/providers/mega) |
+| Box | OAuth | [Setup guide](/providers/box) |
+| pCloud | OAuth | [Setup guide](/providers/pcloud) |
+| Filen | E2E | [Setup guide](/providers/filen) |
+| Internxt | E2E | [Setup guide](/providers/internxt) |
+| Zoho WorkDrive | OAuth | [Setup guide](/providers/zoho) |
+| kDrive | API | [Setup guide](/providers/kdrive) |
+| Jottacloud | API | [Setup guide](/providers/jottacloud) |
+| Koofr | API | [Setup guide](/providers/koofr) |
+| OpenDrive | API | [Setup guide](/providers/opendrive) |
+| Yandex Disk | OAuth | [Setup guide](/providers/yandex) |
+| 4shared | OAuth | [Setup guide](/providers/4shared) |
 
-If you want the fastest path to a working connection for a specific brand or service, start here.
+## S3-Compatible Object Storage
 
-## Featured Provider Guides
+| Provider | Notes | Guide |
+| --- | --- | --- |
+| Backblaze B2 | Affordable, S3-compatible | [Setup guide](/providers/backblaze-b2) |
+| Cloudflare R2 | Zero egress fees | [Setup guide](/providers/cloudflare-r2) |
+| Storj | Decentralized S3 gateways | [Setup guide](/providers/storj) |
+| IDrive e2 | 10 GB free hot storage | [Setup guide](/providers/idrive-e2) |
+| Wasabi | No egress fees | [Setup guide](/providers/wasabi) |
+| DigitalOcean Spaces | Region-based endpoints | [Setup guide](/providers/digitalocean-spaces) |
+| Oracle Cloud | Namespace-based endpoints | [Setup guide](/providers/oracle-cloud) |
+| MinIO | Self-hosted S3 | [Setup guide](/providers/minio) |
+| Alibaba Cloud OSS | China & global regions | [Setup guide](/providers/alibaba-cloud-oss) |
+| Tencent Cloud COS | APPID-style bucket naming | [Setup guide](/providers/tencent-cloud-cos) |
 
-| Provider | Best For | Connection Modes | Guide |
-| --- | --- | --- | --- |
-| Quotaless | Managed storage with both object and file-style access | S3, WebDAV | [Open guide](/providers/quotaless) |
-| Hetzner Storage Box | Backup storage and simple remote file access | SFTP | [Open guide](/providers/hetzner-storage-box) |
-| Backblaze B2 | Low-cost object storage and backup workflows | S3-compatible | [Open guide](/providers/backblaze-b2) |
-| Cloudflare R2 | Object storage with zero egress fees | S3-compatible | [Open guide](/providers/cloudflare-r2) |
-| Storj | Decentralized object storage through S3 gateways | S3-compatible | [Open guide](/providers/storj) |
-| Alibaba Cloud OSS | S3-compatible object storage for China and global regions | S3-compatible | [Open guide](/providers/alibaba-cloud-oss) |
-| Tencent Cloud COS | S3-compatible object storage with APPID-style bucket naming | S3-compatible | [Open guide](/providers/tencent-cloud-cos) |
-| Oracle Cloud | S3-compatible object storage with namespace-based endpoints | S3-compatible | [Open guide](/providers/oracle-cloud) |
-| Nextcloud | Self-hosted collaboration and file sync | WebDAV | [Open guide](/providers/nextcloud) |
-| Felicloud | Hosted Nextcloud-style storage with EU/GDPR positioning | WebDAV | [Open guide](/providers/felicloud) |
-| SourceForge | Release uploads for open source projects | SFTP | [Open guide](/providers/sourceforge) |
-| IDrive e2 | Affordable S3-compatible hot storage | S3-compatible | [Open guide](/providers/idrive-e2) |
-| Wasabi | High-performance object storage with simple pricing | S3-compatible | [Open guide](/providers/wasabi) |
-| FileLu | Multi-protocol storage with S3, WebDAV, API, FTP, and FTPS | S3, WebDAV, API, FTP, FTPS | [Open guide](/providers/filelu) |
-| MinIO | Self-hosted S3-compatible storage | S3-compatible | [Open guide](/providers/minio) |
-| DigitalOcean Spaces | Managed object storage with region-based endpoints | S3-compatible | [Open guide](/providers/digitalocean-spaces) |
+## WebDAV & Self-hosted
 
-## Browse by Connection Type
+| Provider | Notes | Guide |
+| --- | --- | --- |
+| Nextcloud | Self-hosted, OCS API | [Setup guide](/providers/nextcloud) |
+| Felicloud | Hosted Nextcloud, EU/GDPR | [Setup guide](/providers/felicloud) |
+| Quotaless | S3 + WebDAV dual access | [Setup guide](/providers/quotaless) |
 
-If you already know the protocol family, start here:
+## Multi-protocol
 
-- **S3-compatible providers**: [Quotaless](/providers/quotaless), [Backblaze B2](/providers/backblaze-b2), [Cloudflare R2](/providers/cloudflare-r2), [Storj](/providers/storj), [Alibaba Cloud OSS](/providers/alibaba-cloud-oss), [Tencent Cloud COS](/providers/tencent-cloud-cos), [Oracle Cloud](/providers/oracle-cloud), [IDrive e2](/providers/idrive-e2), [Wasabi](/providers/wasabi), [FileLu](/providers/filelu), [MinIO](/providers/minio), [DigitalOcean Spaces](/providers/digitalocean-spaces)
-- **WebDAV providers**: [Quotaless](/providers/quotaless), [Nextcloud](/providers/nextcloud), [Felicloud](/providers/felicloud), [FileLu](/providers/filelu)
-- **SFTP providers**: [Hetzner Storage Box](/providers/hetzner-storage-box), [SourceForge](/providers/sourceforge)
+| Provider | Protocols | Guide |
+| --- | --- | --- |
+| FileLu | S3, WebDAV, API, FTP, FTPS | [Setup guide](/providers/filelu) |
+| Hetzner Storage Box | SFTP (port 23) | [Setup guide](/providers/hetzner-storage-box) |
+| SourceForge | SFTP | [Setup guide](/providers/sourceforge) |
+
+## Developer
+
+| Provider | Notes | Guide |
+| --- | --- | --- |
+| GitHub | Repository file system | [Setup guide](/providers/github) |
 
 ## How These Guides Work
 
-Each provider page is built around the same structure:
+Each guide follows the same structure:
 
-- what AeroFTP supports for that provider
-- exact connection values to prepare
-- a step-by-step setup path
-- recommended defaults
-- common troubleshooting notes
+- What AeroFTP supports for that provider
+- Exact connection values (endpoint, port, path)
+- Step-by-step setup walkthrough
+- Recommended defaults
+- Troubleshooting tips
 
-That means you can use these pages as a practical setup reference, not just as a product overview.
-
-## Which Page Should You Use?
-
-Use a **provider page** when:
-
-- you are connecting to a known service such as Quotaless, Backblaze, or Nextcloud
-- you want exact endpoint or path values
-- you want a shorter setup guide with fewer generic details
-
-Use a **protocol page** when:
-
-- you are connecting to a custom or self-hosted service
-- you want to understand how the protocol behaves in AeroFTP
-- you are comparing multiple services that use the same protocol
-
-## More Provider Guides
-
-This section starts with the highest-value setup pages and will expand over time to cover more S3, WebDAV, and cloud-drive providers already supported by AeroFTP.
-
-For the full protocol-level support matrix, see [Provider Reference](/advanced/provider-reference).
+Use a **setup guide** when connecting to a known service. Use a [technical reference](/protocols/overview) page when working with a custom or self-hosted service.

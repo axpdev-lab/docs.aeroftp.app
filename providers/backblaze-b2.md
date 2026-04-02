@@ -3,6 +3,8 @@ title: Backblaze B2 with AeroFTP
 description: Connect to Backblaze B2 in AeroFTP using the built-in S3-compatible preset, with bucket, endpoint, and credential guidance.
 ---
 
+# Backblaze B2
+
 Backblaze B2 is a cost-effective object storage platform with an S3-compatible API. AeroFTP includes a built-in **Backblaze B2 preset** that simplifies endpoint setup.
 
 ## Why Use AeroFTP with Backblaze B2

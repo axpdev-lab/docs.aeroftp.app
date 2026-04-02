@@ -3,6 +3,8 @@ title: Nextcloud with AeroFTP
 description: Connect Nextcloud to AeroFTP using the built-in WebDAV preset, standard path format, and app-password friendly setup.
 ---
 
+# Nextcloud
+
 Nextcloud is one of the most common WebDAV-based storage and collaboration platforms. AeroFTP includes a dedicated **Nextcloud preset** that fills the expected WebDAV path automatically.
 
 ## Why Use AeroFTP with Nextcloud

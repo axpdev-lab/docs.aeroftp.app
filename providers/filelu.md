@@ -3,6 +3,8 @@ title: FileLu with AeroFTP
 description: Connect to FileLu in AeroFTP using S3, WebDAV, API, FTP, or FTPS depending on your workflow and account setup.
 ---
 
+# FileLu
+
 FileLu is unusual because AeroFTP supports it through multiple connection modes. Depending on your workflow, you can use FileLu through its API integration, S3-compatible storage, WebDAV, FTP, or FTPS.
 
 ## Supported Connection Modes

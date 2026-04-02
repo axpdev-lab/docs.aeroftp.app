@@ -3,6 +3,8 @@ title: IDrive e2 with AeroFTP
 description: Set up IDrive e2 in AeroFTP with the built-in S3-compatible preset, endpoint guidance, and bucket access tips.
 ---
 
+# IDrive e2
+
 IDrive e2 is an S3-compatible hot storage service that works well for backup, media storage, and application assets. AeroFTP includes an **IDrive e2 preset** for faster setup.
 
 ## Why Use AeroFTP with IDrive e2

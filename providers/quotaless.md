@@ -3,6 +3,8 @@ title: Quotaless with AeroFTP
 description: Connect to Quotaless in AeroFTP using S3 or WebDAV with exact endpoint values, recommended defaults, and troubleshooting tips.
 ---
 
+# Quotaless
+
 Connect to Quotaless in AeroFTP using either **S3** or **WebDAV**. Use the S3 profile if you want an object-storage workflow, or WebDAV if you prefer a more file-oriented connection style.
 
 ## Why Use AeroFTP with Quotaless

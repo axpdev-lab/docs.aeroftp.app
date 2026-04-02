@@ -3,6 +3,8 @@ title: Hetzner Storage Box with AeroFTP
 description: Set up Hetzner Storage Box in AeroFTP over SFTP with the correct host format, port 23, and recommended connection settings.
 ---
 
+# Hetzner Storage Box
+
 Hetzner Storage Box is a low-cost remote storage service designed for backup, file transfer, and archival workloads. AeroFTP supports Hetzner Storage Box through a built-in **SFTP preset**.
 
 ## Why Use AeroFTP with Hetzner Storage Box
