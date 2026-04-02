@@ -4,6 +4,11 @@ WebDAV (Web Distributed Authoring and Versioning) extends HTTP with file managem
 
 AeroFTP's WebDAV implementation uses the `reqwest` HTTP client with `quick-xml` for parsing PROPFIND responses, supporting both Basic and Digest authentication, TLS certificate validation, and streaming uploads.
 
+For provider-specific setup guides, see:
+
+- [Quotaless](/providers/quotaless)
+- [Nextcloud](/providers/nextcloud)
+
 ## Connection Settings
 
 ![WebDAV connection with preset selector](/images/webdav-presets.png)

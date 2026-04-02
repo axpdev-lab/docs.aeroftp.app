@@ -30,6 +30,7 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: '/getting-started/installation' },
       { text: 'Protocols', link: '/protocols/overview' },
+      { text: 'Providers', link: '/providers/' },
       { text: 'Features', link: '/features/aerocloud' },
       { text: 'CLI', link: '/cli/installation' },
       {
@@ -80,6 +81,24 @@ export default defineConfig({
             { text: 'OpenDrive', link: '/protocols/opendrive' },
             { text: 'Zoho WorkDrive', link: '/protocols/zoho' },
             { text: '4shared', link: '/protocols/4shared' },
+          ],
+        },
+        {
+          text: 'Providers',
+          collapsed: false,
+          items: [
+            { text: 'Overview', link: '/providers/' },
+            { text: 'Quotaless', link: '/providers/quotaless' },
+            { text: 'Hetzner Storage Box', link: '/providers/hetzner-storage-box' },
+            { text: 'Backblaze B2', link: '/providers/backblaze-b2' },
+            { text: 'Cloudflare R2', link: '/providers/cloudflare-r2' },
+            { text: 'Nextcloud', link: '/providers/nextcloud' },
+            { text: 'SourceForge', link: '/providers/sourceforge' },
+            { text: 'IDrive e2', link: '/providers/idrive-e2' },
+            { text: 'Wasabi', link: '/providers/wasabi' },
+            { text: 'FileLu', link: '/providers/filelu' },
+            { text: 'MinIO', link: '/providers/minio' },
+            { text: 'DigitalOcean Spaces', link: '/providers/digitalocean-spaces' },
           ],
         },
         {

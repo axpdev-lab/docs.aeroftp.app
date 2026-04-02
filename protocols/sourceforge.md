@@ -2,6 +2,8 @@
 
 SourceForge is one of the largest open-source hosting platforms, providing project hosting, file distribution, and download mirrors worldwide. AeroFTP includes a native SourceForge integration that lets you upload releases directly to the SourceForge File Release System (FRS) via SFTP.
 
+For the shorter provider-oriented setup page, see [SourceForge with AeroFTP](/providers/sourceforge).
+
 ## Before You Start
 
 SourceForge requires SSH key authentication for SFTP access. Password-based login is not supported for file uploads. Don't worry - setting up an SSH key takes just a few minutes, and you only need to do it once.
@@ -19,16 +21,18 @@ ssh-keygen -t ed25519 -C "your-sourceforge-username"
 ```
 
 When prompted:
+
 - **File location**: Press Enter to accept the default (`~/.ssh/id_ed25519`)
 - **Passphrase**: Enter a passphrase for extra security, or press Enter for none
 
 This creates two files:
+
 - `~/.ssh/id_ed25519` - your **private key** (keep this secret, never share it)
 - `~/.ssh/id_ed25519.pub` - your **public key** (this is what you upload to SourceForge)
 
 ### Windows
 
-**Option A: Using PowerShell (Windows 10/11)**
+#### Option A: Using PowerShell (Windows 10/11)
 
 ```powershell
 ssh-keygen -t ed25519 -C "your-sourceforge-username"
@@ -36,7 +40,7 @@ ssh-keygen -t ed25519 -C "your-sourceforge-username"
 
 Keys are saved to `C:\Users\YourName\.ssh\`
 
-**Option B: Using PuTTYgen**
+#### Option B: Using PuTTYgen
 
 1. Download and run [PuTTYgen](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
 2. Select **EdDSA** (Ed25519) at the bottom
@@ -65,7 +69,7 @@ For more details, see [SourceForge SSH Keys documentation](https://sourceforge.n
 ## Step 3: Connect with AeroFTP
 
 1. Open AeroFTP and go to **Discover > Developer > SourceForge**
-2. Fill in the connection form:
+1. Fill in the connection form:
 
 | Field | Value | Notes |
 | ----- | ----- | ----- |
@@ -75,15 +79,15 @@ For more details, see [SourceForge SSH Keys documentation](https://sourceforge.n
 | Project (Unixname) | Your project's Unix name | e.g. `aeroftp` - visible in your project URL |
 | Private Key Path | `~/.ssh/id_ed25519` | Click the browse button or type the path |
 
-3. Leave the **Password** field empty (SSH key handles authentication)
-4. Expand **SSH Authentication** and set the **Private Key Path**
-5. Click **Connect**
+1. Leave the **Password** field empty (SSH key handles authentication)
+1. Expand **SSH Authentication** and set the **Private Key Path**
+1. Click **Connect**
 
 ## File Release System Structure
 
 Once connected, you'll see your project's release directory:
 
-```
+```text
 /home/frs/project/your-project/
     v1.0.0/
         your-app-1.0.0-linux-x64.deb
