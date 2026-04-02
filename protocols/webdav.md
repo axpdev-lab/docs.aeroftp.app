@@ -8,6 +8,7 @@ For provider-specific setup guides, see:
 
 - [Quotaless](/providers/quotaless)
 - [Nextcloud](/providers/nextcloud)
+- [Felicloud](/providers/felicloud)
 
 ## Connection Settings
 
@@ -31,6 +32,7 @@ AeroFTP includes preconfigured presets that auto-fill the endpoint path and port
 | **Nextcloud** | `/remote.php/dav/files/USERNAME/` | 443 | Varies by provider | Replace `USERNAME` with your exact login name |
 | **Seafile** | `/seafdav` | 443 | 2 GB | SeafDAV must be enabled by the server admin |
 | **CloudMe** | `/` (host: `webdav.cloudme.com`) | 443 | 3 GB | Direct WebDAV access, no path prefix needed |
+| **Felicloud** | `/remote.php/dav/files/USERNAME/` | 443 | 10 GB | Hosted Nextcloud-based service with the same DAV path pattern |
 | **Custom** | Any path | Any | -- | For any WebDAV-compatible server or NAS |
 
 ### Nextcloud Setup
