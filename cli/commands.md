@@ -247,6 +247,42 @@ DISCONNECT
 
 Batch commands: SET, ECHO, ON_ERROR, CONNECT, DISCONNECT, LS, GET, PUT, MKDIR, RM, MV, CAT, STAT, FIND, DF, TREE, SYNC. Variables use `${VAR}` syntax with single-pass expansion (injection-safe). Error policies: `ON_ERROR FAIL` (default), `ON_ERROR CONTINUE`.
 
+### agent
+
+Run AeroAgent from the CLI for natural-language workflows, vault-backed server access, or MCP integration.
+
+```bash
+# One-shot instruction
+aeroftp-cli agent -m "List files on the Production server" --json
+
+# Explicit provider/model
+aeroftp-cli agent --provider xai --model grok-3-mini \
+  -m "Check disk usage on all saved servers" -y --json
+
+# Native MCP server over stdio
+aeroftp-cli agent --mcp
+```
+
+Current agent integrations:
+
+- `aeroftp-cli agent -m ...`: one-shot orchestration through AeroAgent with approval controls
+- `aeroftp-cli agent --mcp`: native Model Context Protocol server for Claude Desktop, Cursor, VS Code, and other MCP clients
+
+The current MCP server exposes 16 curated remote tools, resource discovery for saved profiles/capabilities/connections, reusable prompts, connection pooling, request cancellation, rate limiting, and audit logging.
+
+Example Claude Desktop configuration:
+
+```json
+{
+  "mcpServers": {
+    "aeroftp": {
+      "command": "aeroftp-cli",
+      "args": ["agent", "--mcp"]
+    }
+  }
+}
+```
+
 ## GitHub Protocol
 
 Every upload and delete creates a real Git commit. Branch-aware with automatic working branch creation for protected branches.

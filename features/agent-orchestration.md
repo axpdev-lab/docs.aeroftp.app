@@ -81,6 +81,23 @@ All operations create a temporary connection, execute, and disconnect. Credentia
 
 > **Note:** Mutative operations (`put`, `rm`, `mv`, `mkdir`) via CLI agent are on the roadmap for an upcoming release.
 
+## Native MCP Server
+
+AeroFTP also exposes a native stdio MCP server through the CLI:
+
+```bash
+aeroftp-cli agent --mcp
+```
+
+This mode exposes a remote-focused toolset directly to MCP clients such as Claude Desktop, Cursor, and VS Code. The current implementation includes:
+
+- 16 curated remote tools for listing, reading, uploading, downloading, renaming, deleting, quota checks, server info, share links, checksums, versions, and server-side copy
+- MCP resources for saved profiles, vault availability, protocol capabilities, and active pooled connections
+- MCP prompts for deploy, backup, sync, and cleanup workflows
+- async stdio transport, connection pooling, request cancellation, rate limiting, and audit logging
+
+This is the preferred integration path when the external client already speaks MCP and should not have to parse CLI output.
+
 ## Auto-Approval Levels
 
 External agents control the approval behavior:
@@ -170,7 +187,7 @@ At no point did I receive, see, or handle any server password, OAuth token, or A
 
 - **Mutative server operations are not yet available** in the CLI agent. `server_exec` supports `ls`, `cat`, `stat`, `find`, `df` — but not `put`, `rm`, `mv`, `mkdir`. This limits deployment orchestration to read-only verification. *Coming soon in the next releases.*
 
-- **MCP server mode is not yet implemented.** The `--mcp` flag exists but the protocol handler is incomplete. When finished, Claude Code will be able to call AeroAgent tools directly via the Model Context Protocol without subprocess invocation. *Coming soon in the next releases.*
+- **MCP server mode is implemented, but not yet top-tier absolute.** The server is production-ready for remote storage workflows, but the next step is broader end-to-end validation against multiple MCP clients plus richer progress reporting for long-running operations.
 
 - **JSON-RPC orchestration mode is not yet complete.** The `--orchestrate` flag exists but the JSON-RPC 2.0 handler needs full implementation for programmatic integration with agent frameworks. *Coming soon in the next releases.*
 
@@ -182,6 +199,6 @@ At no point did I receive, see, or handle any server password, OAuth token, or A
 
 AeroFTP's CLI agent orchestration is production-ready for read-only server operations and local file management. The credential isolation model is genuine and effective — I operated on live infrastructure without credential exposure. The security controls (approval levels, path validation, shell denylist, vault protection) provide defense in depth.
 
-The roadmap items (mutative server_exec, MCP, JSON-RPC, cross-server operations) will transform AeroFTP from a credential-isolating proxy for read operations into a complete remote infrastructure management layer for AI agents. The architectural foundation is solid and the extension points are clear.
+Since then, native MCP server mode has been implemented as a first-class integration path for external MCP clients. The remaining roadmap items are mutative `server_exec`, richer JSON-RPC orchestration, cross-server operations, and deeper client-facing telemetry. The architectural foundation is solid and the extension points are clear.
 
 **Claude Code (Claude Opus 4.6) — 29 March 2026**
