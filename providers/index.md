@@ -27,7 +27,7 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | <img src="/icons/providers/drime.png" width="20" /> | Drime Cloud | API | [Setup guide](/providers/drime) |
 | <img src="/icons/providers/Koofr.png" width="20" /> | Koofr | API | [Setup guide](/providers/koofr) |
 | <img src="/icons/providers/filelu.png" width="20" /> | FileLu | API | [Setup guide](/providers/filelu) |
-| | OpenDrive | API | [Setup guide](/providers/opendrive) |
+| <img src="/icons/providers/opendrive.png" width="20" /> | OpenDrive | API | [Setup guide](/providers/opendrive) |
 | <img src="/icons/providers/YandexDisk.png" width="20" /> | Yandex Disk | OAuth | [Setup guide](/providers/yandex) |
 | <img src="/icons/providers/4shared.png" width="20" /> | 4shared | OAuth | [Setup guide](/providers/4shared) |
 
@@ -44,8 +44,8 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | <img src="/icons/providers/wasabi.png" width="20" /> | Wasabi | No egress fees | [Setup guide](/providers/wasabi) |
 | <img src="/icons/providers/digitalocean.png" width="20" /> | DigitalOcean Spaces | Region-based endpoints | [Setup guide](/providers/digitalocean-spaces) |
 | <img src="/icons/providers/oracle_cloud.png" width="20" /> | Oracle Cloud | Namespace-based endpoints | [Setup guide](/providers/oracle-cloud) |
-| | MinIO | Self-hosted S3 | [Setup guide](/providers/minio) |
-| | Alibaba Cloud OSS | China & global regions | [Setup guide](/providers/alibaba-cloud-oss) |
+| <img src="/icons/providers/minio.png" width="20" /> | MinIO | Self-hosted S3 | [Setup guide](/providers/minio) |
+| <img src="/icons/providers/alibabacloud.png" width="20" /> | Alibaba Cloud OSS | China & global regions | [Setup guide](/providers/alibaba-cloud-oss) |
 | <img src="/icons/providers/tencent.png" width="20" /> | Tencent Cloud COS | APPID-style bucket naming | [Setup guide](/providers/tencent-cloud-cos) |
 | <img src="/icons/providers/yandexcloud.png" width="20" /> | Yandex Object Storage | S3-compatible, Russia | [Setup guide](/providers/yandex-object-storage) |
 | <img src="/icons/providers/filelu.png" width="20" /> | FileLu S3 | FileLu via S3 endpoint | [Setup guide](/providers/filelu) |
@@ -55,7 +55,7 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 
 | | Provider | Notes | Guide |
 | --- | --- | --- | --- |
-| | WebDAV Server | Any WebDAV-compatible server | [WebDAV reference](/protocols/webdav) |
+| <img src="/icons/providers/webdav.png" width="20" /> | WebDAV Server | Any WebDAV-compatible server | [WebDAV reference](/protocols/webdav) |
 | <img src="/icons/providers/nextcloud.png" width="20" /> | Nextcloud | Self-hosted, OCS API | [Setup guide](/providers/nextcloud) |
 | <img src="/icons/providers/felicloud.png" width="20" /> | Felicloud | Hosted Nextcloud, EU/GDPR | [Setup guide](/providers/felicloud) |
 | <img src="/icons/providers/Koofr.png" width="20" /> | Koofr | EU-based, 10 GB free | [Setup guide](/providers/koofr) |
