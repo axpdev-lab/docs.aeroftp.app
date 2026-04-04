@@ -51,54 +51,66 @@ features:
 
 Connect to 40+ cloud providers and services via FTP, FTPS, SFTP, WebDAV, S3, OAuth2, and native APIs.
 
-<table>
+<table align="center">
   <tr>
-    <td align="center" width="72"><img src="/icons/providers/Google_Drive.png" width="36" /><br><sub>Google Drive</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/dropbox.png" width="36" /><br><sub>Dropbox</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/onedrive.png" width="36" /><br><sub>OneDrive</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/mega.png" width="36" /><br><sub>MEGA</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/box.png" width="36" /><br><sub>Box</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/pcloud.png" width="36" /><br><sub>pCloud</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/filen.png" width="36" /><br><sub>Filen</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/internxt.png" width="36" /><br><sub>Internxt</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/ZohoWorkDrive.png" width="36" /><br><sub>Zoho</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/Koofr.png" width="36" /><br><sub>Koofr</sub></td>
+    <td align="center" width="96"><a href="/providers/google-drive"><img src="/icons/providers/Google_Drive.png" width="36" /></a><br><sub>Google Drive</sub></td>
+    <td align="center" width="96"><a href="/providers/dropbox"><img src="/icons/providers/dropbox.png" width="36" /></a><br><sub>Dropbox</sub></td>
+    <td align="center" width="96"><a href="/providers/onedrive"><img src="/icons/providers/onedrive.png" width="36" /></a><br><sub>OneDrive</sub></td>
+    <td align="center" width="96"><a href="/providers/mega"><img src="/icons/providers/mega.png" width="36" /></a><br><sub>MEGA</sub></td>
+    <td align="center" width="96"><a href="/providers/box"><img src="/icons/providers/box.png" width="36" /></a><br><sub>Box</sub></td>
+    <td align="center" width="96"><a href="/providers/pcloud"><img src="/icons/providers/pcloud.png" width="36" /></a><br><sub>pCloud</sub></td>
+    <td align="center" width="96"><a href="/providers/filen"><img src="/icons/providers/filen.png" width="36" /></a><br><sub>Filen</sub></td>
+    <td align="center" width="96"><a href="/providers/internxt"><img src="/icons/providers/internxt.png" width="36" /></a><br><sub>Internxt</sub></td>
+    <td align="center" width="96"><a href="/providers/zoho"><img src="/icons/providers/ZohoWorkDrive.png" width="36" /></a><br><sub>Zoho</sub></td>
+    <td align="center" width="96"><a href="/providers/koofr"><img src="/icons/providers/Koofr.png" width="36" /></a><br><sub>Koofr</sub></td>
   </tr>
   <tr>
-    <td align="center" width="72"><img src="/icons/providers/kdrive.png" width="36" /><br><sub>kDrive</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/jottacloud.png" width="36" /><br><sub>Jottacloud</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/YandexDisk.png" width="36" /><br><sub>Yandex Disk</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/4shared.png" width="36" /><br><sub>4shared</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/filelu.png" width="36" /><br><sub>FileLu</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/drime.png" width="36" /><br><sub>Drime</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/nextcloud.png" width="36" /><br><sub>Nextcloud</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/felicloud.png" width="36" /><br><sub>Felicloud</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/cloudme.png" width="36" /><br><sub>CloudMe</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/infiniCloud.png" width="36" /><br><sub>InfiniCLOUD</sub></td>
+    <td align="center" width="96"><a href="/providers/kdrive"><img src="/icons/providers/kdrive.png" width="36" /></a><br><sub>kDrive</sub></td>
+    <td align="center" width="96"><a href="/providers/jottacloud"><img src="/icons/providers/jottacloud.png" width="36" /></a><br><sub>Jottacloud</sub></td>
+    <td align="center" width="96"><a href="/providers/yandex"><img src="/icons/providers/YandexDisk.png" width="36" /></a><br><sub>Yandex Disk</sub></td>
+    <td align="center" width="96"><a href="/providers/4shared"><img src="/icons/providers/4shared.png" width="36" /></a><br><sub>4shared</sub></td>
+    <td align="center" width="96"><a href="/providers/filelu"><img src="/icons/providers/filelu.png" width="36" /></a><br><sub>FileLu</sub></td>
+    <td align="center" width="96"><a href="/providers/drime"><img src="/icons/providers/drime.png" width="36" /></a><br><sub>Drime</sub></td>
+    <td align="center" width="96"><a href="/providers/opendrive"><img src="/icons/providers/opendrive.png" width="36" /></a><br><sub>OpenDrive</sub></td>
+    <td align="center" width="96"><a href="/providers/nextcloud"><img src="/icons/providers/nextcloud.png" width="36" /></a><br><sub>Nextcloud</sub></td>
+    <td align="center" width="96"><a href="/providers/felicloud"><img src="/icons/providers/felicloud.png" width="36" /></a><br><sub>Felicloud</sub></td>
+    <td align="center" width="96"><a href="/providers/cloudme"><img src="/icons/providers/cloudme.png" width="36" /></a><br><sub>CloudMe</sub></td>
   </tr>
   <tr>
-    <td align="center" width="72"><img src="/icons/providers/jianguoyun.png" width="36" /><br><sub>Jianguoyun</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/seafile.png" width="36" /><br><sub>Seafile</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/drivehq.png" width="36" /><br><sub>DriveHQ</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/Amazon_Web_Services.png" width="36" /><br><sub>AWS S3</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/azure.png" width="36" /><br><sub>Azure</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/backblaze.png" width="36" /><br><sub>Backblaze</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/wasabi.png" width="36" /><br><sub>Wasabi</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/cloudfare.png" width="36" /><br><sub>Cloudflare R2</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/digitalocean.png" width="36" /><br><sub>DigitalOcean</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/tencent.png" width="36" /><br><sub>Tencent COS</sub></td>
+    <td align="center" width="96"><a href="/providers/infinicloud"><img src="/icons/providers/infiniCloud.png" width="36" /></a><br><sub>InfiniCLOUD</sub></td>
+    <td align="center" width="96"><a href="/providers/jianguoyun"><img src="/icons/providers/jianguoyun.png" width="36" /></a><br><sub>Jianguoyun</sub></td>
+    <td align="center" width="96"><a href="/providers/seafile"><img src="/icons/providers/seafile.png" width="36" /></a><br><sub>Seafile</sub></td>
+    <td align="center" width="96"><a href="/providers/drivehq"><img src="/icons/providers/drivehq.png" width="36" /></a><br><sub>DriveHQ</sub></td>
+    <td align="center" width="96"><a href="/providers/aws-s3"><img src="/icons/providers/Amazon_Web_Services.png" width="36" /></a><br><sub>AWS S3</sub></td>
+    <td align="center" width="96"><a href="/protocols/azure"><img src="/icons/providers/azure.png" width="36" /></a><br><sub>Azure</sub></td>
+    <td align="center" width="96"><a href="/providers/backblaze-b2"><img src="/icons/providers/backblaze.png" width="36" /></a><br><sub>Backblaze</sub></td>
+    <td align="center" width="96"><a href="/providers/wasabi"><img src="/icons/providers/wasabi.png" width="36" /></a><br><sub>Wasabi</sub></td>
+    <td align="center" width="96"><a href="/providers/cloudflare-r2"><img src="/icons/providers/cloudfare.png" width="36" /></a><br><sub>Cloudflare R2</sub></td>
+    <td align="center" width="96"><a href="/providers/digitalocean-spaces"><img src="/icons/providers/digitalocean.png" width="36" /></a><br><sub>DigitalOcean</sub></td>
   </tr>
   <tr>
-    <td align="center" width="72"><img src="/icons/providers/oracle_cloud.png" width="36" /><br><sub>Oracle</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/storj.png" width="36" /><br><sub>Storj</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/idrive_e2.png" width="36" /><br><sub>IDrive e2</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/hetzner.png" width="36" /><br><sub>Hetzner</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/yandexcloud.png" width="36" /><br><sub>Yandex Cloud</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/quotaless.png" width="36" /><br><sub>Quotaless</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/github.png" width="36" /><br><sub>GitHub</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/gitlab.png" width="36" /><br><sub>GitLab</sub></td>
-    <td align="center" width="72"><img src="/icons/providers/sourceforge.png" width="36" /><br><sub>SourceForge</sub></td>
-    <td align="center" width="72"></td>
+    <td align="center" width="96"><a href="/providers/tencent-cloud-cos"><img src="/icons/providers/tencent.png" width="36" /></a><br><sub>Tencent COS</sub></td>
+    <td align="center" width="96"><a href="/providers/alibaba-cloud-oss"><img src="/icons/providers/alibabacloud.png" width="36" /></a><br><sub>Alibaba OSS</sub></td>
+    <td align="center" width="96"><a href="/providers/oracle-cloud"><img src="/icons/providers/oracle_cloud.png" width="36" /></a><br><sub>Oracle</sub></td>
+    <td align="center" width="96"><a href="/providers/storj"><img src="/icons/providers/storj.png" width="36" /></a><br><sub>Storj</sub></td>
+    <td align="center" width="96"><a href="/providers/idrive-e2"><img src="/icons/providers/idrive_e2.png" width="36" /></a><br><sub>IDrive e2</sub></td>
+    <td align="center" width="96"><a href="/providers/minio"><img src="/icons/providers/minio.png" width="36" /></a><br><sub>MinIO</sub></td>
+    <td align="center" width="96"><a href="/providers/hetzner-storage-box"><img src="/icons/providers/hetzner.png" width="36" /></a><br><sub>Hetzner</sub></td>
+    <td align="center" width="96"><a href="/providers/yandex-object-storage"><img src="/icons/providers/yandexcloud.png" width="36" /></a><br><sub>Yandex Cloud</sub></td>
+    <td align="center" width="96"><a href="/providers/quotaless"><img src="/icons/providers/quotaless.png" width="36" /></a><br><sub>Quotaless</sub></td>
+    <td align="center" width="96"><a href="/providers/github"><img src="/icons/providers/github.png" width="36" /></a><br><sub>GitHub</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="96"><a href="/providers/gitlab"><img src="/icons/providers/gitlab.png" width="36" /></a><br><sub>GitLab</sub></td>
+    <td align="center" width="96"><a href="/providers/sourceforge"><img src="/icons/providers/sourceforge.png" width="36" /></a><br><sub>SourceForge</sub></td>
+    <td align="center" width="96"></td>
+    <td align="center" width="96"></td>
+    <td align="center" width="96"></td>
+    <td align="center" width="96"></td>
+    <td align="center" width="96"></td>
+    <td align="center" width="96"></td>
+    <td align="center" width="96"></td>
+    <td align="center" width="96"></td>
   </tr>
 </table>
 
