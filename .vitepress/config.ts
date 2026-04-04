@@ -99,12 +99,12 @@ export default defineConfig({
             { text: 'MinIO', link: '/providers/minio' },
             { text: 'Alibaba Cloud OSS', link: '/providers/alibaba-cloud-oss' },
             { text: 'Tencent Cloud COS', link: '/providers/tencent-cloud-cos' },
-            // WebDAV & Self-hosted
+            // WebDAV
             { text: 'Nextcloud', link: '/providers/nextcloud' },
             { text: 'Felicloud', link: '/providers/felicloud' },
             { text: 'Quotaless', link: '/providers/quotaless' },
-            // Multi-protocol
             { text: 'FileLu', link: '/providers/filelu' },
+            // SFTP Presets
             { text: 'Hetzner Storage Box', link: '/providers/hetzner-storage-box' },
             { text: 'SourceForge', link: '/providers/sourceforge' },
             // Developer

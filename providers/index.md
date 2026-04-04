@@ -24,6 +24,7 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | Jottacloud | API | [Setup guide](/providers/jottacloud) |
 | Drime Cloud | API | [Setup guide](/providers/drime) |
 | Koofr | API | [Setup guide](/providers/koofr) |
+| FileLu | API | [Setup guide](/providers/filelu) |
 | OpenDrive | API | [Setup guide](/providers/opendrive) |
 | Yandex Disk | OAuth | [Setup guide](/providers/yandex) |
 | 4shared | OAuth | [Setup guide](/providers/4shared) |
@@ -42,28 +43,37 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | MinIO | Self-hosted S3 | [Setup guide](/providers/minio) |
 | Alibaba Cloud OSS | China & global regions | [Setup guide](/providers/alibaba-cloud-oss) |
 | Tencent Cloud COS | APPID-style bucket naming | [Setup guide](/providers/tencent-cloud-cos) |
+| FileLu S3 | FileLu via S3 endpoint | [Setup guide](/providers/filelu) |
+| Quotaless S3 | Quotaless via S3 endpoint | [Setup guide](/providers/quotaless) |
 
-## WebDAV & Self-hosted
+## WebDAV
 
 | Provider | Notes | Guide |
 | --- | --- | --- |
 | Nextcloud | Self-hosted, OCS API | [Setup guide](/providers/nextcloud) |
 | Felicloud | Hosted Nextcloud, EU/GDPR | [Setup guide](/providers/felicloud) |
-| Quotaless | S3 + WebDAV dual access | [Setup guide](/providers/quotaless) |
+| Koofr | EU-based, 10 GB free | [Setup guide](/providers/koofr) |
+| CloudMe | Swedish cloud, 3 GB free | WebDAV preset |
+| DriveHQ | Enterprise file sharing | WebDAV preset |
+| Jianguoyun | Chinese cloud, 3 GB free | WebDAV preset |
+| InfiniCLOUD | Japanese cloud, 25 GB free | WebDAV preset |
+| Seafile | Open-source, self-hosted | WebDAV preset |
+| Quotaless | ownCloud-based WebDAV | [Setup guide](/providers/quotaless) |
+| FileLu WebDAV | FileLu via WebDAV | [Setup guide](/providers/filelu) |
 
-## Multi-protocol
+## SFTP Presets
 
-| Provider | Protocols | Guide |
+| Provider | Notes | Guide |
 | --- | --- | --- |
-| FileLu | S3, WebDAV, API, FTP, FTPS | [Setup guide](/providers/filelu) |
-| Hetzner Storage Box | SFTP (port 23) | [Setup guide](/providers/hetzner-storage-box) |
+| Hetzner Storage Box | Backup storage, port 23 | [Setup guide](/providers/hetzner-storage-box) |
+| SourceForge | Project file releases | [Setup guide](/providers/sourceforge) |
 
 ## Developer
 
 | Provider | Notes | Guide |
 | --- | --- | --- |
-| GitHub | Repository file system | [Setup guide](/providers/github) |
-| SourceForge | Project file releases (SFTP) | [Setup guide](/providers/sourceforge) |
+| GitHub | Repository file system (OAuth, PAT, App .pem) | [Setup guide](/providers/github) |
+| GitLab | Repository browser (REST API v4) | Setup guide coming soon |
 
 ## How These Guides Work
 
