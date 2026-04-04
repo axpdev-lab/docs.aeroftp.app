@@ -93,7 +93,7 @@ AeroFTP performs a recursive `walkdir` scan of the directory, showing a progress
 
 ## Cryptomator Compatibility
 
-AeroVault provides read-only support for Cryptomator vault format 8 containers as legacy compatibility. Access Cryptomator vaults through the right-click context menu rather than the main AeroVault interface.
+AeroFTP supports creating and browsing Cryptomator vault format 8 containers. Create new vaults or open existing ones through the right-click context menu.
 
 Cryptomator vaults use a different cryptographic stack:
 

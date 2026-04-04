@@ -81,7 +81,7 @@ The key derivation parameters exceed OWASP 2024 minimum recommendations:
 | Directory support | Yes (hierarchical paths in manifest) | Yes (directory nodes) |
 | Remote vault support | Yes (download, edit, re-upload) | Read-only in AeroFTP |
 
-AeroFTP can also open Cryptomator vault format 8 containers as read-only legacy support, using scrypt + AES-256-KW + AES-256-SIV + AES-256-GCM.
+AeroFTP can also create and browse Cryptomator vault format 8 containers, using scrypt + AES-256-KW + AES-256-SIV + AES-256-GCM.
 
 ## Archive Encryption
 
