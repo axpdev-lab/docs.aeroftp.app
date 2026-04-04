@@ -156,6 +156,7 @@ export default defineConfig({
           text: 'Advanced',
           collapsed: false,
           items: [
+            { text: 'Hosting Provider Integration', link: '/advanced/hosting-integration' },
             { text: 'AeroVault Crate', link: '/advanced/aerovault-crate' },
             { text: 'Provider Reference', link: '/advanced/provider-reference' },
             { text: 'AI Provider Reference', link: '/advanced/ai-providers' },
