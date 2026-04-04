@@ -57,13 +57,13 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | --- | --- | --- |
 | FileLu | S3, WebDAV, API, FTP, FTPS | [Setup guide](/providers/filelu) |
 | Hetzner Storage Box | SFTP (port 23) | [Setup guide](/providers/hetzner-storage-box) |
-| SourceForge | SFTP | [Setup guide](/providers/sourceforge) |
 
 ## Developer
 
 | Provider | Notes | Guide |
 | --- | --- | --- |
 | GitHub | Repository file system | [Setup guide](/providers/github) |
+| SourceForge | Project file releases (SFTP) | [Setup guide](/providers/sourceforge) |
 
 ## How These Guides Work
 
