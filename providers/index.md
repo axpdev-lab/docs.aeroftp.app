@@ -33,6 +33,8 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 
 | Provider | Notes | Guide |
 | --- | --- | --- |
+| AWS S3 | The original S3 implementation | [S3 reference](/protocols/s3) |
+| MEGA S4 | MEGA's S3-compatible object storage | [S3 reference](/protocols/s3) |
 | Backblaze B2 | Affordable, S3-compatible | [Setup guide](/providers/backblaze-b2) |
 | Cloudflare R2 | Zero egress fees | [Setup guide](/providers/cloudflare-r2) |
 | Storj | Decentralized S3 gateways | [Setup guide](/providers/storj) |
@@ -43,6 +45,7 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | MinIO | Self-hosted S3 | [Setup guide](/providers/minio) |
 | Alibaba Cloud OSS | China & global regions | [Setup guide](/providers/alibaba-cloud-oss) |
 | Tencent Cloud COS | APPID-style bucket naming | [Setup guide](/providers/tencent-cloud-cos) |
+| Yandex Object Storage | S3-compatible, Russia | [S3 reference](/protocols/s3) |
 | FileLu S3 | FileLu via S3 endpoint | [Setup guide](/providers/filelu) |
 | Quotaless S3 | Quotaless via S3 endpoint | [Setup guide](/providers/quotaless) |
 
@@ -50,6 +53,7 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 
 | Provider | Notes | Guide |
 | --- | --- | --- |
+| WebDAV Server | Any WebDAV-compatible server | [WebDAV reference](/protocols/webdav) |
 | Nextcloud | Self-hosted, OCS API | [Setup guide](/providers/nextcloud) |
 | Felicloud | Hosted Nextcloud, EU/GDPR | [Setup guide](/providers/felicloud) |
 | Koofr | EU-based, 10 GB free | [Setup guide](/providers/koofr) |
