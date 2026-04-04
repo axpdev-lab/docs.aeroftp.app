@@ -89,6 +89,8 @@ export default defineConfig({
             { text: 'Yandex Disk', link: '/providers/yandex' },
             { text: '4shared', link: '/providers/4shared' },
             // S3 Providers
+            { text: 'AWS S3', link: '/providers/aws-s3' },
+            { text: 'MEGA S4', link: '/providers/mega-s4' },
             { text: 'Backblaze B2', link: '/providers/backblaze-b2' },
             { text: 'Cloudflare R2', link: '/providers/cloudflare-r2' },
             { text: 'Storj', link: '/providers/storj' },
@@ -99,15 +101,23 @@ export default defineConfig({
             { text: 'MinIO', link: '/providers/minio' },
             { text: 'Alibaba Cloud OSS', link: '/providers/alibaba-cloud-oss' },
             { text: 'Tencent Cloud COS', link: '/providers/tencent-cloud-cos' },
+            { text: 'Yandex Object Storage', link: '/providers/yandex-object-storage' },
             // WebDAV
             { text: 'Nextcloud', link: '/providers/nextcloud' },
             { text: 'Felicloud', link: '/providers/felicloud' },
+            { text: 'Koofr', link: '/providers/koofr' },
+            { text: 'CloudMe', link: '/providers/cloudme' },
+            { text: 'DriveHQ', link: '/providers/drivehq' },
+            { text: 'Jianguoyun', link: '/providers/jianguoyun' },
+            { text: 'InfiniCLOUD', link: '/providers/infinicloud' },
+            { text: 'Seafile', link: '/providers/seafile' },
             { text: 'Quotaless', link: '/providers/quotaless' },
             { text: 'FileLu', link: '/providers/filelu' },
             // SFTP Presets
             { text: 'Hetzner Storage Box', link: '/providers/hetzner-storage-box' },
             // Developer
             { text: 'GitHub', link: '/providers/github' },
+            { text: 'GitLab', link: '/providers/gitlab' },
             { text: 'SourceForge', link: '/providers/sourceforge' },
           ],
         },
