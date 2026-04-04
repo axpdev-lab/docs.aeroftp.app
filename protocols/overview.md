@@ -40,7 +40,7 @@ AeroFTP supports **27 protocols** and cloud storage providers natively. Each pro
 | 18 | [Internxt](internxt.md) | Password (PBKDF2 + BIP39) | Client-side AES-256-CTR | 1 GB |
 | 19 | [kDrive](kdrive.md) | API Token | HTTPS | 15 GB |
 | 20 | [Jottacloud](jottacloud.md) | Personal Login Token | HTTPS | 5 GB |
-| 21 | Drime Cloud | API Token (Bearer) | HTTPS | 20 GB |
+| 21 | [Drime Cloud](drime.md) | API Token (Bearer) | HTTPS | 20 GB |
 | 22 | [FileLu](filelu.md) | API Key | HTTPS | 1 GB |
 | 23 | [Yandex Disk](yandex.md) | OAuth2 Token | HTTPS | 5 GB |
 | 24 | [OpenDrive](opendrive.md) | Session Auth (user/pass) | HTTPS | 5 GB |
