@@ -22,6 +22,7 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | Zoho WorkDrive | OAuth | [Setup guide](/providers/zoho) |
 | kDrive | API | [Setup guide](/providers/kdrive) |
 | Jottacloud | API | [Setup guide](/providers/jottacloud) |
+| Drime Cloud | API | [Setup guide](/providers/drime) |
 | Koofr | API | [Setup guide](/providers/koofr) |
 | OpenDrive | API | [Setup guide](/providers/opendrive) |
 | Yandex Disk | OAuth | [Setup guide](/providers/yandex) |
