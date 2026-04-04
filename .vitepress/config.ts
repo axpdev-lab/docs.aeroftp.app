@@ -205,7 +205,7 @@ export default defineConfig({
     },
     search: { provider: 'local' },
     footer: {
-      message: 'Released under the GPL-3.0 License. <a href="https://sourceforge.net/software/product/AeroFTP/" target="_blank" rel="noopener"><img alt="AeroFTP Reviews" src="https://b.sf-syn.com/badge_img/4075717/light-default" style="height:28px;vertical-align:middle;margin-left:8px" /></a>',
+      message: 'Released under the GPL-3.0 License. <a href="https://sourceforge.net/software/product/AeroFTP/" target="_blank" rel="noopener"><img alt="AeroFTP Reviews" src="https://b.sf-syn.com/badge_img/4075717/light-default" style="height:50px;vertical-align:middle;margin-left:8px" /></a>',
       copyright: 'Copyright 2024-2026 AxpDev',
     },
   },
