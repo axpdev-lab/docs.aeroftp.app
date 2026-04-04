@@ -106,9 +106,9 @@ export default defineConfig({
             { text: 'FileLu', link: '/providers/filelu' },
             // SFTP Presets
             { text: 'Hetzner Storage Box', link: '/providers/hetzner-storage-box' },
-            { text: 'SourceForge', link: '/providers/sourceforge' },
             // Developer
             { text: 'GitHub', link: '/providers/github' },
+            { text: 'SourceForge', link: '/providers/sourceforge' },
           ],
         },
         {

@@ -66,7 +66,6 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | Provider | Notes | Guide |
 | --- | --- | --- |
 | Hetzner Storage Box | Backup storage, port 23 | [Setup guide](/providers/hetzner-storage-box) |
-| SourceForge | Project file releases | [Setup guide](/providers/sourceforge) |
 
 ## Developer
 
@@ -74,6 +73,7 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | --- | --- | --- |
 | GitHub | Repository file system (OAuth, PAT, App .pem) | [Setup guide](/providers/github) |
 | GitLab | Repository browser (REST API v4) | Setup guide coming soon |
+| SourceForge | Project file releases (SFTP) | [Setup guide](/providers/sourceforge) |
 
 ## How These Guides Work
 
