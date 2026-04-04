@@ -83,6 +83,7 @@ export default defineConfig({
             { text: 'Zoho WorkDrive', link: '/providers/zoho' },
             { text: 'kDrive', link: '/providers/kdrive' },
             { text: 'Jottacloud', link: '/providers/jottacloud' },
+            { text: 'Drime Cloud', link: '/providers/drime' },
             { text: 'Koofr', link: '/providers/koofr' },
             { text: 'OpenDrive', link: '/providers/opendrive' },
             { text: 'Yandex Disk', link: '/providers/yandex' },
