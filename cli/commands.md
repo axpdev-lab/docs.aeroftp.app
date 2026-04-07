@@ -222,7 +222,117 @@ aeroftp-cli sync --profile "server" ./local/ /remote/ --bwlimit "08:00,512k 12:0
 
 # Simple bandwidth limit
 aeroftp-cli sync --profile "server" ./local/ /remote/ --bwlimit "1M"
+
+# Bisync with conflict resolution
+aeroftp-cli sync --profile "server" ./local/ /remote/ --conflict-mode newer
+aeroftp-cli sync --profile "server" ./local/ /remote/ --conflict-mode skip --dry-run
+
+# Force full resync (discard snapshot)
+aeroftp-cli sync --profile "server" ./local/ /remote/ --resync
+
+# Backup before overwrite/delete
+aeroftp-cli sync --profile "server" ./local/ /remote/ --delete --backup-dir /tmp/bak
 ```
+
+Bisync (`--direction both`, the default) saves a `.aeroftp-bisync.json` snapshot after each successful sync, enabling delta detection and bidirectional delete propagation. Conflict modes: `newer` (default), `older`, `larger`, `smaller`, `skip`.
+
+### mount
+
+Mount any remote as a local FUSE filesystem. Any application can access remote files with standard tools.
+
+```bash
+# Mount S3 as local directory
+mkdir /mnt/cloud
+aeroftp-cli --profile "S3 Storj" mount /mnt/cloud
+
+# Read-only mode
+aeroftp-cli --profile "server" mount /mnt/remote --read-only
+
+# Custom cache TTL
+aeroftp-cli --profile "NAS" mount /mnt/nas --cache-ttl 60
+
+# Windows: mount as drive letter
+aeroftp-cli --profile "server" mount Z:
+```
+
+Full read-write: ls, cat, cp, vim, grep, mkdir, rm, touch, mv, df. File managers (Nautilus, Dolphin, Explorer) browse the mount natively. Linux/macOS use FUSE, Windows uses a WebDAV bridge mapped as network drive. Unmount: `fusermount -u /mnt/cloud` or Ctrl+C.
+
+### ncdu
+
+Interactive TUI disk usage explorer for remote storage.
+
+```bash
+aeroftp-cli --profile "server" ncdu /          # Interactive TUI
+aeroftp-cli --profile "server" ncdu / -d 5     # Depth limit
+aeroftp-cli --profile "server" ncdu / --export /tmp/usage.json   # Export JSON
+aeroftp-cli --profile "server" ncdu / --json   # JSON to stdout
+```
+
+TUI controls: Up/Down navigate, Enter opens directory, Backspace goes back, q quits. Directories sorted by size descending with visual percentage bars.
+
+### serve
+
+Expose any remote as a local server of the chosen protocol. Anonymous access, Ctrl+C to stop.
+
+```bash
+# HTTP (read-only, range requests, directory listing)
+aeroftp-cli --profile "server" serve http _ / --addr 127.0.0.1:8080
+
+# WebDAV (read-write, 8 methods)
+aeroftp-cli --profile "server" serve webdav _ / --addr 127.0.0.1:8080
+
+# FTP (read-write, passive mode)
+aeroftp-cli --profile "server" serve ftp _ / --addr 0.0.0.0:2121 --passive-ports 49152-49200
+
+# SFTP (read-write, ED25519 host key)
+aeroftp-cli --profile "server" serve sftp _ / --addr 0.0.0.0:2222
+```
+
+Any FTP/SFTP/WebDAV/HTTP client can now access all 27 AeroFTP providers as if they were standard servers.
+
+### daemon
+
+Background service for persistent mounts, scheduled transfers, and job management.
+
+```bash
+aeroftp-cli daemon start                  # Start (HTTP API on port 14320)
+aeroftp-cli daemon status                 # Check status + job counts
+aeroftp-cli daemon stop                   # Stop
+curl http://localhost:14320/health         # Health check
+```
+
+### jobs
+
+Manage background transfer jobs (requires daemon running).
+
+```bash
+aeroftp-cli jobs add get --profile "S3" /backups/db.sql ./   # Queue a job
+aeroftp-cli jobs list                                        # List all jobs
+aeroftp-cli jobs status <id>                                 # Check one job
+aeroftp-cli jobs cancel <id>                                 # Cancel
+```
+
+Jobs are persisted in SQLite (`~/.config/aeroftp/jobs.db`) and survive daemon restarts.
+
+### crypt
+
+Zero-knowledge encrypted storage on any provider. Content encrypted with AES-256-GCM (64KB blocks, hardware accelerated), filenames encrypted with AES-256-SIV, key derivation via Argon2id.
+
+```bash
+# Initialize encrypted overlay
+aeroftp-cli --profile "S3" crypt init _ /encrypted --password "MySecret"
+
+# Upload (content + filename encrypted)
+aeroftp-cli --profile "S3" crypt put ./secret.pdf _ /encrypted --password "MySecret"
+
+# List (decrypted names visible)
+aeroftp-cli --profile "S3" crypt ls _ /encrypted --password "MySecret"
+
+# Download + decrypt
+aeroftp-cli --profile "S3" crypt get secret.pdf _ /encrypted ./decrypted.pdf --password "MySecret"
+```
+
+The cloud provider never sees file names or content. Password via env: `AEROFTP_CRYPT_PASSWORD`.
 
 ### batch
 
@@ -322,6 +432,11 @@ aeroftp-cli cat github://token:PAT@owner/repo /README.md
 | `--max-size <size>` | Max file size filter |
 | `--min-age <duration>` | Skip files newer than (`7d`, `24h`) |
 | `--max-age <duration>` | Skip files older than |
+| `--max-transfer <size>` | Abort after N bytes transferred (`10G`, `500M`). Exit code 8 |
+| `--retries <n>` | Retry failed transfers N times (default: 3) |
+| `--retries-sleep <dur>` | Delay between retries (`5s`, `1m`, `500ms`). Default: 1s |
+| `--max-backlog <n>` | Max queued parallel tasks (default: 10000) |
+| `--dump <kinds>` | Debug: `headers`, `bodies`, `auth` (comma-separated) |
 
 ## Output Hygiene
 
@@ -390,3 +505,19 @@ All commands tested live against 12 providers via `--profile`:
 Additional commands tested on SFTP: `dedupe`, `track-renames`, `bwlimit`, `touch`, `tree` — all PASS.
 
 Filter system (`--include`, `--exclude-global`, `--min-size`, `--max-size`) and `check` with `hashsum` round-trip verification all passed on SFTP. `about` tested on all 12 providers. `dedupe`, `track-renames`, and `bwlimit` tested on SFTP.
+
+### Advanced Features Test Results (v3.4.2)
+
+56 tests on 9 providers (Storj S3, Cloudflare R2, FTP Aruba, jianguoyun, InfiniCloud, Koofr, CloudMe, MEGA, 4Shared):
+
+| Feature | Tests | Passed | Providers |
+| ------- | ----- | ------ | --------- |
+| mount (FUSE r/w) | 11 | 10 | S3, R2, FTP, WebDAV x4, MEGA |
+| serve ftp | 6 | 6 | S3 |
+| serve sftp | 1 | 1 | S3 |
+| daemon + jobs | 5 | 5 | - |
+| bisync (snapshot, conflict modes) | 7 | 7 | S3 |
+| ncdu TUI | 4 | 4 | S3, R2, FTP |
+| crypt overlay | 8 | 8 | S3 |
+| transfer controls | 11 | 11 | S3, R2, FTP |
+| **Total** | **56** | **55** | 1 auth failure (expired token, not a bug) |

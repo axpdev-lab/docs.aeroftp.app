@@ -5,9 +5,16 @@ description: Provider-specific setup guides with endpoints, credentials, ports, 
 
 # Integrations
 
-AeroFTP connects to 51+ cloud storage providers, developer platforms, and self-hosted services. Each guide covers provider-specific setup with exact endpoints, credential paths, and recommended defaults.
+AeroFTP connects to 53+ cloud storage providers, developer platforms, and self-hosted services. Each guide covers provider-specific setup with exact endpoints, credential paths, and recommended defaults.
 
 For protocol-level technical reference, see [Technical Reference](/protocols/overview).
+
+## Photo & Media
+
+| | Provider | Type | Guide |
+| --- | --- | --- | --- |
+| <img src="/icons/providers/immich.png" width="20" /> | Immich | API | [Setup guide](/providers/immich) |
+| <img src="/icons/providers/pixelunion.png" width="20" /> | PixelUnion | API | [Setup guide](/providers/pixelunion) |
 
 ## Cloud Storage (OAuth & API)
 
@@ -36,6 +43,7 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | | Provider | Notes | Guide |
 | --- | --- | --- | --- |
 | <img src="/icons/providers/Amazon_Web_Services.png" width="20" /> | AWS S3 | The original S3 implementation | [Setup guide](/providers/aws-s3) |
+| <img src="/icons/providers/googlecloud.png" width="20" /> | Google Cloud Storage | HMAC interop, multi-region | [Setup guide](/providers/google-cloud-storage) |
 | <img src="/icons/providers/mega.png" width="20" /> | MEGA S4 | MEGA's S3-compatible object storage | [Setup guide](/providers/mega-s4) |
 | <img src="/icons/providers/backblaze.png" width="20" /> | Backblaze B2 | Affordable, S3-compatible | [Setup guide](/providers/backblaze-b2) |
 | <img src="/icons/providers/cloudfare.png" width="20" /> | Cloudflare R2 | Zero egress fees | [Setup guide](/providers/cloudflare-r2) |

@@ -71,6 +71,9 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: 'Overview', link: '/providers/' },
+            // Photo & Media
+            { text: 'Immich', link: '/providers/immich' },
+            { text: 'PixelUnion', link: '/providers/pixelunion' },
             // OAuth & Cloud
             { text: 'Google Drive', link: '/providers/google-drive' },
             { text: 'OneDrive', link: '/providers/onedrive' },

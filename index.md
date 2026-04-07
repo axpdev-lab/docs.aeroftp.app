@@ -103,9 +103,9 @@ features:
   <tr>
     <td align="center" width="130"><a href="/providers/gitlab"><img src="/icons/providers/gitlab.png" width="36" /></a><br><sub>GitLab</sub></td>
     <td align="center" width="130"><a href="/providers/sourceforge"><img src="/icons/providers/sourceforge.png" width="36" /></a><br><sub>SourceForge</sub></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
+    <td align="center" width="130"><a href="/providers/google-cloud-storage"><img src="/icons/providers/googlecloud.png" width="36" /></a><br><sub>Google Cloud</sub></td>
+    <td align="center" width="130"><a href="/providers/immich"><img src="/icons/providers/immich.png" width="36" /></a><br><sub>Immich</sub></td>
+    <td align="center" width="130"><a href="/providers/pixelunion"><img src="/icons/providers/pixelunion.png" width="36" /></a><br><sub>PixelUnion</sub></td>
     <td align="center" width="130"></td>
     <td align="center" width="130"></td>
     <td align="center" width="130"></td>
