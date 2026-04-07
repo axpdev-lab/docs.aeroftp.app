@@ -34,8 +34,14 @@ export default defineConfig({
       { text: 'Features', link: '/features/aerocloud' },
       { text: 'CLI', link: '/cli/installation' },
       {
+        text: 'Website',
+        link: 'https://aeroftp.app',
+        target: '_blank',
+        rel: 'noopener',
+      },
+      {
         text: 'GitHub',
-        link: 'https://github.com/axpnet/aeroftp',
+        link: 'https://github.com/axpdev-lab/aeroftp',
         target: '_blank',
         rel: 'noopener',
       },
@@ -201,15 +207,15 @@ export default defineConfig({
       ],
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/axpnet/aeroftp' },
+      { icon: 'github', link: 'https://github.com/axpdev-lab/aeroftp' },
     ],
     editLink: {
-      pattern: 'https://github.com/axpnet/docs.aeroftp.app/edit/main/:path',
+      pattern: 'https://github.com/axpdev-lab/docs.aeroftp.app/edit/main/:path',
       text: 'Suggest changes',
     },
     search: { provider: 'local' },
     footer: {
-      message: 'Released under the GPL-3.0 License. <a href="https://sourceforge.net/software/product/AeroFTP/" target="_blank" rel="noopener"><img alt="AeroFTP Reviews" src="https://b.sf-syn.com/badge_img/4075717/light-default" style="height:50px;vertical-align:middle;margin-left:8px" /></a>',
+      message: '<a href="https://aeroftp.app" target="_blank" rel="noopener">aeroftp.app</a> - Released under the GPL-3.0 License. <a href="https://sourceforge.net/software/product/AeroFTP/" target="_blank" rel="noopener"><img alt="AeroFTP Reviews" src="https://b.sf-syn.com/badge_img/4075717/light-default" style="height:50px;vertical-align:middle;margin-left:8px" /></a>',
       copyright: 'Copyright 2024-2026 AxpDev',
     },
   },
