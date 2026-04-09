@@ -393,6 +393,23 @@ Example Claude Desktop configuration:
 }
 ```
 
+### import rclone
+
+Import server profiles from rclone configuration files. Supports 17 rclone backend types with automatic password de-obfuscation.
+
+```bash
+# Auto-detect rclone.conf location
+aeroftp-cli import rclone
+
+# Specify path manually
+aeroftp-cli import rclone /path/to/rclone.conf
+
+# JSON output for scripting
+aeroftp-cli import rclone --json
+```
+
+Supported rclone types: `ftp`, `sftp`, `s3` (all providers), `webdav` (Nextcloud, ownCloud), `drive`, `dropbox`, `onedrive`, `mega`, `box`, `pcloud`, `azureblob`, `swift`, `yandexdisk`, `koofr`, `jottacloud`, `b2`, `opendrive`. Passwords are revealed from rclone's reversible AES-256-CTR obfuscation. Use the GUI import flow (Settings > Export/Import > Import from rclone) to store credentials in the encrypted vault.
+
 ## GitHub Protocol
 
 Every upload and delete creates a real Git commit. Branch-aware with automatic working branch creation for protected branches.
