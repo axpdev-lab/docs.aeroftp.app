@@ -6,7 +6,7 @@
 
 ## What this does
 
-AeroFTP can **import and export** rclone configuration files (`rclone.conf`), allowing seamless migration between the two tools.
+AeroFTP and rclone are fully interoperable. Import and export server profiles freely between the two tools through the shared `rclone.conf` format.
 
 ### Import (rclone to AeroFTP)
 
