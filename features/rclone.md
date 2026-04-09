@@ -1,8 +1,8 @@
 # rclone Integration
 
-> AeroFTP stands on the shoulders of a giant. [rclone](https://rclone.org) is the gold standard in file transfer and cloud synchronization — a project that has redefined what a command-line tool can do. With 70+ backends, a thriving community, and over a decade of relentless development, rclone has set the bar for every tool in this space, including ours.
+> AeroFTP stands on the shoulders of a giant. [rclone](https://rclone.org) is the gold standard in file transfer and cloud synchronization - a project that has redefined what a command-line tool can do. With 70+ backends, a thriving community, and over a decade of relentless development, rclone has set the bar for every tool in this space, including ours.
 >
-> This integration is our way of building a bridge, not a wall. If you use rclone, AeroFTP welcomes you with open arms. Your configuration, your remotes, your workflow — bring it all.
+> This integration is our way of building a bridge, not a wall. If you use rclone, AeroFTP welcomes you with open arms. Your configuration, your remotes, your workflow - bring it all.
 
 ## What this does
 
@@ -12,7 +12,7 @@ AeroFTP can **import and export** rclone configuration files (`rclone.conf`), al
 
 - Reads your `rclone.conf` directly (auto-detected or manually selected)
 - Maps rclone remote types to AeroFTP protocols
-- **Upgrades credential security**: rclone stores passwords using reversible obfuscation (AES-256-CTR with a published key). AeroFTP de-obfuscates them and stores them in an AES-256-GCM encrypted vault with Argon2id key derivation — a significant security improvement with zero effort on your part
+- **Upgrades credential security**: rclone stores passwords using reversible obfuscation (AES-256-CTR with a published key). AeroFTP de-obfuscates them and stores them in an AES-256-GCM encrypted vault with Argon2id key derivation - a significant security improvement with zero effort on your part
 - Available in the GUI (Settings > Export/Import > Import from rclone) and CLI (`aeroftp import rclone`)
 
 ### Export (AeroFTP to rclone)
@@ -64,9 +64,9 @@ We are actively adding support for more backends. If your favorite rclone remote
 
 1. Open **Settings > Export/Import**
 2. In the **rclone** section, click **Import from rclone**
-3. AeroFTP auto-detects your `rclone.conf` — or click **Browse** to select it manually
+3. AeroFTP auto-detects your `rclone.conf` - or click **Browse** to select it manually
 4. Review the list of detected remotes, deselect any you don't need
-5. Click **Import** — credentials are stored in your encrypted vault
+5. Click **Import** - credentials are stored in your encrypted vault
 
 For export, select **Export to rclone**, choose which servers to include, and save the `.conf` file.
 
