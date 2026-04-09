@@ -60,7 +60,7 @@ rclone supports 70+ backends. We currently map 17 of them. Remotes with unsuppor
 
 The bridge works both ways, though. AeroFTP natively supports several providers that rclone does not integrate, including **GitHub** and **GitLab** (repository and release browsing), **KDrive** (Infomaniak), and **4shared**. We are also the first file manager to offer native integration with **[Immich](https://immich.app)**, the open-source, self-hosted photo and video management platform. As a fellow open-source project, supporting Immich felt like a natural fit. These providers are exclusive to AeroFTP and are not part of the rclone import/export mapping.
 
-We are actively adding support for more backends on both sides. If your favorite rclone remote type is missing, [open an issue](https://github.com/axpdev-lab/aeroftp/issues) and we will prioritize it.
+We are actively adding support for more backends. If your favorite rclone remote type is missing, [open an issue](https://github.com/axpdev-lab/aeroftp/issues) and we will prioritize it.
 
 ## GUI usage
 
