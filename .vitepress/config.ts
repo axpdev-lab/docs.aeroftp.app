@@ -148,7 +148,7 @@ export default defineConfig({
             { text: 'Batch Rename', link: '/features/batch-rename' },
             { text: 'Code Editor', link: '/features/code-editor' },
             { text: 'File Tags', link: '/features/file-tags' },
-            { text: 'rclone Integration', link: '/features/rclone' },
+            { text: 'rclone Bridge', link: '/features/rclone' },
             { text: 'Terminal', link: '/features/terminal' },
           ],
         },

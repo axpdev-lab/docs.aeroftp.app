@@ -1,4 +1,4 @@
-# rclone Integration
+# rclone Bridge
 
 > AeroFTP stands on the shoulders of a giant. [rclone](https://rclone.org) is the gold standard in file transfer and cloud synchronization - a project that has redefined what a command-line tool can do. With 70+ backends, a thriving community, and over a decade of relentless development, rclone has set the bar for every tool in this space, including ours.
 >
