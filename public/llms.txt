@@ -1,0 +1,49 @@
+# AeroFTP
+
+> AeroFTP is a multi-protocol file manager for Windows, macOS and Linux.
+> It connects to 40+ cloud providers and services via FTP, FTPS, SFTP, WebDAV, S3, OAuth2 and native APIs.
+
+## Core capabilities
+
+- File transfer: upload, download, rename, delete, mkdir across all protocols
+- AeroSync: bidirectional sync with conflict resolution, scheduling, bandwidth control
+- AeroCloud: turn any server into a personal cloud with multi-protocol sync
+- AeroVault: AES-256-GCM-SIV encrypted containers for sensitive files
+- AeroAgent: AI assistant with 47 specialized file management tools
+- AeroPlayer: media preview and playback
+- AeroTools: batch rename, file tags, archives, code editor, terminal
+- CLI: full command-line interface with batch scripting and JSON output
+
+## Supported protocols
+
+FTP, FTPS, SFTP, WebDAV, S3-compatible, Azure Blob, OpenStack Swift, Google Drive, Google Photos, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Internxt, Zoho WorkDrive, kDrive, Jottacloud, Drime, Koofr, OpenDrive, Yandex Disk, 4shared, FileLu, GitHub, GitLab, SourceForge, Immich
+
+## Cloud providers with setup guides
+
+AWS S3, Backblaze B2, Cloudflare R2, Wasabi, DigitalOcean Spaces, Storj, IDrive e2, MinIO, Oracle Cloud, Alibaba OSS, Tencent COS, Yandex Object Storage, Google Cloud Storage, MEGA S4, Hetzner Storage Box, Nextcloud, Felicloud, CloudMe, DriveHQ, Jianguoyun, InfiniCLOUD, Seafile, Quotaless, PixelUnion
+
+## Security
+
+- AeroVault v2: 512-byte header + AES-SIV manifest + AES-256-GCM-SIV chunked data
+- Cryptomator v8 compatibility: open and decrypt Cryptomator vaults
+- rclone crypt compatibility: decrypt existing rclone-encrypted remotes (read-only)
+- Credential storage: OS keyring with AES-256-GCM encrypted vault fallback
+- TOTP 2FA: time-based one-time passwords for server connections
+- No telemetry, no analytics, no tracking
+
+## Internationalization
+
+47 languages fully translated
+
+## Installation
+
+- Linux: .deb, .AppImage, Snap Store, AUR (aeroftp-bin)
+- Windows: .msi installer, Winget (axpnet.AeroFTP)
+- macOS: .dmg (Intel and Apple Silicon)
+
+## Links
+
+- Website: https://aeroftp.app
+- Documentation: https://docs.aeroftp.app
+- GitHub: https://github.com/axpdev-lab/aeroftp
+- License: GPL-3.0

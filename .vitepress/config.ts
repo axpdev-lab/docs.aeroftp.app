@@ -11,14 +11,42 @@ const icons = {
 export default defineConfig({
   ignoreDeadLinks: true,
   title: 'AeroFTP Documentation',
-  description: 'Documentation for AeroFTP - Multi-protocol file manager',
+  description: 'AeroFTP is a multi-protocol file manager supporting FTP, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA and 40+ cloud providers. Transfer, sync, encrypt from one app.',
   base: '/',
+  sitemap: { hostname: 'https://docs.aeroftp.app' },
   head: [
     ['link', { rel: 'icon', href: '/favicon.svg' }],
-    ['meta', { property: 'og:title', content: 'AeroFTP Docs' }],
-    ['meta', { property: 'og:description', content: 'Multi-protocol file manager — FTP, SFTP, S3, Google Drive & 19 more' }],
-    ['meta', { property: 'og:image', content: '/logo.svg' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/favicon.png' }],
+    ['meta', { name: 'author', content: 'AxpDev' }],
+    ['meta', { name: 'keywords', content: 'AeroFTP, FTP client, SFTP client, S3 client, WebDAV client, file manager, cloud storage, file transfer, Google Drive, Dropbox, OneDrive, MEGA, encryption, AeroVault, AeroSync, AeroCloud, CLI' }],
+    // Open Graph
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:site_name', content: 'AeroFTP Documentation' }],
+    ['meta', { property: 'og:title', content: 'AeroFTP - Multi-Protocol File Manager Documentation' }],
+    ['meta', { property: 'og:description', content: 'Connect to 40+ cloud providers via FTP, SFTP, WebDAV, S3, OAuth2 and native APIs. Transfer, sync, encrypt from one app.' }],
+    ['meta', { property: 'og:image', content: 'https://docs.aeroftp.app/logo.png' }],
+    ['meta', { property: 'og:url', content: 'https://docs.aeroftp.app' }],
+    // Twitter Card
+    ['meta', { name: 'twitter:card', content: 'summary' }],
+    ['meta', { name: 'twitter:title', content: 'AeroFTP Documentation' }],
+    ['meta', { name: 'twitter:description', content: 'Multi-protocol file manager - FTP, SFTP, S3, Google Drive & 40+ providers' }],
+    ['meta', { name: 'twitter:image', content: 'https://docs.aeroftp.app/logo.png' }],
+    // Theme
     ['meta', { name: 'theme-color', content: '#3b82f6' }],
+    // JSON-LD structured data
+    ['script', { type: 'application/ld+json' }, JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'AeroFTP',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Windows, macOS, Linux',
+      url: 'https://aeroftp.app',
+      downloadUrl: 'https://github.com/axpdev-lab/aeroftp/releases',
+      description: 'Multi-protocol file manager supporting FTP, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA and 40+ cloud providers with AI assistant, encryption and sync.',
+      license: 'https://www.gnu.org/licenses/gpl-3.0.html',
+      author: { '@type': 'Organization', name: 'AxpDev', url: 'https://axpdev.it' },
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    })],
     // Inter font for a modern look
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
