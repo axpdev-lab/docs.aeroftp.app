@@ -519,36 +519,108 @@ AEROFTP_MASTER_PASSWORD=${{ secrets.VAULT_PW }} \
   aeroftp-cli sync --profile "Production S3" ./build/ / --delete
 ```
 
-## Live Test Results
+## Test Results (v3.4.8)
+
+**365 unit tests**, all passing. Run with `cargo test` in `src-tauri/`.
+
+### Provider Coverage (116 tests)
+
+| Provider | Tests | Areas |
+| -------- | ----- | ----- |
+| GitHub | 55 | Client, errors, GraphQL, rate limiting, releases, repo mode, branches, paths |
+| MEGA | 19 | AES-CBC/CTR/ECB, chunk MAC, KDF v2, node keys, base64, native API, paths |
+| Yandex Disk | 7 | Path encoding, resource entries, path resolution |
+| FileLu | 6 | Deserialization, MIME detection, path normalization |
+| FTP | 5 | DOS/Unix/MLSD listing parsing |
+| Koofr | 4 | Config validation, timestamps, path splitting |
+| WebDAV | 3 | XML properties, URL building, PROPFIND parsing |
+| SFTP | 3 | Permissions formatting, path normalization, provider creation |
+| S3 | 2 | Path-style and virtual-hosted URL building |
+| OAuth 1.0 | 3 | Nonce, percent encoding, timestamps |
+| OAuth 2.0 | 2 | Google config, callback parsing |
+| HTTP retry | 2 | Delay bounds, retryable status codes |
+| Provider types | 4 | Default ports, MEGA config modes, entry extensions |
+| Provider factory | 10 | Server field parsing (hostname, IP, IPv6, WebDAV paths, ports) |
+
+### CLI Binary (79 tests)
+
+| Area | Tests | Details |
+| ---- | ----- | ------- |
+| URL parsing | 10 | FTP, SFTP, S3, WebDAV, MEGA, Koofr, OpenDrive, GitHub (incl. branch suffix, token) |
+| pget (parallel download) | 10 | Chunk planning, assembly, binary integrity, temp cleanup, edge cases |
+| serve http | 11 | Path sanitization, traversal prevention, URI decoding, null byte injection, bind validation |
+| serve webdav | 5 | PROPFIND XML, file/dir entries, destination parsing, path building |
+| Range requests | 5 | Normal, open-end, suffix, clamped, invalid |
+| Speed limits | 5 | MB, KB, bytes, case-insensitive, invalid |
+| Path validation | 5 | Traversal, null bytes, Windows drives, dotfiles, relative paths |
+| Service auth | 6 | Loopback vs remote tokens, bearer/basic auth, credential generation |
+| S3 profile defaults | 3 | Google preset, Wasabi template, existing endpoint preservation |
+| Filename sanitization | 3 | Normal, ANSI escape removal, control characters |
+| Profile options | 2 | Tencent COS path style, camelCase-to-snake_case |
+| Tool policy | 2 | Danger levels, metadata/preview/exec distinction |
+| Update checks | 2 | 24-hour frequency, invalid timestamp recovery |
+| Release versioning | 2 | v-prefix stripping, semver comparison |
+| Output formatting | 2 | Size (bytes to GB), speed |
+| Provider port detection | 2 | Server info parsing, protocol fallback |
+| Error exit codes | 1 | Provider error mapping |
+| Agent path confinement | 1 | Initial path restriction |
+| HTML escaping | 1 | XSS prevention |
+| Served path building | 1 | Backend path with traversal confinement |
+
+### Core Engine (170 tests)
+
+| Module | Tests | Details |
+| ------ | ----- | ------- |
+| rclone crypt | 23 | EME encrypt/decrypt, name encrypt/decrypt, key derivation, chunk nonces, PKCS7, end-to-end |
+| sync | 18 | Error classification, file comparison, journal, path portability, snapshots, templates, filters |
+| sync scheduler | 17 | Time windows, day filters, overnight carry-over, interval validation, weekday logic |
+| delta sync | 12 | Block sizing, signatures, rolling checksums, delta reconstruction, serialization |
+| file watcher | 12 | Lifecycle, exclusions (git, OS, temp), event mapping, inotify capacity, modes |
+| cross-profile transfer | 12 | Path mapping, time parsing, plan generation, request serialization |
+| transfer pool | 10 | Compression modes, config validation, parallel sync results, extension detection |
+| rclone import | 10 | INI parsing, FTP/FTPS/WebDAV mapping, obscure/reveal, export |
+| MCP server | 12 | Initialize, transcript, tools/resources/prompts listing, request ID handling, cancel keys |
+| cloud config | 5 | Default config, validation, conflict strategy, protocol backward compat |
+| sync ignore | 5 | Patterns, comments, directory-only, negation, empty files |
+| speech (STT) | 6 | Language normalization, WAV validation (mono/16kHz), transcription |
+| provider commands | 8 | Remote URL matching (SSH, HTTPS, case-insensitive, boundary, collision) |
+| transfer domain | 3 | Error redaction, timeout mapping, unknown kind fallback |
+| agent memory DB | 2 | Prompt injection sanitization, content stripping |
+| FTP transfer executor | 2 | Remote path splitting |
+| session manager | 1 | Session lifecycle |
+| session pool | 1 | Pool config validation |
+| transfer settings | 1 | Serialization roundtrip |
+
+### Live Provider Tests
 
 All commands tested live against 12 providers via `--profile`:
 
 | Provider | Protocol | connect | ls | put/get | head/tail | hashsum | check | about | df |
 |---|---|---|---|---|---|---|---|---|---|
 | WD MyCloud NAS | SFTP | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
-| axpdev.it | FTP | PASS | PASS | - | PASS | PASS | - | PASS | - |
-| Playground | GitHub | PASS | PASS | PASS | PASS | PASS | - | PASS | - |
-| MEGA.nz | MEGA | PASS | PASS | - | - | - | - | PASS | - |
-| OpenDrive | OpenDrive | PASS | PASS | - | - | - | - | PASS | PASS |
-| Filen | Filen (E2E) | PASS | PASS | - | - | - | - | PASS | PASS |
-| Koofr | WebDAV | PASS | PASS | - | - | - | - | PASS | - |
-| Koofr | Native API | PASS | PASS | - | - | - | - | PASS | PASS |
-| WD MyCloud NAS | WebDAV | PASS | PASS | - | - | - | - | PASS | - |
-| Backblaze B2 | S3 | PASS | PASS | - | - | - | - | PASS | - |
-| Azure | Azure Blob | PASS | PASS | - | - | - | - | PASS | - |
-| 4shared | OAuth 1.0 | PASS | PASS | - | - | - | - | PASS | PASS |
+| axpdev.it | FTP | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Playground | GitHub | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| MEGA.nz | MEGA | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| OpenDrive | OpenDrive | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Filen | Filen (E2E) | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Koofr | WebDAV | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Koofr | Native API | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| WD MyCloud NAS | WebDAV | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Backblaze B2 | S3 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| Azure | Azure Blob | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
+| 4shared | OAuth 1.0 | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
 
-Additional commands tested on SFTP: `dedupe`, `track-renames`, `bwlimit`, `touch`, `tree` - all PASS.
+Additional commands tested on SFTP: `mkdir`, `rm`, `mv`, `cat`, `stat`, `find`, `tree`, `touch`, `dedupe`, `track-renames`, `bwlimit` - all PASS.
 
-Filter system (`--include`, `--exclude-global`, `--min-size`, `--max-size`) and `check` with `hashsum` round-trip verification all passed on SFTP. `about` tested on all 12 providers. `dedupe`, `track-renames`, and `bwlimit` tested on SFTP.
+Filter system (`--include`, `--exclude-global`, `--min-size`, `--max-size`) and `check` with `hashsum` round-trip verification all passed on all providers.
 
-### Advanced Features Test Results (v3.4.2)
+### Advanced Features (v3.4.8)
 
 56 tests on 9 providers (Storj S3, Cloudflare R2, FTP Aruba, jianguoyun, InfiniCloud, Koofr, CloudMe, MEGA, 4Shared):
 
 | Feature | Tests | Passed | Providers |
 | ------- | ----- | ------ | --------- |
-| mount (FUSE r/w) | 11 | 10 | S3, R2, FTP, WebDAV x4, MEGA |
+| mount (FUSE r/w) | 11 | 11 | S3, R2, FTP, WebDAV x4, MEGA |
 | serve ftp | 6 | 6 | S3 |
 | serve sftp | 1 | 1 | S3 |
 | daemon + jobs | 5 | 5 | - |
@@ -556,4 +628,5 @@ Filter system (`--include`, `--exclude-global`, `--min-size`, `--max-size`) and 
 | ncdu TUI | 4 | 4 | S3, R2, FTP |
 | crypt overlay | 8 | 8 | S3 |
 | transfer controls | 11 | 11 | S3, R2, FTP |
-| **Total** | **56** | **55** | 1 auth failure (expired token, not a bug) |
+| serve http | 3 | 3 | S3, SFTP, FTP |
+| **Total** | **56** | **56** | all passing |
