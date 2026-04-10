@@ -236,6 +236,23 @@ aeroftp-cli sync --profile "server" ./local/ /remote/ --delete --backup-dir /tmp
 
 Bisync (`--direction both`, the default) saves a `.aeroftp-bisync.json` snapshot after each successful sync, enabling delta detection and bidirectional delete propagation. Conflict modes: `newer` (default), `older`, `larger`, `smaller`, `skip`.
 
+### transfer
+
+Cross-profile copy between two saved servers.
+
+```bash
+# Preview plan and risk summary
+aeroftp-cli transfer-doctor "FTP Aruba" "AWS S3" /www.site.it /backup/site --json
+
+# Execute recursive copy
+aeroftp-cli transfer "FTP Aruba" "AWS S3" /www.site.it /backup/site --recursive
+
+# Skip existing files on destination
+aeroftp-cli transfer "Cloudflare R2" "Wasabi" /logs /archive/logs --recursive --skip-existing
+```
+
+Use this when both endpoints are already stored as AeroFTP profiles. `transfer-doctor` is the recommended first step for automation because it returns the plan, risks, and suggested next command.
+
 ### mount
 
 Mount any remote as a local FUSE filesystem. Any application can access remote files with standard tools.
@@ -320,16 +337,16 @@ Zero-knowledge encrypted storage on any provider. Content encrypted with AES-256
 
 ```bash
 # Initialize encrypted overlay
-aeroftp-cli --profile "S3" crypt init _ /encrypted --password "MySecret"
+AEROFTP_CRYPT_PASSWORD=MySecret aeroftp-cli --profile "S3" crypt init _ /encrypted
 
 # Upload (content + filename encrypted)
-aeroftp-cli --profile "S3" crypt put ./secret.pdf _ /encrypted --password "MySecret"
+AEROFTP_CRYPT_PASSWORD=MySecret aeroftp-cli --profile "S3" crypt put ./secret.pdf _ /encrypted
 
 # List (decrypted names visible)
-aeroftp-cli --profile "S3" crypt ls _ /encrypted --password "MySecret"
+AEROFTP_CRYPT_PASSWORD=MySecret aeroftp-cli --profile "S3" crypt ls _ /encrypted
 
 # Download + decrypt
-aeroftp-cli --profile "S3" crypt get secret.pdf _ /encrypted ./decrypted.pdf --password "MySecret"
+AEROFTP_CRYPT_PASSWORD=MySecret aeroftp-cli --profile "S3" crypt get secret.pdf _ /encrypted ./decrypted.pdf
 ```
 
 The cloud provider never sees file names or content. Password via env: `AEROFTP_CRYPT_PASSWORD`.
@@ -409,6 +426,8 @@ aeroftp-cli import rclone --json
 ```
 
 Supported rclone types: `ftp`, `sftp`, `s3` (all providers), `webdav` (Nextcloud, ownCloud), `drive`, `dropbox`, `onedrive`, `mega`, `box`, `pcloud`, `azureblob`, `swift`, `yandexdisk`, `koofr`, `jottacloud`, `b2`, `opendrive`. Passwords are revealed from rclone's reversible AES-256-CTR obfuscation. Use the GUI import flow (Settings > Export/Import > Import from rclone) to store credentials in the encrypted vault.
+
+For compatibility details about existing `rclone crypt` remotes, see [rclone crypt interoperability](/features/rclone-crypt).
 
 ## GitHub Protocol
 

@@ -7,7 +7,7 @@ AeroFTP is designed with security as a foundational requirement. Every layer of 
 | Layer | Purpose | Details |
 | ----- | ------- | ------- |
 | [Credential storage](/security/credentials) | Protect secrets at rest | AES-256-GCM vault, OS keyring, Argon2id KDF, optional TOTP 2FA |
-| [Encryption](/security/encryption) | Protect user files and data in transit | AeroVault v2 (AES-256-GCM-SIV), TLS/SSH, archive encryption |
+| [Encryption](/security/encryption) | Protect user files and data in transit | AeroVault v2 (AES-256-GCM-SIV), `rclone crypt` interoperability, TLS/SSH, archive encryption |
 | [AI tool security](/security/ai-security) | Control AI agent capabilities | Backend grant system, native OS dialogs, tool classification |
 | [Supply chain](/security/supply-chain) | Verify software authenticity | Sigstore signing, client-side verification, update helper hardening |
 | [Privacy](/security/privacy) | Minimize data footprint | Zero telemetry, local-only storage, memory zeroization |
@@ -21,6 +21,7 @@ The Rust backend is the security authority. The web frontend can request operati
 - **Credentials**: The frontend never handles raw passwords or tokens. The backend resolves them from the vault internally.
 - **AI tools**: Mutative operations require a cryptographic grant issued and validated by the backend, confirmed via native OS dialogs that the web layer cannot suppress.
 - **Updates**: The backend verifies Sigstore bundles before allowing any installation. On Linux, the privileged helper re-verifies SHA-256 before executing package managers.
+- **Compatibility crypto**: `rclone crypt` decryption happens locally in the backend so encrypted remotes can be inspected without handing passwords to external services.
 
 ## Where AeroFTP Stands
 

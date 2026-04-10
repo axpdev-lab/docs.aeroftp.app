@@ -149,6 +149,7 @@ export default defineConfig({
             { text: 'Code Editor', link: '/features/code-editor' },
             { text: 'File Tags', link: '/features/file-tags' },
             { text: 'rclone Bridge', link: '/features/rclone' },
+            { text: 'rclone crypt', link: '/features/rclone-crypt' },
             { text: 'Terminal', link: '/features/terminal' },
           ],
         },
@@ -179,6 +180,7 @@ export default defineConfig({
           items: [
             { text: 'Overview', link: '/security/overview' },
             { text: 'Encryption', link: '/security/encryption' },
+            { text: 'rclone crypt', link: '/features/rclone-crypt' },
             { text: 'Credentials', link: '/security/credentials' },
             { text: 'Credential Isolation', link: '/credential-isolation' },
             { text: 'TOTP 2FA', link: '/security/totp' },

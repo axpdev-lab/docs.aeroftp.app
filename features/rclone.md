@@ -8,12 +8,14 @@
 
 AeroFTP and rclone are fully interoperable. Import and export server profiles freely between the two tools through the shared `rclone.conf` format.
 
+This bridge page covers profile interoperability through `rclone.conf`. If you need compatibility guidance for existing encrypted `rclone crypt` remotes, see [rclone crypt interoperability](/features/rclone-crypt).
+
 ### Import (rclone to AeroFTP)
 
 - Reads your `rclone.conf` directly (auto-detected or manually selected)
 - Maps rclone remote types to AeroFTP protocols
 - **Upgrades credential security**: rclone stores passwords using reversible obfuscation (AES-256-CTR with a published key). AeroFTP de-obfuscates them and stores them in an AES-256-GCM encrypted vault with Argon2id key derivation - a significant security improvement with zero effort on your part
-- Available in the GUI (Settings > Export/Import > Import from rclone) and CLI (`aeroftp import rclone`)
+- Available in the GUI (Settings > Export/Import > Import from rclone) and CLI (`aeroftp-cli import rclone`)
 
 ### Export (AeroFTP to rclone)
 
@@ -76,13 +78,13 @@ For export, select **Export to rclone**, choose which servers to include, and sa
 
 ```bash
 # Auto-detect rclone.conf and scan
-aeroftp import rclone
+aeroftp-cli import rclone
 
 # Specify path explicitly
-aeroftp import rclone ~/.config/rclone/rclone.conf
+aeroftp-cli import rclone ~/.config/rclone/rclone.conf
 
 # JSON output for scripting and automation
-aeroftp import rclone --json
+aeroftp-cli import rclone --json
 ```
 
 ## Security comparison

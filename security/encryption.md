@@ -10,6 +10,7 @@ AeroFTP applies encryption across four distinct layers:
 | ----- | ------- | ----------------- |
 | AeroVault v2 | Encrypted file containers | AES-256-GCM-SIV (RFC 8452) |
 | Archive encryption | Password-protected ZIP/7z | AES-256 |
+| rclone crypt interoperability | Compatibility decryption for existing remotes | XSalsa20-Poly1305 content + standard filename decryption |
 | Credential storage | vault.db secrets | AES-256-GCM + Argon2id |
 | Transport security | Wire encryption | TLS 1.2/1.3, SSH |
 
@@ -82,6 +83,16 @@ The key derivation parameters exceed OWASP 2024 minimum recommendations:
 | Remote vault support | Yes (download, edit, re-upload) | Read-only in AeroFTP |
 
 AeroFTP can also create and browse Cryptomator vault format 8 containers, using scrypt + AES-256-KW + AES-256-SIV + AES-256-GCM.
+
+## rclone crypt interoperability
+
+AeroFTP also includes a compatibility layer for existing `rclone crypt` remotes.
+
+- Scope today is read-only access for browsing and decrypting existing data
+- Crypto runs locally in the Rust backend
+- This is documented separately from AeroVault because AeroFTP does not own the `rclone crypt` format
+
+For product-level guidance and current limitations, see [rclone crypt interoperability](/features/rclone-crypt).
 
 ## Archive Encryption
 
