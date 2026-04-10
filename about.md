@@ -22,7 +22,7 @@ AeroFTP is a free, open-source, multi-protocol file manager built with Rust and 
 
 ## Developer
 
-**AXP Development** — [github.com/axpnet](https://github.com/axpnet)
+**AXP Development** - [github.com/axpnet](https://github.com/axpnet)
 
 ## License
 
@@ -71,10 +71,10 @@ AeroFTP is released under the **GNU General Public License v3.0** (GPL-3.0).
 
 AeroFTP has been continuously reviewed by independent AI auditors throughout its development:
 
-- **12-auditor security audit** (v2.4.0) — Grade: A-
-- **5-auditor CLI security audit** (v2.9.2) — 97 findings, all resolved
-- **Dual-engine audit** (v2.9.5) — Claude Opus 4.6 + GPT-5.4, 117 findings
-- **GitHub provider audit** (v3.0.0) — Claude Opus 4.6 + GPT-5.4, all critical resolved
+- **12-auditor security audit** (v2.4.0) - Grade: A-
+- **5-auditor CLI security audit** (v2.9.2) - 97 findings, all resolved
+- **Dual-engine audit** (v2.9.5) - Claude Opus 4.6 + GPT-5.4, 117 findings
+- **GitHub provider audit** (v3.0.0) - Claude Opus 4.6 + GPT-5.4, all critical resolved
 
 ## Protocols (25)
 
@@ -122,4 +122,4 @@ This documentation site is built with [VitePress](https://vitepress.dev) and dep
 
 ---
 
-*AeroFTP — [github.com/axpnet/aeroftp](https://github.com/axpnet/aeroftp) — GPL-3.0*
+*AeroFTP - [github.com/axpnet/aeroftp](https://github.com/axpnet/aeroftp) - GPL-3.0*

@@ -38,8 +38,8 @@ The main chat interface provides a streaming markdown conversation with the AI, 
 
 Messages render incrementally as the AI generates them. The renderer uses a dual-segment architecture:
 
-- **FinalizedSegment** (`React.memo`) — completed paragraphs, code blocks, and lists that never re-render
-- **StreamingSegment** — the currently generating text that updates in real-time
+- **FinalizedSegment** (`React.memo`) - completed paragraphs, code blocks, and lists that never re-render
+- **StreamingSegment** - the currently generating text that updates in real-time
 
 This approach provides smooth streaming without the performance penalty of re-rendering the entire message on every token.
 
@@ -47,10 +47,10 @@ This approach provides smooth streaming without the performance penalty of re-re
 
 Every code block in a response includes action buttons:
 
-- **Copy** — copy the code to the clipboard
-- **Apply** — write the code to a file (prompts for path if not obvious from context)
-- **Diff** — show a side-by-side diff against the current file contents
-- **Run** — execute the code block as a shell command (with approval)
+- **Copy** - copy the code to the clipboard
+- **Apply** - write the code to a file (prompts for path if not obvious from context)
+- **Diff** - show a side-by-side diff against the current file contents
+- **Run** - execute the code block as a shell command (with approval)
 
 ### Thinking Visualization
 
@@ -74,13 +74,13 @@ Configure providers, models, and behavior in the AI Settings panel, accessible f
 
 The settings panel includes seven tabs:
 
-1. **Provider** — select and configure AI providers, browse the Provider Marketplace
-2. **Model** — choose the model, set temperature, max tokens, and thinking budget
-3. **Tools** — enable/disable individual tools, set default approval behavior
-4. **System Prompt** — edit the base system prompt with a toggle and textarea
-5. **Macros** — create and manage tool chain macros with `{{variable}}` templates
-6. **Plugins** — browse, install, and manage plugins from the GitHub-based registry
-7. **History** — configure retention policies, search chat history, view usage stats
+1. **Provider** - select and configure AI providers, browse the Provider Marketplace
+2. **Model** - choose the model, set temperature, max tokens, and thinking budget
+3. **Tools** - enable/disable individual tools, set default approval behavior
+4. **System Prompt** - edit the base system prompt with a toggle and textarea
+5. **Macros** - create and manage tool chain macros with `{{variable}}` templates
+6. **Plugins** - browse, install, and manage plugins from the GitHub-based registry
+7. **History** - configure retention policies, search chat history, view usage stats
 
 ## Supported AI Providers
 
@@ -245,13 +245,13 @@ An `executedToolSignaturesRef` deduplication mechanism prevents models (particul
 
 AeroAgent auto-detects project type from 10 marker files (Cargo.toml, package.json, pom.xml, requirements.txt, go.mod, Gemfile, composer.json, *.csproj, CMakeLists.txt, build.gradle) and injects relevant context. The system prompt is dynamically composed from:
 
-1. **Base personality** — AeroAgent identity, tone, protocol expertise
-2. **Provider profile** — per-provider optimization (e.g., Anthropic cache hints, OpenAI structured outputs)
-3. **Connection context** — AeroCloud vs Server vs AeroFile mode, current host/port/user
-4. **Tool definitions** — all 47 tools with schemas
-5. **Project context** — detected language, framework, file dependency graph
-6. **RAG results** — indexed file previews and search hits
-7. **Agent memory** — persistent notes from previous sessions (`.aeroagent` file)
+1. **Base personality** - AeroAgent identity, tone, protocol expertise
+2. **Provider profile** - per-provider optimization (e.g., Anthropic cache hints, OpenAI structured outputs)
+3. **Connection context** - AeroCloud vs Server vs AeroFile mode, current host/port/user
+4. **Tool definitions** - all 47 tools with schemas
+5. **Project context** - detected language, framework, file dependency graph
+6. **RAG results** - indexed file previews and search hits
+7. **Agent memory** - persistent notes from previous sessions (`.aeroagent` file)
 
 A sliding-window token budget (70% of provider max) with automatic summarization manages context size. The `TokenBudgetIndicator` component shows real-time token usage with three budget modes.
 
@@ -263,9 +263,9 @@ To create your own plugin, see the [Plugin Contributing Guide](https://github.co
 
 The Plugin Browser UI provides three tabs:
 
-- **Installed** — manage currently installed plugins
-- **Browse** — search the registry for new plugins
-- **Updates** — check for and apply plugin updates
+- **Installed** - manage currently installed plugins
+- **Browse** - search the registry for new plugins
+- **Updates** - check for and apply plugin updates
 
 ## Macro System
 
@@ -274,17 +274,17 @@ Chain multiple tools into reusable workflows with `{{variable}}` templates, sing
 ## Chat Features
 
 - **Streaming markdown** with finalized/streaming segments and syntax highlighting
-- **Code block actions** — Copy, Apply, Diff, Run buttons on every code block
+- **Code block actions** - Copy, Apply, Diff, Run buttons on every code block
 - **Thinking visualization** with token count and duration
-- **Prompt templates** — 15 built-in, activated with `/` prefix
+- **Prompt templates** - 15 built-in, activated with `/` prefix
 - **Chat search** (Ctrl+F) with role filter and keyboard navigation
-- **Conversation branching** — fork, switch, delete alternative approaches
+- **Conversation branching** - fork, switch, delete alternative approaches
 - **Chat history** in SQLite with FTS5 full-text search and retention policies (7/30/90/180/365/unlimited days)
 - **Export** to Markdown or JSON
 - **Cost tracking** per message with monthly budget limits per provider
-- **Vision/multimodal** — drag images into chat or paste from clipboard
-- **Drag and drop** — drag files from the file manager into the chat area for analysis
-- **Context menu integration** — right-click files and select "Ask AeroAgent" to start a conversation about them
+- **Vision/multimodal** - drag images into chat or paste from clipboard
+- **Drag and drop** - drag files from the file manager into the chat area for analysis
+- **Context menu integration** - right-click files and select "Ask AeroAgent" to start a conversation about them
 
 ## Extreme Mode
 

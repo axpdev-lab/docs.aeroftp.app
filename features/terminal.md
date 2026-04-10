@@ -4,11 +4,11 @@ AeroFTP includes an integrated terminal emulator powered by xterm.js, providing 
 
 ## Features
 
-- **Full PTY support** — run any shell command, interactive programs, and TUI applications
-- **SSH sessions** — connect to remote servers via SSH directly in the terminal tab
-- **Copy/paste** — standard terminal clipboard operations
-- **Scrollback buffer** — scroll through command history
-- **Resizable** — drag the panel divider to adjust terminal height
+- **Full PTY support** - run any shell command, interactive programs, and TUI applications
+- **SSH sessions** - connect to remote servers via SSH directly in the terminal tab
+- **Copy/paste** - standard terminal clipboard operations
+- **Scrollback buffer** - scroll through command history
+- **Resizable** - drag the panel divider to adjust terminal height
 
 ## Theme Auto-Sync
 
@@ -29,11 +29,11 @@ AeroAgent can execute shell commands via the `shell_execute` backend tool. Comma
 
 - **30-second timeout** per command
 - **1 MB output limit** to prevent memory issues
-- **Backend denylist** — dangerous commands (e.g., `rm -rf /`, `mkfs`, `dd`) are rejected at the Rust level before execution
+- **Backend denylist** - dangerous commands (e.g., `rm -rf /`, `mkfs`, `dd`) are rejected at the Rust level before execution
 - **stdout/stderr/exit_code** captured and returned to the AI
 
 > **Note:** On Linux (WebKitGTK), the terminal requires `allowTransparency: false` for correct rendering. This is set automatically.
 
 ## Keyboard Shortcuts
 
-Standard terminal shortcuts apply within the terminal panel. The terminal captures all keyboard input when focused — use **Ctrl+Shift+A** to break out and send a selection to AeroAgent.
+Standard terminal shortcuts apply within the terminal panel. The terminal captures all keyboard input when focused - use **Ctrl+Shift+A** to break out and send a selection to AeroAgent.

@@ -158,7 +158,7 @@ Select a file or folder and press `Alt+Enter` (or right-click → **Properties**
 
 ### Permissions Tab (Linux / macOS)
 
-- **Owner**, **Group**, **Other** — read, write, execute checkboxes
+- **Owner**, **Group**, **Other** - read, write, execute checkboxes
 - **Octal representation** (e.g., `0755`)
 - **Owner name** and **Group name**
 

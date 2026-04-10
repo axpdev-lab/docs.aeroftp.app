@@ -1,6 +1,6 @@
 # Credential Management
 
-AeroFTP stores all sensitive data — server passwords, OAuth tokens, API keys, AI provider keys, and application configuration — in an encrypted vault backed by SQLite. This page describes the vault architecture, key derivation, storage scope, import/export, and platform-specific behavior.
+AeroFTP stores all sensitive data - server passwords, OAuth tokens, API keys, AI provider keys, and application configuration - in an encrypted vault backed by SQLite. This page describes the vault architecture, key derivation, storage scope, import/export, and platform-specific behavior.
 
 ## Unified Keystore (vault.db)
 
@@ -67,7 +67,7 @@ The master password is optional but strongly recommended. It protects the vault 
 ### With Master Password
 
 - The password is processed through Argon2id (128 MiB, t=4, p=4) to derive the master key
-- The master password itself is never stored anywhere — only the derived key is held in memory or the OS keyring
+- The master password itself is never stored anywhere - only the derived key is held in memory or the OS keyring
 - On each application launch, the user is prompted for the master password
 - If TOTP 2FA is enabled, a second factor is required after the password (see [TOTP 2FA](totp.md))
 
@@ -156,13 +156,13 @@ The wizard is auto-triggered on first launch after an upgrade. It can also be ma
 
 On Windows, `vault.db` is the authoritative credential store, but localStorage is maintained as a **write-through backup**. This dual-write strategy prevents permanent credential loss if the Windows Credential Manager encounters issues (corruption, access denied, service restart).
 
-The `secureStoreAndClean` function is `await`-ed at all 6 call sites in the frontend to prevent race conditions where the vault returns stale data before the write has completed. This was a critical fix — earlier versions used fire-and-forget writes that could silently lose credentials.
+The `secureStoreAndClean` function is `await`-ed at all 6 call sites in the frontend to prevent race conditions where the vault returns stale data before the write has completed. This was a critical fix - earlier versions used fire-and-forget writes that could silently lose credentials.
 
 ## Security Considerations
 
 - **Master password never stored**: Only a derived key is held in memory or the OS keyring. The raw password cannot be recovered.
 - **WAL mode**: SQLite WAL provides concurrent read access without database corruption, even during power loss.
 - **Failed auth opacity**: Failed authentication attempts do not reveal whether a particular credential exists in the vault.
-- **Auto-lock**: The vault locks automatically when the application closes. There is no configurable timeout — the vault remains unlocked for the entire session.
+- **Auto-lock**: The vault locks automatically when the application closes. There is no configurable timeout - the vault remains unlocked for the entire session.
 - **No telemetry**: Credential operations are never logged to external services. All operations are local-only.
 - **Poison recovery**: Mutex-protected vault state includes poison recovery, preventing application hangs if a thread panics during a vault operation.

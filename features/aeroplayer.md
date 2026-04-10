@@ -40,16 +40,16 @@ Each band uses a dedicated Web Audio `BiquadFilterNode` for precise frequency sh
 
 Ten built-in presets are available for quick setup:
 
-- **Flat** — all bands at 0 dB (neutral)
-- **Bass Boost** — enhanced low frequencies
-- **Treble Boost** — enhanced high frequencies
-- **Vocal** — mid-range emphasis for voice clarity
-- **Rock** — scooped mids with boosted lows and highs
-- **Pop** — slight bass and treble lift
-- **Jazz** — warm low-mid emphasis
-- **Classical** — gentle high-frequency lift
-- **Electronic** — sub-bass and treble emphasis
-- **Loudness** — compensates for low-volume listening (bass and treble boost)
+- **Flat** - all bands at 0 dB (neutral)
+- **Bass Boost** - enhanced low frequencies
+- **Treble Boost** - enhanced high frequencies
+- **Vocal** - mid-range emphasis for voice clarity
+- **Rock** - scooped mids with boosted lows and highs
+- **Pop** - slight bass and treble lift
+- **Jazz** - warm low-mid emphasis
+- **Classical** - gentle high-frequency lift
+- **Electronic** - sub-bass and treble emphasis
+- **Loudness** - compensates for low-volume listening (bass and treble boost)
 
 ### Stereo Balance
 
@@ -85,10 +85,10 @@ GPU-accelerated shader-based visualizations that create immersive audio-reactive
 | ------ | ----------- |
 | **Wave Glitch** | Distorted waveform with glitch artifacts that intensify on beats |
 | **VHS** | Retro VHS tape effect with scanlines, color bleeding, and tracking noise |
-| **Mandelbrot** | Fractal zoom driven by audio amplitude — deeper zoom on louder passages |
+| **Mandelbrot** | Fractal zoom driven by audio amplitude - deeper zoom on louder passages |
 | **Raymarch Tunnel** | 3D raymarched tunnel that pulses and distorts in response to beats |
 | **Metaball** | Organic metaball shapes that pulse, merge, and split with the audio |
-| **Particles** | Particle system with audio-reactive forces — particles scatter on beats |
+| **Particles** | Particle system with audio-reactive forces - particles scatter on beats |
 
 > **Tip:** Press **V** to cycle through all 14 visualizer modes. WebGL modes require GPU support and are automatically skipped on systems without WebGL 2 capability.
 
@@ -96,9 +96,9 @@ GPU-accelerated shader-based visualizations that create immersive audio-reactive
 
 AeroPlayer performs real-time onset energy analysis to detect beats in the audio stream. The algorithm uses:
 
-- **Circular buffer** — stores recent energy samples for comparison
-- **Exponential decay** (factor 0.92) — smooths energy tracking to distinguish genuine beats from sustained loudness
-- **Onset threshold** — a beat is registered when the current energy exceeds the rolling average by a configurable margin
+- **Circular buffer** - stores recent energy samples for comparison
+- **Exponential decay** (factor 0.92) - smooths energy tracking to distinguish genuine beats from sustained loudness
+- **Onset threshold** - a beat is registered when the current energy exceeds the rolling average by a configurable margin
 
 Detected beats trigger synchronized visual effects across all visualizer modes, creating a responsive audio-visual experience.
 
@@ -111,6 +111,6 @@ All visualizer modes (both Canvas 2D and WebGL) support layered post-processing 
 | **Vignette** | Darkened edges that draw focus to the center of the visualization |
 | **Chromatic aberration** | RGB channel offset creating a prismatic distortion around edges |
 | **CRT scanlines** | Retro monitor scanline overlay for a vintage CRT display look |
-| **Glitch on beat** | Transient glitch distortion triggered by beat detection — frame displacement, color shift, and horizontal tearing |
+| **Glitch on beat** | Transient glitch distortion triggered by beat detection - frame displacement, color shift, and horizontal tearing |
 
 Post-processing effects are composited in order: the base visualization renders first, then vignette, chromatic aberration, scanlines, and finally beat-triggered glitch. Effects can be combined for layered visual complexity.

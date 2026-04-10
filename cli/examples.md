@@ -19,7 +19,7 @@ protocol://user[:password]@host[:port]/path
 | Port | No (uses default) | `:2222` |
 | Path | No (defaults to `/`) | `/var/www/html/` |
 
-> **Warning:** Embedding passwords in URLs is discouraged — they appear in shell history and process listings. The CLI will warn unconditionally when a password is detected in the URL. Use SSH keys for SFTP, or let the CLI prompt interactively.
+> **Warning:** Embedding passwords in URLs is discouraged - they appear in shell history and process listings. The CLI will warn unconditionally when a password is detected in the URL. Use SSH keys for SFTP, or let the CLI prompt interactively.
 
 ## Basic File Operations
 
@@ -139,7 +139,7 @@ aeroftp-cli sync s3://AKIAIOSFODNN7@s3.eu-west-1.amazonaws.com/assets/ ./local-a
 # Sync with checksum verification
 aeroftp-cli sync sftp://user@host/data/ ./data/ --verify full
 
-# Dry run — show what would change without transferring
+# Dry run - show what would change without transferring
 aeroftp-cli sync sftp://user@host/www/ ./dist/ --dry-run
 ```
 
@@ -154,7 +154,7 @@ aeroftp-cli ls sftp://user@host/var/www/
 # FTP with explicit TLS
 aeroftp-cli ls ftps://user@ftp.example.com/
 
-# Plain FTP (not recommended — credentials sent in cleartext)
+# Plain FTP (not recommended - credentials sent in cleartext)
 aeroftp-cli ls ftp://user@ftp.example.com/
 
 # WebDAV (Nextcloud)
@@ -255,7 +255,7 @@ deploy:
 
 ```bash
 #!/bin/bash
-# pre-deploy-check.sh — Verify server is reachable before deploying
+# pre-deploy-check.sh - Verify server is reachable before deploying
 
 aeroftp-cli connect sftp://ci@staging.example.com
 EXIT_CODE=$?
@@ -273,12 +273,12 @@ aeroftp-cli sync sftp://ci@staging.example.com/www/ ./dist/
 
 ```bash
 #!/bin/bash
-# quota-check.sh — Alert when storage exceeds 80%
+# quota-check.sh - Alert when storage exceeds 80%
 
 USAGE=$(aeroftp-cli df s3://key@s3.amazonaws.com/my-bucket/ --json | jq -r '.used_percent')
 
 if (( $(echo "$USAGE > 80" | bc -l) )); then
-  echo "WARNING: Storage at ${USAGE}% — consider cleanup"
+  echo "WARNING: Storage at ${USAGE}% - consider cleanup"
   # Send alert via webhook, email, etc.
   curl -X POST "$SLACK_WEBHOOK" -d "{\"text\":\"Storage alert: ${USAGE}% used\"}"
 fi
@@ -287,7 +287,7 @@ fi
 ## Batch Script: Multi-Server Deployment
 
 ```bash
-# deploy-all.aeroftp — Deploy to staging + production
+# deploy-all.aeroftp - Deploy to staging + production
 # Run: aeroftp-cli batch deploy-all.aeroftp
 
 SET build=./dist
@@ -321,7 +321,7 @@ aeroftp-cli batch deploy-all.aeroftp
 ## Batch Script: Database Backup Rotation
 
 ```bash
-# db-backup.aeroftp — Download DB dump and rotate old backups
+# db-backup.aeroftp - Download DB dump and rotate old backups
 
 SET server=sftp://backup@db.example.com
 SET remote_dump=/var/backups/pg-latest.sql.gz
@@ -465,18 +465,18 @@ aeroftp-cli sync --profile "server" ./build/ /var/www/ --delete --max-delete 25%
 
 ## Tips and Best Practices
 
-1. **Always test with `connect` first** — verify credentials before running long operations. Connection failures return exit code 1.
+1. **Always test with `connect` first** - verify credentials before running long operations. Connection failures return exit code 1.
 
-2. **Use `--json` in scripts** — structured output is stable across versions and safe to parse.
+2. **Use `--json` in scripts** - structured output is stable across versions and safe to parse.
 
-3. **Set `NO_COLOR=1` in CI** — prevents ANSI escape codes from polluting log files.
+3. **Set `NO_COLOR=1` in CI** - prevents ANSI escape codes from polluting log files.
 
-4. **Prefer SFTP over FTP** — SFTP encrypts both credentials and data. FTP sends passwords in cleartext.
+4. **Prefer SFTP over FTP** - SFTP encrypts both credentials and data. FTP sends passwords in cleartext.
 
-5. **Use batch scripts for multi-step operations** — they provide error handling, variables, and reproducibility that shell scripts require extra effort to achieve.
+5. **Use batch scripts for multi-step operations** - they provide error handling, variables, and reproducibility that shell scripts require extra effort to achieve.
 
-6. **Pipe JSON to jq for filtering** — `aeroftp-cli ls --json | jq '.[] | select(.size > 1000000)'` is more reliable than parsing human-readable output.
+6. **Pipe JSON to jq for filtering** - `aeroftp-cli ls --json | jq '.[] | select(.size > 1000000)'` is more reliable than parsing human-readable output.
 
-7. **Check exit codes** — every CLI command returns a semantic exit code (0 for success, 1-8 for specific failure categories, 99 for unknown errors).
+7. **Check exit codes** - every CLI command returns a semantic exit code (0 for success, 1-8 for specific failure categories, 99 for unknown errors).
 
 > **Note:** For the complete list of exit codes and their meanings, see the [Installation](installation.md) page.

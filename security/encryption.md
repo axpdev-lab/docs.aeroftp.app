@@ -1,6 +1,6 @@
 # Encryption
 
-AeroFTP uses encryption at multiple layers to protect data at rest, in transit, and during credential storage. All cryptographic operations execute locally in the Rust backend — no data is ever sent to external services for encryption or key management.
+AeroFTP uses encryption at multiple layers to protect data at rest, in transit, and during credential storage. All cryptographic operations execute locally in the Rust backend - no data is ever sent to external services for encryption or key management.
 
 ## Encryption Architecture Overview
 
@@ -53,7 +53,7 @@ An AeroVault v2 file has the following structure:
 
 ### Why AES-256-GCM-SIV
 
-AES-256-GCM-SIV (RFC 8452) is a nonce-misuse-resistant AEAD cipher. Unlike standard AES-GCM, accidental nonce reuse does not catastrophically compromise security — it only leaks whether two plaintexts are identical. This provides a significant safety margin for file encryption where nonce management across thousands of chunks is critical.
+AES-256-GCM-SIV (RFC 8452) is a nonce-misuse-resistant AEAD cipher. Unlike standard AES-GCM, accidental nonce reuse does not catastrophically compromise security - it only leaks whether two plaintexts are identical. This provides a significant safety margin for file encryption where nonce management across thousands of chunks is critical.
 
 ### Argon2id Parameters
 

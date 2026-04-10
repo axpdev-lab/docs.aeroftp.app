@@ -5,7 +5,7 @@
 <h1 align="center">AeroFTP Documentation</h1>
 
 <p align="center">
-  <strong>Official documentation for <a href="https://www.aeroftp.app">AeroFTP</a> — the open-source, multi-protocol file manager.</strong>
+  <strong>Official documentation for <a href="https://www.aeroftp.app">AeroFTP</a> - the open-source, multi-protocol file manager.</strong>
 </p>
 
 <!-- Row 1: Status & Links -->
@@ -36,18 +36,18 @@
 
 Comprehensive documentation for AeroFTP covering:
 
-- **Getting Started** — Installation on Linux (.deb, .rpm, .AppImage, .snap, AUR), macOS (.dmg), and Windows (.msi)
-- **27 Protocols** — FTP, FTPS, SFTP, WebDAV, S3-compatible (10+ presets), Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Azure Blob, 4shared, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, GitHub
-- **AeroSync** — Bidirectional sync with profiles, conflict resolution, bandwidth control, scheduler
-- **AeroVault** — Military-grade AES-256-GCM-SIV encrypted containers with Argon2id KDF
-- **AeroAgent** — AI-powered file management with 47 tools, multi-step autonomous execution, 19 AI providers
-- **AeroPlayer** — Integrated media player with 10-band EQ, 14 visualizer modes, 6 WebGL shaders
-- **AeroTools** — Security toolkit (Hash Forge, CryptoLab, Password Forge) in Cyber theme
-- **AeroFile** — Local file manager with tabs, tags, and Finder-style color labels
-- **CLI** — 14 commands, batch scripting (.aeroftp), glob patterns, JSON output, exit codes
-- **Security** — Universal Vault (AES-256-GCM + Argon2id), TOTP 2FA, SFTP TOFU, credential isolation for AI agents
-- **GitHub Integration** — File browsing, commits, branches, PRs, releases with CHANGELOG import, GitHub Pages monitoring, App co-authoring with dual avatars
-- **Advanced** — Provider reference, AI provider marketplace, plugin development
+- **Getting Started** - Installation on Linux (.deb, .rpm, .AppImage, .snap, AUR), macOS (.dmg), and Windows (.msi)
+- **27 Protocols** - FTP, FTPS, SFTP, WebDAV, S3-compatible (10+ presets), Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Azure Blob, 4shared, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, GitHub
+- **AeroSync** - Bidirectional sync with profiles, conflict resolution, bandwidth control, scheduler
+- **AeroVault** - Military-grade AES-256-GCM-SIV encrypted containers with Argon2id KDF
+- **AeroAgent** - AI-powered file management with 47 tools, multi-step autonomous execution, 19 AI providers
+- **AeroPlayer** - Integrated media player with 10-band EQ, 14 visualizer modes, 6 WebGL shaders
+- **AeroTools** - Security toolkit (Hash Forge, CryptoLab, Password Forge) in Cyber theme
+- **AeroFile** - Local file manager with tabs, tags, and Finder-style color labels
+- **CLI** - 14 commands, batch scripting (.aeroftp), glob patterns, JSON output, exit codes
+- **Security** - Universal Vault (AES-256-GCM + Argon2id), TOTP 2FA, SFTP TOFU, credential isolation for AI agents
+- **GitHub Integration** - File browsing, commits, branches, PRs, releases with CHANGELOG import, GitHub Pages monitoring, App co-authoring with dual avatars
+- **Advanced** - Provider reference, AI provider marketplace, plugin development
 
 ## Stack
 

@@ -36,7 +36,7 @@ If you already use Google Drive in AeroFTP, you already have a Google Cloud proj
 4. Search for **"Photos Library API"**
 5. Click **Enable**
 
-[ Screenshot 01 — Photos Library API page with Enable button ]
+[ Screenshot 01 - Photos Library API page with Enable button ]
 
 ### Step 2: Add OAuth Scopes
 
@@ -51,7 +51,7 @@ https://www.googleapis.com/auth/photoslibrary.appendonly
 5. Verify both scopes appear as checked in the list
 6. Click **Save**
 
-[ Screenshot 02 — Scopes page with photoslibrary scopes added ]
+[ Screenshot 02 - Scopes page with photoslibrary scopes added ]
 
 !!! tip "Already have Google Drive?"
     If you already configured Google Drive, your `drive` and `drive.file` scopes should already be there. Add the Photos scopes alongside them.
@@ -64,18 +64,18 @@ https://www.googleapis.com/auth/photoslibrary.appendonly
 4. Click **"Sign in with Google Photos"**
 5. Your browser opens with the Google consent screen
 6. Select your Google account
-7. If you see "Google non ha verificato questa app" (Google hasn't verified this app), click **"Continua"** (Continue) — this is normal for personal OAuth apps
+7. If you see "Google non ha verificato questa app" (Google hasn't verified this app), click **"Continua"** (Continue) - this is normal for personal OAuth apps
 8. Grant both permissions:
    - View your Google Photos library
    - Add items to your Google Photos library
 9. Click **"Continua"** (Continue)
 10. AeroFTP connects and shows your albums
 
-[ Screenshot 03 — AeroFTP Discover Services with Google Photos selected ]
+[ Screenshot 03 - AeroFTP Discover Services with Google Photos selected ]
 
-[ Screenshot 04 — Google consent screen with Photos permissions ]
+[ Screenshot 04 - Google consent screen with Photos permissions ]
 
-[ Screenshot 05 — AeroFTP connected showing albums ]
+[ Screenshot 05 - AeroFTP connected showing albums ]
 
 ### Step 4 (Optional): Save Connection
 

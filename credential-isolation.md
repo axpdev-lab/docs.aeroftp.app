@@ -4,7 +4,7 @@ As of March 2026, AeroFTP provides a credential-isolated workflow for AI coding 
 
 ## The Problem
 
-AI coding agents — Claude Code, Cursor, Codex, Devin — need to read and write files on remote servers. Every current approach leaks credentials:
+AI coding agents - Claude Code, Cursor, Codex, Devin - need to read and write files on remote servers. Every current approach leaks credentials:
 
 | Method | Exposure |
 |--------|----------|
@@ -21,7 +21,7 @@ An AI agent that runs `scp` or sets environment variables places your credential
 AeroFTP introduces a credential isolation boundary between the AI agent and the authentication layer:
 
 1. All credentials are stored in an encrypted vault (AES-256-GCM + Argon2id with 128 MiB memory cost)
-2. The agent calls `aeroftp-cli ls --profile "My Server" /path/` — no password anywhere in the command
+2. The agent calls `aeroftp-cli ls --profile "My Server" /path/` - no password anywhere in the command
 3. The Rust backend opens the vault, authenticates to the remote server, and executes the operation
 4. The agent receives only the result (directory listing, file content, transfer confirmation)
 5. Credentials never appear in: command-line arguments, environment variables, shell history, IPC messages, AI model context, or application logs
@@ -36,13 +36,13 @@ The `aeroftp-cli` binary resolves credentials from the vault at runtime. The age
 # List saved profiles (names and protocols only, never passwords)
 aeroftp-cli profiles
 
-# Standard file operations — credential-free
+# Standard file operations - credential-free
 aeroftp-cli ls --profile "Production" /var/www/
 aeroftp-cli put --profile "Staging" ./dist/app.js /var/www/app.js
 aeroftp-cli cat --profile "Production" /etc/nginx/nginx.conf
 aeroftp-cli sync --profile "NAS Backup" ./data/ /backups/ --dry-run
 
-# OAuth providers work identically — authorize once in the GUI, reuse from CLI
+# OAuth providers work identically - authorize once in the GUI, reuse from CLI
 aeroftp-cli ls --profile "Google Drive" /
 aeroftp-cli get --profile "Dropbox" /Documents/report.pdf
 aeroftp-cli put --profile "OneDrive" ./report.xlsx /Work/
@@ -54,9 +54,9 @@ For CI/CD pipelines, a single secret (`AEROFTP_MASTER_PASSWORD`) unlocks the vau
 
 AeroFTP's integrated AI assistant (AeroAgent) includes two tools specifically designed for credential-isolated server access:
 
-**`server_list_saved`** (safe) — Returns server names, protocols, and hostnames. Never returns passwords, tokens, or API keys.
+**`server_list_saved`** (safe) - Returns server names, protocols, and hostnames. Never returns passwords, tokens, or API keys.
 
-**`server_exec`** (high danger, requires approval) — Executes 10 operations on any saved server:
+**`server_exec`** (high danger, requires approval) - Executes 10 operations on any saved server:
 
 | Operation | Description |
 |-----------|-------------|
@@ -73,7 +73,7 @@ AeroFTP's integrated AI assistant (AeroAgent) includes two tools specifically de
 
 Server matching is fuzzy: exact name, then case-insensitive, then substring. If the match is unique, it proceeds automatically. If ambiguous, it returns the list of candidates and asks for clarification.
 
-Passwords are resolved from the vault **in Rust** — they cross no IPC boundary, no JavaScript context, and no AI model input.
+Passwords are resolved from the vault **in Rust** - they cross no IPC boundary, no JavaScript context, and no AI model input.
 
 ## Protocol Coverage
 
@@ -87,12 +87,12 @@ Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, 4shared, Drime
 
 ## Practical Workflows
 
-**Web deployment** — An AI agent edits source code locally, then deploys:
+**Web deployment** - An AI agent edits source code locally, then deploys:
 ```bash
 aeroftp-cli put --profile "Production" ./dist/ /var/www/html/ --recursive
 ```
 
-**Multi-server management** — Batch scripts reference profiles by name:
+**Multi-server management** - Batch scripts reference profiles by name:
 ```
 SET profile = NAS Backup
 CONNECT $profile
@@ -100,16 +100,16 @@ PUT ./database-dump.sql /backups/db/
 DISCONNECT
 ```
 
-**Code review with server context** — Ask AeroAgent to compare local code with what is deployed:
+**Code review with server context** - Ask AeroAgent to compare local code with what is deployed:
 > "Compare my local `app.js` with the version on Production server at `/var/www/app.js`"
 
 AeroAgent calls `server_exec` to read the remote file, diffs it locally, and reports the changes. The production server's SFTP password never enters the conversation.
 
 ## Why Existing Solutions Fall Short
 
-- **Traditional CLIs** (scp, rsync, rclone) require credentials in arguments, config files, or environment variables — all accessible to the AI agent
+- **Traditional CLIs** (scp, rsync, rclone) require credentials in arguments, config files, or environment variables - all accessible to the AI agent
 - **OS keystores** protect against other users, not other processes running as the same user
-- **Credential proxy services** (Vault, AWS Secrets Manager) only handle HTTP-based APIs — they cannot authenticate an FTP or SFTP session
+- **Credential proxy services** (Vault, AWS Secrets Manager) only handle HTTP-based APIs - they cannot authenticate an FTP or SFTP session
 - **SSH agent forwarding** covers only SSH/SFTP, not the other 20+ protocols
 
 AeroFTP handles its provider backends behind a single encrypted vault with a single unlock mechanism. The AI agent operates through a narrow, well-defined interface: profile name and file path. Nothing else.

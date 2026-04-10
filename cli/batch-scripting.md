@@ -152,7 +152,7 @@ When a script aborts due to `ON_ERROR FAIL`, the CLI exits with the exit code of
 ## Real-World Example: Nightly Backup
 
 ```bash
-# backup.aeroftp — Nightly backup of production server
+# backup.aeroftp - Nightly backup of production server
 # Run: aeroftp-cli batch backup.aeroftp
 # Cron: 0 2 * * * /usr/bin/aeroftp-cli batch /opt/scripts/backup.aeroftp >> /var/log/aeroftp-backup.log 2>&1
 
@@ -193,7 +193,7 @@ Schedule it via cron:
 ## Real-World Example: Multi-Server Deployment
 
 ```bash
-# deploy.aeroftp — Deploy build artifacts to 3 servers
+# deploy.aeroftp - Deploy build artifacts to 3 servers
 # Run: aeroftp-cli batch deploy.aeroftp
 
 SET build_dir=./dist

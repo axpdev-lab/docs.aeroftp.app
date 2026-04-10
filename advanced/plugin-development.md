@@ -94,7 +94,7 @@ The `plugin.json` manifest defines the plugin metadata, tools, and hooks:
 
 | Level | Behavior | Use Case |
 |-------|----------|----------|
-| `safe` | **Elevated to `medium`** — plugins cannot bypass the approval gate | Read-only operations |
+| `safe` | **Elevated to `medium`** - plugins cannot bypass the approval gate | Read-only operations |
 | `medium` | Requires user approval before execution | File modifications, API calls |
 | `high` | Requires user approval, shown with warning | Destructive operations |
 
@@ -116,7 +116,7 @@ Tools communicate via **stdin/stdout**:
 
 ```bash
 #!/bin/bash
-# my-tool-script.sh — Reads JSON from stdin, processes it, writes result to stdout
+# my-tool-script.sh - Reads JSON from stdin, processes it, writes result to stdout
 
 # Read the full stdin JSON
 INPUT=$(cat)
@@ -145,7 +145,7 @@ echo "{\"line_count\": $RESULT, \"file\": \"$FILE\"}"
 
 Plugin scripts run in a **sandboxed environment**:
 
-- Environment variables are stripped — only minimal safe variables are restored (`PATH`, `HOME`, `LANG`, `TERM`)
+- Environment variables are stripped - only minimal safe variables are restored (`PATH`, `HOME`, `LANG`, `TERM`)
 - Working directory is set to a safe location
 - Scripts have a configurable timeout
 - Output is size-limited
@@ -327,4 +327,4 @@ echo "$(date -Iseconds) | $(echo "$INPUT" | jq -c '.')" >> "$HOME/.config/aeroft
 - Use JSON for structured output so AeroAgent can parse the result
 - Set appropriate danger levels (most tools should be `"medium"`)
 - Test scripts independently before packaging as a plugin
-- Include a meaningful `description` — this is what the AI model sees when deciding which tool to use
+- Include a meaningful `description` - this is what the AI model sees when deciding which tool to use

@@ -27,10 +27,10 @@ Click **Create New Vault** to begin the vault creation workflow.
 ![Create vault dialog](/images/aerovault-create.png)
 <!-- SCREENSHOT: Create vault dialog showing the vault name field, password input with strength indicator, optional cascade mode toggle, and optional TOTP 2FA checkbox -->
 
-1. **Choose a save location** — select where the `.aerovault` file will be stored using the native file dialog.
-2. **Set a master password** — this password is the sole key to your vault. AeroVault derives the encryption key using Argon2id with parameters that exceed OWASP 2024 recommendations (128 MiB memory, 4 iterations, 4 parallel lanes).
-3. **Enable cascade mode** (optional) — adds a second encryption layer using ChaCha20-Poly1305 on top of AES-256-GCM-SIV. This provides defense-in-depth: even if one algorithm is compromised, the other still protects your data.
-4. **Enable TOTP 2FA** (optional) — require a 6-digit time-based one-time password in addition to the master password every time the vault is opened. See [TOTP 2FA](../security/totp.md) for setup instructions.
+1. **Choose a save location** - select where the `.aerovault` file will be stored using the native file dialog.
+2. **Set a master password** - this password is the sole key to your vault. AeroVault derives the encryption key using Argon2id with parameters that exceed OWASP 2024 recommendations (128 MiB memory, 4 iterations, 4 parallel lanes).
+3. **Enable cascade mode** (optional) - adds a second encryption layer using ChaCha20-Poly1305 on top of AES-256-GCM-SIV. This provides defense-in-depth: even if one algorithm is compromised, the other still protects your data.
+4. **Enable TOTP 2FA** (optional) - require a 6-digit time-based one-time password in addition to the master password every time the vault is opened. See [TOTP 2FA](../security/totp.md) for setup instructions.
 
 After creation, the vault opens immediately and you can begin adding files.
 
@@ -43,10 +43,10 @@ Click **Open Vault** or select a recent vault to enter the password prompt.
 
 The open screen displays security badges confirming the cryptographic algorithms protecting the vault:
 
-- **AES-256-GCM-SIV** — content encryption (nonce-misuse resistant, RFC 8452)
-- **Argon2id** — key derivation (128 MiB / t=4 / p=4)
-- **AES-256-KW** — key wrapping (RFC 3394)
-- **HMAC-SHA512** — header integrity verification
+- **AES-256-GCM-SIV** - content encryption (nonce-misuse resistant, RFC 8452)
+- **Argon2id** - key derivation (128 MiB / t=4 / p=4)
+- **AES-256-KW** - key wrapping (RFC 3394)
+- **HMAC-SHA512** - header integrity verification
 
 If TOTP 2FA is enabled, a second field appears for the 6-digit code. Rate limiting with exponential backoff protects against brute-force attempts (5 attempts before lockout, escalating from 30 seconds to 15 minutes).
 
@@ -59,13 +59,13 @@ Once unlocked, the vault browser presents the contents in a familiar file-list i
 
 ### Available Operations
 
-- **Add files** — drag files into the vault browser or click the Add button to select files via the native dialog. Files are encrypted and added immediately.
-- **Add files to subdirectory** — navigate to a folder within the vault and add files directly into it.
-- **Create directories** — organize vault contents into a hierarchical folder structure with breadcrumb navigation. Intermediate directories are created automatically.
-- **Extract individual files** — select one or more files and extract them to a local directory. Decryption happens on-the-fly.
-- **Extract all** — decrypt and extract the entire vault contents at once.
-- **Delete entries** — remove files or entire directory trees from the vault (recursive deletion supported).
-- **Change password** — re-encrypt the vault with a new master password without extracting and re-adding files.
+- **Add files** - drag files into the vault browser or click the Add button to select files via the native dialog. Files are encrypted and added immediately.
+- **Add files to subdirectory** - navigate to a folder within the vault and add files directly into it.
+- **Create directories** - organize vault contents into a hierarchical folder structure with breadcrumb navigation. Intermediate directories are created automatically.
+- **Extract individual files** - select one or more files and extract them to a local directory. Decryption happens on-the-fly.
+- **Extract all** - decrypt and extract the entire vault contents at once.
+- **Delete entries** - remove files or entire directory trees from the vault (recursive deletion supported).
+- **Change password** - re-encrypt the vault with a new master password without extracting and re-adding files.
 
 ### Vault Inspection
 
@@ -145,9 +145,9 @@ The `.aerovault` binary format consists of three sections:
 [512-byte header] [AES-SIV encrypted manifest] [AES-256-GCM-SIV chunked data...]
 ```
 
-- **Header** (512 bytes) — contains the vault version, Argon2id salt, wrapped key material, and HMAC-SHA512 integrity tag
-- **Manifest** — an AES-256-SIV encrypted index of all files and directories with their encrypted filenames, sizes, and offsets
-- **Data** — file contents encrypted in 64 KB chunks using AES-256-GCM-SIV (and optionally ChaCha20-Poly1305 in cascade mode)
+- **Header** (512 bytes) - contains the vault version, Argon2id salt, wrapped key material, and HMAC-SHA512 integrity tag
+- **Manifest** - an AES-256-SIV encrypted index of all files and directories with their encrypted filenames, sizes, and offsets
+- **Data** - file contents encrypted in 64 KB chunks using AES-256-GCM-SIV (and optionally ChaCha20-Poly1305 in cascade mode)
 
 AeroVault files are registered as a MIME type on all platforms with dedicated icons in 8 PNG sizes (16 px to 512 px), SVG, ICO, and ICNS. Double-clicking a `.aerovault` file opens it directly in AeroFTP via the deep-link handler, with single-instance argv forwarding for already-running instances.
 

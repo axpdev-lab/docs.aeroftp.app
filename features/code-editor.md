@@ -8,8 +8,8 @@ Double-click any text file in the local or remote file panel to open it in the e
 
 ## Features
 
-- **Syntax highlighting** — auto-detected by file extension, covering 50+ languages
-- **Multiple themes** — editor theme syncs with the application theme:
+- **Syntax highlighting** - auto-detected by file extension, covering 50+ languages
+- **Multiple themes** - editor theme syncs with the application theme:
 
 | App Theme | Editor Theme |
 |-----------|-------------|
@@ -18,9 +18,9 @@ Double-click any text file in the local or remote file panel to open it in the e
 | Tokyo Night | Tokyo Night |
 | Cyber | Cyber (neon green on dark) |
 
-- **Find and replace** — standard Ctrl+F / Ctrl+H with regex support
-- **Minimap** — code overview on the right side of the editor
-- **Word wrap** — toggle via the View menu
+- **Find and replace** - standard Ctrl+F / Ctrl+H with regex support
+- **Minimap** - code overview on the right side of the editor
+- **Word wrap** - toggle via the View menu
 - **Line numbers** and **bracket matching**
 
 ## AeroAgent Integration

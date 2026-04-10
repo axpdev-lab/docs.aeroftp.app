@@ -159,8 +159,8 @@ Show the directory tree of batch1/. Then search for the word
   └── notes.md (35 B)
 
 2 match(es) in 3 files for "AeroAgent"
-  hello.txt:1 — Ciao AeroAgent
-  notes.md:2 — - Created by AeroAgent
+  hello.txt:1 - Ciao AeroAgent
+  notes.md:2 - - Created by AeroAgent
 ```
 
 **Tools used:** `local_tree`, `local_search`
@@ -179,7 +179,7 @@ Copy notes.md to notes-backup.md. Show file info for config.json.
 ```
 Copied 1/1 file(s): notes.md
 
-config.json — 31 bytes | Type: application/json | Permissions: 100664
+config.json - 31 bytes | Type: application/json | Permissions: 100664
 ```
 
 **Tools used:** `local_copy_files`, `local_file_info`
@@ -260,7 +260,7 @@ Run "uname -a" in the terminal.
 
 **Result:**
 ```
-uname -a — exit code 0
+uname -a - exit code 0
 Linux server 6.17.0-19-generic #19~24.04.2-Ubuntu SMP
 PREEMPT_DYNAMIC Fri Mar 6 23:08:46 UTC 2 x86_64
 ```

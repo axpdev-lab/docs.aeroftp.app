@@ -49,7 +49,7 @@ Data is encrypted in 64 KB chunks for an optimal balance between security and pe
 
 ```rust
 pub enum EncryptionMode {
-    AesGcmSiv,    // Default — AES-256-GCM-SIV only
+    AesGcmSiv,    // Default - AES-256-GCM-SIV only
     Cascade,      // AES-256-GCM-SIV + ChaCha20-Poly1305
 }
 ```
@@ -186,9 +186,9 @@ CreateOptions::new(path, password)
 
 The `.aerovault` format consists of:
 
-1. **Header** (512 bytes) — magic bytes, version, encryption mode, Argon2id salt, AES-KW wrapped key, HMAC-SHA512 MAC
-2. **Manifest** — AES-SIV encrypted JSON index of all entries (filenames, sizes, offsets, timestamps)
-3. **Data blocks** — AES-256-GCM-SIV encrypted chunks (64 KB each), optionally double-encrypted with ChaCha20-Poly1305 in cascade mode
+1. **Header** (512 bytes) - magic bytes, version, encryption mode, Argon2id salt, AES-KW wrapped key, HMAC-SHA512 MAC
+2. **Manifest** - AES-SIV encrypted JSON index of all entries (filenames, sizes, offsets, timestamps)
+3. **Data blocks** - AES-256-GCM-SIV encrypted chunks (64 KB each), optionally double-encrypted with ChaCha20-Poly1305 in cascade mode
 
 The format specification is available in the [GitHub repository](https://github.com/axpnet/aerovault).
 

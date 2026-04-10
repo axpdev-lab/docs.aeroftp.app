@@ -55,7 +55,7 @@ In order of preference:
 1. **stdin** (most secure): `echo "$PASS" | aeroftp-cli --password-stdin connect sftp://user@host`
 2. **Environment variable**: `AEROFTP_TOKEN=mytoken aeroftp-cli connect jottacloud://user@host`
 3. **Interactive prompt**: Hidden TTY input when no password provided
-4. **URL** (least secure): `sftp://user:password@host` — warning always displayed
+4. **URL** (least secure): `sftp://user:password@host` - warning always displayed
 
 Master password for vault: set `AEROFTP_MASTER_PASSWORD` env var or enter interactively.
 
@@ -164,7 +164,7 @@ aeroftp-cli check --profile "server" /local/ /remote/ --one-way
 
 ### about
 
-Detailed server info with storage quota — more comprehensive than `df`.
+Detailed server info with storage quota - more comprehensive than `df`.
 
 ```bash
 # Server info with storage quota
@@ -526,19 +526,19 @@ All commands tested live against 12 providers via `--profile`:
 | Provider | Protocol | connect | ls | put/get | head/tail | hashsum | check | about | df |
 |---|---|---|---|---|---|---|---|---|---|
 | WD MyCloud NAS | SFTP | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS |
-| axpdev.it | FTP | PASS | PASS | — | PASS | PASS | — | PASS | — |
-| Playground | GitHub | PASS | PASS | PASS | PASS | PASS | — | PASS | — |
-| MEGA.nz | MEGA | PASS | PASS | — | — | — | — | PASS | — |
-| OpenDrive | OpenDrive | PASS | PASS | — | — | — | — | PASS | PASS |
-| Filen | Filen (E2E) | PASS | PASS | — | — | — | — | PASS | PASS |
-| Koofr | WebDAV | PASS | PASS | — | — | — | — | PASS | — |
-| Koofr | Native API | PASS | PASS | — | — | — | — | PASS | PASS |
-| WD MyCloud NAS | WebDAV | PASS | PASS | — | — | — | — | PASS | — |
-| Backblaze B2 | S3 | PASS | PASS | — | — | — | — | PASS | — |
-| Azure | Azure Blob | PASS | PASS | — | — | — | — | PASS | — |
-| 4shared | OAuth 1.0 | PASS | PASS | — | — | — | — | PASS | PASS |
+| axpdev.it | FTP | PASS | PASS | - | PASS | PASS | - | PASS | - |
+| Playground | GitHub | PASS | PASS | PASS | PASS | PASS | - | PASS | - |
+| MEGA.nz | MEGA | PASS | PASS | - | - | - | - | PASS | - |
+| OpenDrive | OpenDrive | PASS | PASS | - | - | - | - | PASS | PASS |
+| Filen | Filen (E2E) | PASS | PASS | - | - | - | - | PASS | PASS |
+| Koofr | WebDAV | PASS | PASS | - | - | - | - | PASS | - |
+| Koofr | Native API | PASS | PASS | - | - | - | - | PASS | PASS |
+| WD MyCloud NAS | WebDAV | PASS | PASS | - | - | - | - | PASS | - |
+| Backblaze B2 | S3 | PASS | PASS | - | - | - | - | PASS | - |
+| Azure | Azure Blob | PASS | PASS | - | - | - | - | PASS | - |
+| 4shared | OAuth 1.0 | PASS | PASS | - | - | - | - | PASS | PASS |
 
-Additional commands tested on SFTP: `dedupe`, `track-renames`, `bwlimit`, `touch`, `tree` — all PASS.
+Additional commands tested on SFTP: `dedupe`, `track-renames`, `bwlimit`, `touch`, `tree` - all PASS.
 
 Filter system (`--include`, `--exclude-global`, `--min-size`, `--max-size`) and `check` with `hashsum` round-trip verification all passed on SFTP. `about` tested on all 12 providers. `dedupe`, `track-renames`, and `bwlimit` tested on SFTP.
 

@@ -45,7 +45,7 @@ AeroFTP welcomes responsible disclosure. Researchers who report valid issues wil
 
 We gratefully acknowledge security researchers who help improve AeroFTP:
 
-*No reports yet — be the first!*
+*No reports yet - be the first!*
 
 ## Known Issues
 

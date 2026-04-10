@@ -4,7 +4,7 @@ AeroCloud turns any server into a private personal cloud. Reliable sync with 11 
 
 ## Supported Protocols
 
-AeroCloud supports 21 protocols for sync (GitHub and DrimeCloud are excluded — conceptually incompatible with sync). Protocols are classified by sync reliability:
+AeroCloud supports 21 protocols for sync (GitHub and DrimeCloud are excluded - conceptually incompatible with sync). Protocols are classified by sync reliability:
 
 - **Stable (12)**: SFTP, S3, Azure, WebDAV, Google Drive, Dropbox, OneDrive, Jottacloud, kDrive, Koofr, OpenDrive, FeliCloud
 - **Beta (8)**: FTP, FTPS, Box, pCloud, Zoho WorkDrive, Yandex Disk, MEGA, Filen, Internxt
@@ -26,7 +26,7 @@ Direct server connections using standard file transfer protocols.
 
 ### OAuth Cloud Providers
 
-Cloud services that authenticate via OAuth 2.0. AeroFTP handles the full authorization flow — click **Authorize**, sign in to the provider, and the token is stored securely in the vault.
+Cloud services that authenticate via OAuth 2.0. AeroFTP handles the full authorization flow - click **Authorize**, sign in to the provider, and the token is stored securely in the vault.
 
 | Provider | Free Tier | Auth | Special Features |
 |----------|-----------|------|------------------|
@@ -64,7 +64,7 @@ Cloud services that use API keys, passwords, or session-based authentication.
 
 ## Background Sync
 
-AeroCloud runs in the system tray and synchronizes files in the background. The cloud provider factory dispatches connections for all supported protocols — direct-auth, OAuth 2.0, and OAuth 1.0. Protocol maturity badges in the setup wizard indicate sync reliability per provider.
+AeroCloud runs in the system tray and synchronizes files in the background. The cloud provider factory dispatches connections for all supported protocols - direct-auth, OAuth 2.0, and OAuth 1.0. Protocol maturity badges in the setup wizard indicate sync reliability per provider.
 
 When background sync is active:
 
@@ -78,15 +78,15 @@ When background sync is active:
 
 The CloudPanel wizard guides you through connecting a new cloud provider in four steps.
 
-### Step 1 — Select Protocol
+### Step 1 - Select Protocol
 
 A grid of protocol cards organized into three groups:
 
-- **Servers** — FTP, FTPS, SFTP, WebDAV, S3
-- **Cloud** — Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho, kDrive, Koofr, FeliCloud, Yandex, MEGA, 4shared, Filen, Internxt, FileLu, OpenDrive, Jottacloud
-- **Special** — Azure Blob, GitHub
+- **Servers** - FTP, FTPS, SFTP, WebDAV, S3
+- **Cloud** - Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho, kDrive, Koofr, FeliCloud, Yandex, MEGA, 4shared, Filen, Internxt, FileLu, OpenDrive, Jottacloud
+- **Special** - Azure Blob, GitHub
 
-### Step 2 — Connection Fields
+### Step 2 - Connection Fields
 
 Dynamic form fields based on the selected protocol:
 
@@ -95,11 +95,11 @@ Dynamic form fields based on the selected protocol:
 - **API providers**: API key, email, password, 2FA code (Filen)
 - **S3**: Endpoint, region, bucket, access key, secret key, path style toggle
 
-### Step 3 — Authorize (OAuth only)
+### Step 3 - Authorize (OAuth only)
 
 For OAuth providers, click **Authorize** to open the browser-based consent flow. AeroFTP receives the callback, exchanges the code for tokens, and stores them in the encrypted vault.
 
-### Step 4 — Sync Settings
+### Step 4 - Sync Settings
 
 Configure the sync behavior for this connection:
 
@@ -110,7 +110,7 @@ Configure the sync behavior for this connection:
 
 ## Native OS File Manager Badges
 
-AeroCloud provides native sync status badges in your operating system's file manager — the same green checkmarks and blue sync arrows you see with Dropbox or OneDrive.
+AeroCloud provides native sync status badges in your operating system's file manager - the same green checkmarks and blue sync arrows you see with Dropbox or OneDrive.
 
 ### Badge States
 
@@ -118,7 +118,7 @@ AeroCloud provides native sync status badges in your operating system's file man
 |-------|---------|
 | **Green checkmark** | File is synced and up to date |
 | **Blue arrows** | File is currently syncing |
-| **Red X** | Sync error — check the sync log for details |
+| **Red X** | Sync error - check the sync log for details |
 
 ### Linux (Nautilus / Nemo / Caja)
 
@@ -126,7 +126,7 @@ AeroCloud communicates with GNOME-based file managers through the **GIO emblem**
 
 ### Windows (Cloud Filter API)
 
-On Windows 10 1709+, AeroCloud uses the **Cloud Filter API** (`CfSetInSyncState`, `CfRegisterSyncRoot`) to display native Explorer sync badges. No COM DLL or shell extension is required — the badges appear automatically in the file list and Details pane.
+On Windows 10 1709+, AeroCloud uses the **Cloud Filter API** (`CfSetInSyncState`, `CfRegisterSyncRoot`) to display native Explorer sync badges. No COM DLL or shell extension is required - the badges appear automatically in the file list and Details pane.
 
 ### macOS (FinderSync)
 
@@ -154,9 +154,9 @@ The status bar displays remaining storage for the connected provider. Quota info
 
 Providers that support versioning (Google Drive, Dropbox, OneDrive, Box, Zoho WorkDrive) expose version history through the StorageProvider trait:
 
-- **List versions** — see all previous versions with timestamps and sizes
-- **Download version** — retrieve a specific historical version
-- **Restore version** — promote a previous version to current
+- **List versions** - see all previous versions with timestamps and sizes
+- **Download version** - retrieve a specific historical version
+- **Restore version** - promote a previous version to current
 
 ### Share Links
 

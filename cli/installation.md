@@ -1,6 +1,6 @@
 # CLI Installation
 
-The `aeroftp-cli` command-line interface is a standalone Rust binary built from the same codebase as the AeroFTP desktop application. It provides full scriptable access to all 22 supported protocols — FTP, FTPS, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Azure Blob, 4shared, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, and OpenDrive — without requiring a graphical environment.
+The `aeroftp-cli` command-line interface is a standalone Rust binary built from the same codebase as the AeroFTP desktop application. It provides full scriptable access to all 22 supported protocols - FTP, FTPS, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Azure Blob, 4shared, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, and OpenDrive - without requiring a graphical environment.
 
 ## Included with Every Desktop Package
 
@@ -30,7 +30,7 @@ For package formats where the binary is not in PATH (AppImage, macOS `.dmg`), cr
 # macOS
 sudo ln -s /Applications/AeroFTP.app/Contents/MacOS/aeroftp-cli /usr/local/bin/aeroftp
 
-# AppImage — extract first, then symlink
+# AppImage - extract first, then symlink
 ./AeroFTP-x86_64.AppImage --appimage-extract
 sudo ln -s "$(pwd)/squashfs-root/usr/bin/aeroftp-cli" /usr/local/bin/aeroftp
 ```
@@ -119,10 +119,10 @@ In CI/CD environments or when piping output, use `--json` for machine-readable p
 
 ## SIGPIPE Handling
 
-On Unix systems, the CLI installs a `SIGPIPE` handler at startup via `libc::signal(SIGPIPE, SIG_DFL)`. This ensures proper pipe compliance — if you pipe output to a program that closes early (e.g., `head`), the CLI terminates cleanly instead of printing a broken pipe error:
+On Unix systems, the CLI installs a `SIGPIPE` handler at startup via `libc::signal(SIGPIPE, SIG_DFL)`. This ensures proper pipe compliance - if you pipe output to a program that closes early (e.g., `head`), the CLI terminates cleanly instead of printing a broken pipe error:
 
 ```bash
-# Works correctly — CLI exits when head has enough lines
+# Works correctly - CLI exits when head has enough lines
 aeroftp-cli ls sftp://user@host/ --json | head -5
 ```
 

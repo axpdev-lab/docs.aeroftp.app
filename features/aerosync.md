@@ -47,28 +47,28 @@ The Advanced tab provides full control over synchronization behavior through fou
 
 Choose the sync direction and configure orphan handling:
 
-- **Local to Remote** — push local changes to the server
-- **Remote to Local** — pull remote changes to your machine
-- **Bidirectional** — sync changes in both directions
-- **Delete orphans** toggle — remove files on the destination that do not exist on the source
+- **Local to Remote** - push local changes to the server
+- **Remote to Local** - pull remote changes to your machine
+- **Bidirectional** - sync changes in both directions
+- **Delete orphans** toggle - remove files on the destination that do not exist on the source
 
 ### Compare Section
 
 Define how AeroSync determines whether a file needs to be transferred:
 
-- **overwrite_if_newer** — transfer only when the source file has a more recent modification time
-- **overwrite_if_different** — transfer when file size or checksum differs, regardless of timestamp
-- **skip_if_identical** — skip files where both size and SHA-256 hash match exactly
-- **Compare checksum** toggle — enable SHA-256 hashing during the scan phase (streaming 64 KB chunks)
+- **overwrite_if_newer** - transfer only when the source file has a more recent modification time
+- **overwrite_if_different** - transfer when file size or checksum differs, regardless of timestamp
+- **skip_if_identical** - skip files where both size and SHA-256 hash match exactly
+- **Compare checksum** toggle - enable SHA-256 hashing during the scan phase (streaming 64 KB chunks)
 
 ### Transfer Section
 
 Control retry behavior, verification policies, and per-file timeouts:
 
-- **Retry count** — number of retry attempts per file (default: 3)
-- **Retry delay** — base delay with exponential backoff (default: 500 ms, 2x multiplier, 10-second cap)
-- **Per-file timeout** — maximum time allowed for a single file transfer (default: 2 minutes)
-- **Post-transfer verification** — 4 policies: None, Size Only, Size + Mtime, Full (SHA-256 re-hash after transfer)
+- **Retry count** - number of retry attempts per file (default: 3)
+- **Retry delay** - base delay with exponential backoff (default: 500 ms, 2x multiplier, 10-second cap)
+- **Per-file timeout** - maximum time allowed for a single file transfer (default: 2 minutes)
+- **Post-transfer verification** - 4 policies: None, Size Only, Size + Mtime, Full (SHA-256 re-hash after transfer)
 
 ### Automation Section
 
@@ -116,18 +116,18 @@ When both the local and remote copies of a file have been modified since the las
 
 For each conflicting file, three options are available:
 
-- **Keep Local** — upload the local version, overwriting the remote copy
-- **Keep Remote** — download the remote version, overwriting the local copy
-- **Skip** — leave both versions untouched for this sync run
+- **Keep Local** - upload the local version, overwriting the remote copy
+- **Keep Remote** - download the remote version, overwriting the local copy
+- **Skip** - leave both versions untouched for this sync run
 
 ### Batch Actions
 
 When dealing with many conflicts, batch actions resolve all files at once:
 
-- **Keep Newer All** — for each file, keep whichever version has the more recent modification time
-- **Keep Local All** — upload all local versions
-- **Keep Remote All** — download all remote versions
-- **Skip All** — leave all conflicting files untouched
+- **Keep Newer All** - for each file, keep whichever version has the more recent modification time
+- **Keep Local All** - upload all local versions
+- **Keep Remote All** - download all remote versions
+- **Skip All** - leave all conflicting files untouched
 
 All conflict decisions are recorded in the transfer journal for auditing and reproducibility.
 
@@ -135,19 +135,19 @@ All conflict decisions are recorded in the transfer journal for auditing and rep
 
 Configure AeroSync to run automatically on a recurring basis. The scheduler UI provides intuitive controls for timing and scope.
 
-- **Interval selector** — choose a sync frequency from every 5 minutes up to every 24 hours
-- **Time window** — restrict sync operations to specific hours (e.g., 02:00 to 06:00) to avoid interfering with active work or peak bandwidth periods
-- **Day picker** — select which days of the week the scheduler should be active (weekdays only, weekends only, or custom)
-- **Pause / Resume** — temporarily suspend the scheduler with a single click; a live countdown displays the time until the next scheduled sync
-- **Overnight carry-over** — if a time window spans midnight (e.g., 23:00 to 03:00), AeroSync handles the day boundary correctly
+- **Interval selector** - choose a sync frequency from every 5 minutes up to every 24 hours
+- **Time window** - restrict sync operations to specific hours (e.g., 02:00 to 06:00) to avoid interfering with active work or peak bandwidth periods
+- **Day picker** - select which days of the week the scheduler should be active (weekdays only, weekends only, or custom)
+- **Pause / Resume** - temporarily suspend the scheduler with a single click; a live countdown displays the time until the next scheduled sync
+- **Overnight carry-over** - if a time window spans midnight (e.g., 23:00 to 03:00), AeroSync handles the day boundary correctly
 
 ## Filesystem Watcher
 
 AeroSync can monitor local directories for real-time changes using inotify on Linux. A health indicator in the sync panel shows the watcher status:
 
-- **Active** (green) — watcher is running and monitoring all configured paths
-- **Warning** (yellow) — inotify watch count is approaching the system limit (`/proc/sys/fs/inotify/max_user_watches`)
-- **Inactive** (gray) — watcher is not running
+- **Active** (green) - watcher is running and monitoring all configured paths
+- **Warning** (yellow) - inotify watch count is approaching the system limit (`/proc/sys/fs/inotify/max_user_watches`)
+- **Inactive** (gray) - watcher is not running
 
 When the watcher detects file changes, it can trigger an immediate sync or queue changes for the next scheduled run, depending on your configuration.
 
@@ -165,8 +165,8 @@ When the **Compare checksum** option is enabled, AeroSync computes SHA-256 hashe
 
 ### Journal Maintenance
 
-- **Auto-cleanup** — journals older than 30 days are automatically deleted when the sync panel opens
-- **Clear History** — a button with confirmation dialog to delete all journals at once
+- **Auto-cleanup** - journals older than 30 days are automatically deleted when the sync panel opens
+- **Clear History** - a button with confirmation dialog to delete all journals at once
 - Journals use compact JSON serialization (no pretty-printing) to minimize disk usage
 
 ## Bandwidth Control
@@ -183,8 +183,8 @@ Define multiple local-to-remote path mappings within a single sync configuration
 
 Before executing a sync, run a dry-run to preview exactly what will happen. The dry-run scans both sides, computes the diff, and exports the planned operations as either:
 
-- **JSON** — structured format for programmatic analysis or scripting
-- **CSV** — tabular format for review in spreadsheet applications
+- **JSON** - structured format for programmatic analysis or scripting
+- **CSV** - tabular format for review in spreadsheet applications
 
 The dry-run report includes file paths, planned actions (upload, download, delete, skip), file sizes, and the reason for each decision.
 
@@ -206,10 +206,10 @@ Templates are exported and imported via Tauri's native file dialog.
 
 Create pre-sync snapshots of your data that can be restored if a sync produces unwanted results.
 
-- **Create snapshot** — save the current state before running a sync
-- **List snapshots** — view all available snapshots with timestamps and file counts
-- **Preview** — inspect the files contained in a snapshot before restoring
-- **Delete** — remove old snapshots to free disk space
+- **Create snapshot** - save the current state before running a sync
+- **List snapshots** - view all available snapshots with timestamps and file counts
+- **Preview** - inspect the files contained in a snapshot before restoring
+- **Delete** - remove old snapshots to free disk space
 
 ## Error Handling
 

@@ -20,16 +20,16 @@ As you type, a preview column shows the result of the rename operation for every
 ### Sequential Options
 
 When using Sequential mode, you can configure:
-- **Base name** — the prefix before the number
-- **Start number** — the first number in the sequence (default: 1)
-- **Zero padding** — number of digits (e.g., 3 digits gives `001`, `002`, ...)
+- **Base name** - the prefix before the number
+- **Start number** - the first number in the sequence (default: 1)
+- **Zero padding** - number of digits (e.g., 3 digits gives `001`, `002`, ...)
 
 ## Inline Rename
 
 For renaming a single file quickly:
 
-- **F2** — press F2 with a file selected to enter inline edit mode
-- **Click on filename** — click the filename text of an already-selected file
+- **F2** - press F2 with a file selected to enter inline edit mode
+- **Click on filename** - click the filename text of an already-selected file
 
 Inline rename works in both the local and remote file panels. Press **Enter** to confirm or **Escape** to cancel.
 
