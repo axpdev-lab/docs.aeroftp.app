@@ -179,6 +179,7 @@ export default defineConfig({
             { text: 'rclone Bridge', link: '/features/rclone' },
             { text: 'rclone crypt', link: '/features/rclone-crypt' },
             { text: 'WinSCP Bridge', link: '/features/winscp' },
+            { text: 'FileZilla Bridge', link: '/features/filezilla' },
             { text: 'Terminal', link: '/features/terminal' },
           ],
         },
