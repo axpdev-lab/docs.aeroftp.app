@@ -47,6 +47,12 @@ features:
     details: Complete internationalization - use AeroFTP in your own language.
 ---
 
+<script setup>
+import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
+</script>
+
+<SnapTerritories />
+
 <h2 align="center">Integrations</h2>
 
 <p align="center">Connect to 40+ cloud providers and services via FTP, FTPS, SFTP, WebDAV, S3, OAuth2, and native APIs.</p>
