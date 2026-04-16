@@ -61,6 +61,7 @@ export default defineConfig({
       { text: 'Setup Guides', link: '/providers/' },
       { text: 'Features', link: '/features/aerocloud' },
       { text: 'CLI', link: '/cli/installation' },
+      { text: 'MCP', link: '/mcp/overview' },
       {
         text: 'Website',
         link: 'https://aeroftp.app',
@@ -191,6 +192,13 @@ export default defineConfig({
             { text: 'Commands', link: '/cli/commands' },
             { text: 'Batch Scripting', link: '/cli/batch-scripting' },
             { text: 'Examples', link: '/cli/examples' },
+          ],
+        },
+        {
+          text: 'MCP',
+          collapsed: false,
+          items: [
+            { text: 'Overview', link: '/mcp/overview' },
           ],
         },
         {
