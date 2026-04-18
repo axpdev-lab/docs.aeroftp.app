@@ -25,13 +25,13 @@ All providers on this page speak the S3 API. AeroFTP uses native Signature V4, m
 
 | Provider | Endpoint | Class | Score | Core | Integrity | Navigation | Advanced | Encoding | Reconcile |
 |----------|----------|:-----:|:-----:|:----:|:---------:|:----------:|:--------:|:--------:|:---------:|
-| <img class="provider-logo" src="/icons/providers/Amazon_Web_Services.png" alt=""> [AWS S3](#aws-s3) | `s3.amazonaws.com` | **B** | 89 | 30/30 | 20/20 | 15/15 | 12/15 | 7/10* | 5/10 |
-| <img class="provider-logo" src="/icons/providers/backblaze.png" alt=""> [Backblaze B2](#backblaze-b2) | `s3.{region}.backblazeb2.com` | **B** | 87 | 30/30 | 20/20 | 15/15 | 10/15 | 7/10* | 5/10 |
-| <img class="provider-logo" src="/icons/providers/cloudfare.png" alt=""> [Cloudflare R2](#cloudflare-r2) | `{account}.r2.cloudflarestorage.com` | **B** | 87 | 30/30 | 20/20 | 15/15 | 10/15 | 7/10* | 5/10 |
-| <img class="provider-logo" src="/icons/providers/storj.png" alt=""> [Storj](#storj) | `gateway.storjshare.io` | **B** | 87 | 30/30 | 20/20 | 15/15 | 10/15 | 7/10* | 5/10 |
-| <img class="provider-logo" src="/icons/providers/wasabi.png" alt=""> [Wasabi](#wasabi) | `s3.{region}.wasabisys.com` | **B** | 87 | 30/30 | 20/20 | 15/15 | 10/15 | 7/10* | 5/10 |
+| <img class="provider-logo" src="/icons/providers/Amazon_Web_Services.png" alt=""> [AWS S3](#aws-s3) | `s3.amazonaws.com` | **B** | 87 | 30/30 | 20/20 | 15/15 | 12/15 | 5/10 | 5/10 |
+| <img class="provider-logo" src="/icons/providers/backblaze.png" alt=""> [Backblaze B2](#backblaze-b2) | `s3.{region}.backblazeb2.com` | **B** | 85 | 30/30 | 20/20 | 15/15 | 10/15 | 5/10 | 5/10 |
+| <img class="provider-logo" src="/icons/providers/cloudfare.png" alt=""> [Cloudflare R2](#cloudflare-r2) | `{account}.r2.cloudflarestorage.com` | **B** | 85 | 30/30 | 20/20 | 15/15 | 10/15 | 5/10 | 5/10 |
+| <img class="provider-logo" src="/icons/providers/storj.png" alt=""> [Storj](#storj) | `gateway.storjshare.io` | **B** | 86 | 30/30 | 20/20 | 15/15 | 10/15 | 6/10 | 5/10 |
+| <img class="provider-logo" src="/icons/providers/wasabi.png" alt=""> [Wasabi](#wasabi) | `s3.{region}.wasabisys.com` | **B** | 86 | 30/30 | 20/20 | 15/15 | 10/15 | 6/10 | 5/10 |
 
-*\* Encoding scored conservatively pending dedicated live-provider run; see [hub notes](./#notes-on-score-dimensions).*
+Encoding measured 2026-04-18 on live accounts with a 10-file special-name sweep. S3-compatible providers consistently fail on the same set (`%`, `+`, `&`, `'`, `#`); see [hub notes](./#notes-on-score-dimensions) for the AeroFTP client issues being tracked.
 
 ## AWS S3
 

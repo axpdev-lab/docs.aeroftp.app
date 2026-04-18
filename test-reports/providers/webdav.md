@@ -25,12 +25,12 @@ AeroFTP speaks WebDAV over HTTP/1.1 with Basic and Digest authentication. Provid
 
 | Provider | Endpoint | Class | Score | Core | Integrity | Navigation | Advanced | Encoding | Reconcile |
 |----------|----------|:-----:|:-----:|:----:|:---------:|:----------:|:--------:|:--------:|:---------:|
-| <img class="provider-logo" src="/icons/providers/felicloud.png" alt=""> [FeliCloud](#felicloud) | Nextcloud WebDAV | **A** | 90 | 30/30 | 20/20 | 15/15 | 8/15 | 7/10* | 10/10 |
-| <img class="provider-logo" src="/icons/providers/Koofr.png" alt=""> [Koofr](#koofr-webdav) | `app.koofr.net/dav` | **B** | 88 | 30/30 | 20/20 | 15/15 | 6/15 | 7/10* | 10/10 |
-| <img class="provider-logo" src="/icons/providers/infiniCloud.png" alt=""> [InfiniCloud JP](#infinicloud) | `wajima.infini-cloud.net/dav` | **C** | 68 | 30/30 | ⏳ | ⏳ | 6/15 | 7/10* | 10/10 |
-| <img class="provider-logo" src="/icons/providers/drivehq.png" alt=""> [DriveHQ](#drivehq) | `webdav.drivehq.com` | **C** | 68 | 30/30 | ⏳ | ⏳ | 6/15 | 7/10* | 10/10 |
+| <img class="provider-logo" src="/icons/providers/felicloud.png" alt=""> [FeliCloud](#felicloud) | Nextcloud WebDAV | **A** | 90 | 30/30 | 20/20 | 15/15 | 8/15 | 7/10 | 10/10 |
+| <img class="provider-logo" src="/icons/providers/Koofr.png" alt=""> [Koofr](#koofr-webdav) | `app.koofr.net/dav` | **B** | 86 | 30/30 | 20/20 | 15/15 | 6/15 | 5/10 | 10/10 |
+| <img class="provider-logo" src="/icons/providers/drivehq.png" alt=""> [DriveHQ](#drivehq) | `webdav.drivehq.com` | **B** | 81 | 30/30 | 20/20 | ⏳ 7 | 6/15 | 8/10 | 10/10 |
+| <img class="provider-logo" src="/icons/providers/infiniCloud.png" alt=""> [InfiniCloud JP](#infinicloud) | `wajima.infini-cloud.net/dav` | **B** | 80 | 30/30 | 20/20 | ⏳ 7 | 6/15 | 7/10 | 10/10 |
 
-*\* Encoding scored conservatively pending dedicated live-provider run; see [hub notes](./#notes-on-score-dimensions).*
+Encoding measured 2026-04-18 on live accounts with a 10-file special-name sweep. Integrity verified via SHA-256 round-trip on 1 MB payload.
 
 ## FeliCloud
 

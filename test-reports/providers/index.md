@@ -43,32 +43,34 @@ Speed is deliberately excluded: throughput depends on distance from the provider
 
 ## Stable Core
 
-The providers below have passed connect / listing / round-trip / integrity checks. Scoring is conservative: gaps on advanced features or on reconciliation reduce the score even when core operations are green.
+Scores below reflect a full encoding sweep completed 2026-04-18 on live accounts for each provider, with SHA-256 end-to-end verification on 1 MB round-trip.
 
 | Provider | Protocol | Class | Score | Integrity | Navigation | Advanced | Encoding | Reconcile |
 |----------|----------|:-----:|:-----:|:---------:|:----------:|:--------:|:--------:|:---------:|
-| <img class="provider-logo" src="/icons/providers/Amazon_Web_Services.png" alt=""> [AWS S3](./s3-compatible#aws-s3) | S3 | **B** | 89 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| <img class="provider-logo" src="/icons/providers/dropbox.png" alt=""> [Dropbox](./#dropbox) | Dropbox API | **A** | 92 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| <img class="provider-logo" src="/icons/providers/YandexDisk.png" alt=""> [Yandex Disk](./#yandex-disk) | Native API | **B** | 89 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| <img class="provider-logo" src="/icons/providers/kdrive.png" alt=""> [kDrive](./#kdrive) | Infomaniak API | **A** | 90 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| <img class="provider-logo" src="/icons/providers/filelu.png" alt=""> [FileLu API](./#filelu) | Native API | **A** | 90 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| <img class="provider-logo" src="/icons/providers/felicloud.png" alt=""> [FeliCloud](./webdav#felicloud) | WebDAV (Nextcloud) | **A** | 90 | ✅ | ✅ | ✅ | ⏳ | ✅ |
-| <img class="provider-logo" src="/icons/providers/Koofr.png" alt=""> [Koofr](./webdav#koofr-webdav) | WebDAV | **B** | 88 | ✅ | ✅ | ✅ | ⏳ | ✅ |
+| <img class="provider-logo" src="/icons/providers/dropbox.png" alt=""> [Dropbox](./#dropbox) | Dropbox API | **A** | 95 | ✅ | ✅ | ✅ | ✅ 10/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/kdrive.png" alt=""> [kDrive](./#kdrive) | Infomaniak API | **A** | 93 | ✅ | ✅ | ✅ | ✅ 10/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/YandexDisk.png" alt=""> [Yandex Disk](./#yandex-disk) | Native API | **A** | 92 | ✅ | ✅ | ✅ | ✅ 10/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/filelu.png" alt=""> [FileLu API](./#filelu) | Native API | **A** | 92 | ✅ | ✅ | ✅ | ✅ 9/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/felicloud.png" alt=""> [FeliCloud](./webdav#felicloud) | WebDAV (Nextcloud) | **A** | 90 | ✅ | ✅ | ✅ | ⚠️ 7/10 | ✅ |
 | <img class="provider-logo" src="/icons/protocols.svg" alt=""> [SSH MyCloud HD](./#ssh-mycloud) | SFTP (NAS) | **A** | 90 | ✅ | ✅ | ✅ | ✅ | ✅ |
-| <img class="provider-logo" src="/icons/providers/backblaze.png" alt=""> [Backblaze B2](./s3-compatible#backblaze-b2) | S3 | **B** | 87 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| <img class="provider-logo" src="/icons/providers/storj.png" alt=""> [Storj](./s3-compatible#storj) | S3 Gateway | **B** | 87 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| <img class="provider-logo" src="/icons/providers/wasabi.png" alt=""> [Wasabi](./s3-compatible#wasabi) | S3 | **B** | 87 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| <img class="provider-logo" src="/icons/providers/cloudfare.png" alt=""> [Cloudflare R2](./s3-compatible#cloudflare-r2) | S3 | **B** | 87 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| <img class="provider-logo" src="/icons/providers/infiniCloud.png" alt=""> [InfiniCloud JP](./webdav#infinicloud) | WebDAV | **C** | 68 | ⏳ | ⏳ | ✅ | ⏳ | ✅ |
-| <img class="provider-logo" src="/icons/providers/drivehq.png" alt=""> [DriveHQ](./webdav#drivehq) | WebDAV | **C** | 68 | ⏳ | ⏳ | ✅ | ⏳ | ✅ |
+| <img class="provider-logo" src="/icons/providers/Amazon_Web_Services.png" alt=""> [AWS S3](./s3-compatible#aws-s3) | S3 | **B** | 87 | ✅ | ✅ | ✅ | ⚠️ 5/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/storj.png" alt=""> [Storj](./s3-compatible#storj) | S3 Gateway | **B** | 86 | ✅ | ✅ | ✅ | ⚠️ 6/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/wasabi.png" alt=""> [Wasabi](./s3-compatible#wasabi) | S3 | **B** | 86 | ✅ | ✅ | ✅ | ⚠️ 6/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/Koofr.png" alt=""> [Koofr](./webdav#koofr-webdav) | WebDAV | **B** | 86 | ✅ | ✅ | ✅ | ⚠️ 5/10 | ✅ |
+| <img class="provider-logo" src="/icons/providers/backblaze.png" alt=""> [Backblaze B2](./s3-compatible#backblaze-b2) | S3 | **B** | 85 | ✅ | ✅ | ✅ | ⚠️ 5/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/cloudfare.png" alt=""> [Cloudflare R2](./s3-compatible#cloudflare-r2) | S3 | **B** | 85 | ✅ | ✅ | ✅ | ⚠️ 5/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/drivehq.png" alt=""> [DriveHQ](./webdav#drivehq) | WebDAV | **B** | 81 | ✅ | ⏳ | ✅ | ⚠️ 8/10 | ✅ |
+| <img class="provider-logo" src="/icons/providers/infiniCloud.png" alt=""> [InfiniCloud JP](./webdav#infinicloud) | WebDAV | **B** | 80 | ✅ | ⏳ | ✅ | ⚠️ 7/10 | ✅ |
 
 Legend: ✅ full pass · ⚠️ partial pass · ⏳ pending benchmark · ❌ fail · - not applicable
 
 ### Notes on score dimensions
 
-- **Encoding Robustness** is currently marked ⏳ for live providers: the dimension is fully benchmarked only on Docker runs ([2026-04-18](../docker-matrix/2026-04-18)) so far. Live provider scoring for this dimension is conservative (preliminary value 7/10) until dedicated runs consolidate.
-- **Reconciliation ⚠️** on object-storage and cloud APIs means post-sync check requires explicit path configuration; integrity of the transferred data is not affected.
-- **InfiniCloud JP** and **DriveHQ** are marked Class C because mini-completion is clean but the full matrix has not yet been covered.
+- **Encoding Robustness** is now measured on live accounts for all providers in this matrix. The sweep covers 10 file names including unicode, emoji, spaces, and the ASCII special set `& ' # % ( ) +`.
+- **Native / API providers** (Dropbox, kDrive, Yandex, FileLu) handle all 10 names cleanly. FileLu is at 9/10 because emoji is stored correctly but rendered as `????` in the listing (server-side transliteration).
+- **S3-compatible providers** consistently trip on the same set (`%` signature mismatch, `+` reject, `&` / `'` XML split in listing, `#` URL fragment truncation). These are AeroFTP client issues, not provider issues, and are tracked for fix.
+- **Reconciliation ⚠️** on object-storage and cloud APIs means post-sync check currently requires explicit path configuration; integrity of the transferred data is never affected.
+- **InfiniCloud JP** and **DriveHQ** were promoted from Class C after integrity and encoding measurement consolidated.
 
 ## Detail pages
 
@@ -83,7 +85,7 @@ Several additional providers (pCloud, Filen, Internxt, MEGA, 4shared, Zoho WorkD
 
 The matrix is revisited after every significant test run consolidation. Scores may change when:
 
-- New rubric dimensions are benchmarked on previously-untested providers (e.g. encoding robustness for live S3)
+- New rubric dimensions are benchmarked on previously-untested providers
 - Provider-side changes affect an operation class
 - Rubric weights are re-balanced (only in major revisions of the methodology)
 
