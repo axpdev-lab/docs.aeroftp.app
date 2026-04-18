@@ -191,7 +191,21 @@ aeroftp-cli dedupe --profile "server" /data --mode skip
 aeroftp-cli dedupe --profile "server" /data --dry-run --json
 ```
 
-Groups files by size first (fast pre-filter), then hashes to confirm. Modes: `skip` (report only), `newest`, `oldest`, `largest`, `smallest`.
+Groups files by size first (fast pre-filter), then hashes to confirm. Modes: `skip` (report only), `newest`, `oldest`, `largest`, `smallest`, `rename` (rename with numeric suffix), `interactive` (prompt per group, TTY-only), `list` (list without action).
+
+### cleanup
+
+Scan for orphaned `.aerotmp` files from interrupted downloads.
+
+```bash
+# Dry-run: list orphaned temp files
+aeroftp-cli cleanup --profile "server" /remote/path/ --json
+
+# Delete orphaned temp files
+aeroftp-cli cleanup --profile "server" /remote/path/ --force
+```
+
+Dry-run by default. JSON output includes `orphans`, `bytes`, and `bytes_freed`.
 
 ### sync
 
@@ -227,6 +241,21 @@ aeroftp-cli sync --profile "server" ./local/ /remote/ --bwlimit "1M"
 aeroftp-cli sync --profile "server" ./local/ /remote/ --conflict-mode newer
 aeroftp-cli sync --profile "server" ./local/ /remote/ --conflict-mode skip --dry-run
 
+# Rename mode: keep both versions (local uploaded as .conflict-{timestamp})
+aeroftp-cli sync --profile "server" ./local/ /remote/ --conflict-mode rename
+
+# Immutable mode: never overwrite existing files
+aeroftp-cli sync --profile "server" ./local/ /remote/ --immutable
+
+# Transfer only listed files
+aeroftp-cli sync --profile "server" ./local/ /remote/ --files-from list.txt
+
+# Skip remote listing (assume empty destination)
+aeroftp-cli sync --profile "server" ./local/ /remote/ --no-check-dest
+
+# S3 optimization: recursive listing in a single API call
+aeroftp-cli sync --profile "S3" ./local/ /remote/ --fast-list
+
 # Force full resync (discard snapshot)
 aeroftp-cli sync --profile "server" ./local/ /remote/ --resync
 
@@ -234,7 +263,7 @@ aeroftp-cli sync --profile "server" ./local/ /remote/ --resync
 aeroftp-cli sync --profile "server" ./local/ /remote/ --delete --backup-dir /tmp/bak
 ```
 
-Bisync (`--direction both`, the default) saves a `.aeroftp-bisync.json` snapshot after each successful sync, enabling delta detection and bidirectional delete propagation. Conflict modes: `newer` (default), `older`, `larger`, `smaller`, `skip`.
+Bisync (`--direction both`, the default) saves a `.aeroftp-bisync.json` snapshot after each successful sync, enabling delta detection and bidirectional delete propagation. Conflict modes: `newer` (default), `older`, `larger`, `smaller`, `skip`, `rename`.
 
 ### transfer
 
@@ -472,6 +501,16 @@ aeroftp-cli cat github://token:PAT@owner/repo /README.md
 | `--retries <n>` | Retry failed transfers N times (default: 3) |
 | `--retries-sleep <dur>` | Delay between retries (`5s`, `1m`, `500ms`). Default: 1s |
 | `--max-backlog <n>` | Max queued parallel tasks (default: 10000) |
+| `--files-from <file>` | Transfer only files listed in file (one per line, `#` comments) |
+| `--files-from-raw <file>` | Like `--files-from` but preserves whitespace and empty lines |
+| `--immutable` | Never overwrite existing files on destination |
+| `--no-check-dest` | Skip remote listing during sync (assume empty destination) |
+| `--max-depth <n>` | Maximum recursion depth for ls, find, sync, get -r, put -r |
+| `--default-time <ts>` | Fallback mtime when backend returns None (ISO 8601, RFC 3339, or `now`) |
+| `--fast-list` | S3 only: recursive listing in a single API call |
+| `--inplace` | Write downloads directly to final path (no .aerotmp temp file) |
+| `--chunk-size <size>` | Override upload chunk size (e.g., `64M`). Min 5M for S3 |
+| `--buffer-size <size>` | Override download buffer size (e.g., `256K`, `1M`) |
 | `--dump <kinds>` | Debug: `headers`, `bodies`, `auth` (comma-separated) |
 
 ## Output Hygiene
@@ -498,6 +537,9 @@ Respects `NO_COLOR`, `CLICOLOR`, and `CLICOLOR_FORCE` environment variables.
 | 6 | Authentication failed |
 | 7 | Not supported by protocol |
 | 8 | Timeout |
+| 9 | Already exists / directory not empty (`--immutable`, `--no-clobber`) |
+| 10 | Server error / parse error |
+| 11 | I/O error |
 | 99 | Unknown error |
 
 ## CI/CD Example
@@ -519,9 +561,9 @@ AEROFTP_MASTER_PASSWORD=${{ secrets.VAULT_PW }} \
   aeroftp-cli sync --profile "Production S3" ./build/ / --delete
 ```
 
-## Test Results (v3.4.8)
+## Test Results (v3.5.3)
 
-**365 unit tests**, all passing. Run with `cargo test` in `src-tauri/`.
+**376 unit tests**, all passing. Run with `cargo test` in `src-tauri/`.
 
 ### Provider Coverage (116 tests)
 
@@ -542,7 +584,7 @@ AEROFTP_MASTER_PASSWORD=${{ secrets.VAULT_PW }} \
 | Provider types | 4 | Default ports, MEGA config modes, entry extensions |
 | Provider factory | 10 | Server field parsing (hostname, IP, IPv6, WebDAV paths, ports) |
 
-### CLI Binary (79 tests)
+### CLI Binary (90 tests)
 
 | Area | Tests | Details |
 | ---- | ----- | ------- |
@@ -613,6 +655,30 @@ All commands tested live against 12 providers via `--profile`:
 Additional commands tested on SFTP: `mkdir`, `rm`, `mv`, `cat`, `stat`, `find`, `tree`, `touch`, `dedupe`, `track-renames`, `bwlimit` - all PASS.
 
 Filter system (`--include`, `--exclude-global`, `--min-size`, `--max-size`) and `check` with `hashsum` round-trip verification all passed on all providers.
+
+### v3.5.3 Flag Validation & Stress Tests
+
+46 targeted tests across 5 servers (FTP Docker, WebDAV Docker, SFTP Docker, S3 iDrive, SFTP NAS WD MyCloud). All PASS.
+
+| Category | Tests | Servers | Result |
+| -------- | ----- | ------- | ------ |
+| Safety guards (`--no-check-dest + --delete`, `--immutable + --no-check-dest`) | 2 | FTP | PASS |
+| `--files-from` (missing file, >10MB, filtering) | 4 | FTP | PASS |
+| `--default-time` (invalid, naive, now, RFC 3339 Z, RFC 3339 +offset) | 5 | FTP | PASS |
+| `--immutable` put single (skip existing) | 4 | FTP, WebDAV, S3, NAS | PASS |
+| `--immutable` get (skip existing local) | 4 | FTP, WebDAV, S3, NAS | PASS |
+| `--immutable` put -r (upload new, skip existing) | 4 | FTP, WebDAV, S3, NAS | PASS |
+| `--no-check-dest` sync | 4 | FTP, WebDAV, S3, NAS | PASS |
+| `--fast-list` (S3 recursive, FTP fallback) | 2 | S3, FTP | PASS |
+| `--inplace` download | 4 | FTP, WebDAV, S3, NAS | PASS |
+| `cleanup` dry-run + `--force` | 2 | FTP, WebDAV | PASS |
+| `rm -r` multi-level (3-4 levels deep) | 3 | FTP, WebDAV, NAS | PASS |
+| Bisync `--conflict-mode rename` | 3 | FTP, WebDAV, S3 | PASS |
+| Stress: 50-file batch upload (parallel 8) | 1 | FTP Docker | PASS (0.8s) |
+| Stress: 30-file batch upload (parallel 4) | 1 | S3 iDrive | PASS (20.5s) |
+| Stress: bisync with 10 simultaneous conflicts | 1 | FTP Docker | PASS |
+| `dedupe --mode list` | 1 | FTP | PASS |
+| `--max-depth` find | 1 | FTP | PASS |
 
 ### Advanced Features (v3.4.8)
 

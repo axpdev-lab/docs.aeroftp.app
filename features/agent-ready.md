@@ -51,6 +51,9 @@ aeroftp-cli cat --profile "Server" /config.ini | grep DB_HOST
 | 6 | Authentication error |
 | 7 | Not supported |
 | 8 | Timeout |
+| 9 | Already exists (`--immutable`, `--no-clobber`) |
+| 10 | Server / parse error |
+| 11 | I/O error |
 
 **Batch scripting**: agents can generate `.aeroftp` scripts for multi-step operations with error handling.
 
