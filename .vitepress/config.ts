@@ -23,7 +23,7 @@ export default defineConfig({
     ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }],
     ['meta', { name: 'apple-mobile-web-app-title', content: 'AeroFTP Docs' }],
-    ['meta', { name: 'author', content: 'AxpDev' }],
+    ['meta', { name: 'author', content: 'axpdev-lab' }],
     ['meta', { name: 'keywords', content: 'AeroFTP, FTP client, SFTP client, S3 client, WebDAV client, file manager, cloud storage, file transfer, Google Drive, Dropbox, OneDrive, MEGA, encryption, AeroVault, AeroSync, AeroCloud, CLI' }],
     // Open Graph
     ['meta', { property: 'og:type', content: 'website' }],
@@ -50,7 +50,7 @@ export default defineConfig({
       downloadUrl: 'https://github.com/axpdev-lab/aeroftp/releases',
       description: 'Multi-protocol file manager supporting FTP, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA and 40+ cloud providers with AI assistant, encryption and sync.',
       license: 'https://www.gnu.org/licenses/gpl-3.0.html',
-      author: { '@type': 'Organization', name: 'AxpDev', url: 'https://axpdev.it' },
+      author: { '@type': 'Organization', name: 'axpdev-lab', url: 'https://axpdev.it' },
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     })],
     // Inter font for a modern look
@@ -264,7 +264,7 @@ export default defineConfig({
     search: { provider: 'local' },
     footer: {
       message: '<a href="https://aeroftp.app" target="_blank" rel="noopener">aeroftp.app</a> - Released under the GPL-3.0 License. <a href="https://sourceforge.net/software/product/AeroFTP/" target="_blank" rel="noopener"><img alt="AeroFTP Reviews" src="https://b.sf-syn.com/badge_img/4075717/light-default" style="height:50px;vertical-align:middle;margin-left:8px" /></a>',
-      copyright: 'Copyright 2024-2026 AxpDev',
+      copyright: 'Copyright 2024-2026 axpdev-lab',
     },
   },
 })
