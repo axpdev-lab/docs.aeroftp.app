@@ -54,13 +54,19 @@ Scores below reflect a full encoding sweep completed 2026-04-18 on live accounts
 | <img class="provider-logo" src="/icons/providers/felicloud.png" alt=""> [FeliCloud](./webdav#felicloud) | WebDAV (Nextcloud) | **A** | 90 | ✅ | ✅ | ✅ | ⚠️ 7/10 | ✅ |
 | <img class="provider-logo" src="/icons/protocols.svg" alt=""> [SSH MyCloud HD](./#ssh-mycloud) | SFTP (NAS) | **A** | 90 | ✅ | ✅ | ✅ | ✅ | ✅ |
 | <img class="provider-logo" src="/icons/providers/Amazon_Web_Services.png" alt=""> [AWS S3](./s3-compatible#aws-s3) | S3 | **B** | 87 | ✅ | ✅ | ✅ | ⚠️ 5/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/googlecloud.png" alt=""> [Google Cloud Storage](./s3-compatible#google-cloud) | S3 | **B** | 87 | ✅ | ✅ | ✅ | ⚠️ 7/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/idrive_e2.png" alt=""> [iDrive e2](./s3-compatible#idrive-e2) | S3 | **B** | 86 | ✅ | ✅ | ✅ | ⚠️ 6/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/mega.png" alt=""> [MEGA S4](./s3-compatible#mega-s4) | S3 | **B** | 86 | ✅ | ✅ | ✅ | ⚠️ 6/10 | ⚠️ |
 | <img class="provider-logo" src="/icons/providers/storj.png" alt=""> [Storj](./s3-compatible#storj) | S3 Gateway | **B** | 86 | ✅ | ✅ | ✅ | ⚠️ 6/10 | ⚠️ |
 | <img class="provider-logo" src="/icons/providers/wasabi.png" alt=""> [Wasabi](./s3-compatible#wasabi) | S3 | **B** | 86 | ✅ | ✅ | ✅ | ⚠️ 6/10 | ⚠️ |
 | <img class="provider-logo" src="/icons/providers/Koofr.png" alt=""> [Koofr](./webdav#koofr-webdav) | WebDAV | **B** | 86 | ✅ | ✅ | ✅ | ⚠️ 5/10 | ✅ |
 | <img class="provider-logo" src="/icons/providers/backblaze.png" alt=""> [Backblaze B2](./s3-compatible#backblaze-b2) | S3 | **B** | 85 | ✅ | ✅ | ✅ | ⚠️ 5/10 | ⚠️ |
 | <img class="provider-logo" src="/icons/providers/cloudfare.png" alt=""> [Cloudflare R2](./s3-compatible#cloudflare-r2) | S3 | **B** | 85 | ✅ | ✅ | ✅ | ⚠️ 5/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/filelu.png" alt=""> [FileLu S3](./s3-compatible#filelu-s3) | S3 (S5) | **B** | 85 | ✅ | ✅ | ✅ | ⚠️ 5/10 | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/tencent.png" alt=""> [Tencent COS](./s3-compatible#tencent-cos) | S3 | **B** | 85 | ✅ | ✅ | ✅ | ⚠️ 5/10 | ⚠️ |
 | <img class="provider-logo" src="/icons/providers/drivehq.png" alt=""> [DriveHQ](./webdav#drivehq) | WebDAV | **B** | 81 | ✅ | ⏳ | ✅ | ⚠️ 8/10 | ✅ |
 | <img class="provider-logo" src="/icons/providers/infiniCloud.png" alt=""> [InfiniCloud JP](./webdav#infinicloud) | WebDAV | **B** | 80 | ✅ | ⏳ | ✅ | ⚠️ 7/10 | ✅ |
+| <img class="provider-logo" src="/icons/providers/alibabacloud.png" alt=""> [Alibaba OSS](./s3-compatible#alibaba-oss) | S3 | **C** | 69 | ✅ | ⚠️ | ✅ | ⚠️ 4/10 | ⚠️ |
 
 Legend: ✅ full pass · ⚠️ partial pass · ⏳ pending benchmark · ❌ fail · - not applicable
 
@@ -71,6 +77,7 @@ Legend: ✅ full pass · ⚠️ partial pass · ⏳ pending benchmark · ❌ fai
 - **S3-compatible providers** consistently trip on the same set (`%` signature mismatch, `+` reject, `&` / `'` XML split in listing, `#` URL fragment truncation). These are AeroFTP client issues, not provider issues, and are tracked for fix.
 - **Reconciliation ⚠️** on object-storage and cloud APIs means post-sync check currently requires explicit path configuration; integrity of the transferred data is never affected.
 - **InfiniCloud JP** and **DriveHQ** were promoted from Class C after integrity and encoding measurement consolidated.
+- **Alibaba OSS** is currently Class C: uploads and downloads succeed but the listing path is fragile when keys contain emoji or other multibyte characters. The underlying AeroFTP client issue is tracked for fix; score will lift once resolved.
 
 ## Detail pages
 
