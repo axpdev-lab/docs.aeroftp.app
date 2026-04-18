@@ -298,3 +298,14 @@
     font-size: 12px;
   }
 }
+
+.test-reports table img.provider-logo {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 8px;
+  border-radius: 3px;
+  object-fit: contain;
+  background: var(--vp-c-bg-soft);
+  padding: 1px;
+}

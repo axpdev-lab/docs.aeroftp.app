@@ -41,20 +41,20 @@ The providers below have passed connect / listing / round-trip / integrity check
 
 | Provider | Protocol | Class | Score | Integrity | Navigation | Advanced | Encoding | Reconcile |
 |----------|----------|:-----:|:-----:|:---------:|:----------:|:--------:|:--------:|:---------:|
-| [AWS S3](./s3-compatible#aws-s3) | S3 | **B** | 89 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| [My Dropbox](#dropbox) | Dropbox API | **A** | 92 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| [Yandex Disk](#yandex-disk) | Native API | **B** | 89 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| [kDrive](#kdrive) | Infomaniak API | **A** | 90 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| [FileLu API](#filelu) | Native API | **A** | 90 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| [FeliCloud](./webdav#felicloud) | WebDAV (Nextcloud) | **A** | 90 | ✅ | ✅ | ✅ | ⏳ | ✅ |
-| [Koofr](./webdav#koofr-webdav) | WebDAV | **B** | 88 | ✅ | ✅ | ✅ | ⏳ | ✅ |
-| [SSH MyCloud HD](#ssh-mycloud) | SFTP (NAS) | **A** | 90 | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Backblaze B2](./s3-compatible#backblaze-b2) | S3 | **B** | 87 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| [Storj](./s3-compatible#storj) | S3 Gateway | **B** | 87 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| [Wasabi](./s3-compatible#wasabi) | S3 | **B** | 87 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| [Cloudflare R2](./s3-compatible#cloudflare-r2) | S3 | **B** | 87 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
-| [InfiniCloud JP](./webdav#infinicloud) | WebDAV | **C** | 68 | ⏳ | ⏳ | ✅ | ⏳ | ✅ |
-| [DriveHQ](./webdav#drivehq) | WebDAV | **C** | 68 | ⏳ | ⏳ | ✅ | ⏳ | ✅ |
+| <img class="provider-logo" src="/icons/providers/Amazon_Web_Services.png" alt=""> [AWS S3](./s3-compatible#aws-s3) | S3 | **B** | 89 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/dropbox.png" alt=""> [Dropbox](./#dropbox) | Dropbox API | **A** | 92 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/YandexDisk.png" alt=""> [Yandex Disk](./#yandex-disk) | Native API | **B** | 89 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/kdrive.png" alt=""> [kDrive](./#kdrive) | Infomaniak API | **A** | 90 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/filelu.png" alt=""> [FileLu API](./#filelu) | Native API | **A** | 90 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/felicloud.png" alt=""> [FeliCloud](./webdav#felicloud) | WebDAV (Nextcloud) | **A** | 90 | ✅ | ✅ | ✅ | ⏳ | ✅ |
+| <img class="provider-logo" src="/icons/providers/Koofr.png" alt=""> [Koofr](./webdav#koofr-webdav) | WebDAV | **B** | 88 | ✅ | ✅ | ✅ | ⏳ | ✅ |
+| <img class="provider-logo" src="/icons/protocols.svg" alt=""> [SSH MyCloud HD](./#ssh-mycloud) | SFTP (NAS) | **A** | 90 | ✅ | ✅ | ✅ | ✅ | ✅ |
+| <img class="provider-logo" src="/icons/providers/backblaze.png" alt=""> [Backblaze B2](./s3-compatible#backblaze-b2) | S3 | **B** | 87 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/storj.png" alt=""> [Storj](./s3-compatible#storj) | S3 Gateway | **B** | 87 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/wasabi.png" alt=""> [Wasabi](./s3-compatible#wasabi) | S3 | **B** | 87 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/cloudfare.png" alt=""> [Cloudflare R2](./s3-compatible#cloudflare-r2) | S3 | **B** | 87 | ✅ | ✅ | ✅ | ⏳ | ⚠️ |
+| <img class="provider-logo" src="/icons/providers/infiniCloud.png" alt=""> [InfiniCloud JP](./webdav#infinicloud) | WebDAV | **C** | 68 | ⏳ | ⏳ | ✅ | ⏳ | ✅ |
+| <img class="provider-logo" src="/icons/providers/drivehq.png" alt=""> [DriveHQ](./webdav#drivehq) | WebDAV | **C** | 68 | ⏳ | ⏳ | ✅ | ⏳ | ✅ |
 
 Legend: ✅ full pass · ⚠️ partial pass · ⏳ pending benchmark · ❌ fail · — not applicable
 
