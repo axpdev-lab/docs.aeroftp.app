@@ -302,12 +302,25 @@
 .test-reports table img.provider-logo {
   width: 20px;
   height: 20px;
+  display: inline-block;
   vertical-align: middle;
   margin-right: 8px;
   border-radius: 3px;
   object-fit: contain;
   background: var(--vp-c-bg-soft);
   padding: 1px;
+  flex-shrink: 0;
+}
+
+/* Keep logo + provider name on a single row in the first column */
+.test-reports table td:has(img.provider-logo) {
+  white-space: nowrap;
+}
+
+.test-reports table td:has(img.provider-logo) a {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
 }
 
 /* Breadcrumb nav with badge-style entries */
