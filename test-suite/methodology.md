@@ -9,58 +9,58 @@ description: How AeroFTP integration tests are reproduced
 
 <div class="test-suite">
 
-# Metodologia di test
+# Test Methodology
 
-## Principi
+## Principles
 
-1. **Reproducible before report**: un test che non si può rieseguire non entra nel record pubblico
-2. **Ground truth esterna**: per ogni protocollo verifichiamo anche con un client terzo (`curl`, `mc`, `ssh`, `openssl`) per distinguere regressioni AeroFTP da misconfig server
-3. **Integrity check**: ogni upload/download pesante viene verificato con SHA-256
-4. **Exit code first**: ogni comando deve terminare con exit code corretto; l'output testuale è secondario
+1. **Reproducible before report**: a test that can't be re-run doesn't enter the public record
+2. **External ground truth**: for each protocol we also verify with a third-party client (`curl`, `mc`, `ssh`, `openssl`) to distinguish AeroFTP regressions from server misconfig
+3. **Integrity check**: every heavy upload/download is verified with SHA-256
+4. **Exit code first**: every command must terminate with the correct exit code; textual output is secondary
 
 ## Docker harness
 
-Ambiente locale completo, containers esposti su localhost:
+Full local environment, containers exposed on localhost:
 
-| Servizio | Porta host | Protocollo | Credenziali |
-|----------|-----------|------------|-------------|
+| Service | Host port | Protocol | Credentials |
+|---------|-----------|----------|-------------|
 | `aeroftp-test-ftps` | 2121 | FTP (vsftpd) | `ftpuser` / `password123` |
-| `aeroftp-test-sftp` | 2223 | SFTP (OpenSSH) | `user_key` con key, `user_pwd` con password |
+| `aeroftp-test-sftp` | 2223 | SFTP (OpenSSH) | `user_key` with key, `user_pwd` with password |
 | `aeroftp-test-webdav` | 8080 | WebDAV (bytemark/webdav) | `webdavuser` / `password123` |
 | `aeroftp-test-minio` | 9000 / 9001 | S3 (MinIO) | `admin` / `password123` |
 
-Start rapido:
+Quick start:
 
 ```bash
 docker compose up -d
 ```
 
-### Bucket S3 iniziale
+### Initial S3 bucket
 
 ```bash
 mc alias set test http://127.0.0.1:9000 admin password123
 mc mb --ignore-existing test/aeroftp-test
 ```
 
-## Convenzioni per le matrici
+## Matrix conventions
 
-Simboli nelle tabelle:
+Symbols used in tables:
 
-- ✅ passa completo con integrità verificata
-- ⚠️ passa con caveat (nota in nota a piè di tabella)
-- ❌ fallisce
-- "-" non applicabile / non testato
+- ✅ passes completely with verified integrity
+- ⚠️ passes with caveat (noted below the table)
+- ❌ fails
+- "-" not applicable / not tested
 
-Le matrici sono HTML table senza styling custom. La sezione `test-suite` usa un layout a tutta larghezza per ospitarle anche quando la griglia è fitta.
+Matrices are plain HTML tables without custom styling. The `test-suite` section uses a full-width layout to host them even when the grid is dense.
 
-## Cosa non è questa suite
+## What this suite is not
 
-Questa suite **non** è:
+This suite is **not**:
 
-- un benchmark performance rigoroso (per quello servono hardware standardizzato e rete non-loopback)
-- una certificazione di sicurezza (quella è in [Security](/security/))
-- un API contract (quello è in [CLI](/cli/overview) e [MCP](/mcp/overview))
+- a rigorous performance benchmark (that requires standardized hardware and non-loopback network)
+- a security certification (that lives in [Security](/security/))
+- an API contract (that lives in [CLI](/cli/overview) and [MCP](/mcp/overview))
 
-È un log operativo di regression testing, pubblicato per trasparenza.
+It's an operational regression-testing log, published for transparency.
 
 </div>

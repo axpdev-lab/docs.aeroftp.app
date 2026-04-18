@@ -11,33 +11,33 @@ description: Public record of AeroFTP integration test runs and capability matri
 
 # AeroFTP Test Suite
 
-Record pubblico dei test AeroFTP: integrazione protocolli, capability AeroAgent, matrice provider. Ogni run è riproducibile, ogni ambiente documentato.
+Public record of AeroFTP tests: protocol integration, AeroAgent capabilities, provider matrix. Every run is reproducible, every environment documented.
 
-## Scopo
+## Purpose
 
-- **Evidenza operativa**: per ogni area, una matrice che mostra cosa funziona, su quale provider, con quale comando
-- **Riproducibilità**: comandi esatti e ambienti Docker documentati - chiunque può rieseguire
-- **Trasparenza**: pubblichiamo i risultati dei test che passano, gli ambienti, e le metodologie
+- **Operational evidence**: for each area, a matrix showing what works, on which provider, with which command
+- **Reproducibility**: exact commands and Docker environments documented so anyone can re-run
+- **Transparency**: we publish the results of tests that pass, the environments, and the methodologies
 
-Questa sezione non è documentazione user-facing. Per le guide all'uso vedi [Getting Started](/getting-started/installation).
+This section is not user-facing documentation. For usage guides see [Getting Started](/getting-started/installation).
 
-## Sezioni
+## Sections
 
-### Protocolli & providers
+### Protocols & providers
 
-| Run | Data | Scope |
+| Run | Date | Scope |
 |-----|------|-------|
-| [Docker matrix 2026-04-18](./docker-matrix/2026-04-18) | 2026-04-18 | FTP, SFTP, WebDAV, S3/MinIO su container locali |
+| [Docker matrix 2026-04-18](./docker-matrix/2026-04-18) | 2026-04-18 | FTP, SFTP, WebDAV, S3/MinIO on local containers |
 
 ### AeroAgent
 
-| Documento | Scope |
-|-----------|-------|
-| [Capability matrix](./aeroagent/capability-matrix) | 25 capability AeroAgent testate con Gemini e Cohere |
+| Document | Scope |
+|----------|-------|
+| [Capability matrix](./aeroagent/capability-matrix) | 25 AeroAgent capabilities tested with Gemini and Cohere |
 
-### Metodologia
+### Methodology
 
-- [Come riprodurre un run](./methodology)
+- [How to reproduce a run](./methodology)
 - [Docker harness](./methodology#docker-harness)
 
 </div>
