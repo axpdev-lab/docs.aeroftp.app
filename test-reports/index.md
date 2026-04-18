@@ -25,9 +25,12 @@ This section is not user-facing documentation. For usage guides see [Getting Sta
 
 ### Protocols & providers
 
-| Run | Date | Scope |
-|-----|------|-------|
-| [Docker matrix 2026-04-18](./docker-matrix/2026-04-18) | 2026-04-18 | FTP, SFTP, WebDAV, S3/MinIO on local containers |
+| Document | Scope |
+|----------|-------|
+| [Provider Coverage Matrix](./providers/) | Coverage Class and score for supported providers |
+| [S3-compatible providers](./providers/s3-compatible) | AWS, Backblaze, Storj, Wasabi, Cloudflare R2 |
+| [WebDAV providers](./providers/webdav) | Koofr, FeliCloud, InfiniCloud JP, DriveHQ |
+| [Docker matrix 2026-04-18](./docker-matrix/2026-04-18) | FTP, SFTP, WebDAV, S3/MinIO on local containers |
 
 ### AeroAgent
 

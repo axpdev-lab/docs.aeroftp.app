@@ -42,12 +42,37 @@ mc alias set test http://127.0.0.1:9000 admin password123
 mc mb --ignore-existing test/aeroftp-test
 ```
 
+## Coverage Class and scoring
+
+The [Provider Coverage Matrix](./providers/) assigns each provider a **Coverage Class** (A, B, C, D) and a numeric score out of 100 derived from a deterministic, speed-independent rubric.
+
+| Class | Label | Score | Meaning |
+|-------|-------|-------|---------|
+| **A** | Primary | 90-100 | Full matrix green, ready for critical workloads |
+| **B** | Extended | 70-89 | Core operations solid, minor gaps on advanced features |
+| **C** | Compatible | 50-69 | Base works, known non-blocking limitations |
+| **D** | Observer | < 50 | Partially covered, not recommended for production |
+
+Rubric (100 pt total):
+
+| Dimension | Weight | What it measures |
+|-----------|--------|------------------|
+| Core Operations | 30 | connect, ls, put, get, stat, mkdir, rm, mv |
+| Data Integrity | 20 | SHA-256 end-to-end + hashsum parity |
+| Navigation & Discovery | 15 | tree, find, head, cat, recursive stat |
+| Advanced Features | 15 | share links, trash/restore, versions, server-side copy, quota |
+| Encoding Robustness | 10 | unicode, spaces, special characters in file names |
+| Reconciliation | 10 | check, sync-doctor, reconcile post-sync matches |
+
+Throughput is deliberately excluded from scoring: it depends on distance from the provider endpoint and local network conditions, not on the client implementation.
+
 ## Matrix conventions
 
 Symbols used in tables:
 
 - ✅ passes completely with verified integrity
 - ⚠️ passes with caveat (noted below the table)
+- ⏳ pending benchmark (dimension not yet consolidated for this provider)
 - ❌ fails
 - "-" not applicable / not tested
 
