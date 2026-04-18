@@ -197,3 +197,86 @@
 .dark .VPFooter {
   background-color: var(--vp-c-bg) !important;
 }
+
+/* ============================================
+   Test Suite — wide academic layout
+   ============================================ */
+
+.test-suite {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.test-suite h1 {
+  font-size: 2rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.test-suite h2 {
+  font-size: 1.35rem;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.test-suite h3 {
+  font-size: 1.1rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.test-suite table {
+  display: table;
+  width: 100%;
+  margin: 1rem 0;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.test-suite table th,
+.test-suite table td {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--vp-c-divider);
+  vertical-align: top;
+}
+
+.test-suite table th {
+  background-color: var(--vp-c-bg-soft);
+  font-weight: 600;
+  text-align: left;
+}
+
+.test-suite table code {
+  font-size: 12px;
+  padding: 0.1rem 0.35rem;
+}
+
+.test-suite pre,
+.test-suite div[class*="language-"] {
+  font-size: 13px;
+}
+
+.test-suite p code,
+.test-suite li code {
+  font-size: 13px;
+}
+
+/* Horizontal scroll for exceptionally wide tables */
+.test-suite .table-wrapper,
+.test-suite > table {
+  overflow-x: auto;
+}
+
+@media (max-width: 1200px) {
+  .test-suite {
+    padding: 1.5rem 1rem 3rem;
+  }
+  .test-suite table {
+    font-size: 12px;
+  }
+}
