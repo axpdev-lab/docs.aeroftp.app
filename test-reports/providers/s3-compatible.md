@@ -35,7 +35,7 @@ All providers on this page speak the S3 API. AeroFTP uses native Signature V4, m
 | <img class="provider-logo" src="/icons/providers/cloudfare.png" alt=""> [Cloudflare R2](#cloudflare-r2) | `{account}.r2.cloudflarestorage.com` | **B** | 85 | 30/30 | 20/20 | 15/15 | 10/15 | 5/10 | 5/10 |
 | <img class="provider-logo" src="/icons/providers/filelu.png" alt=""> [FileLu S3](#filelu-s3) | `s5.filelu.com` | **B** | 85 | 30/30 | 20/20 | 15/15 | 10/15 | 5/10 | 5/10 |
 | <img class="provider-logo" src="/icons/providers/tencent.png" alt=""> [Tencent COS](#tencent-cos) | `cos.{region}.myqcloud.com` | **B** | 85 | 30/30 | 20/20 | 15/15 | 10/15 | 5/10 | 5/10 |
-| <img class="provider-logo" src="/icons/providers/alibabacloud.png" alt=""> [Alibaba OSS](#alibaba-oss) | `oss-{region}.aliyuncs.com` | **C** | 69 | 20/30 | 20/20 | ⚠️ 4/15 | 10/15 | 4/10 | 5/10 |
+| <img class="provider-logo" src="/icons/providers/alibabacloud.png" alt=""> [Alibaba OSS](#alibaba-oss) | `oss-{region}.aliyuncs.com` | **B** | 73 | 30/30 | 20/20 | 15/15 | 10/15 | 5/10 | 5/10 |
 
 Encoding measured 2026-04-18 on live accounts with a 10-file special-name sweep. S3-compatible providers consistently fail on the same set (`%`, `+`, `&`, `'`, `#`); see [hub notes](./#notes-on-score-dimensions) for the AeroFTP client issues being tracked.
 
@@ -54,8 +54,8 @@ Reference implementation. Full round-trip verified on small and large objects, h
 | server-side copy | ✅ |
 | versions (get/list/restore) | ✅ |
 | share link (presigned URL) | ✅ |
-| storage quota `df` | ⚠️ not exposed by API |
-| reconcile post-sync | ⚠️ requires explicit path |
+| storage quota `df` | - not exposed by S3 API |
+| reconcile post-sync | ✅ *path-normalized after fix 2026-04-19* |
 
 ## Backblaze B2
 
@@ -72,8 +72,8 @@ B2 S3-compatible endpoint. Operations pass end-to-end. Storage classes and serve
 | server-side copy | ✅ |
 | versions | ✅ |
 | share link | ✅ |
-| storage quota `df` | ⚠️ not exposed |
-| reconcile post-sync | ⚠️ requires explicit path |
+| storage quota `df` | - not exposed by S3 API |
+| reconcile post-sync | ✅ *path-normalized after fix 2026-04-19* |
 
 ## Cloudflare R2
 
@@ -88,10 +88,10 @@ Account-scoped endpoint (`{account}.r2.cloudflarestorage.com`). Zero egress fees
 | hashsum | ✅ |
 | tree, find | ✅ |
 | server-side copy | ✅ |
-| versions | ⚠️ limited in R2 API |
+| versions | ◑ limited in R2 API |
 | share link | ✅ (via presigned) |
-| storage quota `df` | ⚠️ not exposed |
-| reconcile post-sync | ⚠️ requires explicit path |
+| storage quota `df` | - not exposed by S3 API |
+| reconcile post-sync | ✅ *path-normalized after fix 2026-04-19* |
 
 ## Storj
 
@@ -106,10 +106,10 @@ Distributed storage accessed via the Storj S3 gateway at `gateway.storjshare.io`
 | hashsum | ✅ |
 | tree, find | ✅ |
 | server-side copy | ✅ |
-| versions | ⚠️ depends on bucket config |
+| versions | ◑ depends on bucket config |
 | share link | ✅ |
-| storage quota `df` | ⚠️ not exposed |
-| reconcile post-sync | ⚠️ requires explicit path |
+| storage quota `df` | - not exposed by S3 API |
+| reconcile post-sync | ✅ *path-normalized after fix 2026-04-19* |
 
 ## Wasabi
 
@@ -126,8 +126,8 @@ Hot cloud storage, S3 API. Full matrix green.
 | server-side copy | ✅ |
 | versions | ✅ |
 | share link | ✅ |
-| storage quota `df` | ⚠️ not exposed |
-| reconcile post-sync | ⚠️ requires explicit path |
+| storage quota `df` | - not exposed by S3 API |
+| reconcile post-sync | ✅ *path-normalized after fix 2026-04-19* |
 
 ## iDrive e2
 
@@ -141,8 +141,8 @@ iDrive e2 S3-compatible endpoint, deep-discount cold-storage positioning. Full m
 | hashsum, tree, find | ✅ |
 | server-side copy | ✅ |
 | share link (presigned URL) | ✅ |
-| storage quota `df` | ⚠️ not exposed |
-| reconcile post-sync | ⚠️ requires explicit path |
+| storage quota `df` | - not exposed by S3 API |
+| reconcile post-sync | ✅ *path-normalized after fix 2026-04-19* |
 
 ## Google Cloud Storage
 
@@ -156,8 +156,8 @@ Google Cloud Storage via its S3 interoperability layer. One of the best encoding
 | hashsum, tree, find | ✅ |
 | server-side copy | ✅ |
 | share link (presigned URL) | ✅ |
-| storage quota `df` | ⚠️ not exposed |
-| reconcile post-sync | ⚠️ requires explicit path |
+| storage quota `df` | - not exposed by S3 API |
+| reconcile post-sync | ✅ *path-normalized after fix 2026-04-19* |
 
 ## MEGA S4
 
@@ -170,9 +170,9 @@ MEGA Object Storage S3-compatible frontend at `s3.g.s4.mega.io`. Standard S3 sur
 | connect, ls, mkdir, put, get, stat, rm, mv | ✅ |
 | hashsum, tree, find | ✅ |
 | server-side copy | ✅ |
-| versions / tagging / SSE | ⚠️ not supported by S4 |
+| versions / tagging / SSE | - not supported by MEGA S4 |
 | presigned URL (max 7 days) | ✅ |
-| reconcile post-sync | ⚠️ requires explicit path |
+| reconcile post-sync | ✅ *path-normalized after fix 2026-04-19* |
 
 ## FileLu S3
 
@@ -184,8 +184,8 @@ FileLu's S3 gateway (S5). Emoji characters in keys are stored correctly server-s
 |-----------|:------:|
 | connect, ls, mkdir, put, get, stat, rm, mv | ✅ |
 | hashsum, tree, find | ✅ |
-| emoji key rendering in listing | ⚠️ shown as `????` |
-| reconcile post-sync | ⚠️ requires explicit path |
+| emoji key rendering in listing | ◑ shown as `????` (server-side transliteration) |
+| reconcile post-sync | ✅ *path-normalized after fix 2026-04-19* |
 
 ## Tencent COS
 
@@ -198,28 +198,27 @@ Tencent Cloud Object Storage via S3 compatibility API. Same encoding gaps as the
 | connect, ls, mkdir, put, get, stat, rm, mv | ✅ |
 | hashsum, tree, find | ✅ |
 | server-side copy | ✅ |
-| storage quota `df` | ⚠️ not exposed |
-| reconcile post-sync | ⚠️ requires explicit path |
+| storage quota `df` | - not exposed by S3 API |
+| reconcile post-sync | ✅ *path-normalized after fix 2026-04-19* |
 
 ## Alibaba OSS
 
-**Class C - 69/100**
+**Class B - 73/100**
 
-Alibaba OSS via S3-compatible endpoint. Uploads and downloads succeed; SHA-256 round-trip passes. The listing path is currently fragile when keys contain emoji or other multibyte characters positioned at a specific buffer boundary (AeroFTP client issue tracked for fix). Rated Class C pending resolution.
+Alibaba OSS via S3-compatible endpoint at `oss-{region}.aliyuncs.com`. Post-fix 2026-04-19: the S3 listing panic on multibyte keys was eliminated (F-P1: `s3.rs` debug preview now uses char-aware truncation instead of a raw byte slice), promoting Alibaba from Class C to Class B. Retains the common S3-family encoding gaps on `%`, `&`, `'`, `#` which affect the whole S3 column.
 
 | Operation | Status |
 |-----------|:------:|
-| connect, mkdir, put, get, rm, mv | ✅ |
-| ls (listing) | ⚠️ fragile on emoji keys |
-| stat single file | ✅ |
-| hashsum | ✅ |
+| connect, ls, mkdir, put, get, stat, rm, mv | ✅ |
+| hashsum, tree, find | ✅ |
 | server-side copy | ✅ |
-| reconcile post-sync | ⚠️ requires explicit path |
+| storage quota `df` | - not exposed by S3 API |
+| reconcile post-sync | ✅ *path-normalized after fix 2026-04-19* |
 
 ## Notes on S3 common items
 
-- **`df` / storage quota**: most S3-compatible providers do not expose a standard "used space" endpoint. The `df` warning is structural, not a regression.
-- **Reconcile post-sync**: `check` and `reconcile` on object storage currently benefit from explicit path configuration. Integrity of the transferred objects is never affected; only the matching step of the post-sync diff requires path normalization.
+- **`df` / storage quota**: most S3-compatible providers do not expose a standard "used space" endpoint. This is a structural `N/A` rather than a regression, shown as `-` in tables.
+- **Reconcile post-sync**: post-fix 2026-04-19 `cmd_check`, `cmd_reconcile`, and `cmd_sync` track relative paths via the scan queue state (`entry.name` basename + accumulated `rel_prefix`) instead of stripping the provider-returned absolute path. Reconciliation on S3-compatible providers now matches cleanly without explicit path hints.
 
 ## Back to
 
