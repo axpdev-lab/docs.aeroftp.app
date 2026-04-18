@@ -16,7 +16,7 @@ Record pubblico dei test AeroFTP: integrazione protocolli, capability AeroAgent,
 ## Scopo
 
 - **Evidenza operativa**: per ogni area, una matrice che mostra cosa funziona, su quale provider, con quale comando
-- **Riproducibilità**: comandi esatti e ambienti Docker documentati — chiunque può rieseguire
+- **Riproducibilità**: comandi esatti e ambienti Docker documentati - chiunque può rieseguire
 - **Trasparenza**: pubblichiamo i risultati dei test che passano, gli ambienti, e le metodologie
 
 Questa sezione non è documentazione user-facing. Per le guide all'uso vedi [Getting Started](/getting-started/installation).
@@ -39,10 +39,5 @@ Questa sezione non è documentazione user-facing. Per le guide all'uso vedi [Get
 
 - [Come riprodurre un run](./methodology)
 - [Docker harness](./methodology#docker-harness)
-
-## Note editoriali
-
-- Le pagine usano un layout a tutta larghezza per ospitare matrici tecniche ampie
-- I test pubblicati qui usano il binario `aeroftp-cli` e il server MCP integrato; l'app grafica ha il suo percorso QA separato non coperto qui
 
 </div>

@@ -256,6 +256,24 @@
   padding: 0.1rem 0.35rem;
 }
 
+.test-suite table a {
+  color: var(--vp-c-brand-1);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.test-suite table a:hover {
+  color: var(--vp-c-brand-2);
+  text-decoration-thickness: 2px;
+}
+
+.test-suite table a::after {
+  content: " \2192";
+  opacity: 0.55;
+}
+
 .test-suite pre,
 .test-suite div[class*="language-"] {
   font-size: 13px;

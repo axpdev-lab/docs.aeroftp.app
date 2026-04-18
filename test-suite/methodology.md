@@ -49,7 +49,7 @@ Simboli nelle tabelle:
 - ✅ passa completo con integrità verificata
 - ⚠️ passa con caveat (nota in nota a piè di tabella)
 - ❌ fallisce
-- — non applicabile / non testato
+- "-" non applicabile / non testato
 
 Le matrici sono HTML table senza styling custom. La sezione `test-suite` usa un layout a tutta larghezza per ospitarle anche quando la griglia è fitta.
 
