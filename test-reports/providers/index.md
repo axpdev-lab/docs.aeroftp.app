@@ -62,7 +62,7 @@ The providers below have passed connect / listing / round-trip / integrity check
 | <img class="provider-logo" src="/icons/providers/infiniCloud.png" alt=""> [InfiniCloud JP](./webdav#infinicloud) | WebDAV | **C** | 68 | ⏳ | ⏳ | ✅ | ⏳ | ✅ |
 | <img class="provider-logo" src="/icons/providers/drivehq.png" alt=""> [DriveHQ](./webdav#drivehq) | WebDAV | **C** | 68 | ⏳ | ⏳ | ✅ | ⏳ | ✅ |
 
-Legend: ✅ full pass · ⚠️ partial pass · ⏳ pending benchmark · ❌ fail · — not applicable
+Legend: ✅ full pass · ⚠️ partial pass · ⏳ pending benchmark · ❌ fail · - not applicable
 
 ### Notes on score dimensions
 
@@ -72,8 +72,8 @@ Legend: ✅ full pass · ⚠️ partial pass · ⏳ pending benchmark · ❌ fai
 
 ## Detail pages
 
-- [S3-compatible providers](./s3-compatible) — AWS, Backblaze, Storj, Wasabi, Cloudflare R2
-- [WebDAV providers](./webdav) — Koofr, FeliCloud, InfiniCloud JP, DriveHQ
+- [S3-compatible providers](./s3-compatible) - AWS, Backblaze, Storj, Wasabi, Cloudflare R2
+- [WebDAV providers](./webdav) - Koofr, FeliCloud, InfiniCloud JP, DriveHQ
 
 ## Providers not yet in the public matrix
 

@@ -64,7 +64,7 @@ Koofr exposes WebDAV at `app.koofr.net/dav/Koofr`. Core and reconcile are solid;
 | hashsum | ✅ |
 | tree, find | ✅ |
 | server-side `COPY` | ✅ |
-| share link (via WebDAV) | — use Koofr native API |
+| share link (via WebDAV) | - use Koofr native API |
 | reconcile post-sync | ✅ |
 
 ## InfiniCloud
