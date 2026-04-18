@@ -199,10 +199,10 @@
 }
 
 /* ============================================
-   Test Suite — wide academic layout
+   Test Reports - wide layout for dense matrices
    ============================================ */
 
-.test-suite {
+.test-reports {
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 2rem 4rem;
@@ -210,7 +210,7 @@
   line-height: 1.55;
 }
 
-.test-suite h1 {
+.test-reports h1 {
   font-size: 2rem;
   margin-top: 0;
   margin-bottom: 1rem;
@@ -218,19 +218,19 @@
   border-bottom: 1px solid var(--vp-c-divider);
 }
 
-.test-suite h2 {
+.test-reports h2 {
   font-size: 1.35rem;
   margin-top: 2.5rem;
   margin-bottom: 0.75rem;
 }
 
-.test-suite h3 {
+.test-reports h3 {
   font-size: 1.1rem;
   margin-top: 1.75rem;
   margin-bottom: 0.5rem;
 }
 
-.test-suite table {
+.test-reports table {
   display: table;
   width: 100%;
   margin: 1rem 0;
@@ -238,25 +238,25 @@
   font-size: 13px;
 }
 
-.test-suite table th,
-.test-suite table td {
+.test-reports table th,
+.test-reports table td {
   padding: 0.4rem 0.75rem;
   border: 1px solid var(--vp-c-divider);
   vertical-align: top;
 }
 
-.test-suite table th {
+.test-reports table th {
   background-color: var(--vp-c-bg-soft);
   font-weight: 600;
   text-align: left;
 }
 
-.test-suite table code {
+.test-reports table code {
   font-size: 12px;
   padding: 0.1rem 0.35rem;
 }
 
-.test-suite table a {
+.test-reports table a {
   color: var(--vp-c-brand-1);
   font-weight: 500;
   text-decoration: underline;
@@ -264,37 +264,37 @@
   text-underline-offset: 2px;
 }
 
-.test-suite table a:hover {
+.test-reports table a:hover {
   color: var(--vp-c-brand-2);
   text-decoration-thickness: 2px;
 }
 
-.test-suite table a::after {
+.test-reports table a::after {
   content: " \2192";
   opacity: 0.55;
 }
 
-.test-suite pre,
-.test-suite div[class*="language-"] {
+.test-reports pre,
+.test-reports div[class*="language-"] {
   font-size: 13px;
 }
 
-.test-suite p code,
-.test-suite li code {
+.test-reports p code,
+.test-reports li code {
   font-size: 13px;
 }
 
 /* Horizontal scroll for exceptionally wide tables */
-.test-suite .table-wrapper,
-.test-suite > table {
+.test-reports .table-wrapper,
+.test-reports > table {
   overflow-x: auto;
 }
 
 @media (max-width: 1200px) {
-  .test-suite {
+  .test-reports {
     padding: 1.5rem 1rem 3rem;
   }
-  .test-suite table {
+  .test-reports table {
     font-size: 12px;
   }
 }

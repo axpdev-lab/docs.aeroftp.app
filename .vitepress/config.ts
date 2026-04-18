@@ -62,7 +62,7 @@ export default defineConfig({
       { text: 'Features', link: '/features/aerocloud' },
       { text: 'CLI', link: '/cli/installation' },
       { text: 'MCP', link: '/mcp/overview' },
-      { text: 'Test Suite', link: '/test-suite/' },
+      { text: 'Test Reports', link: '/test-reports/' },
       {
         text: 'Website',
         link: 'https://aeroftp.app',
@@ -171,7 +171,7 @@ export default defineConfig({
             { text: 'AeroAgent', link: '/features/aeroagent' },
             { text: 'Agent Orchestration', link: '/features/agent-orchestration' },
             { text: 'Agent-Ready Architecture', link: '/features/agent-ready' },
-            { text: 'AeroAgent Tests', link: '/test-suite/aeroagent/capability-matrix' },
+            { text: 'AeroAgent Tests', link: '/test-reports/aeroagent/capability-matrix' },
             { text: 'AeroPlayer', link: '/features/aeroplayer' },
             { text: 'AeroTools', link: '/features/aerotools' },
             { text: 'Archives', link: '/features/archives' },

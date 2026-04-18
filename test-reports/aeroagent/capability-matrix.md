@@ -7,7 +7,7 @@ title: AeroAgent Capability Matrix
 description: Real-world capability tests of AeroAgent across multiple AI providers
 ---
 
-<div class="test-suite">
+<div class="test-reports">
 
 # AeroAgent Capability Matrix
 

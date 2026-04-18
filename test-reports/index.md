@@ -3,13 +3,13 @@ layout: page
 sidebar: false
 aside: false
 outline: false
-title: AeroFTP Test Suite
+title: AeroFTP Test Reports
 description: Public record of AeroFTP integration test runs and capability matrices
 ---
 
-<div class="test-suite">
+<div class="test-reports">
 
-# AeroFTP Test Suite
+# AeroFTP Test Reports
 
 Public record of AeroFTP tests: protocol integration, AeroAgent capabilities, provider matrix. Every run is reproducible, every environment documented.
 

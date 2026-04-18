@@ -7,7 +7,7 @@ title: Test Methodology
 description: How AeroFTP integration tests are reproduced
 ---
 
-<div class="test-suite">
+<div class="test-reports">
 
 # Test Methodology
 
@@ -51,7 +51,7 @@ Symbols used in tables:
 - ❌ fails
 - "-" not applicable / not tested
 
-Matrices are plain HTML tables without custom styling. The `test-suite` section uses a full-width layout to host them even when the grid is dense.
+Matrices are plain HTML tables without custom styling. The `test-reports` section uses a full-width layout to host them even when the grid is dense.
 
 ## What this suite is not
 
