@@ -15,8 +15,14 @@ export default defineConfig({
   base: '/',
   sitemap: { hostname: 'https://docs.aeroftp.app' },
   head: [
-    ['link', { rel: 'icon', href: '/favicon.svg' }],
-    ['link', { rel: 'icon', type: 'image/png', href: '/favicon.png' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+    ['link', { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicon-96x96.png' }],
+    ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }],
+    ['link', { rel: 'manifest', href: '/manifest.webmanifest' }],
+    ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
+    ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }],
+    ['meta', { name: 'apple-mobile-web-app-title', content: 'AeroFTP Docs' }],
     ['meta', { name: 'author', content: 'AxpDev' }],
     ['meta', { name: 'keywords', content: 'AeroFTP, FTP client, SFTP client, S3 client, WebDAV client, file manager, cloud storage, file transfer, Google Drive, Dropbox, OneDrive, MEGA, encryption, AeroVault, AeroSync, AeroCloud, CLI' }],
     // Open Graph
