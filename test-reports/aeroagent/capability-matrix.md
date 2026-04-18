@@ -12,9 +12,7 @@ description: Real-world capability tests of AeroAgent across multiple AI provide
 <ul class="breadcrumb">
   <li class="breadcrumb-item"><a href="/test-reports/">Test Reports</a></li>
   <li class="breadcrumb-sep">›</li>
-  <li class="breadcrumb-item"><a href="/test-reports/aeroagent/">AeroAgent</a></li>
-  <li class="breadcrumb-sep">›</li>
-  <li class="breadcrumb-item"><span class="current">Capability Matrix</span></li>
+  <li class="breadcrumb-item"><span class="current">AeroAgent Capability Matrix</span></li>
 </ul>
 
 # AeroAgent Capability Matrix
