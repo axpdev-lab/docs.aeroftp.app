@@ -9,6 +9,12 @@ description: AeroFTP provider coverage with Coverage Class and scoring rubric
 
 <div class="test-reports">
 
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/test-reports/">Test Reports</a></li>
+  <li class="breadcrumb-sep">›</li>
+  <li class="breadcrumb-item"><span class="current">Providers</span></li>
+</ul>
+
 # Provider Coverage Matrix
 
 AeroFTP classifies each supported provider with a **Coverage Class** (A, B, C, D) and a numeric **score** out of 100. The rubric is deterministic, speed-independent, and designed to reflect the end-to-end experience of running production workloads on AeroFTP + provider.

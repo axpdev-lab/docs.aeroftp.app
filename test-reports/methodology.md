@@ -9,6 +9,12 @@ description: How AeroFTP integration tests are reproduced
 
 <div class="test-reports">
 
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/test-reports/">Test Reports</a></li>
+  <li class="breadcrumb-sep">›</li>
+  <li class="breadcrumb-item"><span class="current">Methodology</span></li>
+</ul>
+
 # Test Methodology
 
 ## Principles

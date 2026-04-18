@@ -9,6 +9,14 @@ description: Coverage scoring and matrix for AWS S3 and S3-compatible storage
 
 <div class="test-reports">
 
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/test-reports/">Test Reports</a></li>
+  <li class="breadcrumb-sep">›</li>
+  <li class="breadcrumb-item"><a href="/test-reports/providers/">Providers</a></li>
+  <li class="breadcrumb-sep">›</li>
+  <li class="breadcrumb-item"><span class="current">S3-Compatible</span></li>
+</ul>
+
 # S3-Compatible Providers
 
 All providers on this page speak the S3 API. AeroFTP uses native Signature V4, multipart uploads above 4 MB, and streaming chunked download.

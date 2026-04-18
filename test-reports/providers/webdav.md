@@ -9,6 +9,14 @@ description: Coverage scoring and matrix for WebDAV endpoints
 
 <div class="test-reports">
 
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/test-reports/">Test Reports</a></li>
+  <li class="breadcrumb-sep">›</li>
+  <li class="breadcrumb-item"><a href="/test-reports/providers/">Providers</a></li>
+  <li class="breadcrumb-sep">›</li>
+  <li class="breadcrumb-item"><span class="current">WebDAV</span></li>
+</ul>
+
 # WebDAV Providers
 
 AeroFTP speaks WebDAV over HTTP/1.1 with Basic and Digest authentication. Providers on this page include Nextcloud-family endpoints, generic WebDAV hosts, and managed services exposing a DAV surface.

@@ -309,3 +309,57 @@
   background: var(--vp-c-bg-soft);
   padding: 1px;
 }
+
+/* Breadcrumb nav with badge-style entries */
+.test-reports .breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+  font-size: 12.5px;
+}
+
+.test-reports .breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.test-reports .breadcrumb-item a,
+.test-reports .breadcrumb-item span.current {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-soft);
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--vp-c-text-2);
+  transition: all 0.15s ease;
+}
+
+.test-reports .breadcrumb-item a::after {
+  content: none;
+}
+
+.test-reports .breadcrumb-item a:hover {
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+}
+
+.test-reports .breadcrumb-item span.current {
+  color: var(--vp-c-text-1);
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+}
+
+.test-reports .breadcrumb-sep {
+  color: var(--vp-c-text-3);
+  font-size: 14px;
+  line-height: 1;
+  user-select: none;
+}
