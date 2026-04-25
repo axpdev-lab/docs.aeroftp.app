@@ -173,6 +173,8 @@ export default defineConfig({
             { text: 'AeroCloud', link: '/features/aerocloud' },
             { text: 'AeroFile', link: '/features/aerofile' },
             { text: 'AeroSync', link: '/features/aerosync' },
+            { text: 'Delta Sync', link: '/features/delta-sync' },
+            { text: 'aerorsync', link: '/features/aerorsync' },
             { text: 'AeroVault', link: '/features/aerovault' },
             { text: 'AeroAgent', link: '/features/aeroagent' },
             { text: 'Agent Orchestration', link: '/features/agent-orchestration' },

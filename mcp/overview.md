@@ -1,12 +1,14 @@
 # MCP Server
 
-The AeroFTP MCP (Model Context Protocol) server exposes 16 file management tools to AI assistants via JSON-RPC over stdio. It connects Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client to all 22 AeroFTP protocols without custom integration code.
+The AeroFTP MCP (Model Context Protocol) server exposes ~20 file management tools to AI assistants via JSON-RPC over stdio. It connects Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client to all 22 AeroFTP protocols without custom integration code.
 
 ## What is MCP?
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) is an open standard that lets AI assistants call external tools through a structured JSON-RPC interface. Instead of generating shell commands, the AI calls typed tools with validated parameters and receives structured responses.
 
-AeroFTP implements an MCP server that wraps its CLI into 16 curated tools with rate limiting, connection pooling, and audit logging.
+AeroFTP implements an MCP server that wraps its CLI into ~20 curated tools with connection pooling (auto-reset on stale handles), per-profile request serialization, schema validation, request cancellation, rate limiting, and audit logging.
+
+The official VS Code extension [`axpdev-lab.aeroftp-mcp`](https://marketplace.visualstudio.com/items?itemName=axpdev-lab.aeroftp-mcp) configures this server in one click for Claude Code, Claude Desktop, Cursor, and Windsurf simultaneously.
 
 ## Quick Start
 
@@ -62,38 +64,45 @@ Once configured, your AI assistant can use `list_profiles` to see your saved ser
 
 ## Available Tools
 
-The MCP server exposes 16 tools organized by danger level:
+The MCP server exposes the following curated tools (names use the `aeroftp_` prefix in the wire protocol; the table omits the prefix for brevity).
 
 ### Safe Tools (Read-Only)
 
 | Tool | Description |
 |------|-------------|
-| `list_directory` | List files and directories at a given path |
-| `read_file` | Read text file content (with configurable size limit) |
-| `stat` | Get file or directory metadata (size, mtime, permissions) |
-| `search` | Search for files by name pattern (glob) |
-| `get_quota` | Get storage quota information (used/total) |
-| `list_profiles` | List saved server profiles (names only, no credentials) |
-| `connect` | Connect to a saved server profile |
-| `disconnect` | Disconnect from the current server |
-| `server_info` | Get server and protocol capability information |
+| `list_servers` | List saved server profiles (names + protocol + tags only — never credentials). Supports a `filter` arg |
+| `mcp_info` | Server capabilities, version, supported protocols |
+| `server_info` | Connect to a profile and return server/protocol metadata |
+| `list_files` | List files and directories at a given path |
+| `read_file` | Read text file content. `preview_kb` argument for soft-truncation (added v3.5.9) |
+| `file_info` | File or directory metadata (size, mtime, permissions, hash) |
+| `file_versions` | List historical versions where the protocol supports them |
+| `search_files` | Search files by name pattern (glob) |
+| `storage_quota` | Storage quota (used/free/total) |
+| `checksum` | Compute SHA-256 / BLAKE3 / etc. on a remote file |
+| `check_tree` | Categorized local-vs-remote diff. `compare_method` argument supports `size` / `mtime` / `checksum` (added v3.6.0) |
 
 ### Medium Tools (Write Operations)
 
 | Tool | Description |
 |------|-------------|
 | `download_file` | Download a remote file to a local path |
-| `upload_file` | Upload a local file to a remote path |
-| `create_directory` | Create a directory on the remote server |
+| `upload_file` | Upload a local file. Supports `create_parents` for missing-directory auto-creation, `no_clobber` for skip-if-exists (added v3.5.9) |
+| `upload_many` | Batch upload from a `files: []` array (mirrors CLI `--files-from`). Returns per-file `status` (uploaded / skipped / error). Added v3.5.10 |
+| `create_directory` | Create a remote directory |
 | `rename` | Rename or move a file or directory |
-| `copy` | Server-side copy (if the protocol supports it) |
+| `server_copy` | Server-side copy (when supported by the protocol) |
+| `create_share_link` | Generate a share link with optional password/expiry |
+| `edit` | Find and replace in a remote text file (download → edit → upload). Added v3.5.10 |
+| `sync_tree` | Plan and execute a directory sync. Returns `plan[]` (per-file decision) and `plan_by_op` with caps; supports `dry_run` and pool-invalidate fix on apply |
+| `close_connection` | Close the current pooled connection (forces reconnect on next call) |
 
 ### High Tools (Destructive)
 
 | Tool | Description |
 |------|-------------|
-| `delete_file` | Permanently delete a remote file |
-| `delete_directory` | Permanently delete a remote directory |
+| `delete` | Permanently delete a remote file or directory |
+| `delete_many` | Batch delete from an explicit list. Per-item `status` reporting |
 
 ## Rate Limits
 
@@ -101,9 +110,9 @@ The MCP server enforces per-category rate limits to prevent runaway operations:
 
 | Category | Limit | Tools |
 |----------|-------|-------|
-| **Read** | 60/min | list_directory, read_file, stat, search, get_quota, list_profiles, server_info |
-| **Write** | 30/min | upload_file, download_file, create_directory, rename, copy |
-| **Delete** | 10/min | delete_file, delete_directory |
+| **Read** | 60/min | list_servers, list_files, read_file, file_info, search_files, storage_quota, checksum, check_tree, server_info, mcp_info, file_versions |
+| **Write** | 30/min | upload_file, upload_many, download_file, create_directory, rename, server_copy, edit, sync_tree, create_share_link |
+| **Delete** | 10/min | delete, delete_many |
 
 When a rate limit is exceeded, the server returns an error with a `retry_after` hint.
 
@@ -179,9 +188,21 @@ aeroftp-cli connect sftp://user@host --save "My Server"
 
 Reduce the frequency of tool calls or wait for the `retry_after` period. Rate limits reset every 60 seconds.
 
+## Recent Hardening (v3.5.4)
+
+Three independent audits surfaced 9 issues across pool, vault, serialization, and shutdown semantics. All resolved:
+
+- **S3 bucket fix from vault profiles**: `create_provider_from_vault` now reads `bucket`/`region`/`endpoint`/`path_style` from the saved profile options. Previously surfaced as "bucket required" on 10+ S3-backed profiles.
+- **Vault auto-init**: `McpServer::run()` initializes the Universal Vault automatically; falls back to `AEROFTP_MASTER_PASSWORD` when set. Subprocess MCP now sees credentials without manual unlock.
+- **Per-profile serialization**: `Arc<Mutex<HashMap<String, Arc<Mutex<()>>>>>` linearizes tool calls on the same profile while keeping cross-server calls parallel. Prevents wire interleaving on flaky servers.
+- **Shutdown drain**: `JoinSet` tracks spawned tasks; on EOF stdin, `drain_pending(10s)` lets in-flight responses complete before exit.
+- **Schema validation**: `inputSchema.required` checked before dispatch. Missing fields return MCP-standard `-32602 Invalid params` instead of generic errors.
+- **Top-level `mcp` subcommand**: `aeroftp-cli mcp` argv now matches what the VS Code extension registers, removing the need for nested subcommand routing.
+
 ## Further Reading
 
 - [CLI Commands](/cli/commands) - Full CLI reference
 - [CLI Examples](/cli/examples) - Real-world usage patterns
+- [aerorsync](/features/aerorsync) - Native rsync delta sync engine (used by sync_tree on SFTP)
 - [LLM Integration Guide](https://github.com/axpdev-lab/aeroftp/blob/main/docs/LLM-INTEGRATION-GUIDE.md) - Safe patterns and anti-patterns for AI integration
 - [Threat Model](https://github.com/axpdev-lab/aeroftp/blob/main/docs/THREAT-MODEL.md) - Security architecture documentation

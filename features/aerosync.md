@@ -2,6 +2,8 @@
 
 AeroSync is AeroFTP's professional file synchronization engine. It supports bidirectional sync across all 27 protocols with conflict resolution, scheduling, bandwidth throttling, transfer journaling, and checkpoint-based resume. AeroSync operates through a two-tab interface: **Quick Sync** for common scenarios and **Advanced** for granular control over every aspect of the sync process.
 
+> Delta sync has its own eligibility rules and validation matrix. For the exact requirements, current support scope, and the meaning of the `delta` / `classic` badges, see [Delta Sync](/features/delta-sync).
+
 ## Quick Sync Tab
 
 The Quick Sync tab presents three preset cards that cover the most common synchronization scenarios. Select a card and click **Start** to begin immediately with sensible defaults.

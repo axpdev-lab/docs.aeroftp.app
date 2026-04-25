@@ -304,6 +304,24 @@ AeroAgent operates in three modes through a shared trait abstraction layer (`ai_
 
 This enables GUI mode (Tauri events), CLI mode (stdout/stderr), and Orchestration mode (JSON-RPC 2.0 over stdin/stdout). MCP compatibility maps naturally: tools become MCP Tools, RAG/vault become Resources, macros/templates become Prompts, and multi-step execution becomes Sampling.
 
+## Running AeroAgent from the CLI
+
+```bash
+# One-shot prompt
+aeroftp-cli agent --provider ollama --message "list saved servers"
+
+# Orchestration mode (JSON-RPC over stdin/stdout)
+aeroftp-cli agent --orchestrate
+
+# MCP server mode (full alias)
+aeroftp-cli agent --mcp
+
+# MCP server mode (top-level shortcut, used by the VS Code extension)
+aeroftp-cli mcp
+```
+
+The top-level `aeroftp-cli mcp` shortcut (added in v3.5.4) is the argv used by the official [`axpdev-lab.aeroftp-mcp`](https://marketplace.visualstudio.com/items?itemName=axpdev-lab.aeroftp-mcp) VS Code extension. See [MCP Overview](/mcp/overview) for the full integration guide.
+
 ## Keyboard Shortcuts
 
 | Shortcut | Action |

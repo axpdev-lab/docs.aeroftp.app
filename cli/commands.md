@@ -265,6 +265,46 @@ aeroftp-cli sync --profile "server" ./local/ /remote/ --delete --backup-dir /tmp
 
 Bisync (`--direction both`, the default) saves a `.aeroftp-bisync.json` snapshot after each successful sync, enabling delta detection and bidirectional delete propagation. Conflict modes: `newer` (default), `older`, `larger`, `smaller`, `skip`, `rename`.
 
+### reconcile
+
+Categorized local-vs-remote diff. Returns 4 buckets (matches / differs / missing-remote / missing-local) for AI agents and CI pipelines that need to *plan* a sync before executing it.
+
+```bash
+# Detailed diff with all 4 categories
+aeroftp-cli reconcile --profile "server" ./local /remote --json > diff.json
+
+# Summary mode (counts only)
+aeroftp-cli reconcile --profile "server" ./local /remote --reconcile-format summary
+
+# Feed the diff into a sync without rescanning
+aeroftp-cli sync --profile "server" ./local /remote --from-reconcile diff.json --direction upload
+```
+
+### sync-doctor
+
+Pre-sync preflight checks. Emits a JSON report with planned upload/download/delete counts, bandwidth estimate, top-level diff buckets, and a `next_command` field with the exact `aeroftp-cli sync ...` invocation that matches the preflight.
+
+```bash
+aeroftp-cli sync-doctor --profile "server" ./local /remote --json
+```
+
+**Recommended discovery surface for AI coding agents** before they execute any mutating sync.
+
+### speed
+
+Bandwidth benchmark — uploads a synthetic file, downloads it back, reports upload/download MB/s, latency, and round-trip time.
+
+```bash
+# Default (10 MB synthetic file)
+aeroftp-cli speed --profile "server"
+
+# Custom size (alias --size / -s)
+aeroftp-cli speed --profile "server" --size 100M
+
+# JSON output
+aeroftp-cli speed --profile "server" --size 50M --json
+```
+
 ### transfer
 
 Cross-profile copy between two saved servers.
@@ -334,7 +374,7 @@ aeroftp-cli --profile "server" serve ftp _ / --addr 0.0.0.0:2121 --passive-ports
 aeroftp-cli --profile "server" serve sftp _ / --addr 0.0.0.0:2222
 ```
 
-Any FTP/SFTP/WebDAV/HTTP client can now access all 27 AeroFTP providers as if they were standard servers.
+Any FTP/SFTP/WebDAV/HTTP client can now access all 22 AeroFTP production protocols (plus the GitHub repository backend) as if they were standard servers.
 
 ### daemon
 
@@ -422,18 +462,27 @@ aeroftp-cli agent --mcp
 Current agent integrations:
 
 - `aeroftp-cli agent -m ...`: one-shot orchestration through AeroAgent with approval controls
-- `aeroftp-cli agent --mcp`: native Model Context Protocol server for Claude Desktop, Cursor, VS Code, and other MCP clients
+- `aeroftp-cli agent --mcp` / `aeroftp-cli mcp`: native Model Context Protocol server for Claude Desktop, Cursor, VS Code, and other MCP clients
 
-The current MCP server exposes 16 curated remote tools, resource discovery for saved profiles/capabilities/connections, reusable prompts, connection pooling, request cancellation, rate limiting, and audit logging.
+The MCP server exposes ~20 curated remote tools (see [MCP Overview](/mcp/overview)), resource discovery for saved profiles/capabilities/connections, reusable prompts, connection pooling with auto-reset, per-profile request serialization, request cancellation, rate limiting, schema validation, and audit logging.
 
-Example Claude Desktop configuration:
+### mcp (top-level shortcut)
+
+```bash
+# Start the MCP server on stdin/stdout
+aeroftp-cli mcp
+```
+
+`aeroftp-cli mcp` is a top-level alias for `aeroftp-cli agent --mcp` (added in v3.5.4). The official VS Code extension `axpdev-lab.aeroftp-mcp` registers exactly this argv, so the shortcut keeps the extension self-contained without nested subcommands. The server initializes the Universal Vault automatically (or falls back to `AEROFTP_MASTER_PASSWORD` when set), serializes per-profile tool calls, and validates `inputSchema.required` before dispatch.
+
+Example Claude Desktop / Claude Code / Cursor configuration:
 
 ```json
 {
   "mcpServers": {
     "aeroftp": {
       "command": "aeroftp-cli",
-      "args": ["agent", "--mcp"]
+      "args": ["mcp"]
     }
   }
 }
@@ -560,6 +609,15 @@ For OAuth providers in CI, use `--profile` with the vault pre-configured on the 
 AEROFTP_MASTER_PASSWORD=${{ secrets.VAULT_PW }} \
   aeroftp-cli sync --profile "Production S3" ./build/ / --delete
 ```
+
+## Recent Highlights
+
+- **v3.6.1 — Windows first-class delta sync**: AeroFTP ships **`aerorsync`**, a native rsync protocol 31 implementation in pure Rust. No `rsync.exe` bundle, no WSL requirement, byte-identical to stock rsync 3.4.1 in CI. See [aerorsync](/features/aerorsync) for the architecture and [Delta Sync](/features/delta-sync) for the user-facing UI.
+- **v3.5.4 — MCP hardening**: top-level `aeroftp-cli mcp`, vault auto-init in MCP, per-profile serialization, schema validation, S3 bucket fix from vault profiles, FTP/SFTP/WebDAV/Filen/FileLu/Drime/Immich error message hardening.
+- **v3.5.3 — `sync --watch`**: continuous bidirectional sync with native filesystem watcher (inotify/FSEvents/ReadDirectoryChangesW), anti-loop cooldown, NDJSON output. **First CLI on the market with this feature natively** (rclone doesn't ship it).
+- **v3.5.3 — Agent-friendly flags**: `--files-from`, `--immutable`, `--no-check-dest`, `--max-depth`, `--inplace`, `--fast-list` (S3), `--compare-dest`/`--copy-dest`, `cleanup` for orphan `.aerotmp`.
+- **v3.5.2 — Determinism**: 12 structured exit codes mapping all `ProviderError` variants, `mkdir --parents`, `rm --force`, `put --no-clobber`, `--chunk-size`/`--buffer-size` overrides.
+- **v3.3.4 — Local server bridges**: `serve http`, `serve webdav`, `serve ftp`, `serve sftp`.
 
 ## Test Results (v3.5.3)
 
