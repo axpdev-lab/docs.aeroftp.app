@@ -201,6 +201,6 @@ Three independent audits surfaced 9 issues across pool, vault, serialization, an
 
 - [CLI Commands](/cli/commands) - Full CLI reference
 - [CLI Examples](/cli/examples) - Real-world usage patterns
-- [aerorsync](/features/aerorsync) - Native rsync delta sync engine (used by sync_tree on SFTP)
+- [AeroRsync](/features/aerorsync) - Native rsync delta sync engine (used by sync_tree on SFTP)
 - [LLM Integration Guide](https://github.com/axpdev-lab/aeroftp/blob/main/docs/LLM-INTEGRATION-GUIDE.md) - Safe patterns and anti-patterns for AI integration
 - [Threat Model](https://github.com/axpdev-lab/aeroftp/blob/main/docs/THREAT-MODEL.md) - Security architecture documentation

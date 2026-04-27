@@ -71,7 +71,7 @@ These connect to servers or buckets you control. You provide the hostname, port,
 
 - **FTP** - Traditional unencrypted file transfer. Suitable for legacy servers and shared hosting on trusted networks.
 - **FTPS** - FTP secured with TLS/SSL. Supports both Explicit (STARTTLS on port 21) and Implicit (port 990) modes. AeroFTP detects TLS downgrade attempts and warns the user.
-- **SFTP** - Secure file transfer over SSH. The recommended choice for self-hosted servers. Supports password and SSH key authentication with TOFU host key verification. Eligible for **delta sync** via [aerorsync](/features/aerorsync) when key-auth + remote `rsync` are present.
+- **SFTP** - Secure file transfer over SSH. The recommended choice for self-hosted servers. Supports password and SSH key authentication with TOFU host key verification. Eligible for **delta sync** via [AeroRsync](/features/aerorsync) when key-auth + remote `rsync` are present.
 - **WebDAV** - HTTP-based file access over HTTPS. Used by Nextcloud, Seafile, and many NAS devices. Supports Basic and Digest authentication.
 - **S3** - Object storage using the S3 API. Works with AWS, Wasabi, Backblaze B2, and any S3-compatible endpoint.
 - **Azure Blob** - Enterprise object storage with HMAC signing or SAS tokens.
@@ -218,7 +218,7 @@ AeroSync features available across the entire surface:
 - Configurable retry with exponential backoff
 - Bandwidth throttling
 - Dry-run mode with JSON / CSV export
-- **Delta sync via [aerorsync](/features/aerorsync)** - eligible SFTP sessions transfer only the bytes that differ; cross-OS first-class on Linux/macOS/Windows since v3.6.1
+- **Delta sync via [AeroRsync](/features/aerorsync)** - eligible SFTP sessions transfer only the bytes that differ; cross-OS first-class on Linux/macOS/Windows since v3.6.1
 
 ### CLI Support
 
