@@ -4,9 +4,9 @@
 
 AeroFTP organizes integrations on three tiers, so what you see in the catalog is precise rather than vague:
 
-1. **7 transport protocols** &mdash; FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift. Native wire-level support, implemented in Rust with full streaming.
-2. **20+ native provider integrations** &mdash; dedicated OAuth2 / API key / SDK code paths per provider (Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, Google Photos, GitHub, GitLab, Immich). Each provider's specific features (sharing, native delta sync, server-side copy, large-file chunking) are first-class instead of best-effort.
-3. **40+ pre-configured presets** &mdash; server URL, port, base path, password-generation deep-link auto-filled for compatible services on top of the protocols above. Visible in the Discover catalog (S3-compatible endpoints, WebDAV-compatible servers, SourceForge, etc.).
+1. **7 transport protocols** - FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift. Native wire-level support, implemented in Rust with full streaming.
+2. **20+ native provider integrations** - dedicated OAuth2 / API key / SDK code paths per provider (Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, Google Photos, GitHub, GitLab, Immich). Each provider's specific features (sharing, native delta sync, server-side copy, large-file chunking) are first-class instead of best-effort.
+3. **40+ pre-configured presets** - server URL, port, base path, password-generation deep-link auto-filled for compatible services on top of the protocols above. Visible in the Discover catalog (S3-compatible endpoints, WebDAV-compatible servers, SourceForge, etc.).
 
 All credentials are encrypted in the AeroFTP Universal Vault (AES-256-GCM + Argon2id). Every integration plugs into AeroSync, AeroAgent, the CLI and the MCP server through the same `StorageProvider` trait.
 
@@ -69,13 +69,13 @@ Direct authentication via API keys, session tokens, or personal access tokens. N
 
 These connect to servers or buckets you control. You provide the hostname, port, and credentials.
 
-- **FTP** &mdash; Traditional unencrypted file transfer. Suitable for legacy servers and shared hosting on trusted networks.
-- **FTPS** &mdash; FTP secured with TLS/SSL. Supports both Explicit (STARTTLS on port 21) and Implicit (port 990) modes. AeroFTP detects TLS downgrade attempts and warns the user.
-- **SFTP** &mdash; Secure file transfer over SSH. The recommended choice for self-hosted servers. Supports password and SSH key authentication with TOFU host key verification. Eligible for **delta sync** via [aerorsync](/features/aerorsync) when key-auth + remote `rsync` are present.
-- **WebDAV** &mdash; HTTP-based file access over HTTPS. Used by Nextcloud, Seafile, and many NAS devices. Supports Basic and Digest authentication.
-- **S3** &mdash; Object storage using the S3 API. Works with AWS, Wasabi, Backblaze B2, and any S3-compatible endpoint.
-- **Azure Blob** &mdash; Enterprise object storage with HMAC signing or SAS tokens.
-- **OpenStack Swift** &mdash; Object storage using the OpenStack Swift API. Works with Blomp, OVH, Rackspace, and any Swift-compatible endpoint. Authenticates via Keystone v3 or TempAuth.
+- **FTP** - Traditional unencrypted file transfer. Suitable for legacy servers and shared hosting on trusted networks.
+- **FTPS** - FTP secured with TLS/SSL. Supports both Explicit (STARTTLS on port 21) and Implicit (port 990) modes. AeroFTP detects TLS downgrade attempts and warns the user.
+- **SFTP** - Secure file transfer over SSH. The recommended choice for self-hosted servers. Supports password and SSH key authentication with TOFU host key verification. Eligible for **delta sync** via [aerorsync](/features/aerorsync) when key-auth + remote `rsync` are present.
+- **WebDAV** - HTTP-based file access over HTTPS. Used by Nextcloud, Seafile, and many NAS devices. Supports Basic and Digest authentication.
+- **S3** - Object storage using the S3 API. Works with AWS, Wasabi, Backblaze B2, and any S3-compatible endpoint.
+- **Azure Blob** - Enterprise object storage with HMAC signing or SAS tokens.
+- **OpenStack Swift** - Object storage using the OpenStack Swift API. Works with Blomp, OVH, Rackspace, and any Swift-compatible endpoint. Authenticates via Keystone v3 or TempAuth.
 
 ### Native Provider Integrations
 
@@ -88,12 +88,12 @@ Each native provider has its own dedicated code path so its specific features (s
 
 Highlights:
 
-- **MEGA** &mdash; Zero-knowledge E2E encryption with client-side AES.
-- **Filen** &mdash; E2E encrypted with PBKDF2 key derivation and AES-256-GCM. Optional 2FA.
-- **Internxt** &mdash; E2E encrypted with PBKDF2 + BIP39 mnemonic and AES-256-CTR.
-- **Drime Cloud** &mdash; 20 GB secure cloud storage with file versioning, server-side copy, and share links.
-- **FileLu** &mdash; File/folder password protection, privacy controls, server-side clone, trash management, remote URL upload.
-- **GitHub** &mdash; Repository as filesystem &mdash; every upload/delete is a real Git commit. PAT keys are encrypted (AES-256-GCM) in the vault on import. Token expiry badges and protected-branch PR creation.
+- **MEGA** - Zero-knowledge E2E encryption with client-side AES.
+- **Filen** - E2E encrypted with PBKDF2 key derivation and AES-256-GCM. Optional 2FA.
+- **Internxt** - E2E encrypted with PBKDF2 + BIP39 mnemonic and AES-256-CTR.
+- **Drime Cloud** - 20 GB secure cloud storage with file versioning, server-side copy, and share links.
+- **FileLu** - File/folder password protection, privacy controls, server-side clone, trash management, remote URL upload.
+- **GitHub** - Repository as filesystem - every upload/delete is a real Git commit. PAT keys are encrypted (AES-256-GCM) in the vault on import. Token expiry badges and protected-branch PR creation.
 
 ## WebDAV Presets
 
@@ -218,7 +218,7 @@ AeroSync features available across the entire surface:
 - Configurable retry with exponential backoff
 - Bandwidth throttling
 - Dry-run mode with JSON / CSV export
-- **Delta sync via [aerorsync](/features/aerorsync)** &mdash; eligible SFTP sessions transfer only the bytes that differ; cross-OS first-class on Linux/macOS/Windows since v3.6.1
+- **Delta sync via [aerorsync](/features/aerorsync)** - eligible SFTP sessions transfer only the bytes that differ; cross-OS first-class on Linux/macOS/Windows since v3.6.1
 
 ### CLI Support
 
@@ -252,4 +252,4 @@ The `server_exec` tool supports 10 operations: `ls`, `cat`, `get`, `put`, `mkdir
 
 ---
 
-> Last updated: 2026-04-27 &mdash; AeroFTP v3.6.6
+> Last updated: 2026-04-27 - AeroFTP v3.6.6

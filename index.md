@@ -62,7 +62,7 @@ import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
 </p>
 
 <p align="center">
-  <em>Transports:</em> FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift &mdash; native wire-level support.<br>
+  <em>Transports:</em> FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift - native wire-level support.<br>
   <em>Native providers:</em> dedicated OAuth2 / API key / SDK code paths so each provider's specific features (sharing, native delta sync, server-side copy, large-file chunking) are first-class.<br>
   <em>Presets:</em> server URL, port, base path, password-generation deep-link auto-filled for compatible services on top of the protocols above (S3-compatible endpoints, WebDAV-compatible servers, etc.).
 </p>

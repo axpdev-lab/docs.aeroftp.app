@@ -1,6 +1,6 @@
 # AeroAgent
 
-AeroAgent is AeroFTP's AI-powered assistant for natural language file management, code editing, and server operations. It integrates with **24 AI providers**, exposes **52 built-in tools**, and operates across local files plus the AeroFTP remote provider backends (7 transport protocols + 20+ native providers) through a single unified `ai_core` backend &mdash; the same one that powers the GUI, the CLI (`aeroftp-cli agent`), and the native MCP server.
+AeroAgent is AeroFTP's AI-powered assistant for natural language file management, code editing, and server operations. It integrates with **24 AI providers**, exposes **52 built-in tools**, and operates across local files plus the AeroFTP remote provider backends (7 transport protocols + 20+ native providers) through a single unified `ai_core` backend - the same one that powers the GUI, the CLI (`aeroftp-cli agent`), and the native MCP server.
 
 ## Welcome Screen
 
@@ -111,7 +111,7 @@ The settings panel includes seven tabs:
 | **Novita AI** (v3.6.2) | SSE | Varies | Native | -- |
 | Custom (OpenAI-compatible) | SSE | Configurable | Native / Text | Configurable |
 
-The five v3.6.2 additions (NVIDIA, Z.AI, Yi, Hyperbolic, Novita) are all OpenAI-compatible at `/chat/completions` and ride the existing `openai_compat::call` dispatch arm &mdash; no new adapter code, branded SVG icons in the marketplace.
+The five v3.6.2 additions (NVIDIA, Z.AI, Yi, Hyperbolic, Novita) are all OpenAI-compatible at `/chat/completions` and ride the existing `openai_compat::call` dispatch arm - no new adapter code, branded SVG icons in the marketplace.
 
 Configure providers in **Settings > AI > Providers**, or browse the **Provider Marketplace** to discover and add new ones. The marketplace presents providers in a searchable grid organized by category with feature badges and pricing tiers.
 

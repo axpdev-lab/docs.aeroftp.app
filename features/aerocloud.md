@@ -1,10 +1,10 @@
 # AeroCloud
 
-AeroCloud turns any server into a private personal cloud. It rides AeroFTP's full provider surface &mdash; **7 transport protocols + 20+ native provider integrations** &mdash; with maturity badges that classify each one by sync reliability. Background sync from the system tray, native file manager badges, selective sync, file versioning (`.aeroversions/`), `.aeroignore` patterns.
+AeroCloud turns any server into a private personal cloud. It rides AeroFTP's full provider surface - **7 transport protocols + 20+ native provider integrations** - with maturity badges that classify each one by sync reliability. Background sync from the system tray, native file manager badges, selective sync, file versioning (`.aeroversions/`), `.aeroignore` patterns.
 
 ## Supported Integrations
 
-AeroCloud supports the entire provider surface for sync (GitHub and Drime Cloud are excluded &mdash; conceptually incompatible with sync). Providers are classified by sync reliability:
+AeroCloud supports the entire provider surface for sync (GitHub and Drime Cloud are excluded - conceptually incompatible with sync). Providers are classified by sync reliability:
 
 - **Stable (12)**: SFTP, S3, Azure Blob, WebDAV, Google Drive, Dropbox, OneDrive, Jottacloud, kDrive, Koofr, OpenDrive, Felicloud
 - **Beta (8)**: FTP, FTPS, Box, pCloud, Zoho WorkDrive, Yandex Disk, MEGA, Filen, Internxt

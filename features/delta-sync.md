@@ -4,7 +4,7 @@ Delta sync is AeroFTP's bandwidth-saving transfer path for eligible SFTP session
 
 This page is intentionally strict about scope. Delta sync is not a generic "all protocols" optimization today. It is a real, measured capability with specific requirements.
 
-> **What's under the hood**: since v3.6.1, AeroFTP runs delta sync through **[aerorsync](/features/aerorsync)** — a native rsync wire-protocol implementation written entirely in Rust. No client-side `rsync` binary, no `rsync.exe` bundle on Windows, no WSL requirement. The user-facing UI described below is the same on every platform.
+> **What's under the hood**: since v3.6.1, AeroFTP runs delta sync through **[aerorsync](/features/aerorsync)** - a native rsync wire-protocol implementation written entirely in Rust. No client-side `rsync` binary, no `rsync.exe` bundle on Windows, no WSL requirement. The user-facing UI described below is the same on every platform.
 
 ## What You Will See In AeroFTP
 
@@ -25,7 +25,7 @@ Today, the supported happy path is:
 - protocol: `SFTP`
 - authentication: SSH key-based session
 - remote requirement: stock `rsync` server reachable via SSH on the remote host
-- client requirement: **none** — AeroFTP ships [aerorsync](/features/aerorsync), a native rsync protocol 31 implementation in pure Rust. No `rsync` binary needed on Linux/macOS/Windows
+- client requirement: **none** - AeroFTP ships [aerorsync](/features/aerorsync), a native rsync protocol 31 implementation in pure Rust. No `rsync` binary needed on Linux/macOS/Windows
 - product path: AeroSync / sync tree flows that request delta policy
 - validation scope: Linux + macOS + Windows (cross-OS first-class as of v3.6.1, byte-identical to stock rsync 3.4.1 in CI)
 
@@ -124,7 +124,7 @@ For the deeper internal roadmap and validation notes, see the engineering append
 
 ## Related Pages
 
-- [aerorsync](/features/aerorsync) — the native rsync engine that powers this feature
+- [aerorsync](/features/aerorsync) - the native rsync engine that powers this feature
 - [AeroSync](/features/aerosync)
 - [SFTP](/protocols/sftp)
 - [Hetzner Storage Box](/providers/hetzner-storage-box)

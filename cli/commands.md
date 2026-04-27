@@ -105,7 +105,7 @@ aeroftp-cli put sftp://user@host "./*.json" /data/
 aeroftp-cli put sftp://user@host ./dist/ /var/www/dist/ -r
 ```
 
-### pget — Segmented Parallel Download (v3.6.5)
+### pget - Segmented Parallel Download (v3.6.5)
 
 ```bash
 # Default: 4 parallel segments
@@ -328,7 +328,7 @@ aeroftp-cli sync-doctor --profile "server" ./local /remote --json
 
 ### speed
 
-Bandwidth benchmark &mdash; uploads a synthetic file, downloads it back, reports upload/download MB/s, latency, and round-trip time. v3.6.6 hardened the path: random non-compressible payload (was zeros), SHA-256 integrity check, TTFB measurement, optional `--no-integrity` flag, automatic password redaction in every output stream.
+Bandwidth benchmark - uploads a synthetic file, downloads it back, reports upload/download MB/s, latency, and round-trip time. v3.6.6 hardened the path: random non-compressible payload (was zeros), SHA-256 integrity check, TTFB measurement, optional `--no-integrity` flag, automatic password redaction in every output stream.
 
 ```bash
 # Default (10 MB synthetic file)
@@ -549,7 +549,7 @@ Example Claude Desktop / Claude Code / Cursor configuration:
 
 ## Agent Discovery & Inventory (v3.6.6)
 
-A dedicated set of subcommands designed for AI coding agents. They return structured JSON describing AeroFTP's capabilities, your saved profile inventory, and per-profile authentication state &mdash; all *without* attempting any live connection &mdash; so an agent can plan its workflow in one round-trip instead of probing N profiles.
+A dedicated set of subcommands designed for AI coding agents. They return structured JSON describing AeroFTP's capabilities, your saved profile inventory, and per-profile authentication state - all *without* attempting any live connection - so an agent can plan its workflow in one round-trip instead of probing N profiles.
 
 ### profiles
 
@@ -558,7 +558,7 @@ aeroftp-cli profiles            # text format
 aeroftp-cli profiles --json     # canonical input for agents
 ```
 
-Lists every server profile in the encrypted vault: display name, protocol, host, optional saved path, credential indicator. Passwords are never printed. v3.6.6 adds per-profile `auth_state` &mdash; one of `valid` / `expired` / `needs_refresh` / `no_credentials` / `unknown` &mdash; so agents can avoid connect-then-fail loops on profiles whose OAuth tokens expired silently.
+Lists every server profile in the encrypted vault: display name, protocol, host, optional saved path, credential indicator. Passwords are never printed. v3.6.6 adds per-profile `auth_state` - one of `valid` / `expired` / `needs_refresh` / `no_credentials` / `unknown` - so agents can avoid connect-then-fail loops on profiles whose OAuth tokens expired silently.
 
 ### ai-models
 
@@ -734,15 +734,15 @@ AEROFTP_MASTER_PASSWORD=${{ secrets.VAULT_PW }} \
 
 ## Recent Highlights
 
-- **v3.6.6 &mdash; Agent surface, onboarding polish, server SpeedTest**: new `agent-connect` (single-shot connect / capabilities / quota / path), `agent-info --json protocol_features` + `agent_connect_supported_protocols`, `head -c / --bytes` byte-range preview, `ls --limit` / `--files-only` / `--dirs-only` (same trio on `find` plus `--name <glob>`), `mkdir --json already_existed: bool`, per-profile `auth_state` (`valid` / `expired` / `needs_refresh` / `no_credentials` / `unknown`), `speed-compare` multi-server benchmark with JSON v1 / CSV / MD reports + password redaction. Cross-profile multi-select on My Servers and a new IconPicker dialog ship in the GUI counterpart.
-- **v3.6.5 &mdash; Throughput parity with rclone, FTP home-directory fix, OAuth profile rename**: plain-FTP TLS-drain bypass (-74% on 100 MiB Docker FTP), SFTP buffer raised to 256 KiB (-36%), WebDAV PUT body 8 KiB &rarr; 256 KiB (-33%); FTP CLI now respects the server-provided home directory after login (no spurious `CWD /`); OAuth saved servers can be renamed from the Edit dialog (issue #127); `find` glob no longer matches as substring across 7 cloud providers; `mkdir + put` works on empty-prefix object stores; Dropbox missing-file detection drops the failure latency from ~3.5 s to ~150 ms; Koofr WebDAV preset path fix (issue #126); `pget` is now a real subcommand; banner cleanup; 39 `default_value = "_"` arguments now hide the `[default: _]` sentinel.
-- **v3.6.4 &mdash; Windows keystore export fix, autostart UX, update opt-out**: `os error 5` on Windows export resolved (write handle kept through `flush + sync_all`); "Start minimized to tray" + "Don't check for updates" toggles; NSIS post-install hooks now actually run (CUSTOM_PRE_INSTALL macro names corrected) so HKCU PATH registration finally activates on every install (issue #125); silent uninstall preserves user data on WinGet upgrades.
-- **v3.6.1 &mdash; Windows first-class delta sync**: AeroFTP ships **`aerorsync`**, a native rsync protocol 31 implementation in pure Rust. No `rsync.exe` bundle, no WSL requirement, byte-identical to stock rsync 3.4.1 in CI. See [aerorsync](/features/aerorsync) for the architecture and [Delta Sync](/features/delta-sync) for the user-facing UI.
-- **v3.5.4 &mdash; MCP hardening**: top-level `aeroftp-cli mcp`, vault auto-init in MCP, per-profile serialization, schema validation, S3 bucket fix from vault profiles, FTP/SFTP/WebDAV/Filen/FileLu/Drime/Immich error message hardening.
-- **v3.5.3 &mdash; `sync --watch`**: continuous bidirectional sync with native filesystem watcher (inotify / FSEvents / ReadDirectoryChangesW), anti-loop cooldown, NDJSON output. **First CLI on the market with this feature natively** (rclone doesn't ship it).
-- **v3.5.3 &mdash; Agent-friendly flags**: `--files-from`, `--immutable`, `--no-check-dest`, `--max-depth`, `--inplace`, `--fast-list` (S3), `--compare-dest` / `--copy-dest`, `cleanup` for orphan `.aerotmp`.
-- **v3.5.2 &mdash; Determinism**: 12 structured exit codes mapping all `ProviderError` variants, `mkdir --parents`, `rm --force`, `put --no-clobber`, `--chunk-size` / `--buffer-size` overrides.
-- **v3.3.4 &mdash; Local server bridges**: `serve http`, `serve webdav`, `serve ftp`, `serve sftp`.
+- **v3.6.6 - Agent surface, onboarding polish, server SpeedTest**: new `agent-connect` (single-shot connect / capabilities / quota / path), `agent-info --json protocol_features` + `agent_connect_supported_protocols`, `head -c / --bytes` byte-range preview, `ls --limit` / `--files-only` / `--dirs-only` (same trio on `find` plus `--name <glob>`), `mkdir --json already_existed: bool`, per-profile `auth_state` (`valid` / `expired` / `needs_refresh` / `no_credentials` / `unknown`), `speed-compare` multi-server benchmark with JSON v1 / CSV / MD reports + password redaction. Cross-profile multi-select on My Servers and a new IconPicker dialog ship in the GUI counterpart.
+- **v3.6.5 - Throughput parity with rclone, FTP home-directory fix, OAuth profile rename**: plain-FTP TLS-drain bypass (-74% on 100 MiB Docker FTP), SFTP buffer raised to 256 KiB (-36%), WebDAV PUT body 8 KiB &rarr; 256 KiB (-33%); FTP CLI now respects the server-provided home directory after login (no spurious `CWD /`); OAuth saved servers can be renamed from the Edit dialog (issue #127); `find` glob no longer matches as substring across 7 cloud providers; `mkdir + put` works on empty-prefix object stores; Dropbox missing-file detection drops the failure latency from ~3.5 s to ~150 ms; Koofr WebDAV preset path fix (issue #126); `pget` is now a real subcommand; banner cleanup; 39 `default_value = "_"` arguments now hide the `[default: _]` sentinel.
+- **v3.6.4 - Windows keystore export fix, autostart UX, update opt-out**: `os error 5` on Windows export resolved (write handle kept through `flush + sync_all`); "Start minimized to tray" + "Don't check for updates" toggles; NSIS post-install hooks now actually run (CUSTOM_PRE_INSTALL macro names corrected) so HKCU PATH registration finally activates on every install (issue #125); silent uninstall preserves user data on WinGet upgrades.
+- **v3.6.1 - Windows first-class delta sync**: AeroFTP ships **`aerorsync`**, a native rsync protocol 31 implementation in pure Rust. No `rsync.exe` bundle, no WSL requirement, byte-identical to stock rsync 3.4.1 in CI. See [aerorsync](/features/aerorsync) for the architecture and [Delta Sync](/features/delta-sync) for the user-facing UI.
+- **v3.5.4 - MCP hardening**: top-level `aeroftp-cli mcp`, vault auto-init in MCP, per-profile serialization, schema validation, S3 bucket fix from vault profiles, FTP/SFTP/WebDAV/Filen/FileLu/Drime/Immich error message hardening.
+- **v3.5.3 - `sync --watch`**: continuous bidirectional sync with native filesystem watcher (inotify / FSEvents / ReadDirectoryChangesW), anti-loop cooldown, NDJSON output. **First CLI on the market with this feature natively** (rclone doesn't ship it).
+- **v3.5.3 - Agent-friendly flags**: `--files-from`, `--immutable`, `--no-check-dest`, `--max-depth`, `--inplace`, `--fast-list` (S3), `--compare-dest` / `--copy-dest`, `cleanup` for orphan `.aerotmp`.
+- **v3.5.2 - Determinism**: 12 structured exit codes mapping all `ProviderError` variants, `mkdir --parents`, `rm --force`, `put --no-clobber`, `--chunk-size` / `--buffer-size` overrides.
+- **v3.3.4 - Local server bridges**: `serve http`, `serve webdav`, `serve ftp`, `serve sftp`.
 
 ## Test Results (v3.5.3)
 
