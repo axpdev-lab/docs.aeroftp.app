@@ -1,6 +1,6 @@
 # MCP Server
 
-The AeroFTP MCP (Model Context Protocol) server exposes ~20 file management tools to AI assistants via JSON-RPC over stdio. It connects Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client to all 22 AeroFTP protocols without custom integration code.
+The AeroFTP MCP (Model Context Protocol) server exposes ~20 curated file management tools to AI assistants via JSON-RPC over stdio. It connects Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client to AeroFTP's full integration surface &mdash; **7 transport protocols + 20+ native provider integrations + 40+ pre-configured presets** &mdash; without custom integration code.
 
 ## What is MCP?
 
@@ -70,9 +70,10 @@ The MCP server exposes the following curated tools (names use the `aeroftp_` pre
 
 | Tool | Description |
 |------|-------------|
-| `list_servers` | List saved server profiles (names + protocol + tags only — never credentials). Supports a `filter` arg |
+| `list_servers` | List saved server profiles (names + protocol + tags + per-profile `auth_state` — never credentials). Supports a `filter` arg |
 | `mcp_info` | Server capabilities, version, supported protocols |
 | `server_info` | Connect to a profile and return server/protocol metadata |
+| `agent_connect` | Single-shot connect surface (added v3.6.6): one JSON envelope with `connect` + `capabilities` + `quota` + `path` blocks, replacing the boilerplate sequence `connect → about → df → ls /` |
 | `list_files` | List files and directories at a given path |
 | `read_file` | Read text file content. `preview_kb` argument for soft-truncation (added v3.5.9) |
 | `file_info` | File or directory metadata (size, mtime, permissions, hash) |
@@ -116,20 +117,17 @@ The MCP server enforces per-category rate limits to prevent runaway operations:
 
 When a rate limit is exceeded, the server returns an error with a `retry_after` hint.
 
-## Supported Protocols
+## Supported Integrations
 
-The MCP server inherits all protocols from the AeroFTP CLI:
+The MCP server inherits AeroFTP's full integration surface from the CLI. See [Protocol Overview](/protocols/overview) for the complete matrix.
 
-| Category | Protocols |
-|----------|-----------|
-| **Traditional** | FTP, FTPS, SFTP |
-| **Standards** | WebDAV, S3-Compatible |
-| **Cloud Storage** | Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud |
-| **Enterprise** | Azure Blob, Zoho WorkDrive |
-| **Privacy** | Filen (E2E), Internxt (E2E) |
-| **Regional** | kDrive, Koofr, Jottacloud, Yandex Disk, 4shared, OpenDrive, FileLu |
+| Tier | Coverage |
+|------|----------|
+| **7 transport protocols** | FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift |
+| **20+ native provider integrations** | Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, GitHub, GitLab, Immich |
+| **40+ pre-configured presets** | AWS S3, Backblaze B2, Cloudflare R2, Wasabi, DigitalOcean Spaces, MinIO, Storj, IDrive e2, Hetzner Storage Box, Yandex Object Storage, Tencent COS, Alibaba OSS, Oracle Cloud, Nextcloud, Seafile, InfiniCLOUD, Jianguoyun, CloudMe, SourceForge, etc. |
 
-S3-compatible providers include AWS S3, Backblaze B2, Cloudflare R2, Wasabi, DigitalOcean Spaces, MinIO, Storj, and more.
+Saved profiles for OAuth providers (Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, Drime) are loaded from the encrypted vault automatically once authorized in the AeroFTP GUI &mdash; the MCP server never sees the underlying tokens.
 
 ## Security Model
 

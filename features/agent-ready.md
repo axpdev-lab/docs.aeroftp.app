@@ -201,7 +201,7 @@ aeroftp-cli df --profile "Nextcloud" --json
 
 ## AeroAgent: The Internal AI Assistant
 
-For users who prefer the GUI, AeroAgent provides the same file management capabilities through natural language. It supports 19 AI providers and 47 tools covering:
+For users who prefer the GUI, AeroAgent provides the same file management capabilities through natural language. It supports 24 AI providers and 52 tools covering:
 
 - **Local file ops**: list, read, write, delete, rename, search, edit, mkdir, move, copy, batch rename, trash, file info, disk usage, find duplicates, grep, head, tail, stat, diff, tree
 - **Remote server ops**: list, read, upload, download, delete, rename, mkdir, edit, search, batch upload/download, server exec

@@ -1,6 +1,6 @@
 # AeroAgent
 
-AeroAgent is AeroFTP's AI-powered assistant for natural language file management, code editing, and server operations. It integrates with 19 AI providers, exposes 47 built-in tools, and operates across local files plus the AeroFTP remote provider backends through a unified backend.
+AeroAgent is AeroFTP's AI-powered assistant for natural language file management, code editing, and server operations. It integrates with **24 AI providers**, exposes **52 built-in tools**, and operates across local files plus the AeroFTP remote provider backends (7 transport protocols + 20+ native providers) through a single unified `ai_core` backend &mdash; the same one that powers the GUI, the CLI (`aeroftp-cli agent`), and the native MCP server.
 
 ## Welcome Screen
 
@@ -82,7 +82,7 @@ The settings panel includes seven tabs:
 6. **Plugins** - browse, install, and manage plugins from the GitHub-based registry
 7. **History** - configure retention policies, search chat history, view usage stats
 
-## Supported AI Providers
+## Supported AI Providers (24)
 
 | Provider | Streaming | Vision | Tool Calling | Thinking |
 | -------- | --------- | ------ | ------------ | -------- |
@@ -104,7 +104,14 @@ The settings panel includes seven tabs:
 | Kimi | SSE | -- | Native | -- |
 | Qwen | SSE | -- | Native | -- |
 | DeepSeek | SSE | -- | Native | DeepSeek-R1 |
-| Custom (OpenAI-compatible) | SSE | Configurable | Native/Text | Configurable |
+| **NVIDIA NIM** (v3.6.2) | SSE | -- | Native | -- |
+| **Z.AI (Zhipu GLM)** (v3.6.2) | SSE | GLM-4V-Plus | Native | -- |
+| **Yi (01.AI)** (v3.6.2) | SSE | Yi-Vision | Native | -- |
+| **Hyperbolic** (v3.6.2) | SSE | Varies | Native | -- |
+| **Novita AI** (v3.6.2) | SSE | Varies | Native | -- |
+| Custom (OpenAI-compatible) | SSE | Configurable | Native / Text | Configurable |
+
+The five v3.6.2 additions (NVIDIA, Z.AI, Yi, Hyperbolic, Novita) are all OpenAI-compatible at `/chat/completions` and ride the existing `openai_compat::call` dispatch arm &mdash; no new adapter code, branded SVG icons in the marketplace.
 
 Configure providers in **Settings > AI > Providers**, or browse the **Provider Marketplace** to discover and add new ones. The marketplace presents providers in a searchable grid organized by category with feature badges and pricing tiers.
 
@@ -117,7 +124,9 @@ For local AI models, AeroAgent includes Ollama-specific features:
 - **GPU monitoring** via `ollama_list_running` showing VRAM usage
 - **8 model family profiles** with `detectOllamaModelFamily()` for optimized prompting
 
-## Tool Reference (47 Tools)
+## Tool Reference (52 Tools)
+
+> Since v3.6.3, all 52 tools flow through a single **unified tool dispatcher** (`ai_core::tools::dispatch_tool`) shared by GUI, CLI (`aeroftp-cli agent`) and the MCP server. Per-area handler modules (`local_tools`, `system_tools`, `remote_tools`, `agent_tools`) host the canonical implementations and per-surface `ToolCtx` impls bridge to the runtime. Result: identical behavior across surfaces, no drift between three parallel match statements.
 
 ### Remote Operations (9 tools)
 
@@ -248,7 +257,7 @@ AeroAgent auto-detects project type from 10 marker files (Cargo.toml, package.js
 1. **Base personality** - AeroAgent identity, tone, protocol expertise
 2. **Provider profile** - per-provider optimization (e.g., Anthropic cache hints, OpenAI structured outputs)
 3. **Connection context** - AeroCloud vs Server vs AeroFile mode, current host/port/user
-4. **Tool definitions** - all 47 tools with schemas
+4. **Tool definitions** - all 52 tools with schemas
 5. **Project context** - detected language, framework, file dependency graph
 6. **RAG results** - indexed file previews and search hits
 7. **Agent memory** - persistent notes from previous sessions (`.aeroagent` file)

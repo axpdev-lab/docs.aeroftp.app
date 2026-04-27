@@ -73,7 +73,7 @@ The `vault_peek` command (also available as an AeroAgent tool) inspects a vault 
 
 ## Remote Vault Support
 
-AeroVault can open `.aerovault` files stored on remote servers across any of AeroFTP's 22 supported protocols.
+AeroVault can open `.aerovault` files stored on remote servers across any of AeroFTP's 7 transport protocols and 20+ native provider integrations.
 
 The workflow is:
 

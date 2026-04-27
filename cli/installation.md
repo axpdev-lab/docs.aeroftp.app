@@ -1,6 +1,12 @@
 # CLI Installation
 
-The `aeroftp-cli` command-line interface is a standalone Rust binary built from the same codebase as the AeroFTP desktop application. It provides full scriptable access to all 22 supported protocols - FTP, FTPS, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Azure Blob, 4shared, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, and OpenDrive - without requiring a graphical environment.
+The `aeroftp-cli` command-line interface is a standalone Rust binary built from the same codebase as the AeroFTP desktop application. It provides full scriptable access to AeroFTP's three integration tiers without requiring a graphical environment:
+
+- **7 transport protocols**: FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift
+- **20+ native provider integrations**: Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, GitHub, GitLab, Immich, and more
+- **40+ pre-configured presets**: AWS S3, Backblaze B2, Cloudflare R2, Wasabi, Storj, MinIO, Hetzner Storage Box, Nextcloud, Seafile, InfiniCLOUD, Jianguoyun, CloudMe, SourceForge, etc.
+
+URL-based connections are available for the transport protocols and direct-auth native providers. OAuth-based providers (Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, Drime) are accessed via vault `--profile` after initial GUI authorization.
 
 ## Included with Every Desktop Package
 
@@ -41,7 +47,7 @@ After installing, confirm the CLI is working:
 
 ```bash
 aeroftp-cli --version
-# Output: aeroftp-cli 3.0.1
+# Output: aeroftp 3.6.6
 
 aeroftp-cli --help
 # Output: full command listing with descriptions
@@ -135,14 +141,17 @@ The CLI uses semantic exit codes for scripting:
 | Code | Meaning |
 |------|---------|
 | 0 | Success |
-| 1 | Connection error |
-| 2 | File/directory not found |
+| 1 | Connection / network error |
+| 2 | File / directory not found |
 | 3 | Permission denied |
-| 4 | Transfer error |
-| 5 | Configuration error |
+| 4 | Transfer failed |
+| 5 | Configuration / usage error |
 | 6 | Authentication failure |
-| 7 | Operation not supported |
+| 7 | Operation not supported by protocol |
 | 8 | Timeout |
+| 9 | Already exists / directory not empty (`--immutable`, `--no-clobber`) |
+| 10 | Server error / parse error |
+| 11 | I/O error |
 | 99 | Unknown error |
 | 130 | Interrupted (Ctrl+C) |
 

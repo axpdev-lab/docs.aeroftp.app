@@ -19,12 +19,12 @@ features:
       src: /icons/protocols.svg
       alt: Protocols
     title: Multi-Protocol
-    details: FTP, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA, GitHub, and more - all native.
+    details: 7 transport protocols + 20+ native provider integrations + 40+ pre-configured presets - all native, no shellouts.
   - icon:
       src: /icons/agent.svg
       alt: AeroAgent
     title: AeroAgent
-    details: AI-powered file management assistant with 47 specialized tools.
+    details: AI-powered file management assistant with 52 specialized tools across 24 AI providers.
   - icon:
       src: /icons/vault.svg
       alt: AeroVault
@@ -55,7 +55,17 @@ import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
 
 <h2 align="center">Integrations</h2>
 
-<p align="center">Connect to 40+ cloud providers and services via FTP, FTPS, SFTP, WebDAV, S3, OAuth2, and native APIs.</p>
+<p align="center">AeroFTP organizes integrations on three tiers, so the catalog is precise rather than vague:</p>
+
+<p align="center">
+  <strong>7 transport protocols</strong> &middot; <strong>20+ native provider integrations</strong> &middot; <strong>40+ pre-configured presets</strong>
+</p>
+
+<p align="center">
+  <em>Transports:</em> FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift &mdash; native wire-level support.<br>
+  <em>Native providers:</em> dedicated OAuth2 / API key / SDK code paths so each provider's specific features (sharing, native delta sync, server-side copy, large-file chunking) are first-class.<br>
+  <em>Presets:</em> server URL, port, base path, password-generation deep-link auto-filled for compatible services on top of the protocols above (S3-compatible endpoints, WebDAV-compatible servers, etc.).
+</p>
 
 <table align="center">
   <tr>

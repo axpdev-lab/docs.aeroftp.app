@@ -1,8 +1,14 @@
 # aerorsync — Native rsync Protocol in Pure Rust
 
-**aerorsync** is AeroFTP's native implementation of the rsync wire protocol 31 written in pure Rust. It powers AeroFTP's delta sync path on SFTP without requiring any external `rsync` binary on the client — neither on Linux/macOS nor on Windows. This is the engine behind the [Delta Sync](/features/delta-sync) feature you see in AeroSync.
+**aerorsync** is AeroFTP's native implementation of the rsync wire protocol 31 written in pure Rust. It powers AeroFTP's delta sync path on SFTP without requiring any external `rsync` binary on the client &mdash; neither on Linux/macOS nor on Windows. This is the engine behind the [Delta Sync](/features/delta-sync) feature you see in AeroSync.
 
 > **Status**: Production, shipped in v3.6.1 as the **first cross-OS file manager with native rsync protocol 31 support in pure Rust**. No `rsync.exe` bundle. No WSL requirement. Byte-identical to stock rsync 3.4.1 in CI.
+
+> **As of v3.6.6** the delta path is wired into three product entry points, not just AeroSync:
+>
+> - **AeroSync** delta transfers (the original entry point).
+> - **Cross-Profile Transfer** SFTP-to-SFTP with key-based auth, so only the bytes that differ from the destination travel on the wire.
+> - **AeroTools Code Editor** save against a remote SFTP file, so a one-line change to a 5 MB file ships only the diff.
 
 ## Why It Exists
 
@@ -68,7 +74,7 @@ The integration point in production is [`SftpProvider::delta_transport()`](https
 
 ## Configuration
 
-aerorsync is **opt-in via a runtime toggle** in v3.6.1, not on by default. The toggle is stored in `~/.config/aeroftp/native_rsync.toml`:
+The Cargo feature `aerorsync` is **compiled by default** since v3.6.1, but the **runtime toggle stays OFF by default** &mdash; there is one outstanding host-key-algorithm negotiation asymmetry between the SSH library used for classic SFTP (`ssh2`) and the one used by aerorsync (`russh`) that needs to be resolved before flipping the first-run default to ON. The toggle is stored in `~/.config/aeroftp/native_rsync.toml`:
 
 ```toml
 enabled = true
@@ -76,7 +82,7 @@ enabled = true
 
 You can also flip it from the AeroFTP GUI: **Settings > AeroSync > Delta backend**.
 
-When enabled, aerorsync activates for any SFTP session that meets the [Delta Sync eligibility rules](/features/delta-sync) (key auth, remote `rsync` available). Otherwise the transfer takes the classic SFTP path automatically.
+When enabled, aerorsync activates for any SFTP session that meets the [Delta Sync eligibility rules](/features/delta-sync) (key auth, remote `rsync` available). Otherwise the transfer takes the classic SFTP path automatically. **Soft fallbacks** (file too small, no key on disk, missing remote helper) silently route back to the classic upload path; security-critical failures (host-key mismatch, permission denied) are treated as hard errors and never silently downgraded.
 
 ## Limitations (Today)
 
