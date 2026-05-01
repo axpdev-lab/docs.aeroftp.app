@@ -105,6 +105,7 @@ export default defineConfig({
             { text: 'SFTP', link: '/protocols/sftp' },
             { text: 'WebDAV', link: '/protocols/webdav' },
             { text: 'S3-Compatible', link: '/protocols/s3' },
+            { text: 'Backblaze B2', link: '/protocols/backblaze' },
             { text: 'Azure Blob', link: '/protocols/azure' },
           ],
         },
