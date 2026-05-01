@@ -87,6 +87,33 @@ aeroftp-cli import rclone ~/.config/rclone/rclone.conf
 aeroftp-cli import rclone --json
 ```
 
+## Filter file conversion
+
+Beyond the server profiles in `rclone.conf`, rclone users often maintain `--filter-from` files with `+`/`-` rules that drive `rclone copy` / `rclone sync` operations. AeroFTP can convert those files into `.aeroignore` (gitignore syntax) so the same rules apply to `aeroftp-cli sync`, `copy`, and AeroCloud:
+
+```bash
+# Convert and inspect on stdout
+aeroftp-cli import rclone-filter ~/.config/rclone/filter.txt
+
+# Write to .aeroignore in your project root
+aeroftp-cli import rclone-filter filter.txt -o /project/.aeroignore
+
+# Pipe-friendly (read filter from stdin)
+cat my-filter.txt | aeroftp-cli import rclone-filter -
+
+# Machine-readable (status + warnings)
+aeroftp-cli import rclone-filter filter.txt --json
+```
+
+The converter handles the **first-match-wins → last-match-wins** semantic gap automatically by reversing the rule order: a rule that appeared first in the rclone filter file ends up last in the generated `.aeroignore`, where it wins under gitignore's last-match-wins rule. `+ pattern` includes become `!pattern` re-includes.
+
+Two non-fatal warnings may be reported:
+
+- **`! ` reset directive**: rclone clears all rules above the reset at runtime; the converter keeps them and surfaces a warning so you can prune them manually if needed.
+- **`{a,b}` brace alternation**: gitignore does not support brace expansion. The pattern is preserved as-is; expand manually if needed.
+
+See the [import rclone-filter](/cli/commands.html#import-rclone-filter) reference for full options, JSON envelope, and exit codes.
+
 ## Security comparison
 
 | Aspect | rclone | AeroFTP |

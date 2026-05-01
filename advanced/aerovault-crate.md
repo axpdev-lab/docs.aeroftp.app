@@ -15,7 +15,7 @@ AeroVault is a standalone Rust crate for creating and managing encrypted vault c
 
 ```toml
 [dependencies]
-aerovault = "0.3"
+aerovault = "0.3.4"
 ```
 
 Or via cargo:
@@ -30,7 +30,7 @@ cargo add aerovault
 cargo install aerovault-cli
 ```
 
-The CLI provides commands for creating, opening, listing, adding, extracting, and managing vault files from the terminal.
+The CLI provides commands for creating, opening, listing, adding, extracting, moving, renaming, copying, and managing vault files from the terminal.
 
 ## Cryptographic Features
 
@@ -127,6 +127,15 @@ vault.delete_entry("old-file.txt")?;
 // Delete multiple entries (recursive for directories)
 vault.delete_entries(&["reports", "temp.log"], true)?;
 
+// Move entry path (file or directory)
+vault.move_entry("reports/q1.xlsx", "archive/2026/q1.xlsx")?;
+
+// Rename entry in-place (same parent)
+vault.rename_entry("archive/2026/q1.xlsx", "q1-final.xlsx")?;
+
+// Copy file or directory recursively
+vault.copy_entry("archive/2026", "backup/2026")?;
+
 // Change the password
 vault.change_password("my-strong-password", "new-password")?;
 
@@ -167,6 +176,9 @@ println!("MAC: {}", info.mac);         // "HMAC-SHA512"
 | `vault.extract_all(output_dir)` | Extract all entries |
 | `vault.delete_entry(name)` | Delete a single entry |
 | `vault.delete_entries(names, recursive)` | Delete multiple entries |
+| `vault.move_entry(from, to)` | Move or rename an entry path |
+| `vault.rename_entry(current, new_name)` | Rename entry inside same parent |
+| `vault.copy_entry(from, to)` | Copy file or directory recursively |
 | `vault.change_password(old, new)` | Change the vault password |
 | `vault.compact()` | Reclaim space from deletions |
 | `vault.security_info()` | Get encryption parameters |

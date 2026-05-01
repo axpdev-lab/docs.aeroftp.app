@@ -1,12 +1,12 @@
 # MCP Server
 
-The AeroFTP MCP (Model Context Protocol) server exposes ~20 curated file management tools to AI assistants via JSON-RPC over stdio. It connects Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client to AeroFTP's full integration surface - **7 transport protocols + 20+ native provider integrations + 40+ pre-configured presets** - without custom integration code.
+The AeroFTP MCP (Model Context Protocol) server exposes 39 curated file management tools to AI assistants via JSON-RPC over stdio. It connects Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client to AeroFTP's full integration surface - **7 transport protocols + 20+ native provider integrations + 40+ pre-configured presets** - without custom integration code.
 
 ## What is MCP?
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) is an open standard that lets AI assistants call external tools through a structured JSON-RPC interface. Instead of generating shell commands, the AI calls typed tools with validated parameters and receives structured responses.
 
-AeroFTP implements an MCP server that wraps its CLI into ~20 curated tools with connection pooling (auto-reset on stale handles), per-profile request serialization, schema validation, request cancellation, rate limiting, and audit logging.
+AeroFTP implements an MCP server that wraps its CLI into 39 curated tools with connection pooling (auto-reset on stale handles), per-profile request serialization, schema validation, request cancellation, rate limiting, and audit logging.
 
 The official VS Code extension [`axpdev-lab.aeroftp-mcp`](https://marketplace.visualstudio.com/items?itemName=axpdev-lab.aeroftp-mcp) configures this server in one click for Claude Code, Claude Desktop, Cursor, and Windsurf simultaneously.
 
@@ -80,8 +80,13 @@ The MCP server exposes the following curated tools (names use the `aeroftp_` pre
 | `file_versions` | List historical versions where the protocol supports them |
 | `search_files` | Search files by name pattern (glob) |
 | `storage_quota` | Storage quota (used/free/total) |
-| `checksum` | Compute SHA-256 / BLAKE3 / etc. on a remote file |
-| `check_tree` | Categorized local-vs-remote diff. `compare_method` argument supports `size` / `mtime` / `checksum` (added v3.6.0) |
+| `checksum` / `hashsum` | Compute SHA-256 / SHA-1 / MD5 / BLAKE3 on a remote file (alias: `hashsum`, added v3.5.9) |
+| `head_file` / `tail_file` | First or last N lines of a remote text file (added v3.5.9) |
+| `tree` | Recursive directory tree, depth-capped (added v3.5.9) |
+| `check_tree` | Categorized local-vs-remote diff. `compare_method` argument supports `size` / `mtime` / `checksum` (added v3.6.0). Per-group caps `max_match` / `max_differ` / `max_missing_local` / `max_missing_remote` and `omit_match` switch (added v3.7.0) |
+| `sync_doctor` | Preflight risk summary with `suggested_next_command`. Lighter than `sync_tree dry_run=true` (added v3.7.0) |
+| `reconcile` | Categorized size-only diff variant of `check_tree` with `elapsed_secs` and `suggested_next_command` (added v3.7.0) |
+| `dedupe` | SHA-256 duplicate detection grouped per size, modes `newest` / `oldest` / `largest` / `smallest` / `list`, dry-run by default (added v3.7.0) |
 
 ### Medium Tools (Write Operations)
 
@@ -96,6 +101,9 @@ The MCP server exposes the following curated tools (names use the `aeroftp_` pre
 | `create_share_link` | Generate a share link with optional password/expiry |
 | `edit` | Find and replace in a remote text file (download → edit → upload). Added v3.5.10 |
 | `sync_tree` | Plan and execute a directory sync. Returns `plan[]` (per-file decision) and `plan_by_op` with caps; supports `dry_run` and pool-invalidate fix on apply |
+| `transfer` / `transfer_tree` | Cross-profile copy: single file or recursive directory between two saved profiles. Source and destination provider opened once and reused for the whole batch (added v3.7.0) |
+| `touch` | Create an empty file at a remote path, or report `action: "exists"` (added v3.7.0) |
+| `speed` | Throughput probe: random payload upload + download + SHA-256 integrity + cleanup. Caps 4 MiB default / 64 MiB max, iterations 1..3 (added v3.7.0) |
 | `close_connection` | Close the current pooled connection (forces reconnect on next call) |
 
 ### High Tools (Destructive)
@@ -104,6 +112,7 @@ The MCP server exposes the following curated tools (names use the `aeroftp_` pre
 |------|-------------|
 | `delete` | Permanently delete a remote file or directory |
 | `delete_many` | Batch delete from an explicit list. Per-item `status` reporting |
+| `cleanup` | BFS scan for orphan `.aerotmp` partial-transfer files. Dry-run by default; deletes only when explicitly asked. Caps 100 k entries / depth 100 (added v3.7.0) |
 
 ## Rate Limits
 

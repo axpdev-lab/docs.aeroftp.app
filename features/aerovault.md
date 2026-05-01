@@ -153,6 +153,6 @@ AeroVault files are registered as a MIME type on all platforms with dedicated ic
 
 ## Standalone Crate
 
-The AeroVault v2 encryption engine is published as a standalone Rust crate on [crates.io](https://crates.io/crates/aerovault), available for use in any Rust project. A companion CLI (`aerovault-cli`) provides 8 commands for creating, listing, adding, extracting, and managing vaults from the terminal.
+The AeroVault v2 encryption engine is published as a standalone Rust crate on [crates.io](https://crates.io/crates/aerovault), available for use in any Rust project. A companion CLI (`aerovault-cli`) provides 11 commands for creating, listing, adding, extracting, moving, renaming, copying, and managing vaults from the terminal.
 
 For Rust API documentation, code examples, and integration guides, see the [AeroVault Crate Reference](/advanced/aerovault-crate.html).

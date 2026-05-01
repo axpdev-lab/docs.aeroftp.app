@@ -1,6 +1,6 @@
 # Protocol Overview
 
-> Last updated: 2026-04-27 (v3.6.6)
+> Last updated: 2026-05-01 (v3.7.0)
 
 AeroFTP organizes integrations on three tiers, so what you see in the catalog is precise rather than vague:
 
@@ -252,4 +252,4 @@ The `server_exec` tool supports 10 operations: `ls`, `cat`, `get`, `put`, `mkdir
 
 ---
 
-> Last updated: 2026-04-27 - AeroFTP v3.6.6
+> Last updated: 2026-05-01 - AeroFTP v3.7.0

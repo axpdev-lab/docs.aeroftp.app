@@ -443,6 +443,43 @@ aeroftp-cli ls --profile "server" /data/ --max-age 24h
 aeroftp-cli ls --profile "server" /var/log/ -l --include "*.log" --min-size 10M --min-age 7d
 ```
 
+### Migrating from rclone filter files
+
+If you already have an rclone `--filter-from` file with `+`/`-` rules, convert it once to `.aeroignore` and reuse it for AeroFTP `sync`/`copy`:
+
+```bash
+# Place the converted file at the sync root so AeroFTP picks it up automatically
+aeroftp-cli import rclone-filter ~/.config/rclone/filter.txt -o /project/.aeroignore --force
+
+# Now sync respects the same rules
+aeroftp-cli sync --profile "server" /project /remote
+```
+
+The converter handles the first-match-wins → last-match-wins gap by reversing the rule order, and surfaces warnings for unsupported constructs (`! ` reset, `{a,b}` brace alternation). See [import rclone-filter](/cli/commands.html#import-rclone-filter) for the full reference.
+
+## Bandwidth Scheduling
+
+### Time-of-day rate limit
+
+Throttle transfers during business hours and let them run full-speed off-hours:
+
+```bash
+# 512 KB/s during the working day, off after midnight, full speed at lunchtime
+aeroftp-cli sync --profile "backup" ./local /remote \
+  --bwlimit "08:00,512k 12:00,10M 13:00,512k 18:00,off 23:00,off"
+```
+
+Times are in **local time** (matching rclone), entries can be in any order, malformed entries (e.g. `25:00,...`) are silently skipped. The active rate is the last entry whose time `<=` now; before the first entry of the day the schedule wraps around midnight to the rate of the last entry. See [Bandwidth Schedule](/cli/commands.html#bandwidth-schedule---bwlimit) for the full grammar and edge cases.
+
+### Plain rate cap
+
+A `--bwlimit` without commas is treated as a global cap:
+
+```bash
+# Cap to 1 MB/s for the whole transfer
+aeroftp-cli sync --profile "backup" ./local /remote --bwlimit "1M"
+```
+
 ## Sync Safety
 
 ### Dry Run Preview
