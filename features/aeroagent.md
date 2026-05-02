@@ -126,7 +126,7 @@ For local AI models, AeroAgent includes Ollama-specific features:
 
 ## Tool Reference (52 Tools)
 
-> Since v3.6.3, all 52 tools flow through a single **unified tool dispatcher** (`ai_core::tools::dispatch_tool`) shared by GUI, CLI (`aeroftp-cli agent`) and the MCP server. Per-area handler modules (`local_tools`, `system_tools`, `remote_tools`, `agent_tools`) host the canonical implementations and per-surface `ToolCtx` impls bridge to the runtime. Result: identical behavior across surfaces, no drift between three parallel match statements.
+> Since v3.6.3, all 43 tools flow through a single **unified tool dispatcher** (`ai_core::tools::dispatch_tool`) shared by GUI, CLI (`aeroftp-cli agent`) and the MCP server. Per-area handler modules (`local_tools`, `system_tools`, `remote_tools`, `agent_tools`) host the canonical implementations and per-surface `ToolCtx` impls bridge to the runtime. Result: identical behavior across surfaces, no drift between three parallel match statements.
 
 ### Remote Operations (9 tools)
 
@@ -257,7 +257,7 @@ AeroAgent auto-detects project type from 10 marker files (Cargo.toml, package.js
 1. **Base personality** - AeroAgent identity, tone, protocol expertise
 2. **Provider profile** - per-provider optimization (e.g., Anthropic cache hints, OpenAI structured outputs)
 3. **Connection context** - AeroCloud vs Server vs AeroFile mode, current host/port/user
-4. **Tool definitions** - all 52 tools with schemas
+4. **Tool definitions** - all 43 tools with schemas
 5. **Project context** - detected language, framework, file dependency graph
 6. **RAG results** - indexed file previews and search hits
 7. **Agent memory** - persistent notes from previous sessions (`.aeroagent` file)

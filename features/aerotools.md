@@ -11,7 +11,7 @@ The AeroTools panel contains four tabs:
 | **AeroTools** | Security Toolkit | Hashing, encryption, and password generation (Cyber theme only) |
 | **Editor** | Monaco Editor | VS Code engine with syntax highlighting for 50+ languages |
 | **Terminal** | SSH Terminal | Remote shell with 8 terminal themes and multiple tabs |
-| **AI Agent** | AeroAgent | AI assistant with 52 tools across local files and the 7 transport protocols + 20+ native provider integrations |
+| **AI Agent** | AeroAgent | AI assistant with 43 tools across local files and the 7 transport protocols + 20+ native provider integrations |
 
 The panel is resizable by dragging the separator between the file browser and the tools area. Each tab maintains its own state independently.
 

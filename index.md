@@ -24,7 +24,7 @@ features:
       src: /icons/agent.svg
       alt: AeroAgent
     title: AeroAgent
-    details: AI-powered file management assistant with 52 specialized tools across 24 AI providers.
+    details: AI-powered file management assistant with 43 specialized tools across 24 AI providers.
   - icon:
       src: /icons/vault.svg
       alt: AeroVault
