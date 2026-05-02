@@ -1,6 +1,6 @@
 # AI Provider Reference
 
-AeroAgent supports 19 AI providers. All providers use the OpenAI-compatible chat completions API unless noted otherwise.
+AeroAgent supports 24 AI providers. All providers use the OpenAI-compatible chat completions API unless noted otherwise.
 
 ## Provider Overview
 

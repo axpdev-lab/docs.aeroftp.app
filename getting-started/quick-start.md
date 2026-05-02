@@ -13,7 +13,7 @@ After [installing](installation.md) AeroFTP, launch it from your application men
 
 Once loaded, you arrive at the **connection screen**. On a fresh install this area will be empty. After you save servers, their cards will appear here for one-click reconnection.
 
-At the top of the screen you will find the **protocol selector** -- a categorized grid of all 23 supported protocols. Below the selector are the connection input fields that adapt based on your chosen protocol.
+At the top of the screen you will find the **protocol selector** -- a categorized grid of all 22 supported protocols. Below the selector are the connection input fields that adapt based on your chosen protocol.
 
 ![Main connection screen with empty saved servers area and protocol selector at the top](/images/quick-start-connection-screen.png)
 <!-- SCREENSHOT: The connection screen on first launch. Show the protocol selector bar at top (collapsed state), the empty saved-servers area with placeholder text, and the connection form fields below. Use the Dark theme for consistency. -->
@@ -32,7 +32,7 @@ Click the **protocol selector** to expand the full protocol grid. Protocols are 
 Each protocol card displays a provider logo and name. Hover over a card to see a brief description. Click a card to select it and load the appropriate connection fields.
 
 ![Protocol selector expanded showing all categories: Servers, Cloud OAuth, S3, WebDAV](/images/quick-start-protocol-selector.png)
-<!-- SCREENSHOT: The protocol selector fully expanded, showing the grid of protocol cards organized by category. All 27 protocols visible with their logos. Dark theme. -->
+<!-- SCREENSHOT: The protocol selector fully expanded, showing the grid of protocol cards organized by category. All 22 protocols visible with their logos. Dark theme. -->
 
 ## 4. Enter Connection Details (SFTP Example)
 
@@ -139,8 +139,8 @@ Now that you are connected, there is much more to discover:
 - **[Interface Overview](interface.md)** -- Detailed tour of every UI element
 - **[AeroSync](../features/aerosync.md)** -- Intelligent directory synchronization with conflict resolution
 - **[AeroVault](../features/aerovault.md)** -- Military-grade encrypted file containers
-- **[AeroAgent](../features/aeroagent.md)** -- AI assistant with 47 tools for file management and code analysis
+- **[AeroAgent](../features/aeroagent.md)** -- AI assistant with 43 tools for file management and code analysis
 - **[AeroTools](../features/aerotools.md)** -- Integrated code editor (Monaco), terminal, and development tools
-- **[Protocols Overview](../protocols/overview.md)** -- Guide to all 23 supported protocols
+- **[Protocols Overview](../protocols/overview.md)** -- Guide to all 22 supported protocols
 
 > **Next step:** Read the [Interface Overview](interface.md) to understand every panel, menu, and shortcut available in AeroFTP.

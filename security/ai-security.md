@@ -1,6 +1,6 @@
 # AI Tool Security
 
-AeroFTP's AI assistant (AeroAgent) provides 48 tools for file management, server operations, and automation. Because AI models can be influenced by prompt injection or produce unexpected outputs, all mutative tool execution is subject to backend-enforced security controls that cannot be bypassed by the web frontend.
+AeroFTP's AI assistant (AeroAgent) provides 43 tools for file management, server operations, and automation. Because AI models can be influenced by prompt injection or produce unexpected outputs, all mutative tool execution is subject to backend-enforced security controls that cannot be bypassed by the web frontend.
 
 ## Backend Approval Model
 
@@ -62,7 +62,7 @@ At no point does the AI model receive passwords, tokens, or connection secrets. 
 
 | Control | Detail |
 | ------- | ------ |
-| **Tool whitelist** | Only 48 named tools are accepted. Unknown tool names are rejected |
+| **Tool whitelist** | Only 43 named tools are accepted. Unknown tool names are rejected |
 | **Path validation** | Null bytes, `..` traversal, and system paths (`/etc/shadow`, `~/.ssh`) are blocked |
 | **Shell denylist** | 35 regex patterns block dangerous commands (`sudo`, `systemctl`, `mount`, `iptables`, etc.) |
 | **Content limits** | Remote reads: 5 KB. Directory listings: 100 entries. Agent memory: 50 KB |

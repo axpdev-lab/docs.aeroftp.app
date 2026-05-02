@@ -4,7 +4,7 @@ A visual tour of AeroFTP's interface and features.
 
 ## Connection Screen
 
-Connect to 27 protocols from a single interface. Saved servers with protocol badges, search, and one-click connect.
+Connect to 22 protocols from a single interface. Saved servers with protocol badges, search, and one-click connect.
 
 ![Connection Screen](/screenshots/connection-screen-protocols.png)
 
@@ -22,7 +22,7 @@ Bidirectional file synchronization with real-time transfer progress, speed graph
 
 ## DevTools & AeroAgent
 
-Integrated code editor (Monaco), SSH terminal, and AI assistant with 47 tools - all in resizable panels.
+Integrated code editor (Monaco), SSH terminal, and AI assistant with 43 tools - all in resizable panels.
 
 ![DevTools & AeroAgent](/screenshots/devtools-aeroagent.png)
 

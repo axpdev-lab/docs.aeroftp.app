@@ -86,26 +86,24 @@ When enabled, AeroRsync activates for any SFTP session that meets the [Delta Syn
 
 ## Limitations (Today)
 
-The first production wave is intentionally narrow. AeroRsync **does not** currently:
+AeroRsync is intentionally narrow in scope. It **does not** currently:
 
-- Stream files larger than **256 MiB** without going through memory - above that threshold, AeroFTP falls back to the classic wrapper on Unix or to plain SFTP on Windows. **P3-T01 (planned for v3.7.x)** removes this cap by introducing chunked streaming I/O for both upload and download (see [Roadmap](#roadmap-p3-t01))
-- Reuse the SSH session across files - every file in a batch opens its own channel. Visible overhead on syncs of *many small* files. P3-T01 also addresses this with batch session reuse
 - Support `--delete*`, `--inplace`, `--append`, `--mkpath`, `--partial-dir`, `--sparse`, xattrs, ACLs, hard links, devices, special files
-- Run the rsync **daemon** mode (`rsync://`) - only the SSH remote-shell mode is implemented
-- Cross-provider delta - AeroRsync is SFTP-only by design
+- Run the rsync **daemon** mode (`rsync://`) — only the SSH remote-shell mode is implemented
+- Cross-provider delta — AeroRsync is SFTP-only by design
 
-These limitations are the natural scope of "delta accelerator on top of SSH for typical SFTP servers". They are **not** blockers for the current production use case (incremental backups to NAS, deploys to web servers, sync against rsync-equipped Linux/BSD hosts).
+These boundaries are the natural scope of "delta accelerator on top of SSH for typical SFTP servers". They are **not** blockers for the current production use case (incremental backups to NAS, deploys to web servers, sync against rsync-equipped Linux/BSD hosts).
 
-## Roadmap: P3-T01
+The 256 MiB streaming cap and the per-file SSH-session overhead that were on the roadmap have both been resolved — see the next section.
 
-The next major AeroRsync milestone is **P3-T01 - Industrializzare native rsync** (planned for v3.7.x, ~24 working days across 4 waves):
+## Maturity milestones (delivered)
 
-1. **W1 - Streaming upload**: rolling-checksum producer with chunked source reading. Removes the cap on the upload side
-2. **W2 - Streaming download**: chunked baseline reader + writer-driven `apply_delta`. Removes the cap on the download side. **At the end of W1+W2 the 256 MiB limit is gone.**
-3. **W3 - Trait extension `DeltaBatch`**: opens one SSH session for N files within a sync batch (~80% RTT saving on 100-small-file syncs against typical 50 ms latency)
-4. **W4 - `sync_tree_core` integration**: the AeroSync product path opens/closes batches around the sync loop and surfaces `delta_session_count` + `delta_bytes_on_wire` in the report
+The **P3-T01 industrialization wave** is now shipped:
 
-The full executable plan lives in the engineering appendix: [APPENDIX-Y P3-T01 Piano Esecutivo](https://github.com/axpdev-lab/aeroftp/blob/main/docs/dev/roadmap/APPENDIX-C-Y-D/APPENDIX-Y/tasks/2026-04-25_P3-T01_Piano_Esecutivo_Dettagliato.md).
+1. **Streaming upload** — rolling-checksum producer with chunked source reading. Files above 256 MiB stream end-to-end on the upload path without going through memory.
+2. **Streaming download** — chunked baseline reader + writer-driven `apply_delta`. Files above 256 MiB stream end-to-end on the download side too. **Result: the 256 MiB cap is gone in both directions.**
+3. **Session-cached batch transport** — the new `AerorsyncBatch` trait opens one SSH session for N files within a sync batch (~80% RTT saving on 100-small-file syncs against typical 50 ms latency)
+4. **`sync_tree_core` integration** — the AeroSync product path opens / closes batches around the sync loop and surfaces `delta_files[]` (per-file breakdown) and `bytes_on_wire` (cumulative wire savings) in the SyncReport, visible in SyncPanel.
 
 ## Origin Story
 

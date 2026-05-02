@@ -1,6 +1,6 @@
 # AeroSync
 
-AeroSync is AeroFTP's professional file synchronization engine. It supports bidirectional sync across **all 7 transport protocols** (FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift) and the **20+ native provider integrations** with conflict resolution, scheduling, bandwidth throttling, transfer journaling, and checkpoint-based resume. AeroSync operates through a two-tab interface: **Quick Sync** for common scenarios and **Advanced** for granular control over every aspect of the sync process.
+AeroSync is AeroFTP's professional file synchronization engine. It supports bidirectional sync across all transport protocols (FTP, FTPS, SFTP, WebDAV, S3, Azure Blob) and the **20+ native provider integrations** with conflict resolution, scheduling, bandwidth throttling, transfer journaling, and checkpoint-based resume. AeroSync operates through a two-tab interface: **Quick Sync** for common scenarios and **Advanced** for granular control over every aspect of the sync process.
 
 > **Delta sync** has its own eligibility rules and validation matrix. For the exact requirements, current support scope, and the meaning of the `delta` / `classic` badges, see [Delta Sync](/features/delta-sync). The engine behind it is [AeroRsync](/features/aerorsync) - a native Rust implementation of the rsync wire protocol 31 that ships **first-class on Windows** without any `rsync.exe` bundle since v3.6.1.
 

@@ -25,7 +25,7 @@ The Rust backend is the security authority. The web frontend can request operati
 
 ## Where AeroFTP Stands
 
-In the landscape of file transfer and cloud management tools, AeroFTP combines protocol breadth (27 protocols) with security depth typically found only in dedicated encryption tools:
+In the landscape of file transfer and cloud management tools, AeroFTP combines protocol breadth (22 protocols) with security depth typically found only in dedicated encryption tools:
 
 - **OpenSSF Best Practices**: 100% passing criteria
 - **Aikido Security**: Top 5% benchmark, 0 open issues (March 2026)

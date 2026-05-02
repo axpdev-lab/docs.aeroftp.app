@@ -1,5 +1,7 @@
 # Drime Cloud
 
+> **Note**: Drime Cloud is currently a **developer-only / partial integration** in AeroFTP — the provider is implemented in the codebase but is excluded from the production AeroCloud sync surface and the discover catalog in release builds. This page documents the integration as it exists today for evaluation purposes; expect rough edges until it is promoted.
+
 AeroFTP connects to Drime Cloud using its native REST API with Bearer token authentication. Drime Cloud is a secure file collaboration and cloud storage platform built on the Bedrive/BeDrive engine with S3-backed storage. The free plan includes 20 GB of storage.
 
 ## Connection Settings

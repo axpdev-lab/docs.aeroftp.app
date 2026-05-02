@@ -53,10 +53,10 @@ Users can independently verify any release artifact using Cosign:
 
 ```bash
 cosign verify-blob \
-  --bundle aeroftp_3.1.7_amd64.deb.sigstore.json \
+  --bundle aeroftp_3.7.0_amd64.deb.sigstore.json \
   --certificate-identity-regexp "https://github.com/axpdev-lab/aeroftp/" \
   --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
-  aeroftp_3.1.7_amd64.deb
+  aeroftp_3.7.0_amd64.deb
 ```
 
 ## Plugin Registry

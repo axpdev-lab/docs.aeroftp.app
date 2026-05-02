@@ -79,7 +79,7 @@ Executes read operations on any saved server. The backend resolves credentials i
 
 All operations create a temporary connection, execute, and disconnect. Credentials cross no process boundary.
 
-> **Note:** Mutative operations (`put`, `rm`, `mv`, `mkdir`) via CLI agent are on the roadmap for an upcoming release.
+Mutative operations (`put`, `get`, `rm`, `mv`, `mkdir`) are also exposed through `server_exec` with the same credential isolation — passwords are resolved from the vault inside Rust and never appear in CLI output, JSON, or the agent's transcript.
 
 ## Native MCP Server
 
@@ -91,7 +91,7 @@ aeroftp-cli agent --mcp
 
 This mode exposes a remote-focused toolset directly to MCP clients such as Claude Desktop, Cursor, and VS Code. The current implementation includes:
 
-- 16 curated remote tools for listing, reading, uploading, downloading, renaming, deleting, quota checks, server info, share links, checksums, versions, and server-side copy
+- 39 curated remote tools for listing, reading, uploading, downloading, renaming, deleting, quota checks, server info, share links, checksums, versions, and server-side copy
 - MCP resources for saved profiles, vault availability, protocol capabilities, and active pooled connections
 - MCP prompts for deploy, backup, sync, and cleanup workflows
 - async stdio transport, connection pooling, request cancellation, rate limiting, and audit logging

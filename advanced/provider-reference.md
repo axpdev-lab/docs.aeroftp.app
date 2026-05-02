@@ -1,6 +1,6 @@
 # Provider Reference
 
-Technical reference for all 23 storage protocols supported by AeroFTP. Protocols are grouped by connection type.
+Technical reference for all 22 storage protocols supported by AeroFTP. Protocols are grouped by connection type.
 
 ## Server Protocols
 
@@ -291,13 +291,14 @@ All protocols implement a unified `StorageProvider` trait with 18 methods:
 
 | Crate | Version | Used By |
 |-------|---------|---------|
-| suppaftp | 8.0.1 (pinned) | FTP, FTPS |
+| suppaftp | 8.0.3 (pinned) | FTP, FTPS |
 | russh | 0.57 | SFTP |
+| ssh2 | 0.9 (vendored OpenSSL) | SFTP upload backend (some embedded servers) |
 | reqwest | 0.13 | All HTTP-based protocols |
 | quick-xml | 0.39 | WebDAV, Azure Blob, S3 |
 | tokio-util | 0.7 | Streaming I/O |
 | secrecy | 0.8 | All credential handling |
 
 ::: warning suppaftp Pin
-`suppaftp` is pinned to `=8.0.1` because v8.0.2 uses `std::os::fd::AsFd` which is Unix-only and breaks Windows builds.
+`suppaftp` is pinned to `=8.0.3` (the latest 8.0.x line). The Windows-breaking `std::os::fd::AsFd` reference is still present upstream but is feature-gated behind `tokio-async-native-tls`, which AeroFTP does not enable (we use `tokio-rustls-aws-lc-rs`). The pin keeps the FTP layer stable across Linux, macOS, and Windows while picking up the 14 upstream fixes between 8.0.1 and 8.0.3 (UB in TLS, panics on EPSV/SIZE/MDTM, infinite loops in async `feat()` and `read_response_in()`, MLSX `cdir`/`pdir`, EPRT for IPv6).
 :::

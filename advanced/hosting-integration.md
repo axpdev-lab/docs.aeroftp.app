@@ -42,7 +42,7 @@ An `.aeroftp` file is a JSON document with an encrypted payload:
   "encrypted_payload": [/* AES-256-GCM ciphertext as integer array */],
   "metadata": {
     "exportDate": "2026-04-04T20:00:00Z",
-    "aeroftpVersion": "3.3.9",
+    "aeroftpVersion": "3.7.0",
     "serverCount": 1,
     "hasCredentials": true
   }
@@ -174,7 +174,7 @@ def generate_aeroftp_profile(servers, password):
         "encrypted_payload": list(ciphertext),
         "metadata": {
             "exportDate": datetime.now(timezone.utc).isoformat(),
-            "aeroftpVersion": "3.3.9",
+            "aeroftpVersion": "3.7.0",
             "serverCount": len(servers),
             "hasCredentials": any(s.get("credential") for s in servers)
         }
@@ -232,7 +232,7 @@ async function generateAeroftpProfile(servers, password) {
     encrypted_payload: [...encrypted],
     metadata: {
       exportDate: new Date().toISOString(),
-      aeroftpVersion: '3.3.9',
+      aeroftpVersion: '3.7.0',
       serverCount: servers.length,
       hasCredentials: servers.some(s => s.credential)
     }
@@ -271,7 +271,7 @@ function generateAeroftpProfile(array $servers, string $password): array {
         'encrypted_payload' => array_values(unpack('C*', $ciphertext . $tag)),
         'metadata' => [
             'exportDate' => gmdate('Y-m-d\TH:i:s\Z'),
-            'aeroftpVersion' => '3.3.9',
+            'aeroftpVersion' => '3.7.0',
             'serverCount' => count($servers),
             'hasCredentials' => !empty(array_filter($servers, fn($s) => !empty($s['credential'])))
         ]

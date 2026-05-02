@@ -2,7 +2,7 @@
 
 The `aeroftp-cli` command-line interface is a standalone Rust binary built from the same codebase as the AeroFTP desktop application. It provides full scriptable access to AeroFTP's three integration tiers without requiring a graphical environment:
 
-- **7 transport protocols**: FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift
+- **Core transport protocols**: FTP, FTPS, SFTP, WebDAV, S3, Azure Blob
 - **20+ native provider integrations**: Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, GitHub, GitLab, Immich, and more
 - **40+ pre-configured presets**: AWS S3, Backblaze B2, Cloudflare R2, Wasabi, Storj, MinIO, Hetzner Storage Box, Nextcloud, Seafile, InfiniCLOUD, Jianguoyun, CloudMe, SourceForge, etc.
 
@@ -47,7 +47,7 @@ After installing, confirm the CLI is working:
 
 ```bash
 aeroftp-cli --version
-# Output: aeroftp 3.6.6
+# Output: aeroftp 3.7.0
 
 aeroftp-cli --help
 # Output: full command listing with descriptions

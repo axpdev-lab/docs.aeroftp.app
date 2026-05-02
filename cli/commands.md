@@ -574,7 +574,7 @@ Current agent integrations:
 - `aeroftp-cli agent -m ...`: one-shot orchestration through AeroAgent with approval controls
 - `aeroftp-cli agent --mcp` / `aeroftp-cli mcp`: native Model Context Protocol server for Claude Desktop, Cursor, VS Code, and other MCP clients
 
-The MCP server exposes ~20 curated remote tools (see [MCP Overview](/mcp/overview)), resource discovery for saved profiles/capabilities/connections, reusable prompts, connection pooling with auto-reset, per-profile request serialization, request cancellation, rate limiting, schema validation, and audit logging.
+The MCP server exposes 39 curated remote tools (see [MCP Overview](/mcp/overview)), resource discovery for saved profiles/capabilities/connections, reusable prompts, connection pooling with auto-reset, per-profile request serialization, request cancellation, rate limiting, schema validation, and audit logging.
 
 ### mcp (top-level shortcut)
 

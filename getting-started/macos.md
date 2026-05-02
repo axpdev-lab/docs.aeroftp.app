@@ -4,7 +4,7 @@ AeroFTP is distributed as a `.dmg` disk image for macOS 12 (Monterey) and later.
 
 ## Installing
 
-1. Download `AeroFTP_3.0.1_x64.dmg` from [GitHub Releases](https://github.com/axpnet/aeroftp/releases)
+1. Download `AeroFTP_3.7.0_aarch64-beta.dmg` from [GitHub Releases](https://github.com/axpnet/aeroftp/releases)
 2. Open the `.dmg` file
 3. Drag **AeroFTP** into your **Applications** folder
 4. Eject the disk image

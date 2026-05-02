@@ -37,8 +37,8 @@ The Rust backend handles all protocol communication, encryption, and system oper
 
 | Module | Purpose |
 |--------|---------|
-| `ai_stream.rs` | SSE/NDJSON streaming for 15 AI providers |
-| `ai_tools.rs` | 47 provider-agnostic AI tools (file ops, shell, vault) |
+| `ai_stream.rs` | SSE/NDJSON streaming for 24 AI providers |
+| `ai_tools.rs` | 43 provider-agnostic AI tools (file ops, shell, vault) |
 | `ai_core/` | Abstraction layer: `EventSink`, `CredentialProvider`, `RemoteBackend` traits |
 | `sync.rs` | AeroSync engine: journal, checksum, retry, verification |
 | `vault_v2.rs` | AeroVault v2: AES-256-GCM-SIV chunked encryption |

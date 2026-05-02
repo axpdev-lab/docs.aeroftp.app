@@ -39,7 +39,7 @@ For full details, see the [Terminal documentation](terminal.md).
 
 ## AeroAgent
 
-The AI-powered assistant with **52 built-in tools** that work across local files and the AeroFTP provider backends (7 transports + 20+ native providers). Supports **24 AI providers** including OpenAI, Anthropic, Google Gemini, NVIDIA NIM, Z.AI (GLM), Yi, Hyperbolic, Novita, Cohere, Cerebras, SambaNova, Fireworks, and local models via Ollama.
+The AI-powered assistant with **43 built-in tools** that work across local files and the AeroFTP provider backends (7 transports + 20+ native providers). Supports **24 AI providers** including OpenAI, Anthropic, Google Gemini, NVIDIA NIM, Z.AI (GLM), Yi, Hyperbolic, Novita, Cohere, Cerebras, SambaNova, Fireworks, and local models via Ollama.
 
 For full details, see the [AeroAgent documentation](aeroagent.md) and [AeroAgent Test Results](aeroagent-tests.md).
 

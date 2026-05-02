@@ -124,7 +124,7 @@ Toggle AeroTools from the **View** menu, the titlebar button, or `Ctrl+Shift+E`.
 | --- | --- |
 | **Code Editor** | Monaco-based editor with syntax highlighting for 50+ languages, Cyber theme support, and "Ask AeroAgent" integration (`Ctrl+Shift+A`) |
 | **Terminal** | Integrated PTY terminal (xterm.js) with theme-synced colors. Supports full interactive shell sessions. |
-| **AeroAgent** | AI chat assistant with 47 tools for file management, code analysis, shell execution, archive operations, and server management across all 27 protocols |
+| **AeroAgent** | AI chat assistant with 43 tools for file management, code analysis, shell execution, archive operations, and server management across all 22 protocols |
 
 ## Command Palette
 

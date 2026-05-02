@@ -1,6 +1,6 @@
 # GitHub
 
-AeroFTP treats GitHub repositories as remote filesystems. Every write operation -- upload, delete, rename, move -- creates a real Git commit on the target branch. This means you can manage repository contents, upload release assets, and browse code using the same file manager interface as any other protocol. GitHub is the 23rd protocol supported by AeroFTP.
+AeroFTP treats GitHub repositories as remote filesystems. Every write operation -- upload, delete, rename, move -- creates a real Git commit on the target branch. This means you can manage repository contents, upload release assets, and browse code using the same file manager interface as any other protocol. GitHub is the 22nd protocol supported by AeroFTP.
 
 ## Capabilities
 

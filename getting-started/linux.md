@@ -7,13 +7,13 @@ AeroFTP supports all major Linux distributions. Choose the format that best matc
 Download the `.deb` package from [GitHub Releases](https://github.com/axpnet/aeroftp/releases) and install with `apt`:
 
 ```bash
-sudo apt install ./aeroftp_3.0.1_amd64.deb
+sudo apt install ./aeroftp_3.7.0_amd64.deb
 ```
 
 This method automatically resolves and installs any missing dependencies (including WebKitGTK 4.1). Alternatively, use `dpkg` directly:
 
 ```bash
-sudo dpkg -i aeroftp_3.0.1_amd64.deb
+sudo dpkg -i aeroftp_3.7.0_amd64.deb
 sudo apt-get install -f   # resolve any missing dependencies
 ```
 
@@ -28,13 +28,13 @@ sudo apt remove aeroftp
 Download the `.rpm` package and install with DNF:
 
 ```bash
-sudo dnf install ./aeroftp-3.0.1-1.x86_64.rpm
+sudo dnf install ./AeroFTP-3.7.0-1.x86_64.rpm
 ```
 
 Or with RPM directly:
 
 ```bash
-sudo rpm -i aeroftp-3.0.1-1.x86_64.rpm
+sudo rpm -i AeroFTP-3.7.0-1.x86_64.rpm
 ```
 
 To uninstall:
@@ -48,8 +48,8 @@ sudo dnf remove aeroftp
 AppImage runs on virtually any Linux distribution without installation. No root access required.
 
 ```bash
-chmod +x AeroFTP_3.0.1_amd64.AppImage
-./AeroFTP_3.0.1_amd64.AppImage
+chmod +x AeroFTP_3.7.0_amd64.AppImage
+./AeroFTP_3.7.0_amd64.AppImage
 ```
 
 The AppImage is fully self-contained and includes all required libraries.
