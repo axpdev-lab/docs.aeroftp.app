@@ -91,7 +91,7 @@ The `contentSha1` field returned by `b2_copy_part` is the literal string `"none"
 
 B2 keeps every version of every file by default — uploading the same key twice produces two `fileId`s with distinct `uploadTimestamp`s. AeroFTP exposes this through the standard versioning API:
 
-- `list_versions(path)` walks `b2_list_file_versions` paginated by `(nextFileName, nextFileId)`, filters to entries matching the requested key, and returns one `FileVersion` per version. Hide markers (B2's soft-delete tombstones) are surfaced with `size = 0` so the UI can render them as "deleted at <time>" rows.
+- `list_versions(path)` walks `b2_list_file_versions` paginated by `(nextFileName, nextFileId)`, filters to entries matching the requested key, and returns one `FileVersion` per version. Hide markers (B2's soft-delete tombstones) are surfaced with `size = 0` so the UI can render them as `"deleted at <time>"` rows.
 - `download_version(_, version_id, local_path)` streams `b2_download_file_by_id` straight to disk via the same atomic `.aerotmp` rename used by regular downloads.
 - `restore_version(path, version_id)` replays the chosen version through `b2_copy_file` so it becomes the new latest version under the original `fileName` — no client byte transfer.
 
