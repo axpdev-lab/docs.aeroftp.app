@@ -58,6 +58,7 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | <img src="/icons/providers/yandexcloud.png" width="20" /> | Yandex Object Storage | S3-compatible, Russia | [Setup guide](/providers/yandex-object-storage) |
 | <img src="/icons/providers/filelu.png" width="20" /> | FileLu S3 | FileLu via S3 endpoint | [Setup guide](/providers/filelu) |
 | <img src="/icons/providers/quotaless.png" width="20" /> | Quotaless S3 | Quotaless via S3 endpoint | [Setup guide](/providers/quotaless) |
+| <img src="/icons/providers/s3drive.png" width="20" /> | S3Drive | Storj-backed, 12 GB free | [Setup guide](/providers/s3drive) |
 
 ## WebDAV
 
@@ -80,6 +81,16 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | | Provider | Notes | Guide |
 | --- | --- | --- | --- |
 | <img src="/icons/providers/hetzner.png" width="20" /> | Hetzner Storage Box | Backup storage, port 23 | [Setup guide](/providers/hetzner-storage-box) |
+
+## Local Bridges (v3.7.1)
+
+These presets connect AeroFTP to a desktop daemon running on the same machine. They are perfect for piggybacking on an existing authenticated session without re-authenticating from AeroFTP.
+
+| | Preset | Bridge | Guide |
+| --- | --- | --- | --- |
+| <img src="/icons/providers/filen.png" width="20" /> | Filen Desktop (local WebDAV) | `local.webdav.filen.io:1900` | [Setup guide](/providers/filen-desktop) |
+| <img src="/icons/providers/filen.png" width="20" /> | Filen Desktop (local S3) | `local.s3.filen.io:1700` | [Setup guide](/providers/filen-desktop) |
+| <img src="/icons/providers/mega.png" width="20" /> | MEGAcmd (local WebDAV) | `127.0.0.1:4443` | [Setup guide](/providers/megacmd) |
 
 ## Developer
 

@@ -4,7 +4,7 @@
 
 AeroFTP is a free, open-source, multi-protocol file manager built with Rust and React. It connects through **7 transport protocols, 20+ native provider integrations, and 40+ pre-configured presets** from a single desktop application, with built-in encryption, AI assistance (24 AI providers, 43 tools), and a production CLI shared with the GUI through the same Rust backend.
 
-**Current version**: v3.7.0
+**Current version**: v3.7.1
 
 ## Links
 

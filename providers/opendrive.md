@@ -1,6 +1,6 @@
 # OpenDrive
 
-AeroFTP connects to OpenDrive via their native REST API with session-based authentication. OpenDrive provides 5 GB of free storage.
+AeroFTP connects to OpenDrive via their native REST API with session-based authentication. OpenDrive provides up to 7 GB of free storage (5 GB base, expandable via the OpenDrive review/social campaign).
 
 ## Connection Settings
 
@@ -21,7 +21,8 @@ Authentication creates a session token that is maintained for the duration of th
 
 ## Tips
 
-- OpenDrive's free tier provides 5 GB with a 100 MB per-file size limit. Paid plans remove the file size restriction.
+- OpenDrive's free tier starts at 5 GB and can be raised to 7 GB via the review/social campaign. Daily transfer bandwidth can similarly increase from 1 GB to 3 GB when campaign tasks are completed.
+- Free accounts have a 100 MB per-file size limit. Paid plans remove the file size restriction.
 - OpenDrive sessions expire after inactivity. AeroFTP handles re-authentication transparently if the session times out.
 - For AeroSync, OpenDrive's MD5 checksums enable the **checksum** compare mode for the most accurate change detection.
 - OpenDrive share links can be set to expire after a specific date -- useful for temporary file sharing.

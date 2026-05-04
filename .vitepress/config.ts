@@ -161,6 +161,10 @@ export default defineConfig({
             { text: 'FileLu', link: '/providers/filelu' },
             // SFTP Presets
             { text: 'Hetzner Storage Box', link: '/providers/hetzner-storage-box' },
+            // Local Bridges
+            { text: 'Filen Desktop', link: '/providers/filen-desktop' },
+            { text: 'MEGAcmd', link: '/providers/megacmd' },
+            { text: 'S3Drive', link: '/providers/s3drive' },
             // Developer
             { text: 'GitHub', link: '/providers/github' },
             { text: 'GitLab', link: '/providers/gitlab' },
@@ -183,6 +187,7 @@ export default defineConfig({
             { text: 'AeroAgent Tests', link: '/test-reports/aeroagent/capability-matrix' },
             { text: 'AeroPlayer', link: '/features/aeroplayer' },
             { text: 'AeroTools', link: '/features/aerotools' },
+            { text: 'Mount Manager', link: '/features/mount-manager' },
             { text: 'Archives', link: '/features/archives' },
             { text: 'Batch Rename', link: '/features/batch-rename' },
             { text: 'Code Editor', link: '/features/code-editor' },

@@ -436,6 +436,8 @@ Use this when both endpoints are already stored as AeroFTP profiles. `transfer-d
 
 Mount any remote as a local FUSE filesystem. Any application can access remote files with standard tools.
 
+> The GUI [Mount Manager](/features/mount-manager) (v3.7.1) wraps this command with a persistent registry: save mount configs (profile, remote path, mountpoint, read-only, cache TTL, allow-other, autostart) once and mount them with a single click. Autostart installs systemd-user units on Linux and Task Scheduler ONLOGON entries on Windows. The registry can live in a daemon-friendly sidecar JSON or in the encrypted vault.
+
 ```bash
 # Mount S3 as local directory
 mkdir /mnt/cloud
@@ -605,11 +607,26 @@ A dedicated set of subcommands designed for AI coding agents. They return struct
 ### profiles
 
 ```bash
-aeroftp-cli profiles            # text format
+aeroftp-cli profiles            # text table mirroring the GUI My Servers layout
 aeroftp-cli profiles --json     # canonical input for agents
+aeroftp-cli profiles --csv      # spreadsheet-friendly export
+aeroftp-cli profiles -i         # interactive prompt loop (v3.7.1)
 ```
 
-Lists every server profile in the encrypted vault: display name, protocol, host, optional saved path, credential indicator. Passwords are never printed. v3.6.6 adds per-profile `auth_state` - one of `valid` / `expired` / `needs_refresh` / `no_credentials` / `unknown` - so agents can avoid connect-then-fail loops on profiles whose OAuth tokens expired silently.
+Lists every server profile in the encrypted vault. The text format mirrors the GUI **My Servers** table (storage Used / Total / %, per-protocol footer, dedup-aware totals); `--json` and `--csv` carry the same columns plus per-profile `auth_state` (`valid` / `expired` / `needs_refresh` / `no_credentials` / `unknown`) so agents can avoid connect-then-fail loops on profiles whose OAuth tokens expired silently. Passwords are never printed.
+
+#### Interactive mode (`-i`, v3.7.1)
+
+After the table renders, `-i` drops into a compact prompt loop with two-character tokens:
+
+| Token | Action |
+|-------|--------|
+| `1l` / `l1` | List the contents of profile #1 |
+| `2t` / `t2` | Tree of profile #2 |
+| `3d` / `d3` | Delete profile #3 (gated by name-typed confirmation) |
+| `q` | Quit |
+
+Both orderings (number-then-letter and letter-then-number) are accepted. The loop reuses the running binary via `current_exe()` so the output is byte-for-byte identical to the standalone subcommand the same row would invoke.
 
 ### ai-models
 

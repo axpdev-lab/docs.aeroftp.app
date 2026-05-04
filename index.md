@@ -122,9 +122,9 @@ import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
     <td align="center" width="130"><a href="/providers/google-cloud-storage"><img src="/icons/providers/googlecloud.png" width="36" /></a><br><sub>Google Cloud</sub></td>
     <td align="center" width="130"><a href="/providers/immich"><img src="/icons/providers/immich.png" width="36" /></a><br><sub>Immich</sub></td>
     <td align="center" width="130"><a href="/providers/pixelunion"><img src="/icons/providers/pixelunion.png" width="36" /></a><br><sub>PixelUnion</sub></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
+    <td align="center" width="130"><a href="/providers/s3drive"><img src="/icons/providers/s3drive.png" width="36" /></a><br><sub>S3Drive</sub></td>
+    <td align="center" width="130"><a href="/providers/filen-desktop"><img src="/icons/providers/filen.png" width="36" /></a><br><sub>Filen Desktop</sub></td>
+    <td align="center" width="130"><a href="/providers/megacmd"><img src="/icons/providers/mega.png" width="36" /></a><br><sub>MEGAcmd</sub></td>
     <td align="center" width="130"></td>
     <td align="center" width="130"></td>
   </tr>

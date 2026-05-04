@@ -175,6 +175,38 @@ Compute file hashes on demand:
 
 Click **Copy** next to any hash to copy it to the clipboard.
 
+### Multi-file Properties (v3.7.1)
+
+Selecting two or more entries and opening Properties shows a dedicated aggregate dialog instead of the per-file view. It mirrors the Windows multi-select Properties window and works on the local panel and on every one of the 22 remote provider integrations.
+
+Reported fields:
+
+| Field | Behavior |
+|-------|----------|
+| **File / folder count** | Total entries split between regular files and directories |
+| **Total size** | Summed bytes formatted with the appropriate unit |
+| **Common parent** | Closest shared ancestor path |
+| **Modified** | Single row when every entry shares the same mtime; otherwise an **Oldest / Newest** pair |
+| **Permissions** | Octal mode when all entries agree, **Mixed** otherwise |
+| **Read-only** / **Hidden** | Tri-state checkboxes lazily resolved from `get_file_properties` (checked / unchecked / dash for "varies") |
+| **Selected entries list** | Scrollable list at the bottom with per-item kind icon, name, and size |
+
+The dialog opens in parallel with the lazy `get_file_properties` resolver so the per-entry read-only / hidden columns populate without blocking the rest of the dialog.
+
+## Recursive Flatten Search (v3.7.1)
+
+Typing `*` or `**` in the local search box switches the panel into **flatten mode**: every descendant of the current directory is listed, paired with its relative path so you can see how deep each match sits.
+
+Limits:
+
+- **Depth cap**: 32 levels.
+- **Entry cap**: 5,000 results by default; clamped at a hard 20,000 ceiling.
+- A residual filter after the marker (`* foo` or `** report`) narrows the result list by substring match against the relative path.
+
+Visual feedback: the search bar flips to a purple accent while flatten mode is active, and a banner appears when the entry cap is reached so you know the result is partial.
+
+This is the local equivalent of the AeroAgent `local_tree` tool but exposed inline in the file panel; pair it with [file tags](/features/file-tags) to recursively filter a project by colour label.
+
 ## Batch Rename
 
 Select multiple files and press `Ctrl+Shift+R` (or right-click → **Batch Rename**) to open the Batch Rename dialog. Four renaming modes are available, each with a live preview showing before/after filenames.
@@ -246,7 +278,28 @@ Hold `Ctrl` while dragging to copy instead of move.
 | `Ctrl+X` | Cut selected files |
 | `Ctrl+V` | Paste files |
 | `Ctrl+Shift+R` | Batch Rename dialog |
-| `Alt+Enter` | Properties dialog |
+| `Alt+Enter` | Properties dialog (or Multi-file Properties on a multi-selection) |
+| `*` / `**` (in search) | Recursive flatten of the current directory |
+| **Mouse X1** | Navigate Back |
+| **Mouse X2** | Navigate Forward |
+
+### PathBar Shortcuts
+
+The PathBar accepts a few non-obvious moves:
+
+- Click in the empty area to the right of the last segment to drop straight into edit mode (Enter commits, Escape / blur cancels).
+- Click the trailing `>` chevron after the current segment to open a dropdown of first-generation subdirectories.
+- Use the configurable provider icon size in **Settings > Appearance > Interface** (range 18-32 px) to adjust both `ServerCard` and `DiscoverPanel` density.
+
+### Open with Default App
+
+The right-click **Open** entry routes intelligently:
+
+| Extension | Opens in |
+|-----------|----------|
+| `.aerovault`, `.aeroftp`, `.aeroftp-keystore` | Inside AeroFTP (vault unlock or template import) |
+| `.ps1`, `.sh` | AeroTools Terminal with the right shell prefix and POSIX-quoted path |
+| Anything else | OS default via `tauri-plugin-opener` |
 
 ### View
 

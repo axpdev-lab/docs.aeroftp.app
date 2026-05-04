@@ -204,6 +204,25 @@ Save your entire sync configuration (profile, speed mode, paths, scheduler setti
 
 Templates are exported and imported via Tauri's native file dialog.
 
+### Wrapper Script Export (v3.7.1)
+
+The Templates dialog can also emit the active configuration as a runnable wrapper script:
+
+| Format | Default on | Wraps |
+|--------|------------|-------|
+| **POSIX shell** (`.sh`) | Linux / macOS | `aeroftp-cli sync` |
+| **PowerShell** (`.ps1`) | Windows | `aeroftp-cli sync` |
+
+Generated scripts are self-contained: every AeroSync setting (profile, paths, direction, compare mode, retry policy, verification level, scheduler, bandwidth limit) is translated into the corresponding `aeroftp-cli` flag, and a single `# AEROFTP-META { ... }` JSON line is embedded as a comment so the file round-trips back into AeroSync without parsing the rest of the script.
+
+Round-trip rules:
+
+- Importing a `.sh` or `.ps1` reconstructs the AeroSync configuration from the embedded `# AEROFTP-META` line and ignores the rest of the script body.
+- Hand-edited script bodies are explicitly out of scope: AeroSync does not try to reverse-parse them.
+- The `# AEROFTP-META` line is the source of truth on import; the wrapping `aeroftp-cli sync` invocation is for execution only.
+
+This makes wrapper scripts equally usable as a CI/CD artifact, a cron job, a Windows scheduled task, or a manual `bash sync-prod.sh` invocation, while still being importable back into the GUI for editing.
+
 ## Rollback Snapshots
 
 Create pre-sync snapshots of your data that can be restored if a sync produces unwanted results.
