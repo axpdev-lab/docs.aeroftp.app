@@ -10,34 +10,37 @@ The Mount Manager is reachable from three places:
 
 > The Mount Manager wraps `aeroftp-cli mount` (FUSE on Linux / macOS, WebDAV bridge on Windows) and `aeroftp-cli daemon` for autostart. Every mount you save in the GUI works identically from the CLI; no GUI is required to attach a mount.
 
-<!-- SCREENSHOT: Mount Manager dialog with 2-3 saved mount rows, the storage toggle visible in the dialog header, and Mount / Unmount / Open in file manager actions on each row. To be added once the screenshots pass lands. -->
+![Mount Manager dialog](/images/mount-manager.png)
+
+The header carries the **Sidecar** / **Vault** toggle that decides where the registry lives, and a refresh button that re-reads the config from disk. Saved mounts (here, **MEGA Dev**) appear as one-row entries with inline Mount, Edit, and Delete actions. The lower **NEW MOUNT** card is the inline editor: pick a saved profile (here, **OpenDrive** is selected from the filterable profile list), set a display name, the remote base path, the local mountpoint, the metadata cache TTL, and the three flags **Mount read-only**, **Allow other system users**, and **Mount automatically on startup**.
 
 ## Saved Mount Configurations
 
-Each row in the Mount Manager represents a complete mount configuration that survives across launches:
+Each row in the Mount Manager represents a complete mount configuration that survives across launches. Click **+ Add Mount** to open the inline editor; click the pencil icon on any existing row to edit it.
 
-| Field | Purpose |
-|-------|---------|
-| **Profile** | Saved server profile (any of the 7 transport protocols + 20+ native provider integrations) |
-| **Remote path** | Subtree of the remote that becomes the root of the mount |
-| **Mountpoint** | Local directory or, on Windows, a drive letter |
-| **Read-only** | Mount the share as read-only at the FUSE level |
-| **Cache TTL** | Metadata cache duration (seconds) for directory listings |
-| **Allow other** | Linux only -> add `allow_other` so other system users can read the mount |
-| **Auto-start** | When enabled, the mount is attached on system login (see [Phase B](#phase-b-autostart)) |
+| Field in the editor | Purpose |
+|---------------------|---------|
+| **Profile picker** | Filterable list of saved server profiles (any of the 7 transport protocols + 20+ native provider integrations). Each row shows the profile name, protocol badge (e.g. `OPENDRIVE`, `FTP`), and saved host or path. |
+| **Display name** | Human-readable label for this mount (defaults to the profile name; rename freely). |
+| **Remote base path** | Subtree of the remote that becomes the root of the mount. `/` mounts the entire account. |
+| **Local mountpoint** | Local directory (Linux / macOS) or a drive letter (Windows). The default is `~/aeroftp-mounts/<slug>`. |
+| **Metadata cache (seconds)** | Directory-listing cache TTL. Default `30`; raise it for higher latency providers, lower it for collaborative folders that change often. |
+| **Mount read-only** | Mount the share as read-only at the FUSE level. |
+| **Allow other system users** | Linux only -> add `allow_other` so other system users can read the mount. |
+| **Mount automatically on startup** | When enabled, the mount is attached on system login (see [Phase B](#phase-b-autostart)). |
 
-Per-row actions: **Mount**, **Unmount**, **Open in file manager**, **Edit**, **Delete**.
+Per-row actions on saved mounts: **Mount** (green play), **Edit** (pencil), **Delete** (red trash). When a mount is active the play button switches to a stop button, and an **Open in file manager** glyph appears.
 
-On Windows, an inline **Pick free drive letter** helper scans the system for the first unused drive letter so the mountpoint field always has a working default.
+On Windows, an inline **Pick free drive letter** helper scans the system for the first unused drive letter so the **Local mountpoint** field always has a working default.
 
 ## Where Mount Configs Are Stored
 
-The dialog header carries a single toggle that decides where the mount registry lives:
+The dialog header carries a single **Sidecar / Vault** toggle that decides where the mount registry lives. The active mode is shown right under the **Mount Manager** title (in the screenshot above, **Sidecar**):
 
 - **Sidecar JSON** (default, daemon-friendly) -> a plaintext JSON file alongside the user config. This is the right choice when `aeroftp-cli daemon` runs as a system or user service: the daemon does not need vault unlock to read the mount list.
 - **Encrypted vault** -> the registry is stored inside the AeroFTP vault and is decrypted on demand whenever the dialog is opened.
 
-The toggle round-trips both ways. Switching from sidecar to vault re-encrypts the existing entries and removes the plaintext file; the inverse path emits a fresh sidecar from the decrypted entries.
+The toggle round-trips both ways. Switching from sidecar to vault re-encrypts the existing entries and removes the plaintext file; the inverse path emits a fresh sidecar from the decrypted entries. The refresh button next to the toggle re-reads the active store from disk so changes made by the CLI or the daemon outside of the GUI are picked up without closing the dialog.
 
 > **Mount configs themselves never carry secrets.** The mount only stores the profile name + remote path + mountpoint metadata. Authentication (passwords, OAuth tokens, SSH keys, API keys) always flows through the encrypted vault via `aeroftp-cli --profile <name>`. Even the sidecar JSON is safe to back up: it cannot connect to anything without the matching vault entry.
 
