@@ -1,11 +1,11 @@
 # Protocol Overview
 
-> Last updated: 2026-05-01 (v3.7.0)
+> Last updated: 2026-05-06 (v3.7.2)
 
 AeroFTP organizes integrations on three tiers, so what you see in the catalog is precise rather than vague:
 
 1. **7 transport protocols** - FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift. Native wire-level support, implemented in Rust with full streaming.
-2. **20+ native provider integrations** - dedicated OAuth2 / API key / SDK code paths per provider (Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, Google Photos, GitHub, GitLab, Immich). Each provider's specific features (sharing, native delta sync, server-side copy, large-file chunking) are first-class instead of best-effort.
+2. **22+ native provider integrations** - dedicated OAuth2 / API key / SDK code paths per provider (Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, Google Photos, GitHub, GitLab, Immich, ImageKit, Uploadcare). Each provider's specific features (sharing, native delta sync, server-side copy, large-file chunking) are first-class instead of best-effort.
 3. **40+ pre-configured presets** - server URL, port, base path, password-generation deep-link auto-filled for compatible services on top of the protocols above. Visible in the Discover catalog (S3-compatible endpoints, WebDAV-compatible servers, SourceForge, etc.).
 
 All credentials are encrypted in the AeroFTP Universal Vault (AES-256-GCM + Argon2id). Every integration plugs into AeroSync, AeroAgent, the CLI and the MCP server through the same `StorageProvider` trait.
@@ -252,4 +252,4 @@ The `server_exec` tool supports 10 operations: `ls`, `cat`, `get`, `put`, `mkdir
 
 ---
 
-> Last updated: 2026-05-01 - AeroFTP v3.7.0
+> Last updated: 2026-05-06 - AeroFTP v3.7.2

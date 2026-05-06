@@ -2,18 +2,18 @@
 
 ## AeroFTP
 
-AeroFTP is a free, open-source, multi-protocol file manager built with Rust and React. It connects through **7 transport protocols, 20+ native provider integrations, and 40+ pre-configured presets** from a single desktop application, with built-in encryption, AI assistance (24 AI providers, 43 tools), and a production CLI shared with the GUI through the same Rust backend.
+AeroFTP is a free, open-source, multi-protocol file manager built with Rust and React. It connects through **7 transport protocols, 22+ native provider integrations, and 40+ pre-configured presets** from a single desktop application, with built-in encryption, AI assistance (24 AI providers, 39 native AeroAgent tools), and a production CLI shared with the GUI through the same Rust backend.
 
-**Current version**: v3.7.1
+**Current version**: v3.7.2
 
 ## Links
 
 | Resource | URL |
 |----------|-----|
 | **Website** | [www.aeroftp.app](https://www.aeroftp.app) |
-| **GitHub Repository** | [github.com/axpnet/aeroftp](https://github.com/axpnet/aeroftp) |
-| **GitHub Releases** | [github.com/axpnet/aeroftp/releases](https://github.com/axpnet/aeroftp/releases) |
-| **Changelog** | [CHANGELOG.md](https://github.com/axpnet/aeroftp/blob/main/CHANGELOG.md) |
+| **GitHub Repository** | [github.com/axpdev-lab/aeroftp](https://github.com/axpdev-lab/aeroftp) |
+| **GitHub Releases** | [github.com/axpdev-lab/aeroftp/releases](https://github.com/axpdev-lab/aeroftp/releases) |
+| **Changelog** | [CHANGELOG.md](https://github.com/axpdev-lab/aeroftp/blob/main/CHANGELOG.md) |
 | **Snap Store** | [snapcraft.io/aeroftp](https://snapcraft.io/aeroftp) |
 | **AUR** | [aur.archlinux.org/packages/aeroftp-bin](https://aur.archlinux.org/packages/aeroftp-bin) |
 | **GitHub App** | [github.com/apps/aeroftp](https://github.com/apps/aeroftp) |
@@ -122,4 +122,4 @@ This documentation site is built with [VitePress](https://vitepress.dev) and dep
 
 ---
 
-*AeroFTP - [github.com/axpnet/aeroftp](https://github.com/axpnet/aeroftp) - GPL-3.0*
+*AeroFTP - [github.com/axpdev-lab/aeroftp](https://github.com/axpdev-lab/aeroftp) - GPL-3.0*

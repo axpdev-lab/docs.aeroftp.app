@@ -15,6 +15,8 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | --- | --- | --- | --- |
 | <img src="/icons/providers/immich.png" width="20" /> | Immich | API | [Setup guide](/providers/immich) |
 | <img src="/icons/providers/pixelunion.png" width="20" /> | PixelUnion | API | [Setup guide](/providers/pixelunion) |
+| <img src="/icons/providers/imagekit.png" width="20" /> | ImageKit | API | [Setup guide](/providers/imagekit) |
+| <img src="/icons/providers/uploadcare.png" width="20" /> | Uploadcare | API | [Setup guide](/providers/uploadcare) |
 
 ## Cloud Storage (OAuth & API)
 
