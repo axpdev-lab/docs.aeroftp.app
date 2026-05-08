@@ -376,3 +376,120 @@
   line-height: 1;
   user-select: none;
 }
+
+/* ============================================
+   Test Reports - Community Benchmark bar charts
+   ============================================ */
+
+.test-reports .bench-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 22px;
+}
+
+.test-reports .bench-bar-track {
+  position: relative;
+  flex: 1 1 auto;
+  height: 14px;
+  background: var(--vp-c-bg-soft);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.test-reports .bench-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--vp-c-brand-1) 0%,
+    var(--vp-c-brand-2) 100%
+  );
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.test-reports .bench-bar-value {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 12px;
+  min-width: 64px;
+  text-align: right;
+  color: var(--vp-c-text-1);
+}
+
+.test-reports .bench-bar-p95 {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  min-width: 52px;
+  text-align: right;
+  color: var(--vp-c-text-2);
+  font-weight: 400;
+}
+
+.test-reports table.bench-table {
+  font-size: 13px;
+  table-layout: fixed;
+}
+
+.test-reports table.bench-table th:nth-child(1),
+.test-reports table.bench-table td:nth-child(1) {
+  width: 36px;
+  text-align: right;
+  color: var(--vp-c-text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.test-reports table.bench-table th:nth-child(2),
+.test-reports table.bench-table td:nth-child(2) {
+  width: 180px;
+  font-weight: 500;
+}
+
+.test-reports table.bench-table th:nth-child(3),
+.test-reports table.bench-table td:nth-child(3) {
+  width: auto;
+}
+
+.test-reports .bench-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 1rem 0 2rem;
+}
+
+@media (max-width: 900px) {
+  .test-reports .bench-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.test-reports .bench-grid h3 {
+  margin-top: 0;
+  font-size: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.test-reports .bench-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  margin: 0 0 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.test-reports .bench-meta strong {
+  color: var(--vp-c-text-2);
+  font-weight: 500;
+}
