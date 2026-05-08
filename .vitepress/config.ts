@@ -122,7 +122,6 @@ export default defineConfig({
                 { text: 'Alibaba Cloud OSS', link: '/providers/alibaba-cloud-oss' },
                 { text: 'AWS S3', link: '/providers/aws-s3' },
                 { text: 'Backblaze B2', link: '/providers/backblaze-b2' },
-                { text: 'Blomp', link: '/providers/blomp' },
                 { text: 'Cloudflare R2', link: '/providers/cloudflare-r2' },
                 { text: 'DigitalOcean Spaces', link: '/providers/digitalocean-spaces' },
                 { text: 'FileLu S3', link: '/providers/filelu' },
