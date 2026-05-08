@@ -1,11 +1,14 @@
 # Security Audits
 
-AeroFTP undergoes regular independent security audits. This page tracks all audits, their scope, findings, and remediation status.
+AeroFTP undergoes regular independent security audits. This page tracks the historical audit archive.
+
+For the **monthly self-hosted vulnerability pipeline** (current source of truth, reproducible by anyone with `npm run security:report`), see [Continuous Audit](./continuous-audit.md).
 
 ## Audit History
 
 | Version | Date | Auditors | Scope | Findings | Grade |
 | ------- | ---- | -------- | ----- | -------- | ----- |
+| v3.7.5 | May 2026 | Self-hosted pipeline (cargo audit + npm audit + osv-scanner) | Vulnerability scan against RustSec, npm registry, OSV with documented suppression list | 0 open / 25 suppressed (4 GHSA closed: CVE-2026-42184 + 2x openssl + rpassword) | 0 open |
 | v3.1.7 | March 2026 | GPT 5.4 + Claude Opus 4.6 | Desktop security (updater, plugin registry, AI approval, vault) | 4 findings (2 High, 2 Medium), all remediated | - |
 | v2.9.5 | 2026 | Claude Opus 4.6 + GPT 5.4 | Dual-engine 8-area audit | 117 findings (103 + 14), 9 cross-engine convergences, all P0-P2 remediated | A- |
 | v2.8.9 | 2026 | GPT 5.4 | Residual audit closure | 6 of 11 partial findings resolved (34/39 fixed, 5 partial, 0 open) | A- |
