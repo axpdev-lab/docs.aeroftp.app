@@ -68,7 +68,7 @@ import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
 </p>
 
 <table align="center">
-  <!-- Row 1-2: Cloud Storage (OAuth & native API) -->
+  <!-- Continuous grid: Cloud (OAuth/API) -> S3-Compatible -> WebDAV -> SFTP -> Developer -> Media (last) -->
   <tr>
     <td align="center" width="130"><a href="/providers/google-drive"><img src="/icons/providers/Google_Drive.png" width="36" /></a><br><sub>Google Drive</sub></td>
     <td align="center" width="130"><a href="/providers/onedrive"><img src="/icons/providers/onedrive.png" width="36" /></a><br><sub>OneDrive</sub></td>
@@ -93,7 +93,6 @@ import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
     <td align="center" width="130"><a href="/providers/filen-desktop"><img src="/icons/providers/filen.png" width="36" /></a><br><sub>Filen Desktop</sub></td>
     <td align="center" width="130"><a href="/providers/megacmd"><img src="/icons/providers/mega.png" width="36" /></a><br><sub>MEGAcmd</sub></td>
   </tr>
-  <!-- Row 3-4: S3-Compatible Object Storage -->
   <tr>
     <td align="center" width="130"><a href="/providers/aws-s3"><img src="/icons/providers/Amazon_Web_Services.png" width="36" /></a><br><sub>AWS S3</sub></td>
     <td align="center" width="130"><a href="/providers/google-cloud-storage"><img src="/icons/providers/googlecloud.png" width="36" /></a><br><sub>Google Cloud</sub></td>
@@ -113,49 +112,27 @@ import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
     <td align="center" width="130"><a href="/providers/mega-s4"><img src="/icons/providers/mega.png" width="36" /></a><br><sub>MEGA S4</sub></td>
     <td align="center" width="130"><a href="/providers/quotaless"><img src="/icons/providers/quotaless.png" width="36" /></a><br><sub>Quotaless</sub></td>
     <td align="center" width="130"><a href="/providers/s3drive"><img src="/icons/providers/s3drive.png" width="36" /></a><br><sub>S3Drive</sub></td>
-    <td align="center" width="130"><a href="/providers/blomp"><img src="/icons/providers/blomp.png" width="36" /></a><br><sub>Blomp</sub></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-  </tr>
-  <!-- Row 5: WebDAV (Nextcloud-as-a-Service & friends) + SFTP preset -->
-  <tr>
     <td align="center" width="130"><a href="/providers/nextcloud"><img src="/icons/providers/nextcloud.png" width="36" /></a><br><sub>Nextcloud</sub></td>
     <td align="center" width="130"><a href="/providers/felicloud"><img src="/icons/providers/felicloud.png" width="36" /></a><br><sub>Felicloud</sub></td>
     <td align="center" width="130"><a href="/providers/tabdigital"><img src="/icons/providers/tabdigital.png" width="36" /></a><br><sub>Tab.digital</sub></td>
     <td align="center" width="130"><a href="/providers/cloudme"><img src="/icons/providers/cloudme.png" width="36" /></a><br><sub>CloudMe</sub></td>
+  </tr>
+  <tr>
     <td align="center" width="130"><a href="/providers/infinicloud"><img src="/icons/providers/infiniCloud.png" width="36" /></a><br><sub>InfiniCLOUD</sub></td>
     <td align="center" width="130"><a href="/providers/jianguoyun"><img src="/icons/providers/jianguoyun.png" width="36" /></a><br><sub>Jianguoyun</sub></td>
     <td align="center" width="130"><a href="/providers/seafile"><img src="/icons/providers/seafile.png" width="36" /></a><br><sub>Seafile</sub></td>
     <td align="center" width="130"><a href="/providers/drivehq"><img src="/icons/providers/drivehq.png" width="36" /></a><br><sub>DriveHQ</sub></td>
     <td align="center" width="130"><a href="/providers/hetzner-storage-box"><img src="/icons/providers/hetzner.png" width="36" /></a><br><sub>Hetzner</sub></td>
-    <td align="center" width="130"></td>
-  </tr>
-  <!-- Row 6: Developer Forges -->
-  <tr>
     <td align="center" width="130"><a href="/providers/github"><img src="/icons/providers/github.png" width="36" /></a><br><sub>GitHub</sub></td>
     <td align="center" width="130"><a href="/providers/gitlab"><img src="/icons/providers/gitlab.png" width="36" /></a><br><sub>GitLab</sub></td>
     <td align="center" width="130"><a href="/providers/sourceforge"><img src="/icons/providers/sourceforge.png" width="36" /></a><br><sub>SourceForge</sub></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-  </tr>
-  <!-- Row 7: Photo & Media services (last per category ordering) -->
-  <tr>
     <td align="center" width="130"><a href="/providers/immich"><img src="/icons/providers/immich.png" width="36" /></a><br><sub>Immich</sub></td>
     <td align="center" width="130"><a href="/providers/pixelunion"><img src="/icons/providers/pixelunion.png" width="36" /></a><br><sub>PixelUnion</sub></td>
+  </tr>
+  <tr>
     <td align="center" width="130"><a href="/providers/imagekit"><img src="/icons/providers/imagekit.png" width="36" /></a><br><sub>ImageKit</sub></td>
     <td align="center" width="130"><a href="/providers/uploadcare"><img src="/icons/providers/uploadcare.png" width="36" /></a><br><sub>Uploadcare</sub></td>
     <td align="center" width="130"><a href="/providers/cloudinary"><img src="/icons/providers/cloudinary.png" width="36" /></a><br><sub>Cloudinary</sub></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
-    <td align="center" width="130"></td>
   </tr>
 </table>
 

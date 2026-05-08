@@ -53,7 +53,6 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | <img src="/icons/providers/filelu.png" width="20" /> | FileLu S3 | FileLu via S3 endpoint | [Setup guide](/providers/filelu) |
 | <img src="/icons/providers/quotaless.png" width="20" /> | Quotaless S3 | Quotaless via S3 endpoint | [Setup guide](/providers/quotaless) |
 | <img src="/icons/providers/s3drive.png" width="20" /> | S3Drive | Storj-backed, 12 GB free | [Setup guide](/providers/s3drive) |
-| <img src="/icons/providers/blomp.png" width="20" /> | Blomp | Swift / S3-compatible, 40 GB free (pending upstream proxy fix) | [Setup guide](/providers/blomp) |
 
 ## WebDAV (Nextcloud-as-a-Service & friends)
 
