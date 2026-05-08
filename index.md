@@ -19,7 +19,7 @@ features:
       src: /icons/protocols.svg
       alt: Protocols
     title: Multi-Protocol
-    details: 7 transport protocols + 20+ native provider integrations + 40+ pre-configured presets - all native, no shellouts.
+    details: 7 transport protocols + 25+ native provider integrations + 45+ pre-configured presets - all native, no shellouts.
   - icon:
       src: /icons/agent.svg
       alt: AeroAgent
@@ -58,7 +58,7 @@ import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
 <p align="center">AeroFTP organizes integrations on three tiers, so the catalog is precise rather than vague:</p>
 
 <p align="center">
-  <strong>7 transport protocols</strong> &middot; <strong>20+ native provider integrations</strong> &middot; <strong>40+ pre-configured presets</strong>
+  <strong>7 transport protocols</strong> &middot; <strong>25+ native provider integrations</strong> &middot; <strong>45+ pre-configured presets</strong>
 </p>
 
 <p align="center">
@@ -68,10 +68,11 @@ import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
 </p>
 
 <table align="center">
+  <!-- Row 1-2: Cloud Storage (OAuth & native API) -->
   <tr>
     <td align="center" width="130"><a href="/providers/google-drive"><img src="/icons/providers/Google_Drive.png" width="36" /></a><br><sub>Google Drive</sub></td>
-    <td align="center" width="130"><a href="/providers/dropbox"><img src="/icons/providers/dropbox.png" width="36" /></a><br><sub>Dropbox</sub></td>
     <td align="center" width="130"><a href="/providers/onedrive"><img src="/icons/providers/onedrive.png" width="36" /></a><br><sub>OneDrive</sub></td>
+    <td align="center" width="130"><a href="/providers/dropbox"><img src="/icons/providers/dropbox.png" width="36" /></a><br><sub>Dropbox</sub></td>
     <td align="center" width="130"><a href="/providers/mega"><img src="/icons/providers/mega.png" width="36" /></a><br><sub>MEGA</sub></td>
     <td align="center" width="130"><a href="/providers/box"><img src="/icons/providers/box.png" width="36" /></a><br><sub>Box</sub></td>
     <td align="center" width="130"><a href="/providers/pcloud"><img src="/icons/providers/pcloud.png" width="36" /></a><br><sub>pCloud</sub></td>
@@ -83,48 +84,76 @@ import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
   <tr>
     <td align="center" width="130"><a href="/providers/kdrive"><img src="/icons/providers/kdrive.png" width="36" /></a><br><sub>kDrive</sub></td>
     <td align="center" width="130"><a href="/providers/jottacloud"><img src="/icons/providers/jottacloud.png" width="36" /></a><br><sub>Jottacloud</sub></td>
+    <td align="center" width="130"><a href="/providers/drime"><img src="/icons/providers/drime.png" width="36" /></a><br><sub>Drime</sub></td>
+    <td align="center" width="130"><a href="/providers/filelu"><img src="/icons/providers/filelu.png" width="36" /></a><br><sub>FileLu</sub></td>
+    <td align="center" width="130"><a href="/providers/opendrive"><img src="/icons/providers/opendrive.png" width="36" /></a><br><sub>OpenDrive</sub></td>
     <td align="center" width="130"><a href="/providers/yandex"><img src="/icons/providers/YandexDisk.png" width="36" /></a><br><sub>Yandex Disk</sub></td>
     <td align="center" width="130"><a href="/providers/4shared"><img src="/icons/providers/4shared.png" width="36" /></a><br><sub>4shared</sub></td>
-    <td align="center" width="130"><a href="/providers/filelu"><img src="/icons/providers/filelu.png" width="36" /></a><br><sub>FileLu</sub></td>
-    <td align="center" width="130"><a href="/providers/drime"><img src="/icons/providers/drime.png" width="36" /></a><br><sub>Drime</sub></td>
-    <td align="center" width="130"><a href="/providers/opendrive"><img src="/icons/providers/opendrive.png" width="36" /></a><br><sub>OpenDrive</sub></td>
-    <td align="center" width="130"><a href="/providers/nextcloud"><img src="/icons/providers/nextcloud.png" width="36" /></a><br><sub>Nextcloud</sub></td>
-    <td align="center" width="130"><a href="/providers/felicloud"><img src="/icons/providers/felicloud.png" width="36" /></a><br><sub>Felicloud</sub></td>
-    <td align="center" width="130"><a href="/providers/cloudme"><img src="/icons/providers/cloudme.png" width="36" /></a><br><sub>CloudMe</sub></td>
-  </tr>
-  <tr>
-    <td align="center" width="130"><a href="/providers/infinicloud"><img src="/icons/providers/infiniCloud.png" width="36" /></a><br><sub>InfiniCLOUD</sub></td>
-    <td align="center" width="130"><a href="/providers/jianguoyun"><img src="/icons/providers/jianguoyun.png" width="36" /></a><br><sub>Jianguoyun</sub></td>
-    <td align="center" width="130"><a href="/providers/seafile"><img src="/icons/providers/seafile.png" width="36" /></a><br><sub>Seafile</sub></td>
-    <td align="center" width="130"><a href="/providers/drivehq"><img src="/icons/providers/drivehq.png" width="36" /></a><br><sub>DriveHQ</sub></td>
-    <td align="center" width="130"><a href="/providers/aws-s3"><img src="/icons/providers/Amazon_Web_Services.png" width="36" /></a><br><sub>AWS S3</sub></td>
-    <td align="center" width="130"><a href="/protocols/azure"><img src="/icons/providers/azure.png" width="36" /></a><br><sub>Azure</sub></td>
     <td align="center" width="130"><a href="/providers/backblaze-b2"><img src="/icons/providers/backblaze.png" width="36" /></a><br><sub>Backblaze</sub></td>
+    <td align="center" width="130"><a href="/providers/filen-desktop"><img src="/icons/providers/filen.png" width="36" /></a><br><sub>Filen Desktop</sub></td>
+    <td align="center" width="130"><a href="/providers/megacmd"><img src="/icons/providers/mega.png" width="36" /></a><br><sub>MEGAcmd</sub></td>
+  </tr>
+  <!-- Row 3-4: S3-Compatible Object Storage -->
+  <tr>
+    <td align="center" width="130"><a href="/providers/aws-s3"><img src="/icons/providers/Amazon_Web_Services.png" width="36" /></a><br><sub>AWS S3</sub></td>
+    <td align="center" width="130"><a href="/providers/google-cloud-storage"><img src="/icons/providers/googlecloud.png" width="36" /></a><br><sub>Google Cloud</sub></td>
+    <td align="center" width="130"><a href="/protocols/azure"><img src="/icons/providers/azure.png" width="36" /></a><br><sub>Azure</sub></td>
     <td align="center" width="130"><a href="/providers/wasabi"><img src="/icons/providers/wasabi.png" width="36" /></a><br><sub>Wasabi</sub></td>
     <td align="center" width="130"><a href="/providers/cloudflare-r2"><img src="/icons/providers/cloudfare.png" width="36" /></a><br><sub>Cloudflare R2</sub></td>
     <td align="center" width="130"><a href="/providers/digitalocean-spaces"><img src="/icons/providers/digitalocean.png" width="36" /></a><br><sub>DigitalOcean</sub></td>
-  </tr>
-  <tr>
     <td align="center" width="130"><a href="/providers/tencent-cloud-cos"><img src="/icons/providers/tencent.png" width="36" /></a><br><sub>Tencent COS</sub></td>
     <td align="center" width="130"><a href="/providers/alibaba-cloud-oss"><img src="/icons/providers/alibabacloud.png" width="36" /></a><br><sub>Alibaba OSS</sub></td>
     <td align="center" width="130"><a href="/providers/oracle-cloud"><img src="/icons/providers/oracle_cloud.png" width="36" /></a><br><sub>Oracle</sub></td>
     <td align="center" width="130"><a href="/providers/storj"><img src="/icons/providers/storj.png" width="36" /></a><br><sub>Storj</sub></td>
-    <td align="center" width="130"><a href="/providers/idrive-e2"><img src="/icons/providers/idrive_e2.png" width="36" /></a><br><sub>IDrive e2</sub></td>
-    <td align="center" width="130"><a href="/providers/minio"><img src="/icons/providers/minio.png" width="36" /></a><br><sub>MinIO</sub></td>
-    <td align="center" width="130"><a href="/providers/hetzner-storage-box"><img src="/icons/providers/hetzner.png" width="36" /></a><br><sub>Hetzner</sub></td>
-    <td align="center" width="130"><a href="/providers/yandex-object-storage"><img src="/icons/providers/yandexcloud.png" width="36" /></a><br><sub>Yandex Cloud</sub></td>
-    <td align="center" width="130"><a href="/providers/quotaless"><img src="/icons/providers/quotaless.png" width="36" /></a><br><sub>Quotaless</sub></td>
-    <td align="center" width="130"><a href="/providers/github"><img src="/icons/providers/github.png" width="36" /></a><br><sub>GitHub</sub></td>
   </tr>
   <tr>
+    <td align="center" width="130"><a href="/providers/idrive-e2"><img src="/icons/providers/idrive_e2.png" width="36" /></a><br><sub>IDrive e2</sub></td>
+    <td align="center" width="130"><a href="/providers/minio"><img src="/icons/providers/minio.png" width="36" /></a><br><sub>MinIO</sub></td>
+    <td align="center" width="130"><a href="/providers/yandex-object-storage"><img src="/icons/providers/yandexcloud.png" width="36" /></a><br><sub>Yandex Cloud</sub></td>
+    <td align="center" width="130"><a href="/providers/mega-s4"><img src="/icons/providers/mega.png" width="36" /></a><br><sub>MEGA S4</sub></td>
+    <td align="center" width="130"><a href="/providers/quotaless"><img src="/icons/providers/quotaless.png" width="36" /></a><br><sub>Quotaless</sub></td>
+    <td align="center" width="130"><a href="/providers/s3drive"><img src="/icons/providers/s3drive.png" width="36" /></a><br><sub>S3Drive</sub></td>
+    <td align="center" width="130"><a href="/providers/blomp"><img src="/icons/providers/blomp.png" width="36" /></a><br><sub>Blomp</sub></td>
+    <td align="center" width="130"></td>
+    <td align="center" width="130"></td>
+    <td align="center" width="130"></td>
+  </tr>
+  <!-- Row 5: WebDAV (Nextcloud-as-a-Service & friends) + SFTP preset -->
+  <tr>
+    <td align="center" width="130"><a href="/providers/nextcloud"><img src="/icons/providers/nextcloud.png" width="36" /></a><br><sub>Nextcloud</sub></td>
+    <td align="center" width="130"><a href="/providers/felicloud"><img src="/icons/providers/felicloud.png" width="36" /></a><br><sub>Felicloud</sub></td>
+    <td align="center" width="130"><a href="/providers/tabdigital"><img src="/icons/providers/tabdigital.png" width="36" /></a><br><sub>Tab.digital</sub></td>
+    <td align="center" width="130"><a href="/providers/cloudme"><img src="/icons/providers/cloudme.png" width="36" /></a><br><sub>CloudMe</sub></td>
+    <td align="center" width="130"><a href="/providers/infinicloud"><img src="/icons/providers/infiniCloud.png" width="36" /></a><br><sub>InfiniCLOUD</sub></td>
+    <td align="center" width="130"><a href="/providers/jianguoyun"><img src="/icons/providers/jianguoyun.png" width="36" /></a><br><sub>Jianguoyun</sub></td>
+    <td align="center" width="130"><a href="/providers/seafile"><img src="/icons/providers/seafile.png" width="36" /></a><br><sub>Seafile</sub></td>
+    <td align="center" width="130"><a href="/providers/drivehq"><img src="/icons/providers/drivehq.png" width="36" /></a><br><sub>DriveHQ</sub></td>
+    <td align="center" width="130"><a href="/providers/hetzner-storage-box"><img src="/icons/providers/hetzner.png" width="36" /></a><br><sub>Hetzner</sub></td>
+    <td align="center" width="130"></td>
+  </tr>
+  <!-- Row 6: Developer Forges -->
+  <tr>
+    <td align="center" width="130"><a href="/providers/github"><img src="/icons/providers/github.png" width="36" /></a><br><sub>GitHub</sub></td>
     <td align="center" width="130"><a href="/providers/gitlab"><img src="/icons/providers/gitlab.png" width="36" /></a><br><sub>GitLab</sub></td>
     <td align="center" width="130"><a href="/providers/sourceforge"><img src="/icons/providers/sourceforge.png" width="36" /></a><br><sub>SourceForge</sub></td>
-    <td align="center" width="130"><a href="/providers/google-cloud-storage"><img src="/icons/providers/googlecloud.png" width="36" /></a><br><sub>Google Cloud</sub></td>
+    <td align="center" width="130"></td>
+    <td align="center" width="130"></td>
+    <td align="center" width="130"></td>
+    <td align="center" width="130"></td>
+    <td align="center" width="130"></td>
+    <td align="center" width="130"></td>
+    <td align="center" width="130"></td>
+  </tr>
+  <!-- Row 7: Photo & Media services (last per category ordering) -->
+  <tr>
     <td align="center" width="130"><a href="/providers/immich"><img src="/icons/providers/immich.png" width="36" /></a><br><sub>Immich</sub></td>
     <td align="center" width="130"><a href="/providers/pixelunion"><img src="/icons/providers/pixelunion.png" width="36" /></a><br><sub>PixelUnion</sub></td>
-    <td align="center" width="130"><a href="/providers/s3drive"><img src="/icons/providers/s3drive.png" width="36" /></a><br><sub>S3Drive</sub></td>
-    <td align="center" width="130"><a href="/providers/filen-desktop"><img src="/icons/providers/filen.png" width="36" /></a><br><sub>Filen Desktop</sub></td>
-    <td align="center" width="130"><a href="/providers/megacmd"><img src="/icons/providers/mega.png" width="36" /></a><br><sub>MEGAcmd</sub></td>
+    <td align="center" width="130"><a href="/providers/imagekit"><img src="/icons/providers/imagekit.png" width="36" /></a><br><sub>ImageKit</sub></td>
+    <td align="center" width="130"><a href="/providers/uploadcare"><img src="/icons/providers/uploadcare.png" width="36" /></a><br><sub>Uploadcare</sub></td>
+    <td align="center" width="130"><a href="/providers/cloudinary"><img src="/icons/providers/cloudinary.png" width="36" /></a><br><sub>Cloudinary</sub></td>
+    <td align="center" width="130"></td>
+    <td align="center" width="130"></td>
+    <td align="center" width="130"></td>
     <td align="center" width="130"></td>
     <td align="center" width="130"></td>
   </tr>
@@ -133,5 +162,5 @@ import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
 <p align="center">
   <sub>+ FTP, FTPS, SFTP, WebDAV, Swift protocols</sub><br>
   <sub>We reached out directly to providers to ensure quality integration.</sub><br>
-  <sub>Special thanks to MEGA, Koofr, FileLu, Felicloud, Storj, pCloud, IDrive, and SourceForge for their responsive technical support.</sub>
+  <sub>Special thanks to MEGA, Koofr, FileLu, Felicloud, Tab.digital, ImageKit, Uploadcare, Cloudinary, Storj, pCloud, IDrive, and SourceForge for their responsive technical support.</sub>
 </p>
