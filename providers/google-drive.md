@@ -138,3 +138,9 @@ aeroftp ls --profile "Google Drive" / -l --json
 - File names in Google Drive can contain characters that are invalid on local filesystems (e.g. `:`). AeroFTP sanitizes these transparently during downloads.
 - Google Drive API has a rate limit of approximately 12,000 requests per 100 seconds per user. For bulk operations on thousands of files, expect some throttling.
 - AeroSync works well with Google Drive using the **size + modification time** compare mode.
+
+## Further Reading
+
+- [Google Drive API documentation](https://developers.google.com/workspace/drive/api/guides/about-sdk)
+- [Google Cloud APIs dashboard](https://console.cloud.google.com/apis/dashboard)
+- [rclone guide: making your own Google Drive client ID](https://rclone.org/drive/#making-your-own-client-id)
