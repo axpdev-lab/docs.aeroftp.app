@@ -1,5 +1,7 @@
 # Internxt Drive
 
+<ProviderPlanCard id="internxt" />
+
 AeroFTP connects to Internxt Drive, an end-to-end encrypted cloud storage service with a zero-knowledge architecture. Internxt provides 1 GB of free storage.
 
 ## Connection Settings

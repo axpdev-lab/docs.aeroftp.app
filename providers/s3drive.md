@@ -5,6 +5,8 @@ description: Connect AeroFTP to S3Drive (Storj-backed S3-compatible cloud, 12 GB
 
 # S3Drive
 
+<ProviderPlanCard id="s3drive" />
+
 [S3Drive](https://s3drive.app) is an S3-compatible cloud built on top of Storj's decentralised storage network. Its free plan includes 12 GB of storage. AeroFTP ships an **S3Drive** Discover preset that pre-fills the endpoint, region, and addressing style; the only thing you need to copy from the S3Drive desktop app is the access key, secret, and bucket name.
 
 | Field | Default | Notes |

@@ -5,6 +5,8 @@ description: Connect Oracle Cloud Object Storage to AeroFTP using the S3-compati
 
 # Oracle Cloud Object Storage
 
+<ProviderPlanCard id="oracle-cloud" />
+
 Oracle Cloud Object Storage exposes an S3-compatible API through namespace-specific compatibility endpoints. AeroFTP includes an **Oracle Cloud preset** so you can save those endpoints cleanly and reuse them like any other S3-compatible provider.
 
 ## Why Use AeroFTP with Oracle Cloud

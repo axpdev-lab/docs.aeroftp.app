@@ -5,6 +5,8 @@ description: Connect Tab.digital to AeroFTP using its Nextcloud-as-a-Service Web
 
 # Tab.digital
 
+<ProviderPlanCard id="tabdigital" />
+
 [Tab.digital](https://tab.digital) is an EU-based, GDPR-positioned Nextcloud-as-a-Service provider with an 8 GB free tier. AeroFTP connects to Tab.digital through its dedicated **Tab.digital preset**, built on top of the standard WebDAV + OCS API stack already used for Nextcloud and Felicloud. Shipped in **v3.7.4**.
 
 ## Connection Settings

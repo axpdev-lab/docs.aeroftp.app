@@ -1,5 +1,7 @@
 # Google Drive
 
+<ProviderPlanCard id="google-drive" />
+
 AeroFTP connects to Google Drive via the official Google Drive API v3 with OAuth2 authentication. You can browse, upload, download, and manage files on your personal Google Drive and shared (team) drives as if they were a remote filesystem. AeroFTP supports starring, comments, custom properties, file versioning, trash management, and storage quota display.
 
 ## Connection and Authentication

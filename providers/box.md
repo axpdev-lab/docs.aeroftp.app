@@ -1,5 +1,7 @@
 # Box
 
+<ProviderPlanCard id="box" />
+
 AeroFTP connects to Box via the official Box Content API with OAuth2 authentication. Box is a feature-rich cloud storage platform with enterprise capabilities.
 
 ## Connection Settings

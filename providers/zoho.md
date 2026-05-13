@@ -1,5 +1,7 @@
 # Zoho WorkDrive
 
+<ProviderPlanCard id="zoho" />
+
 AeroFTP connects to Zoho WorkDrive via the official API with OAuth2 authentication. Zoho WorkDrive is a team-oriented cloud storage service with label management, file versioning, and 8 regional data centers.
 
 ## Connection Settings
@@ -38,7 +40,7 @@ Zoho operates in 8 regions. The OAuth flow auto-detects your region:
 
 ## Tips
 
-- Zoho WorkDrive's free tier provides 5 GB per team. Paid plans start at 5 TB.
+- Zoho WorkDrive's individual free plan starts with 5 GB. Paid team plans and trials use separate team storage pools.
 - Labels are team-scoped, meaning all team members see and share the same label set.
 - If you need to switch regions, you must create a new Zoho account in the target region -- migration is not supported.
 - For AeroSync, Zoho provides modification timestamps that enable reliable change detection with the **overwrite if newer** strategy.

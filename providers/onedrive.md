@@ -1,5 +1,7 @@
 # OneDrive
 
+<ProviderPlanCard id="onedrive" />
+
 AeroFTP connects to Microsoft OneDrive via the Microsoft Graph API with OAuth2 authentication. Supports personal OneDrive and OneDrive for Business.
 
 ## Connection Settings

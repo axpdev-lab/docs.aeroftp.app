@@ -5,6 +5,8 @@ description: Connect AeroFTP to a MEGA account via the official MEGAcmd CLI's bu
 
 # MEGAcmd (local WebDAV)
 
+<ProviderPlanCard id="megacmd" />
+
 MEGAcmd is MEGA's official command-line tool. It ships with a built-in WebDAV server that exposes your signed-in MEGA account on `127.0.0.1:4443` so any WebDAV-aware client can read and write encrypted MEGA storage without re-implementing the MEGA SDK.
 
 AeroFTP includes a **MEGAcmd (local WebDAV)** Discover preset that pre-fills the bridge URL and authentication mode.

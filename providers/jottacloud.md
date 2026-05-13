@@ -1,5 +1,7 @@
 # Jottacloud
 
+<ProviderPlanCard id="jottacloud" />
+
 AeroFTP connects to Jottacloud via WebDAV. Jottacloud is a Norwegian cloud storage service that provides 5 GB of free storage with data residency in Norway.
 
 ## Connection Settings

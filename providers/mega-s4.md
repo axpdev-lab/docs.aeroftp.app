@@ -1,5 +1,7 @@
 # MEGA S4 Object Storage Setup Guide
 
+<ProviderPlanCard id="mega-s4" />
+
 This guide explains how to configure **MEGA S4** access for use with AeroFTP. MEGA S4 is an S3-compatible object storage service that requires a MEGA **Pro** account or higher.
 
 Follow the steps in this order to correctly configure your environment.

@@ -1,5 +1,7 @@
 # Jianguoyun
 
+<ProviderPlanCard id="jianguoyun" />
+
 Jianguoyun (Nutstore) is a popular Chinese cloud storage service with WebDAV support. AeroFTP includes a built-in Jianguoyun preset with pre-configured endpoint settings. The free plan includes 3 GB of storage.
 
 ## Connection Settings

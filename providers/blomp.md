@@ -5,6 +5,8 @@ description: Connect Blomp to AeroFTP using OpenStack Swift / S3 endpoints with 
 
 # Blomp
 
+<ProviderPlanCard id="blomp" />
+
 [Blomp](https://blomp.com) is a cloud storage provider with a generous **40 GB free** tier, built on top of an OpenStack Swift backend with an S3-compatible front-door. AeroFTP exposes Blomp as a preset on top of the standard S3 protocol stack.
 
 ::: warning Status: pipeline (preset)

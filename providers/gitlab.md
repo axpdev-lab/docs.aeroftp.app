@@ -1,5 +1,7 @@
 # GitLab
 
+<ProviderPlanCard id="gitlab" />
+
 AeroFTP treats GitLab repositories as remote filesystems using the GitLab REST API v4. You can browse, upload, download, and delete files directly from any GitLab instance, including self-hosted ones. Every write operation creates a real Git commit on the target branch.
 
 ## Connection Settings

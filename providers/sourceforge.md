@@ -1,5 +1,7 @@
 # SourceForge
 
+<ProviderPlanCard id="sourceforge" />
+
 SourceForge is one of the largest open-source hosting platforms, providing project hosting, file distribution, and download mirrors worldwide. AeroFTP includes a native SourceForge integration that lets you upload releases directly to the SourceForge File Release System (FRS) via SFTP.
 
 For the shorter provider-oriented setup page, see [SourceForge with AeroFTP](/providers/sourceforge).

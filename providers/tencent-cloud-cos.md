@@ -5,6 +5,8 @@ description: Connect Tencent Cloud COS to AeroFTP using the built-in S3-compatib
 
 # Tencent Cloud COS
 
+<ProviderPlanCard id="tencent-cloud-cos" />
+
 Tencent Cloud COS is Tencent's S3-compatible object storage platform. AeroFTP includes a dedicated **Tencent Cloud COS preset** so the regional endpoint pattern is handled consistently.
 
 ## Why Use AeroFTP with Tencent Cloud COS

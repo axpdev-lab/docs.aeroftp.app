@@ -1,5 +1,7 @@
 # kDrive
 
+<ProviderPlanCard id="kdrive" />
+
 AeroFTP connects to Infomaniak kDrive via the official API. kDrive is a Swiss cloud storage service by Infomaniak, offering 15 GB of free storage.
 
 ## Connection Settings

@@ -139,5 +139,5 @@ import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
 <p align="center">
   <sub>+ FTP, FTPS, SFTP, WebDAV, Swift protocols</sub><br>
   <sub>We reached out directly to providers to ensure quality integration.</sub><br>
-  <sub>Special thanks to MEGA, Koofr, FileLu, Felicloud, Tab.digital, ImageKit, Uploadcare, Cloudinary, Storj, pCloud, IDrive, and SourceForge for their responsive technical support.</sub>
+  <sub>Special thanks to MEGA, Koofr, FileLu, Felicloud, Storj, pCloud, IDrive, Jottacloud, InfiniCLOUD, Jianguoyun and SourceForge for their responsive technical support.</sub>
 </p>

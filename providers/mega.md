@@ -1,5 +1,7 @@
 # MEGA
 
+<ProviderPlanCard id="mega" />
+
 AeroFTP provides comprehensive MEGA integration through three distinct connection modes, covering MEGA's entire product range from personal encrypted cloud storage to enterprise S3-compatible object storage.
 
 MEGA provides 20 GB of free encrypted storage. All files are encrypted client-side with AES-128 before upload - MEGA cannot read your data.

@@ -1,5 +1,7 @@
 # Koofr
 
+<ProviderPlanCard id="koofr" />
+
 AeroFTP connects to Koofr via the official API with OAuth2 PKCE authentication. Koofr is an EU-based cloud storage service (Slovenia) providing 10 GB of free storage.
 
 ## Connection Settings

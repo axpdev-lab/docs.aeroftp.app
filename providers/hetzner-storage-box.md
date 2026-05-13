@@ -5,6 +5,8 @@ description: Set up Hetzner Storage Box in AeroFTP over SFTP with the correct ho
 
 # Hetzner Storage Box
 
+<ProviderPlanCard id="hetzner-storage-box" />
+
 Hetzner Storage Box is a low-cost remote storage service designed for backup, file transfer, and archival workloads. AeroFTP supports Hetzner Storage Box through a built-in **SFTP preset**.
 
 ## Why Use AeroFTP with Hetzner Storage Box

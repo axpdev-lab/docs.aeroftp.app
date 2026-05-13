@@ -5,6 +5,8 @@ description: Connect Google Cloud Storage to AeroFTP using S3-compatible HMAC ke
 
 # Google Cloud Storage
 
+<ProviderPlanCard id="google-cloud-storage" />
+
 Google Cloud Storage (GCS) provides S3-compatible access through its [XML API interoperability](https://cloud.google.com/storage/docs/interoperability) layer. AeroFTP includes a dedicated **Google Cloud Storage preset** with pre-configured endpoint and path-style addressing.
 
 ## Why Use AeroFTP with Google Cloud Storage
