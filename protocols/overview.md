@@ -121,7 +121,7 @@ AeroFTP supports any S3-compatible service. Built-in presets auto-configure the 
 | DigitalOcean Spaces | `{region}.digitaloceanspaces.com` | Pay-as-you-go | CDN included |
 | Cloudflare R2 | `{accountId}.r2.cloudflarestorage.com` | 10 GB | No egress fees, requires Account ID |
 | Storj | `gateway.storjshare.io` | 25 GB | Decentralized storage |
-| Alibaba OSS | `oss-{region}.aliyuncs.com` | Pay-as-you-go | Asia-optimized |
+| Alibaba OSS | `oss-{region}.aliyuncs.com` | 5 GB (China regions) | Asia-optimized |
 | Tencent COS | `cos.{region}.myqcloud.com` | Pay-as-you-go | China regions |
 | MinIO | Custom endpoint | N/A | Self-hosted S3 |
 | Yandex Object Storage | `storage.yandexcloud.net` | Pay-as-you-go | Russia region |
