@@ -5,6 +5,8 @@ description: Connect to Backblaze B2 in AeroFTP using either the native v4 API p
 
 # Backblaze B2
 
+<ProviderPlanCard id="backblaze-b2" />
+
 Backblaze B2 is a cost-effective object storage platform. AeroFTP ships **two** presets and lets you pick the one that matches your workload:
 
 | Preset | Backend | Best for |

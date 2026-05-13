@@ -1,5 +1,7 @@
 # Dropbox
 
+<ProviderPlanCard id="dropbox" />
+
 AeroFTP connects to Dropbox via the official Dropbox API v2 with OAuth2 PKCE authentication. Full file management, tags, trash, and versioning support.
 
 ## Connection Settings

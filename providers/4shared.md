@@ -1,5 +1,7 @@
 # 4shared
 
+<ProviderPlanCard id="4shared" />
+
 AeroFTP connects to 4shared using their native REST API with OAuth 1.0 (HMAC-SHA1) authentication. 4shared provides 15 GB of free storage.
 
 ## Connection Settings

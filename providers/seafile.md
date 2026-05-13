@@ -1,5 +1,7 @@
 # Seafile
 
+<ProviderPlanCard id="seafile" />
+
 Seafile is an open-source, self-hosted cloud storage platform with WebDAV support. AeroFTP includes a built-in Seafile preset. Public instances like Seafile Cloud are also supported.
 
 ## Connection Settings

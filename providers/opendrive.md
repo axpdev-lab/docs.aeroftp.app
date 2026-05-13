@@ -1,9 +1,11 @@
 # OpenDrive
 
-AeroFTP connects to OpenDrive via their native REST API with session-based authentication. OpenDrive provides up to 7 GB of free storage (5 GB base, expandable via the OpenDrive review/social campaign).
+<ProviderPlanCard id="opendrive" />
+
+AeroFTP connects to OpenDrive via their native REST API with session-based authentication. OpenDrive's current free plan starts at 5 GB, with a 100 MB file-size cap and daily bandwidth limits.
 
 ::: tip Sign up for the free plan
-The free plan, including the path to grow from 5 GB to 7 GB, is documented on the official page: **[opendrive.com/free](https://www.opendrive.com/free)**. The campaign tasks (Twitter follow, social shares, leaving a review) and the bandwidth bonus are listed there. Plan availability and exact perks are managed by OpenDrive and may change.
+The live free-plan limits are managed by OpenDrive. At the latest check, the public pricing page lists 5 GB storage, 100 MB max file size, 1 GB/day bandwidth, and 200 KB/s speed for Free accounts.
 :::
 
 ## Connection Settings
@@ -25,8 +27,8 @@ Authentication creates a session token that is maintained for the duration of th
 
 ## Tips
 
-- OpenDrive's free tier starts at 5 GB and can be raised to 7 GB via the review/social campaign at [opendrive.com/free](https://www.opendrive.com/free).
-- The daily bandwidth limit (1 GB, raised to 3 GB after the campaign tasks) applies to **downloads only**, not uploads. Bandwidth usage is shown at [opendrive.com/settings/dashboard](https://www.opendrive.com/settings/dashboard) (the same page also shows the date you created your OpenDrive account). Always confirm the live numbers with OpenDrive directly: AeroFTP only reports what the API returns.
+- OpenDrive's current free tier starts at 5 GB.
+- The daily bandwidth limit applies to **downloads only**, not uploads. Bandwidth usage is shown at [opendrive.com/settings/dashboard](https://www.opendrive.com/settings/dashboard) (the same page also shows the date you created your OpenDrive account). Always confirm the live numbers with OpenDrive directly: AeroFTP only reports what the API returns.
 - Free accounts have a 100 MB per-file size limit. Paid plans remove the file size restriction.
 - OpenDrive sessions expire after inactivity. AeroFTP handles re-authentication transparently if the session times out.
 - For AeroSync, OpenDrive's MD5 checksums enable the **checksum** compare mode for the most accurate change detection.

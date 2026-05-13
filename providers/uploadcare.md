@@ -5,6 +5,8 @@ description: Connect Uploadcare to AeroFTP using public + secret API key authent
 
 # Uploadcare
 
+<ProviderPlanCard id="uploadcare" />
+
 [Uploadcare](https://uploadcare.com) is an EU-based, GDPR-friendly media storage and CDN platform. AeroFTP integrates Uploadcare via its native REST + Upload APIs as a first-class `StorageProvider`. Shipped in **v3.7.2** as the 24th protocol.
 
 ## Connection Settings
@@ -47,7 +49,7 @@ aeroftp-cli sync --profile "MyUploadcare" ./media /
 
 - The public key is safe to embed in client-side code (signed upload widgets, etc.). The secret key must remain server-side. AeroFTP keeps both in the encrypted vault.
 - Uploadcare's CDN supports image transformations via path segments (`/-/preview/300x300/`, etc.). Append them to share links as needed.
-- Free tier includes 3 GB of stored media and unlimited bandwidth for the first 30 days; check the dashboard for the current pricing.
+- Free tier includes 1 GB of stored media, 5 GB/month traffic, 1,000 operations/month, and a 500 MB max file size; check the dashboard for current pricing before production use.
 - Activity Log surfaces the project public-key hostname in the clear (e.g. `Authenticated as api.uploadcare.com/<project>`); the secret key remains masked.
 
 ## Common Issues

@@ -9,6 +9,16 @@ AeroFTP connects to 55+ cloud storage providers, developer platforms, and self-h
 
 For protocol-level technical reference, see [Technical Reference](/protocols/overview).
 
+Each provider guide now starts with a **Plan snapshot** that separates storage quota from traffic, operations, trial windows, and pay-as-you-go triggers:
+
+| Badge | Meaning |
+| --- | --- |
+| `FREE` | A usable no-cost plan or monthly free allowance exists. |
+| `TRIAL` | No-cost use is time-limited or credit-limited. |
+| `PAY` | Paid plan or pay-as-you-go billing applies. |
+| `CARD` | Billing/payment setup is normally required before or during use. |
+| `SELF-HOST` / `BYO` / `LOCAL` | Capacity depends on your own server, external provider, or local bridge. |
+
 ## Cloud Storage (OAuth & API)
 
 | | Provider | Type | Guide |
@@ -63,7 +73,7 @@ For protocol-level technical reference, see [Technical Reference](/protocols/ove
 | <img src="/icons/providers/felicloud.png" width="20" /> | Felicloud | Hosted Nextcloud, EU/GDPR | [Setup guide](/providers/felicloud) |
 | <img src="/icons/providers/tabdigital.png" width="20" /> | Tab.digital | Hosted Nextcloud-as-a-Service, EU/GDPR, 8 GB free | [Setup guide](/providers/tabdigital) |
 | <img src="/icons/providers/cloudme.png" width="20" /> | CloudMe | Swedish cloud, 3 GB free | [Setup guide](/providers/cloudme) |
-| <img src="/icons/providers/infiniCloud.png" width="20" /> | InfiniCLOUD | Japanese cloud, 25 GB free | [Setup guide](/providers/infinicloud) |
+| <img src="/icons/providers/infiniCloud.png" width="20" /> | InfiniCLOUD | Japanese cloud, 20 GB free | [Setup guide](/providers/infinicloud) |
 | <img src="/icons/providers/jianguoyun.png" width="20" /> | Jianguoyun | Chinese cloud, 3 GB free | [Setup guide](/providers/jianguoyun) |
 | <img src="/icons/providers/seafile.png" width="20" /> | Seafile | Open-source, self-hosted | [Setup guide](/providers/seafile) |
 | <img src="/icons/providers/drivehq.png" width="20" /> | DriveHQ | Enterprise file sharing | [Setup guide](/providers/drivehq) |
@@ -101,8 +111,8 @@ These presets connect AeroFTP to a desktop daemon running on the same machine. T
 | --- | --- | --- | --- |
 | <img src="/icons/providers/immich.png" width="20" /> | Immich | Self-hosted photo management (open source) | [Setup guide](/providers/immich) |
 | <img src="/icons/providers/pixelunion.png" width="20" /> | PixelUnion | EU-hosted Immich, 16 GB free | [Setup guide](/providers/pixelunion) |
-| <img src="/icons/providers/imagekit.png" width="20" /> | ImageKit | Media CDN + storage, 20 GB free | [Setup guide](/providers/imagekit) |
-| <img src="/icons/providers/uploadcare.png" width="20" /> | Uploadcare | EU media management, 3 GB free | [Setup guide](/providers/uploadcare) |
+| <img src="/icons/providers/imagekit.png" width="20" /> | ImageKit | Media CDN, 3 GB DAM + 20 GB/month bandwidth free | [Setup guide](/providers/imagekit) |
+| <img src="/icons/providers/uploadcare.png" width="20" /> | Uploadcare | EU media management, 1 GB free storage | [Setup guide](/providers/uploadcare) |
 | <img src="/icons/providers/cloudinary.png" width="20" /> | Cloudinary | Media management CDN with AI services, 25 GB free | [Setup guide](/providers/cloudinary) |
 
 > Google Photos: standby. Google removed the `photoslibrary.readonly` scope on 2025-03-31. Browse / download is no longer possible. Re-enable when Google ships a REST replacement or Picker API integration.

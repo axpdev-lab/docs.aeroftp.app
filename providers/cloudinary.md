@@ -5,6 +5,8 @@ description: Connect Cloudinary to AeroFTP using cloudname + API key + secret au
 
 # Cloudinary
 
+<ProviderPlanCard id="cloudinary" />
+
 [Cloudinary](https://cloudinary.com) is an image and video CDN with AI-powered media services (auto-tagging, content-aware cropping, format optimization, transformations). AeroFTP connects via the native REST API as a first-class `StorageProvider`. Shipped in **v3.7.4** as the 25th protocol.
 
 ## Connection Settings

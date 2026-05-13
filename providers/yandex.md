@@ -1,5 +1,7 @@
 # Yandex Disk
 
+<ProviderPlanCard id="yandex" />
+
 AeroFTP connects to Yandex Disk via the official REST API with OAuth2 authentication. Yandex Disk provides 5 GB of free storage.
 
 ## Connection Settings

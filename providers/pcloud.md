@@ -1,5 +1,7 @@
 # pCloud
 
+<ProviderPlanCard id="pcloud" />
+
 AeroFTP connects to pCloud via their native API with OAuth2 authentication. pCloud offers 10 GB of free storage with US and EU data center options.
 
 ## Connection Settings

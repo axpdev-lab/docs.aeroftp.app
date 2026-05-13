@@ -5,6 +5,8 @@ description: Connect Wasabi object storage to AeroFTP using the built-in S3-comp
 
 # Wasabi
 
+<ProviderPlanCard id="wasabi" />
+
 Wasabi is a high-performance S3-compatible object storage provider known for straightforward pricing and strong backup use cases. AeroFTP includes a dedicated **Wasabi preset** to simplify setup.
 
 ## Why Use AeroFTP with Wasabi

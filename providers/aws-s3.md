@@ -1,5 +1,7 @@
 # AWS S3
 
+<ProviderPlanCard id="aws-s3" />
+
 Amazon S3 (Simple Storage Service) is the original S3 implementation and the de facto standard for cloud object storage. AeroFTP includes a built-in AWS S3 preset with automatic endpoint configuration for 30+ regions.
 
 ## Connection Settings
@@ -32,7 +34,7 @@ Amazon S3 (Simple Storage Service) is the original S3 implementation and the de 
 ## Tips
 
 - Use **fine-grained IAM policies** to restrict access to specific buckets and operations. Avoid using root account credentials.
-- AWS S3 is pay-as-you-go with no permanent free tier (the free tier is 5 GB for the first 12 months only).
+- AWS S3 is pay-as-you-go. New AWS accounts may receive Free Tier credits or legacy account allowances, but there is no permanent S3-only free storage tier.
 - For the best performance, choose a bucket region close to your location.
 - The endpoint is auto-computed as `s3.{region}.amazonaws.com` based on your region selection.
 

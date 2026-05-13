@@ -1,5 +1,7 @@
 # Yandex Object Storage
 
+<ProviderPlanCard id="yandex-object-storage" />
+
 Yandex Object Storage is an S3-compatible cloud storage service by Yandex Cloud, based in Russia. AeroFTP includes a built-in Yandex Object Storage preset with pre-configured endpoint settings.
 
 ## Connection Settings

@@ -1,5 +1,7 @@
 # Filen
 
+<ProviderPlanCard id="filen" />
+
 AeroFTP connects to Filen's end-to-end encrypted cloud storage. All file contents and metadata are encrypted client-side with AES-256 before upload. Filen provides 10 GB of free storage.
 
 > **Two ways to connect**: this page covers the **native API** integration (the recommended path - direct, E2E, 2FA-aware). If you have Filen Desktop installed and want to ride its built-in Network Drive bridges, see [Filen Desktop bridges](/providers/filen-desktop) instead.

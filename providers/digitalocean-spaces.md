@@ -5,6 +5,8 @@ description: Connect DigitalOcean Spaces to AeroFTP with region-based S3 endpoin
 
 # DigitalOcean Spaces
 
+<ProviderPlanCard id="digitalocean-spaces" />
+
 DigitalOcean Spaces is a managed object storage service with an S3-compatible API. AeroFTP supports it through a built-in **DigitalOcean Spaces preset**.
 
 ## Why Use AeroFTP with DigitalOcean Spaces

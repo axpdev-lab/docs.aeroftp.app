@@ -1,6 +1,8 @@
 # InfiniCLOUD
 
-InfiniCLOUD (formerly TeraCLOUD) is a Japanese cloud storage service with WebDAV support. AeroFTP includes a built-in InfiniCLOUD preset. The free plan includes 25 GB of storage.
+<ProviderPlanCard id="infinicloud" />
+
+InfiniCLOUD (formerly TeraCLOUD) is a Japanese cloud storage service with WebDAV support. AeroFTP includes a built-in InfiniCLOUD preset. The free plan includes 20 GB of storage.
 
 ## Connection Settings
 
@@ -29,7 +31,7 @@ InfiniCLOUD (formerly TeraCLOUD) is a Japanese cloud storage service with WebDAV
 
 - Each InfiniCLOUD account has a unique WebDAV server URL assigned to a specific node. You must use your personal URL, not a generic endpoint.
 - Generate an app password from **My Page > Apps Connection** for WebDAV access.
-- The 25 GB free tier is generous compared to most WebDAV-compatible services.
+- The 20 GB free tier is generous compared to most WebDAV-compatible services.
 
 ## Related Documentation
 

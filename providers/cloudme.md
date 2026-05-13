@@ -1,5 +1,7 @@
 # CloudMe
 
+<ProviderPlanCard id="cloudme" />
+
 CloudMe is a Swedish cloud storage service accessible via WebDAV. AeroFTP includes a built-in CloudMe preset with pre-configured endpoint settings. The free plan includes 3 GB of storage.
 
 ## Connection Settings

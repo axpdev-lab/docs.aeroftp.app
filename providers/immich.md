@@ -5,6 +5,8 @@ description: Connect to Immich or PixelUnion in AeroFTP using the native REST AP
 
 # Immich
 
+<ProviderPlanCard id="immich" />
+
 [Immich](https://immich.app) is an open-source (AGPL v3), self-hosted photo and video management platform. AeroFTP connects to any Immich instance via the REST API using API key authentication.
 
 [PixelUnion](https://pixelunion.eu) is an EU-hosted managed Immich service (16 GB free) available as a preset in AeroFTP's Discover panel.

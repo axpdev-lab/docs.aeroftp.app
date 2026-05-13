@@ -1,5 +1,7 @@
 # DriveHQ
 
+<ProviderPlanCard id="drivehq" />
+
 DriveHQ is an enterprise cloud storage and file sharing service accessible via WebDAV. AeroFTP includes a built-in DriveHQ preset with pre-configured endpoint settings.
 
 ## Connection Settings

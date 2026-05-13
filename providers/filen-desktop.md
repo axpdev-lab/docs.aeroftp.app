@@ -5,6 +5,8 @@ description: Connect AeroFTP to a logged-in Filen Desktop instance via the local
 
 # Filen Desktop (local bridges)
 
+<ProviderPlanCard id="filen-desktop" />
+
 Filen Desktop ships two **Network Drive** bridges that let any S3-aware or WebDAV-aware client talk to your Filen account through the desktop app's local listener. AeroFTP exposes both as first-class Discover entries.
 
 | Preset | Endpoint | Port | Auth | Notes |

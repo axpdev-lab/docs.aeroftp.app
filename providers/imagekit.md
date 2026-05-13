@@ -5,7 +5,9 @@ description: Connect to ImageKit in AeroFTP using the native REST API with priva
 
 # ImageKit
 
-[ImageKit](https://imagekit.io) is an image and video CDN with built-in storage, real-time transformations, and a generous 20 GB media + 20 GB bandwidth/month free tier. AeroFTP connects to ImageKit through its native REST API as a first-class `StorageProvider`, with full list / upload / download / delete / mkdir / rename support plus media-CDN transformation passthrough. Shipped in **v3.7.2** as the 23rd protocol.
+<ProviderPlanCard id="imagekit" />
+
+[ImageKit](https://imagekit.io) is an image and video CDN with built-in DAM storage, real-time transformations, and a free tier that currently includes 3 GB DAM storage plus 20 GB bandwidth/month. AeroFTP connects to ImageKit through its native REST API as a first-class `StorageProvider`, with full list / upload / download / delete / mkdir / rename support plus media-CDN transformation passthrough. Shipped in **v3.7.2** as the 23rd protocol.
 
 ## Connection Settings
 
@@ -50,7 +52,7 @@ The CLI resolves the API key from the encrypted vault on every call. The key is 
 ## Tips
 
 - ImageKit private keys inherit account-wide access. Use a dedicated key for AeroFTP if you need to revoke it independently of dashboard logins.
-- The free tier covers 20 GB of media plus 20 GB of bandwidth per month. Heavy CDN traffic counts against the bandwidth quota, not the storage quota.
+- The free tier covers 3 GB of DAM storage plus 20 GB of bandwidth per month. Heavy CDN traffic counts against the bandwidth quota, not the storage quota.
 - ImageKit auto-applies AVIF / WebP conversion when the client supports it. Original uploads are preserved as-is.
 - Activity Log will show `Authenticated as ik.imagekit.io/<endpoint>` (URL only, no key fragments).
 

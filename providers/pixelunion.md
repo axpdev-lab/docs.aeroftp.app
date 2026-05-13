@@ -5,6 +5,8 @@ description: Connect to PixelUnion EU-hosted Immich cloud in AeroFTP with API ke
 
 # PixelUnion
 
+<ProviderPlanCard id="pixelunion" />
+
 [PixelUnion](https://pixelunion.eu) is an EU-hosted managed Immich photo cloud based in the Netherlands. It offers 16 GB of free storage with full Immich functionality.
 
 AeroFTP connects to PixelUnion using the same Immich REST API integration. PixelUnion is available as a preset in Discover Services for quick setup.

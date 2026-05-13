@@ -5,6 +5,8 @@ description: Connect self-hosted MinIO to AeroFTP using an S3-compatible endpoin
 
 # MinIO
 
+<ProviderPlanCard id="minio" />
+
 MinIO is a self-hosted S3-compatible object storage server. AeroFTP supports MinIO through a built-in **MinIO preset** and through generic S3-compatible setup.
 
 ## Why Use AeroFTP with MinIO
