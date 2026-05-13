@@ -16,51 +16,53 @@ Each provider guide now starts with a **Plan snapshot** that separates storage q
 | `FREE` | A usable no-cost plan or monthly free allowance exists. |
 | `TRIAL` | No-cost use is time-limited or credit-limited. |
 | `PAY` | Paid plan or pay-as-you-go billing applies. |
-| `CARD` | Billing/payment setup is normally required before or during use. |
+| `CARD` | The free tier or trial normally requires billing/payment setup. |
 | `SELF-HOST` / `BYO` / `LOCAL` | Capacity depends on your own server, external provider, or local bridge. |
 
 ## Pricing Snapshot (May 2026)
 
-This comparative table complements the individual setup guides. It centralizes the current free tier / trial / paid-entry picture for the main cloud, S3-compatible, and WebDAV providers exposed by AeroFTP. Self-hosted and local bridges remain grouped when the commercial model depends on your own infrastructure rather than on AeroFTP itself.
+This comparative table complements the individual setup guides. It centralizes the current free tier / trial picture for the main cloud, S3-compatible, and WebDAV providers exposed by AeroFTP. Self-hosted and local bridges remain grouped when the commercial model depends on your own infrastructure rather than on AeroFTP itself.
 
-| Provider | Category | Free Tier | Trial | Paid Starting Price | Card Required | Notes / Main Limits |
-| --- | --- | --- | --- | --- | --- | --- |
-| Google Drive | Cloud / OAuth | 15 GB shared with Gmail / Photos | N/A | USD 1.99/month (100 GB) | No for free | Shared quota. Referral and promo boosts are occasional. |
-| OneDrive | Cloud / OAuth | 5 GB | 1 month with Microsoft 365 | ~USD 1.99/month (100 GB) or USD 6.99/month (1 TB + Office) | Yes for paid | Free tier was reduced years ago. Strong Microsoft integration. |
-| Dropbox | Cloud / OAuth | 2 GB | 30 days | ~USD 9.99-11.99/month (2 TB+) | Yes | Free tier is small. Strong sharing ecosystem. |
-| MEGA | Cloud / E2E + S4 | 20 GB, expandable with achievements / referral | N/A | ~EUR 4.99-10/month (Pro) | Yes | One of the most generous free tiers. Strong client-side encryption. |
-| Box | Cloud / OAuth | 10 GB (Personal) | Yes on Business plans | ~USD 5-15/user/month (Business) | Yes | Strong enterprise collaboration focus. |
-| pCloud | Cloud / OAuth | 10 GB (2 GB base + bonuses) | N/A | USD 4.99/month (500 GB) or lifetime from ~USD 199 | Yes | Lifetime plans remain a major differentiator. Swiss privacy positioning. |
-| Filen | Cloud / E2E + Local S3/WebDAV | 10 GB permanent | N/A | EUR 1.99/month (200 GiB) | No for free | Zero-knowledge E2E. Very aggressive entry pricing. |
-| Internxt | Cloud / E2E | 1 GB | N/A | Lifetime deals are frequent (1-20 TB) | Yes | Open-source and privacy-first. |
-| Koofr | Cloud / API + WebDAV | 10 GB forever | N/A | ~EUR 2/month (100 GB+) or lifetime promos | Yes | EU-based. Can aggregate other clouds. |
-| kDrive (Infomaniak) | Cloud / OAuth | 15 GB | 30 days | EUR 4.99/month (3 TB) | Yes | Swiss / EU positioning with strong privacy messaging. |
-| FileLu | Cloud + S3 + WebDAV | 1 GB at signup (+ bonus storage via tasks / referral / dev program) | N/A | ~USD 6 or lifetime from ~USD 120 (1 TB) | Yes | Free plan is constrained: slower speeds and practical download limits. |
-| Zoho WorkDrive | Cloud / OAuth | 5 GB (Individual) | Yes on Team plans | ~USD 2.50/user/month | Yes | Best fit when already inside the Zoho suite. |
-| Drime Cloud | Cloud / API | 20 GB | Risk-free paid trial language | ~EUR 2.39-2.99/month (500 GB) | Yes | EU positioning, collaboration, and privacy messaging. |
-| Jottacloud | Cloud / API | 5 GB | N/A | ~USD 6.99/month (1 TB) | Yes | Norwegian provider with backup-heavy positioning. |
-| 4shared | Cloud / OAuth | 15 GB | N/A | ~USD 9.95/month (100 GB+) | Yes | Sharing-oriented service. WebDAV endpoint also exists. |
-| OpenDrive | Cloud / API + WebDAV | 5 GB with bandwidth / speed limits | N/A | ~USD 12.95/month (Unlimited) | Yes | Free plan has aggressive throughput limits. |
-| Yandex Disk | Cloud / OAuth + Object + WebDAV | 5 GB | N/A | ~USD 2/month (200 GB+) | Yes | Russia-based service; geo and compliance considerations may matter. |
-| Backblaze B2 | Native + S3-compatible | 10 GB permanent | N/A | USD 6/TB/month | Yes beyond free use | Very low cost. Free egress up to 3x stored data. |
-| Amazon S3 | S3 | 5 GB for 12 months on new AWS accounts + free ops allowance | 12 months | ~USD 0.023/GB/month pay-as-you-go | Yes | Egress pricing can dominate the bill. |
-| Cloudflare R2 | S3-compatible | 10 GB-month/month + 1M Class A + 10M Class B | N/A | USD 0.015/GB-month beyond free allowance | Yes for billing setup | Zero egress fee. Strong fit for public assets and edge-heavy workloads. |
-| Google Cloud Storage | S3-compatible | 5 GB-month always free in select US regions + ops allowance | USD 300 credit | Pay-as-you-go | Yes | Always-free scope is region-limited. |
-| IDrive e2 | S3-compatible | 10 GB permanent | N/A | ~USD 0.004/GB/month | Yes | Very aggressive pricing. Egress is free up to 3x stored data. |
-| Wasabi | S3-compatible | No permanent free tier | Yes | ~USD 6.99/TB/month | Yes | No egress or API fees, but 90-day minimum retention applies. |
-| Storj | S3-compatible | No permanent free tier | N/A | ~USD 6-15/TB/month + minimum fees | Yes | Decentralized storage economics differ from classic S3 vendors. |
-| Alibaba Cloud OSS | S3-compatible | ~5 GB always free + 500 GB trial | 1 month | Pay-as-you-go | Yes | Stronger fit for Asia-centric deployments. |
-| DigitalOcean Spaces | S3-compatible | No permanent free tier; trial credits are common | Yes | ~USD 5/month (250 GB) + overage | Yes | Simple pricing and good developer ergonomics. |
-| Oracle Cloud | S3-compatible | 20 GB Always Free object storage | USD 300 credit for 30 days | Pay-as-you-go | Yes | Signup normally requires a credit or debit card even for the free tier. |
-| S3Drive | S3-compatible | 12 GB free | N/A | EUR 1.49/month billed annually (Ultimate) | Yes for paid | Built on Storj. AeroFTP can transfer normally, but the S3 API does not expose quota back to the status bar. |
-| MinIO / Quotaless S3 / Filen Desktop (local S3) | Self-hosted / Local | Unlimited locally or BYO backend | N/A | N/A or backend-specific | No for self-hosted | Economics depend on your own storage or the external backend you attach. |
-| WebDAV Server (generic) | WebDAV | Provider-dependent | Provider-dependent | Provider-dependent | Provider-dependent | Uses the underlying provider account and quota model. |
-| Nextcloud | WebDAV / Self-hosted | Unlimited when self-hosted | N/A | Hosting cost only | No | Full control, but you own the hosting, backups, and maintenance. |
-| Seafile | WebDAV / Self-hosted or hosted | Self-hosted: BYO. Hosted Seafile Plus trial observed at 1 GB total for up to 3 users | 30-day hosted trial observed | Hosting cost or vendor-specific plan | No for self-hosted / no card seen in observed hosted trial | Observed hosted trial also showed 300 GB monthly traffic and 6 AI credits. Per-user quota is admin-configurable and excluded from the pricing comparison. |
-| Tab.digital | WebDAV / Hosted Nextcloud | 8 GB | N/A | EUR 7.44/month (128 GB) | Yes for paid | Hosted Nextcloud with OCS / WebDAV, EU-hosted, privacy-first positioning. |
-| CloudMe | WebDAV / Cloud | 3 GB | N/A | EUR 1.99/month (50 GB, billed annually) | Yes for paid | One of the few remaining simple consumer WebDAV services. |
-| InfiniCLOUD | WebDAV / Cloud | 20 GB | N/A | USD 8.99/month (+300 GB) or USD 87.99/year | Yes for paid | Personal WebDAV URL per account. Long-term bonus increases storage over time on paid plans. |
-| Jianguoyun / DriveHQ / other hosted WebDAV vendors | WebDAV / Cloud | Usually low single-digit to mid-tier free quotas | Varies | Vendor-specific | Usually yes | Hosted WebDAV providers change packaging often; verify the current commercial plan on the vendor page before publishing card-level pricing. |
+The **Tier Snapshot** column reuses the same markers from the plan snapshots above. In particular, `PAY` only signals that paid plans exist, while `CARD` means the free tier or trial normally requires billing/payment setup.
+
+| Provider | Category | Tier Snapshot | Notes / Main Limits |
+| --- | --- | --- | --- |
+| Google Drive | Cloud / OAuth | `FREE` `PAY` 15 GB shared with Gmail / Photos. | Shared quota. Referral and promo boosts are occasional. |
+| OneDrive | Cloud / OAuth | `FREE` `TRIAL` `PAY` 5 GB free. Microsoft 365 trials may add temporary storage. | Free tier was reduced years ago. Strong Microsoft integration. |
+| Dropbox | Cloud / OAuth | `FREE` `TRIAL` `PAY` 2 GB free. Time-limited paid trials appear periodically. | Free tier is small. Strong sharing ecosystem. |
+| MEGA | Cloud / E2E + S4 | `FREE` `PAY` 20 GB, expandable with achievements / referral. | One of the most generous free tiers. Strong client-side encryption. |
+| Box | Cloud / OAuth | `FREE` `TRIAL` `PAY` 10 GB on Personal. Business plans may offer trials. | Strong enterprise collaboration focus. |
+| pCloud | Cloud / OAuth | `FREE` `PAY` 10 GB max on the free tier (2 GB base + bonuses). | Lifetime plans remain a major differentiator. Swiss privacy positioning. |
+| Filen | Cloud / E2E + Local S3/WebDAV | `FREE` `PAY` 10 GB permanent free storage. | Zero-knowledge E2E. Very aggressive entry pricing. |
+| Internxt | Cloud / E2E | `FREE` `PAY` 1 GB free. | Open-source and privacy-first. |
+| Koofr | Cloud / API + WebDAV | `FREE` `PAY` 10 GB forever. | EU-based. Can aggregate other clouds. |
+| kDrive (Infomaniak) | Cloud / OAuth | `FREE` `TRIAL` `PAY` 15 GB free. Trials may unlock larger paid bundles temporarily. | Swiss / EU positioning with strong privacy messaging. |
+| FileLu | Cloud + S3 + WebDAV | `FREE` `PAY` 1 GB at signup, with possible bonus storage via tasks / referral / dev program. | Free plan is constrained: slower speeds and practical download limits. |
+| Zoho WorkDrive | Cloud / OAuth | `FREE` `TRIAL` `PAY` 5 GB on the Individual tier. Team plans may expose trials. | Best fit when already inside the Zoho suite. |
+| Drime Cloud | Cloud / API | `FREE` `PAY` 20 GB free. | EU positioning, collaboration, and privacy messaging. |
+| Jottacloud | Cloud / API | `FREE` `PAY` 5 GB free. | Norwegian provider with backup-heavy positioning. |
+| 4shared | Cloud / OAuth | `FREE` `PAY` 15 GB free. | Sharing-oriented service. WebDAV endpoint also exists. |
+| OpenDrive | Cloud / API + WebDAV | `FREE` `PAY` 5 GB free with bandwidth / speed limits. | Free plan has aggressive throughput limits. |
+| Yandex Disk | Cloud / OAuth + Object + WebDAV | `FREE` `PAY` 5 GB free. | Russia-based service; geo and compliance considerations may matter. |
+| Backblaze B2 | Native + S3-compatible | `FREE` `PAY` 10 GB permanent free allowance. | Very low cost. Free egress up to 3x stored data. |
+| Amazon S3 | S3 | `TRIAL` `PAY` `CARD` New AWS accounts get a time-limited free allowance / credits for eligible S3 use. | Egress pricing can dominate the bill. |
+| Cloudflare R2 | S3-compatible | `FREE` `PAY` `CARD` 10 GB-month plus request allowances on the free tier. | Zero egress fee. Strong fit for public assets and edge-heavy workloads. |
+| Google Cloud Storage | S3-compatible | `FREE` `TRIAL` `PAY` `CARD` 5 GB-month always free in select US regions, plus trial credits for new accounts. | Always-free scope is region-limited. |
+| IDrive e2 | S3-compatible | `FREE` `PAY` 10 GB permanent. | Very aggressive pricing. Egress is free up to 3x stored data. |
+| Wasabi | S3-compatible | `TRIAL` `PAY` `CARD` No permanent free tier; trial availability varies. | No egress or API fees, but 90-day minimum retention applies. |
+| Storj | S3-compatible | `PAY` No meaningful permanent free tier tracked here. | Decentralized storage economics differ from classic S3 vendors. |
+| Alibaba Cloud OSS | S3-compatible | `FREE` `TRIAL` `PAY` `CARD` Small always-free allowance plus temporary trial quota for new accounts. | Stronger fit for Asia-centric deployments. |
+| DigitalOcean Spaces | S3-compatible | `TRIAL` `PAY` `CARD` No permanent free tier; introductory credits / trials are common. | Simple pricing and good developer ergonomics. |
+| Oracle Cloud | S3-compatible | `FREE` `TRIAL` `PAY` `CARD` 20 GB Always Free object storage plus time-limited onboarding credits. | Signup normally requires a credit or debit card even for the free tier. |
+| S3Drive | S3-compatible | `FREE` `PAY` 12 GB free. | Built on Storj. AeroFTP can transfer normally, but the S3 API does not expose quota back to the status bar. |
+| MinIO / Quotaless S3 / Filen Desktop (local S3) | Self-hosted / Local | `SELF-HOST` `BYO` `LOCAL` Capacity depends on your own machine or backend. | Economics depend on your own storage or the external backend you attach. |
+| WebDAV Server (generic) | WebDAV | `BYO` Capacity, trials, and billing depend on the upstream provider. | Uses the underlying provider account and quota model. |
+| Nextcloud | WebDAV / Self-hosted | `SELF-HOST` `BYO` Capacity depends on your hosting. | Full control, but you own the hosting, backups, and maintenance. |
+| Seafile | WebDAV / Self-hosted or hosted | `SELF-HOST` `BYO` `TRIAL` Self-hosted is bring-your-own storage. Hosted Seafile Plus trial was observed at 1 GB total for up to 3 users. | Observed hosted trial also showed 300 GB monthly traffic and 6 AI credits. Per-user quota is admin-configurable and excluded from the pricing comparison. |
+| Tab.digital | WebDAV / Hosted Nextcloud | `FREE` `PAY` 8 GB free. | Hosted Nextcloud with OCS / WebDAV, EU-hosted, privacy-first positioning. |
+| CloudMe | WebDAV / Cloud | `FREE` `PAY` 3 GB free. | One of the few remaining simple consumer WebDAV services. |
+| InfiniCLOUD | WebDAV / Cloud | `FREE` `PAY` 20 GB free. | Personal WebDAV URL per account. Long-term bonus increases storage over time on paid plans. |
+| Jianguoyun / DriveHQ / other hosted WebDAV vendors | WebDAV / Cloud | `FREE` `PAY` Free quotas and trial packaging vary by vendor. | Hosted WebDAV providers change packaging often; verify the current commercial plan on the vendor page before publishing card-level pricing. |
 
 ### Best Fit Tags
 

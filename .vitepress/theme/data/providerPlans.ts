@@ -210,7 +210,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
     id: 'filelu',
     name: 'FileLu',
     badges: ['FREE', 'PAY'],
-    storage: '10 GB free at signup; referral programs may expand the free allowance.',
+    storage: '1 GB free at signup; referral programs may expand the free allowance.',
     limits: 'Free downloads are slower and more limited than premium; premium removes file size and parallel download limits.',
     billing: 'No credit card required for the free account; paid storage can scale much higher.',
     bestFor: 'One provider with API, S3, WebDAV, FTP, FTPS, and rclone-compatible access.',
