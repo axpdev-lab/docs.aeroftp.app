@@ -30,7 +30,7 @@ AeroFTP includes preconfigured presets that auto-fill the endpoint path and port
 | Preset | Endpoint Path | Port | Free Tier | Notes |
 | ------ | ------------- | ---- | --------- | ----- |
 | **Nextcloud** | `/remote.php/dav/files/USERNAME/` | 443 | Varies by provider | Replace `USERNAME` with your exact login name |
-| **Seafile** | `/seafdav` | 443 | 2 GB | SeafDAV must be enabled by the server admin |
+| **Seafile** | `/seafdav` | 443 | Varies by deployment | Self-hosted and hosted Seafile services use the same SeafDAV path |
 | **CloudMe** | `/` (host: `webdav.cloudme.com`) | 443 | 3 GB | Direct WebDAV access, no path prefix needed |
 | **Felicloud** | `/remote.php/dav/files/USERNAME/` | 443 | 10 GB | Hosted Nextcloud-based service with the same DAV path pattern |
 | **Custom** | Any path | Any | -- | For any WebDAV-compatible server or NAS |
@@ -54,7 +54,7 @@ Seafile uses the SeafDAV extension for WebDAV access:
 2. Enter your Seafile server hostname.
 3. Use your Seafile account credentials.
 
-> **Note**: SeafDAV must be enabled by the Seafile server administrator. Check `seahub_settings.py` for `ENABLE_WEBDAV_SECRET`. If it is not enabled, you will receive a 404 error on the WebDAV endpoint.
+> **Note**: On self-hosted Seafile, SeafDAV must be enabled by the server administrator. Check `seahub_settings.py` for `ENABLE_WEBDAV_SECRET`. Hosted Seafile services typically manage this for you. If SeafDAV is disabled, you will receive a 404 error on the WebDAV endpoint.
 
 ### CloudMe Setup
 

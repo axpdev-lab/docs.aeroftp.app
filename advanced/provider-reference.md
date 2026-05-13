@@ -68,7 +68,7 @@ Cloud storage services using OAuth2 for authentication.
 | Zoho WorkDrive | OAuth2 | 5 GB | `https://www.zohoapis.{region}/workdrive/api/v1` |
 | kDrive | OAuth2 | 15 GB | `https://api.infomaniak.com/3/drive/{drive_id}` |
 | Koofr | OAuth2 PKCE | 10 GB | `https://app.koofr.net/api/v2` |
-| Yandex Disk | OAuth2 | 10 GB | `https://cloud-api.yandex.net/v1/disk` |
+| Yandex Disk | OAuth2 | 5 GB | `https://cloud-api.yandex.net/v1/disk` |
 
 ### Google Drive
 
@@ -165,7 +165,7 @@ Cloud storage services using API keys, bearer tokens, or session-based authentic
 | 4shared | OAuth 1.0 (HMAC-SHA1) | 15 GB | `https://api.4shared.com/v1_2` |
 | Filen | Email/Password | 10 GB | `https://gateway.filen.io` |
 | Internxt | OAuth2 PKCE | 1 GB | `https://drive.internxt.com` |
-| FileLu | API Key | 10 GB | `https://filelu.com/api` |
+| FileLu | API Key | 1 GB at signup (+ bonus programs) | `https://filelu.com/api` |
 | OpenDrive | Session (login) | 5 GB | `https://dev.opendrive.com/api/v1` |
 | Jottacloud | Username/Password | 5 GB | `https://jottacloud.com/jfs` |
 
