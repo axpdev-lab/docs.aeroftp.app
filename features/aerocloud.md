@@ -4,63 +4,41 @@ AeroCloud turns any server into a private personal cloud. It rides AeroFTP's ful
 
 ## Supported Integrations
 
-AeroCloud supports the entire provider surface for sync (GitHub and Drime Cloud are excluded - conceptually incompatible with sync). Providers are classified by sync reliability:
+AeroCloud supports the sync surface exposed by the desktop wizard. The maturity badges below are the same ones used in the app. `GitHub` and `Drime Cloud` are excluded from AeroCloud sync because their models do not fit the background-sync workflow.
 
-- **Stable (12)**: SFTP, S3, Azure Blob, WebDAV, Google Drive, Dropbox, OneDrive, Jottacloud, kDrive, Koofr, OpenDrive, Felicloud
-- **Beta (8)**: FTP, FTPS, Box, pCloud, Zoho WorkDrive, Yandex Disk, MEGA, Filen, Internxt
-- **Alpha (2)**: FileLu, 4shared
+### Wizard Sync Tiers
 
-Protocols are grouped into four categories.
+| Integration | Auth | Maturity | Wizard caveat / operational note |
+| --- | --- | --- | --- |
+| FTP | Username / Password | Beta | Requires MFMT support for reliable timestamps. |
+| FTPS | Username / Password | Beta | Requires MFMT support for reliable timestamps. |
+| SFTP | Password / Key / Agent | Stable | Best overall fit for full AeroCloud sync. |
+| WebDAV family | Username / Password | Stable | Covers generic WebDAV plus hosted variants such as Nextcloud, Seafile, Tab.digital, Felicloud, CloudMe, InfiniCLOUD, Jianguoyun, and similar presets. |
+| S3 family | Access Key / Secret | Stable | Covers AWS S3, Cloudflare R2, Backblaze S3, Wasabi, DigitalOcean Spaces, MinIO, Oracle Cloud, S3Drive, and similar S3-compatible presets. |
+| Azure Blob | Connection string / SAS | Stable | Treated as a first-class object-storage sync target in the wizard. |
+| Google Drive | OAuth 2.0 PKCE | Stable | Native Google API path with strong sync behavior. |
+| Dropbox | OAuth 2.0 PKCE | Stable | Native Dropbox API path with strong sync behavior. |
+| OneDrive | OAuth 2.0 PKCE | Stable | Native Microsoft Graph path with strong sync behavior. |
+| Jottacloud | Username / Password | Stable | Native provider with no wizard caveat. |
+| kDrive | OAuth 2.0 | Stable | Native provider with no wizard caveat. |
+| Koofr | OAuth 2.0 PKCE | Stable | Native provider with no wizard caveat. |
+| OpenDrive | Session auth | Stable | Native provider with no wizard caveat. |
+| Box | OAuth 2.0 | Beta | Stricter API rate limits than other providers. |
+| pCloud | OAuth 2.0 | Beta | OAuth flow may require periodic re-authorization. |
+| Zoho WorkDrive | OAuth 2.0 | Beta | Team ID resolution adds setup complexity. |
+| Yandex Disk | OAuth 2.0 | Beta | Service may be blocked in some regions. |
+| MEGA | Email / Password | Beta | Requires the external MEGAcmd daemon for AeroCloud sync. |
+| Filen | Email / Password + optional 2FA | Beta | End-to-end encryption adds sync overhead. |
+| Internxt | OAuth 2.0 PKCE | Beta | End-to-end encryption adds sync overhead. |
+| FileLu | API key / saved profile | Beta | Region latency can vary; sync uses hash comparison. |
+| 4shared | OAuth 1.0 | Alpha | Manual re-authorization is required if the token is revoked. |
 
-### Server Protocols
+### How To Read The Matrix
 
-Direct server connections using standard file transfer protocols.
-
-| Protocol | Auth | Encryption | Notes |
-|----------|------|------------|-------|
-| FTP | Username / Password | None | Classic file transfer |
-| FTPS | Username / Password | TLS (Explicit / Implicit) | FTP over TLS |
-| SFTP | Password / Key / Agent | SSH | Host key TOFU verification |
-| WebDAV | Username / Password | HTTPS | Nextcloud, Seafile, ownCloud, CloudMe |
-| S3-Compatible | Access Key / Secret | HTTPS | AWS, Wasabi, Backblaze, Cloudflare R2, MinIO, DigitalOcean Spaces, and more |
-
-### OAuth Cloud Providers
-
-Cloud services that authenticate via OAuth 2.0. AeroFTP handles the full authorization flow - click **Authorize**, sign in to the provider, and the token is stored securely in the vault.
-
-| Provider | Free Tier | Auth | Special Features |
-|----------|-----------|------|------------------|
-| Google Drive | 15 GB | OAuth 2.0 PKCE | Starring, comments, custom properties |
-| Dropbox | 2 GB | OAuth 2.0 PKCE | Tags, trash management |
-| OneDrive | 5 GB | OAuth 2.0 PKCE | Trash management, resumable uploads > 4 MB |
-| Box | 10 GB | OAuth 2.0 | Tags, comments, collaborations, folder locks |
-| pCloud | 10 GB | OAuth 2.0 | EU data residency option |
-| Zoho WorkDrive | 5 GB | OAuth 2.0 | 8 regional endpoints, team labels, versioning |
-| kDrive | 15 GB | OAuth 2.0 | Infomaniak, cursor-based pagination |
-| Koofr | 10 GB | OAuth 2.0 PKCE | EU-based (Slovenia), trash management |
-| FeliCloud | 10 GB | WebDAV + OCS | EU/GDPR, Nextcloud-based, share links, trash |
-| Yandex Disk | 10 GB | OAuth 2.0 | Trash management, public links |
-
-### API / Token Providers
-
-Cloud services that use API keys, passwords, or session-based authentication.
-
-| Provider | Free Tier | Auth | Notes |
-|----------|-----------|------|-------|
-| MEGA | 20 GB | Email / Password | E2E encrypted |
-| 4shared | 15 GB | OAuth 1.0 (HMAC-SHA1) | ID-based file system |
-| Filen | 10 GB | Email / Password | E2E encrypted, 2FA passthrough |
-| Internxt | 1 GB | OAuth 2.0 PKCE | Zero-knowledge E2E |
-| FileLu | 10 GB | API Key | File privacy, password protection, clone |
-| OpenDrive | 5 GB | Session Auth | MD5 checksums, zlib compression |
-| Jottacloud | 5 GB | Username / Password | Norwegian provider |
-
-### Special Protocols
-
-| Protocol | Auth | Notes |
-|----------|------|-------|
-| Azure Blob Storage | Connection String / SAS | Enterprise object storage |
-| GitHub | Personal Access Token | Repository file browsing |
+- **Stable** means the wizard treats the integration as production-grade for day-to-day AeroCloud usage.
+- **Beta** means the integration is usable, but the desktop app exposes a concrete caveat in the wizard.
+- **Alpha** means the integration is available, but operational rough edges are still expected.
+- **WebDAV family** and **S3 family** are documented by analogy: if a preset is not shown as its own row in the AeroCloud wizard, it inherits the family tier unless its provider guide states otherwise.
 
 ## Background Sync
 
@@ -82,9 +60,9 @@ The CloudPanel wizard guides you through connecting a new cloud provider in four
 
 A grid of protocol cards organized into three groups:
 
-- **Servers** - FTP, FTPS, SFTP, WebDAV, S3
-- **Cloud** - Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho, kDrive, Koofr, FeliCloud, Yandex, MEGA, 4shared, Filen, Internxt, FileLu, OpenDrive, Jottacloud
-- **Special** - Azure Blob, GitHub
+- **Servers** - FTP, FTPS, SFTP, WebDAV
+- **Cloud** - S3, Azure Blob, MEGA, Filen, Internxt, kDrive, Jottacloud, Koofr, OpenDrive, Yandex Disk, FileLu
+- **OAuth** - Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, 4shared
 
 ### Step 2 - Connection Fields
 
