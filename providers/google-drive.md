@@ -26,12 +26,37 @@ Token refresh is automatic. When the access token expires (typically after 1 hou
 
 By default, AeroFTP uses its own OAuth client for Google Drive. If you prefer to use your own Google Cloud project credentials (for higher API quotas or organizational policies), you can enter a custom **Client ID** and **Client Secret** in **Settings > Cloud Providers > Google Drive**.
 
-To create your own credentials:
+#### Creating your own Google Cloud OAuth credentials (step by step)
 
-1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
-2. Create a project and enable the **Google Drive API**.
-3. Under **Credentials**, create an **OAuth 2.0 Client ID** of type "Desktop app".
-4. Copy the Client ID and Client Secret into AeroFTP's settings.
+**1. Create a project**
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and sign in.
+2. Click **Select a project** (top left) then **New project**.
+3. Name it (for example `AeroFTP-Drive`), select an organization if applicable, and click **Create**.
+
+**2. Enable the Google Drive API**
+
+1. Open **APIs & Services > Library**.
+2. Search for **Google Drive API**, select it, and click **Enable**.
+
+**3. Configure the OAuth consent screen**
+
+1. Open **APIs & Services > OAuth consent screen**.
+2. Choose the user type: **External** (personal use) or **Internal** (Google Workspace).
+3. Fill in the app information: **App name** (AeroFTP), **User support email** (your address), **Developer contact information** (your address). Authorized domains can stay empty for personal use.
+4. Under **Scopes**, click **ADD OR REMOVE SCOPES** and select `.../auth/drive` (full access) or `.../auth/drive.file` (only files AeroFTP creates).
+5. Save and continue. For an External app in testing, add your Google account under **Test users**.
+
+**4. Create the OAuth client ID**
+
+1. Open **APIs & Services > Credentials**.
+2. Click **Create credentials > OAuth client ID**.
+3. Select **Web application** as the type.
+4. Under **Authorized redirect URIs**, add `http://127.0.0.1` (AeroFTP handles the port automatically).
+5. Click **Create** and copy the **Client ID** and **Client Secret**.
+6. Paste both into **Settings > Cloud Providers > Google Drive** in AeroFTP.
+
+> The full `.../auth/drive` scope gives AeroFTP access to all Drive files; `.../auth/drive.file` restricts it to files AeroFTP itself creates or opens. Choose the narrower scope if you only use AeroFTP for its own uploads.
 
 ## File Browsing
 
@@ -131,6 +156,10 @@ aeroftp ls --profile "Google Drive" / -l --json
 | Files show 0 bytes | Google Workspace files (Docs, Sheets) have no binary size | This is normal -- these files are exported on download |
 | Cannot delete files | Insufficient permissions on a Shared Drive | Verify your access level on the Shared Drive in Google Drive's web interface |
 | Token refresh fails | OAuth tokens revoked or expired | Disconnect and reconnect to Google Drive to re-authorize |
+| `invalid_client` | Wrong custom Client ID/Secret, or the OAuth client is not a "Web application" | Re-check the Client ID and Secret, and confirm the OAuth client type is **Web application** |
+| `redirect_uri_mismatch` | `http://127.0.0.1` is missing from the authorized redirect URIs, or AeroFTP was not running during authorization | Add `http://127.0.0.1` under the OAuth client's **Authorized redirect URIs** and keep AeroFTP open while authorizing |
+| `access_denied` | **Allow** was not clicked on the consent screen, or the Google account lacks Drive access / is not a registered test user | Re-run the flow and click **Allow**; for an External app in testing add the account under **Test users** |
+| Large-file upload stalls or daily-limit error | Google Drive enforces a ~750 GB/day upload ceiling per account | Spread very large transfers across days; AeroFTP already uses resumable sessions for files over 5 MB |
 
 ## Tips
 
