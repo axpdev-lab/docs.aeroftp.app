@@ -20,6 +20,9 @@ export default defineConfig({
     ['link', { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicon-96x96.png' }],
     ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }],
     ['link', { rel: 'manifest', href: '/manifest.webmanifest' }],
+    // Standard PWA meta (Chrome/Android). Resolves the DevTools deprecation
+    // warning for the apple- prefixed tag, which is kept for older iOS Safari.
+    ['meta', { name: 'mobile-web-app-capable', content: 'yes' }],
     ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }],
     ['meta', { name: 'apple-mobile-web-app-title', content: 'AeroFTP Docs' }],
