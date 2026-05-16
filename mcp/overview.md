@@ -70,23 +70,23 @@ The MCP server exposes the following curated tools (names use the `aeroftp_` pre
 
 | Tool | Description |
 |------|-------------|
-| `list_servers` | List saved server profiles (names + protocol + tags + per-profile `auth_state` - never credentials). Supports a `filter` arg |
-| `mcp_info` | Server capabilities, version, supported protocols |
-| `server_info` | Connect to a profile and return server/protocol metadata |
+| `list_servers` | List saved server profiles from the encrypted vault (names + protocol + tags + per-profile `auth_state` - never credentials). Supports a `filter` arg |
+| `mcp_info` | Diagnostics about the running MCP process: version, supported protocols, capabilities |
 | `agent_connect` | Single-shot connect surface (added v3.6.6): one JSON envelope with `connect` + `capabilities` + `quota` + `path` blocks, replacing the boilerplate sequence `connect → about → df → ls /` |
-| `list_files` | List files and directories at a given path |
+| `list_files` | List files and directories at a given path. Pagination, sort, files-only / dirs-only filters |
 | `read_file` | Read text file content. `preview_kb` argument for soft-truncation (added v3.5.9) |
 | `file_info` | File or directory metadata (size, mtime, permissions, hash) |
-| `file_versions` | List historical versions where the protocol supports them |
-| `search_files` | Search files by name pattern (glob) |
+| `search_files` | Search files by name pattern (glob), with pagination and sort |
 | `storage_quota` | Storage quota (used/free/total) |
-| `checksum` / `hashsum` | Compute SHA-256 / SHA-1 / MD5 / BLAKE3 on a remote file (alias: `hashsum`, added v3.5.9) |
-| `head_file` / `tail_file` | First or last N lines of a remote text file (added v3.5.9) |
+| `hashsum` | Streamed SHA-256 / SHA-1 / MD5 / BLAKE3 of a remote file (alias: `checksum`, added v3.5.9) |
+| `head` / `tail` | First or last N lines of a remote UTF-8 text file, default 50, cap 10000 (added v3.5.9) |
 | `tree` | Recursive directory tree, depth-capped (added v3.5.9) |
 | `check_tree` | Categorized local-vs-remote diff. `compare_method` argument supports `size` / `mtime` / `checksum` (added v3.6.0). Per-group caps `max_match` / `max_differ` / `max_missing_local` / `max_missing_remote` and `omit_match` switch (added v3.7.0) |
 | `sync_doctor` | Preflight risk summary with `suggested_next_command`. Lighter than `sync_tree dry_run=true` (added v3.7.0) |
 | `reconcile` | Categorized size-only diff variant of `check_tree` with `elapsed_secs` and `suggested_next_command` (added v3.7.0) |
 | `dedupe` | SHA-256 duplicate detection grouped per size, modes `newest` / `oldest` / `largest` / `smallest` / `list`, dry-run by default (added v3.7.0) |
+| `debug_snapshot` | Static diagnostic snapshot: host / runtime info plus the last N redacted `aeroftp.log` lines |
+| `debug_run_test` | Run one self-contained diagnostic probe (e.g. `known_hosts`) and return its result |
 
 ### Medium Tools (Write Operations)
 
@@ -97,22 +97,22 @@ The MCP server exposes the following curated tools (names use the `aeroftp_` pre
 | `upload_many` | Batch upload from a `files: []` array (mirrors CLI `--files-from`). Returns per-file `status` (uploaded / skipped / error). Added v3.5.10 |
 | `create_directory` | Create a remote directory |
 | `rename` | Rename or move a file or directory |
-| `server_copy` | Server-side copy (when supported by the protocol) |
-| `create_share_link` | Generate a share link with optional password/expiry |
-| `edit` | Find and replace in a remote text file (download → edit → upload). Added v3.5.10 |
+| `edit` | Find and replace in a remote text file without downloading it locally (added v3.5.10) |
 | `sync_tree` | Plan and execute a directory sync. Returns `plan[]` (per-file decision) and `plan_by_op` with caps; supports `dry_run` and pool-invalidate fix on apply |
 | `transfer` / `transfer_tree` | Cross-profile copy: single file or recursive directory between two saved profiles. Source and destination provider opened once and reused for the whole batch (added v3.7.0) |
 | `touch` | Create an empty file at a remote path, or report `action: "exists"` (added v3.7.0) |
 | `speed` | Throughput probe: random payload upload + download + SHA-256 integrity + cleanup. Caps 4 MiB default / 64 MiB max, iterations 1..3 (added v3.7.0) |
+| `benchmark` | Run the AeroFTP community benchmark suite against a saved profile and return the schema-v1 JSON report |
 | `close_connection` | Close the current pooled connection (forces reconnect on next call) |
 
 ### High Tools (Destructive)
 
 | Tool | Description |
 |------|-------------|
-| `delete` | Permanently delete a remote file or directory |
+| `delete` | Permanently delete one or more remote entries (supports `recursive`) |
 | `delete_many` | Batch delete from an explicit list. Per-item `status` reporting |
 | `cleanup` | BFS scan for orphan `.aerotmp` partial-transfer files. Dry-run by default; deletes only when explicitly asked. Caps 100 k entries / depth 100 (added v3.7.0) |
+| `server_exec` | Execute a vault-backed server operation without exposing credentials to the model |
 
 ## Rate Limits
 
@@ -120,8 +120,8 @@ The MCP server enforces per-category rate limits to prevent runaway operations:
 
 | Category | Limit | Tools |
 |----------|-------|-------|
-| **Read** | 60/min | list_servers, list_files, read_file, file_info, search_files, storage_quota, checksum, check_tree, server_info, mcp_info, file_versions |
-| **Write** | 30/min | upload_file, upload_many, download_file, create_directory, rename, server_copy, edit, sync_tree, create_share_link |
+| **Read** | 60/min | list_servers, list_files, read_file, file_info, search_files, storage_quota, hashsum, head, tail, tree, check_tree, reconcile, sync_doctor, dedupe, mcp_info, agent_connect |
+| **Write** | 30/min | upload_file, upload_many, download_file, create_directory, rename, edit, sync_tree, transfer, transfer_tree, touch, speed, benchmark |
 | **Delete** | 10/min | delete, delete_many |
 
 When a rate limit is exceeded, the server returns an error with a `retry_after` hint.
