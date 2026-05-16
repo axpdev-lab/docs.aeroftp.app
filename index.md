@@ -19,7 +19,7 @@ features:
       src: /icons/protocols.svg
       alt: Protocols
     title: Multi-Protocol
-    details: 7 transport protocols + 25+ native provider integrations + 45+ pre-configured presets - all native, no shellouts.
+    details: 7 transport protocols + 20+ native provider integrations + 40+ pre-configured presets - all native, no shellouts.
   - icon:
       src: /icons/agent.svg
       alt: AeroAgent
@@ -58,7 +58,7 @@ import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
 <p align="center">AeroFTP organizes integrations on three tiers, so the catalog is precise rather than vague:</p>
 
 <p align="center">
-  <strong>7 transport protocols</strong> &middot; <strong>25+ native provider integrations</strong> &middot; <strong>45+ pre-configured presets</strong>
+  <strong>7 transport protocols</strong> &middot; <strong>20+ native provider integrations</strong> &middot; <strong>40+ pre-configured presets</strong>
 </p>
 
 <p align="center">
