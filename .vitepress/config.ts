@@ -294,6 +294,13 @@ export default defineConfig({
           ],
         },
         {
+          text: 'Architecture',
+          collapsed: true,
+          items: [
+            { text: 'DAG Transfer Engine', link: '/architecture/dag-transfer-engine' },
+          ],
+        },
+        {
           text: 'Advanced',
           collapsed: true,
           items: [
