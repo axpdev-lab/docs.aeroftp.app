@@ -187,7 +187,7 @@ AeroVault and AeroFTP-Crypt are two different shapes for two different needs, an
 | Shape | Single sealed file, OS-integrated MIME type, double-clickable | Streaming per-file overlay on top of any provider profile |
 | Granularity | Whole-container operation, manifest indexes all entries | Per-file: each remote object is independently encrypted |
 | Best for | Sharing several files as one bundle (email, instant messenger, USB stick, cold-storage snapshot) | Ongoing folder mirror on a provider you do not trust at rest |
-| Visibility | Browseable in AeroFTP and (for v3) addressable through the vault commands | Cleartext through a Mount Manager mount; encrypted blobs if you open the underlying provider panel directly |
+| Visibility | Browseable in AeroFTP and (for v3) addressable through the vault commands | Cleartext through an AeroMount mount; encrypted blobs if you open the underlying provider panel directly |
 | Single-file aspect | Yes (the load-bearing feature) | No |
 | Format owner | AeroFTP (v2 and v3 specs) | AeroFTP (CLI-defined `.aeroftp-crypt.json` config + per-file AES-256-GCM with HKDF-derived keys) |
 

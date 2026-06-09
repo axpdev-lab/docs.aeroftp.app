@@ -1,22 +1,22 @@
-# Mount Manager
+# AeroMount
 
-The Mount Manager is AeroFTP's persistent mount registry. Save any saved server profile as a reusable mount configuration, mount and unmount with a single click, open the mount in your OS file manager, and optionally have AeroFTP attach the mount automatically on system login.
+AeroMount is AeroFTP's persistent mount registry (also called the Mount Manager). Save any saved server profile as a reusable mount configuration, mount and unmount with a single click, open the mount in your OS file manager, and optionally have AeroFTP attach the mount automatically on system login.
 
-The Mount Manager is reachable from three places:
+AeroMount is reachable from three places:
 
-- **File menu** -> **Mount Manager...**
-- **My Servers** toolbar (Mount Manager button)
+- **File menu** -> **AeroMount...**
+- **My Servers** toolbar (AeroMount button)
 - The **address bar** of any connected remote, via the mount glyph next to the path
 
-> The Mount Manager wraps `aeroftp-cli mount` (FUSE on Linux / macOS, WebDAV bridge on Windows) and `aeroftp-cli daemon` for autostart. Every mount you save in the GUI works identically from the CLI; no GUI is required to attach a mount.
+> AeroMount wraps `aeroftp-cli mount` (FUSE on Linux / macOS, WebDAV bridge on Windows) and `aeroftp-cli daemon` for autostart. Every mount you save in the GUI works identically from the CLI; no GUI is required to attach a mount.
 
-![Mount Manager dialog](/images/mount-manager.png)
+![AeroMount dialog](/images/mount-manager.png)
 
 The header carries the **Sidecar** / **Vault** toggle that decides where the registry lives, and a refresh button that re-reads the config from disk. Saved mounts (here, **MEGA Dev**) appear as one-row entries with inline Mount, Edit, and Delete actions. The lower **NEW MOUNT** card is the inline editor: pick a saved profile (here, **OpenDrive** is selected from the filterable profile list), set a display name, the remote base path, the local mountpoint, the metadata cache TTL, and the three flags **Mount read-only**, **Allow other system users**, and **Mount automatically on startup**.
 
 ## Saved Mount Configurations
 
-Each row in the Mount Manager represents a complete mount configuration that survives across launches. Click **+ Add Mount** to open the inline editor; click the pencil icon on any existing row to edit it.
+Each row in AeroMount represents a complete mount configuration that survives across launches. Click **+ Add Mount** to open the inline editor; click the pencil icon on any existing row to edit it.
 
 | Field in the editor | Purpose |
 |---------------------|---------|
@@ -35,7 +35,7 @@ On Windows, an inline **Pick free drive letter** helper scans the system for the
 
 ## Where Mount Configs Are Stored
 
-The dialog header carries a single **Sidecar / Vault** toggle that decides where the mount registry lives. The active mode is shown right under the **Mount Manager** title (in the screenshot above, **Sidecar**):
+The dialog header carries a single **Sidecar / Vault** toggle that decides where the mount registry lives. The active mode is shown right under the **AeroMount** title (in the screenshot above, **Sidecar**):
 
 - **Sidecar JSON** (default, daemon-friendly) -> a plaintext JSON file alongside the user config. This is the right choice when `aeroftp-cli daemon` runs as a system or user service: the daemon does not need vault unlock to read the mount list.
 - **Encrypted vault** -> the registry is stored inside the AeroFTP vault and is decrypted on demand whenever the dialog is opened.
@@ -69,7 +69,7 @@ The 800 ms grace window matters: opening the file manager too eagerly leaves it 
 Mounts inherit their credentials from the GUI's vault automatically:
 
 ```
-Mount Manager row
+AeroMount row
    |
    v
 aeroftp-cli mount --profile <name> ...
@@ -78,7 +78,7 @@ aeroftp-cli mount --profile <name> ...
 CredentialStore (vault.db) -> resolved at mount time, never written to disk in plaintext
 ```
 
-Because the CLI shares the same Rust backend as the GUI, opening a mount from the Mount Manager and starting the same mount from a terminal produce byte-for-byte identical processes. There is no second credential store; there is no GUI-only auth path.
+Because the CLI shares the same Rust backend as the GUI, opening a mount from AeroMount and starting the same mount from a terminal produce byte-for-byte identical processes. There is no second credential store; there is no GUI-only auth path.
 
 > See [credential isolation](/credential-isolation) for the vault model that makes this work without leaking secrets into the mount registry, the systemd unit, or the Task Scheduler entry.
 
@@ -96,7 +96,7 @@ All [supported integrations](/features/aerocloud#supported-integrations) that ex
 
 **Mountpoint busy on Linux** -> a previous run did not unmount cleanly. Run `fusermount -u <mountpoint>` (or `umount -l <mountpoint>` if FUSE is wedged) and try again.
 
-**Drive letter already taken on Windows** -> use the **Pick free drive letter** helper or pick a letter manually. The Mount Manager refuses to clobber an existing assignment.
+**Drive letter already taken on Windows** -> use the **Pick free drive letter** helper or pick a letter manually. AeroMount refuses to clobber an existing assignment.
 
 **Auto-start unit does not fire on Linux** -> confirm `systemctl --user is-enabled aeroftp-mount-<id>.service`. Lingering must be enabled (`loginctl enable-linger <user>`) for the mount to come up before login on headless boxes.
 
