@@ -47,7 +47,7 @@ The MEGAcmd WebDAV server does not enforce HTTP Basic auth - the local listener 
 
 ## Tips
 
-- For Mount Manager use, point the [Mount Manager](/features/mount-manager) at the saved profile so the mountpoint is persistent and can autostart with the rest of your AeroFTP mounts.
+- For AeroMount use, point [AeroMount](/features/mount-manager) at the saved profile so the mountpoint is persistent and can autostart with the rest of your AeroFTP mounts.
 - For backup workflows, AeroSync's bandwidth control and verification policies work the same way through MEGAcmd as they do through the native MEGA provider, but throughput is generally lower because every request goes through MEGAcmd's local proxy.
 - If the connection silently drops, check the MEGAcmd daemon log (`~/.megaCmd/megacmd.log` on Linux) for sign-in expiry messages.
 

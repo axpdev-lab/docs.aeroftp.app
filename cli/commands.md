@@ -436,7 +436,7 @@ Use this when both endpoints are already stored as AeroFTP profiles. `transfer-d
 
 Mount any remote as a local FUSE filesystem. Any application can access remote files with standard tools.
 
-> The GUI [Mount Manager](/features/mount-manager) (v3.7.1) wraps this command with a persistent registry: save mount configs (profile, remote path, mountpoint, read-only, cache TTL, allow-other, autostart) once and mount them with a single click. Autostart installs systemd-user units on Linux and Task Scheduler ONLOGON entries on Windows. The registry can live in a daemon-friendly sidecar JSON or in the encrypted vault.
+> The GUI [AeroMount](/features/mount-manager) (v3.7.1) wraps this command with a persistent registry: save mount configs (profile, remote path, mountpoint, read-only, cache TTL, allow-other, autostart) once and mount them with a single click. Autostart installs systemd-user units on Linux and Task Scheduler ONLOGON entries on Windows. The registry can live in a daemon-friendly sidecar JSON or in the encrypted vault.
 
 ```bash
 # Mount S3 as local directory

@@ -240,7 +240,7 @@ export default defineConfig({
               items: [
                 { text: 'Delta Sync', link: '/features/delta-sync' },
                 { text: 'aerorsync', link: '/features/aerorsync' },
-                { text: 'Mount Manager', link: '/features/mount-manager' },
+                { text: 'AeroMount', link: '/features/mount-manager' },
               ],
             },
             {
