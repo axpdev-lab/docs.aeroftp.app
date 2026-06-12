@@ -257,19 +257,18 @@ struct MultipartCtx {
 
 1. **Lock `MultipartCtx::handle`.** If the slot is empty, this is
    the first part to enter the runner: open the session through
-   `provider.begin_multipart_upload(remote, total_size,
-   Some(content_type))`. Subsequent invocations see an initialized
-   handle and skip the call.
+   `provider.begin_multipart_upload(remote, total_size, Some(content_type))`.
+   Subsequent invocations see an initialized handle and skip the call.
 
-2. **Read the part's slice from disk.** The offset is `(part_number
-   - 1) * part_size`; the length is the lesser of `part_size` and
-   `total_size - offset` (the last part may be smaller). The runner
-   opens a fresh `tokio::fs::File`, seeks, and `read_exact`s into a
-   `Vec<u8>`.
+2. **Read the part's slice from disk.** The offset is
+   `(part_number - 1) * part_size`; the length is the lesser of
+   `part_size` and `total_size - offset` (the last part may be smaller).
+   The runner opens a fresh `tokio::fs::File`, seeks, and `read_exact`s
+   into a `Vec<u8>`.
 
-3. **Upload the part.** Calls `provider.upload_part(&handle,
-   part_number, data)`. The returned `UploadedPart` receipt is
-   pushed to `MultipartCtx::parts`.
+3. **Upload the part.** Calls
+   `provider.upload_part(&handle, part_number, data)`. The returned
+   `UploadedPart` receipt is pushed to `MultipartCtx::parts`.
 
 ### Lifecycle of `CommitTemp`
 
