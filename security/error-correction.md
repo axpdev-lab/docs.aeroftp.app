@@ -87,19 +87,19 @@ The `aeroftp-cli correct` subcommand protects any file, vault or not:
 
 ```bash
 # Generate a detached recovery sidecar (writes report.bin.aerocorrect)
-$ aeroftp correct gen report.bin --ec medium
+$ aeroftp-cli correct gen report.bin --ec medium
 Wrote report.bin.aerocorrect (31543 bytes, 1 segment(s), 15 shards, 15.5% overhead) for report.bin
 
 # Verify without modifying the file
-$ aeroftp correct verify report.bin
+$ aeroftp-cli correct verify report.bin
 Verified: report.bin matches report.bin.aerocorrect
 
 # ...after a 4 KiB run in report.bin is overwritten with zeros...
-$ aeroftp correct verify report.bin
+$ aeroftp-cli correct verify report.bin
 Corruption detected in report.bin: run `correct repair` to recover from report.bin.aerocorrect
 
 # Repair in place from the sidecar
-$ aeroftp correct repair report.bin
+$ aeroftp-cli correct repair report.bin
 Repaired report.bin from report.bin.aerocorrect (1 shard(s) reconstructed)
 ```
 
@@ -109,20 +109,20 @@ A vault can be created with error correction enabled, scrubbed (verified) on dem
 
 ```bash
 # Create an Error Correction vault at a chosen overhead level
-aeroftp vault create secret.aerovault --error-correction --recovery-level medium
+aeroftp-cli vault create secret.aerovault --error-correction --recovery-level medium
 
 # Verify the container against its parity (embedded or sidecar)
-aeroftp vault scrub secret.aerovault
+aeroftp-cli vault scrub secret.aerovault
 
 # Repair damaged regions; --dry-run reports without writing
-aeroftp vault repair secret.aerovault
-aeroftp vault repair secret.aerovault --dry-run
+aeroftp-cli vault repair secret.aerovault
+aeroftp-cli vault repair secret.aerovault --dry-run
 
 # Write or refresh a detached sidecar for an existing vault, without rewriting the container
-aeroftp vault export-parity secret.aerovault
+aeroftp-cli vault export-parity secret.aerovault
 
 # Drop the embedded parity copy (refuses unless a sidecar exists, or --force)
-aeroftp vault strip-parity secret.aerovault
+aeroftp-cli vault strip-parity secret.aerovault
 ```
 
 `export-parity` is the add-later win: it reads the encrypted container and writes a sidecar without rewriting the vault, so you can enable recovery on a container that was sealed without it. `strip-parity` refuses to leave a vault with no recovery at all unless you pass `--force`. For scrub and repair the parity source resolves in order: an explicit `--parity` path, then the `<vault>.aerocorrect` sidecar, then the embedded extension; the chosen source is reported.
@@ -133,10 +133,10 @@ AeroSync shares the same `.aerocorrect` sidecar and overhead levels. Enable it o
 
 ```bash
 # Generate sidecars alongside the synced files
-aeroftp sync ./local remote:backup --error-correction
+aeroftp-cli sync ./local remote:backup --error-correction
 
 # Cap the parity overhead a small file is allowed to add (skips parity below the benefit threshold)
-aeroftp sync ./local remote:backup --error-correction --ec-max-overhead 25
+aeroftp-cli sync ./local remote:backup --error-correction --ec-max-overhead 25
 ```
 
 A bit-rotted remote backup is then repaired on the next pull from its sidecar, without needing the original.
@@ -158,6 +158,6 @@ Generation and repair run in **64 MiB windows** and read sidecar parity on deman
 
 ## Specifications
 
-- [`AEROCORRECT-SPEC.md`](https://github.com/axpnet/aerovault/blob/main/docs/AEROCORRECT-SPEC.md) is the full v2 binary layout for the detached sidecar.
+- [`AEROCORRECT-SPEC.md`](https://github.com/axpdev-lab/aerovault/blob/main/docs/AEROCORRECT-SPEC.md) is the full v2 binary layout for the detached sidecar.
 - [`AEROVAULT-V3-SPEC.md`](https://github.com/axpdev-lab/aeroftp/blob/main/docs/AEROVAULT-V3-SPEC.md) section 11 covers the vault-side placement and the `v3 + error correction = v4` evolution.
 - [The AeroFTP Wrapper Stack](/security/wrapper-stack) is the intuition for why error correction is the fourth wrapper and where it sits in the pipeline.
