@@ -6,7 +6,7 @@ AeroVault is a standalone Rust crate for creating and managing encrypted vault c
 
 - **crates.io**: [aerovault](https://crates.io/crates/aerovault)
 - **docs.rs**: [aerovault](https://docs.rs/aerovault)
-- **Source**: [github.com/axpnet/aerovault](https://github.com/axpnet/aerovault)
+- **Source**: [github.com/axpdev-lab/aerovault](https://github.com/axpdev-lab/aerovault)
 - **License**: GPL-3.0
 
 ## Installation
@@ -240,7 +240,7 @@ fn protect_and_repair() -> Result<(), Box<dyn std::error::Error>> {
 | `correct_verify(path, parity)` | Check the file against its sidecar without modifying it |
 | `correct_repair(path, parity)` | Reconstruct damaged regions in place, fail-closed |
 
-Generation and repair run in 64 MiB windows and read parity on demand, so memory is bounded regardless of file size (the sidecar is capped at 1 GiB). Overhead levels map to storage targets: `low` ~7%, `medium` ~15%, `quartile` ~25%, `high` ~30%, or a numeric 5-50%. The full binary layout is in [`AEROCORRECT-SPEC.md`](https://github.com/axpnet/aerovault/blob/main/docs/AEROCORRECT-SPEC.md). For the application-level operational surface (vault scrub/repair, sync sidecars), see [Error Correction (`.aerocorrect`)](/security/error-correction).
+Generation and repair run in 64 MiB windows and read parity on demand, so memory is bounded regardless of file size (the sidecar is capped at 1 GiB). Overhead levels map to storage targets: `low` ~7%, `medium` ~15%, `quartile` ~25%, `high` ~30%, or a numeric 5-50%. The full binary layout is in [`AEROCORRECT-SPEC.md`](https://github.com/axpdev-lab/aerovault/blob/main/docs/AEROCORRECT-SPEC.md). For the application-level operational surface (vault scrub/repair, sync sidecars), see [Error Correction (`.aerocorrect`)](/security/error-correction).
 
 ## File Format
 
@@ -250,7 +250,7 @@ The `.aerovault` format consists of:
 2. **Manifest** - AES-SIV encrypted JSON index of all entries (filenames, sizes, offsets, timestamps)
 3. **Data blocks** - AES-256-GCM-SIV encrypted chunks (64 KB each), optionally double-encrypted with ChaCha20-Poly1305 in cascade mode
 
-The format specification is available in the [GitHub repository](https://github.com/axpnet/aerovault).
+The format specification is available in the [GitHub repository](https://github.com/axpdev-lab/aerovault).
 
 ## Cross-Platform Implementations
 
