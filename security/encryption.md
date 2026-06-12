@@ -10,6 +10,7 @@ AeroFTP applies encryption across several distinct layers:
 | ----- | ------- | ----------------- |
 | AeroVault v2 | Stable encrypted file containers (default) | AES-256-GCM-SIV (RFC 8452) |
 | AeroVault v3 (Experimental) | Wrapper-stack container with content-defined chunking, dedup and per-chunk zstd | AES-256-GCM-SIV (RFC 8452) over zstd chunks |
+| AeroVault v4 error correction | Detached `.aerocorrect` recovery sidecar over the ciphertext (repair, not confidentiality) | Reed-Solomon parity, SHA-256 content binding |
 | AeroFTP-Crypt overlay | Streaming per-file encryption on top of any provider profile | AES-256-GCM with HKDF-derived per-file keys |
 | Archive encryption | Password-protected ZIP/7z | AES-256 |
 | rclone crypt interoperability | Compatibility decryption for existing remotes | XSalsa20-Poly1305 content + standard filename decryption |
@@ -121,7 +122,7 @@ Every wrapper layer carries both an algorithm id and an algorithm version. Reade
 | `compression` | `zstd` | 1 | Per chunk, profile-selected level: `fast=3`, `balanced=9` (default), `archive=19` |
 | `crypt` | `aes-256-gcm-siv` | 1 | RFC 8452, 96-bit random nonce per chunk, AAD bound to block index + chunk id |
 | `cipher_hash` | `blake3-256` | 1 | Stored per block, verified before decryption (also the hook point for v4 ECC scrub) |
-| `ecc` | absent in v3 | reserved | Extension slot reserved for the v4 recovery layer |
+| `ecc` | absent in v3, `reed-solomon` in v4 | 2 | Non-critical extension; v4 fills the slot v3 reserves |
 
 ### Key schedule
 
@@ -161,14 +162,16 @@ A handful of size caps prevent the simplest resource-exhaustion shapes against a
 
 These do not replace a hardened deserializer, but they make the easy "give the reader a 10 GB manifest and watch it OOM" pattern not work.
 
-### Forward-compatibility with v4 (ECC)
+### Error correction (v4, shipped)
 
-v4 is intentionally shaped as "v3 plus ECC". The cipher chain (chunk → compress → encrypt) and the chunk hash trail (keyed BLAKE3-128 for dedup, BLAKE3-256 for pre-decryption integrity) do not change for v4. The remaining work is:
+v4 is intentionally shaped as "v3 plus ECC". The cipher chain (chunk → compress → encrypt) and the chunk hash trail (keyed BLAKE3-128 for dedup, BLAKE3-256 for pre-decryption integrity) do not change for v4. The error-correction wrapper ships as:
 
-1. Pick the ECC scheme. Three candidates are on the table: Reed-Solomon over chunks, Parchive-style recovery blocks, or a hybrid (RS within a block group, Parchive across groups). The right granularity depends on the failure modes users actually hit on cold media (USB, NAS, optical).
-2. Implement the chosen scheme as a non-critical extension. No refactor of v3 primitives.
-3. Wire the scrub path: on open, walk the manifest, recompute the per-block cipher hash, identify damaged blocks, pull recovery data from the ECC extension, repair, and re-verify. The cipher hash is stored per block precisely so damaged ciphertext can be detected before decryption.
-4. Surface "X damaged blocks, parity reserve Y %, recovered Z, lost W" in a dedicated repair dialog rather than silently fix.
+1. **Reed-Solomon parity**, carried as a non-critical extension. No refactor of v3 primitives, so a v3-only reader skips it and still opens the container.
+2. **A detached, content-addressed `.aerocorrect` sidecar** as the default placement (`embedded` and `both` are also available), shared byte-for-byte with the standalone `aerovault` crate and with AeroSync. The sidecar binds to the SHA-256 of the protected content and its v2 framing is self-healing.
+3. **The scrub path**: on open, walk the manifest, recompute the per-block cipher hash, identify damaged blocks, pull recovery data from the parity source, repair, and re-verify. The cipher hash is stored per block precisely so damaged ciphertext can be detected before decryption.
+4. **Fail-closed, all-or-nothing repair**: every reconstructed region is re-verified against the container's authenticated values (header MAC and manifest `cipher_hash`) before the vault is re-sealed, so a foreign or corrupt sidecar can only make a repair fail, never overwrite good data. A dedicated repair dialog surfaces damaged-block, recovered, and lost counts rather than silently fixing.
+
+The operational surface is `vault scrub` / `vault repair` / `vault export-parity` / `vault strip-parity` plus the standalone `aeroftp correct gen|verify|repair`. See [Error Correction (`.aerocorrect`)](/security/error-correction) for the full guide.
 
 ### AEAD primitive selection
 
