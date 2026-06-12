@@ -15,7 +15,7 @@ AeroVault is a standalone Rust crate for creating and managing encrypted vault c
 
 ```toml
 [dependencies]
-aerovault = "0.3.4"
+aerovault = "0.5.0"
 ```
 
 Or via cargo:
@@ -30,7 +30,18 @@ cargo add aerovault
 cargo install aerovault-cli
 ```
 
-The CLI provides commands for creating, opening, listing, adding, extracting, moving, renaming, copying, and managing vault files from the terminal.
+The CLI provides commands for creating, opening, listing, adding, extracting, moving, renaming, copying, and managing vault files from the terminal. Since 0.5.0 it also exposes the `correct` subcommand for generating, verifying, and repairing detached `.aerocorrect` recovery sidecars:
+
+```bash
+# Generate a detached recovery sidecar for any file (writes <file>.aerocorrect)
+aerovault correct gen my-vault.aerovault --ec medium
+
+# Verify without modifying the file
+aerovault correct verify my-vault.aerovault
+
+# Repair in place from my-vault.aerovault.aerocorrect
+aerovault correct repair my-vault.aerovault
+```
 
 ## Cryptographic Features
 
@@ -42,8 +53,13 @@ The CLI provides commands for creating, opening, listing, adding, extracting, mo
 | Filename encryption | AES-256-SIV | Deterministic filename encryption |
 | Header integrity | HMAC-SHA512 | Tamper detection on vault header |
 | Cascade mode | ChaCha20-Poly1305 | Optional second encryption layer for defense-in-depth |
+| Error correction | Reed-Solomon parity sidecar (`.aerocorrect` v2) | Detached, content-addressed, self-healing recovery from bit rot |
 
 Data is encrypted in 64 KB chunks for an optimal balance between security and performance.
+
+::: tip Container format
+Since 0.4.0 the crate writes the **v3** container, which binds a per-file 16-byte `file_id` into the chunk AAD to prevent chunk splicing and reordering. Existing **v2** containers stay fully supported (read, write, and in-place re-encrypt); the cryptographic stack above is shared by both.
+:::
 
 ## Encryption Modes
 
@@ -193,6 +209,38 @@ CreateOptions::new(path, password)
     .with_mode(EncryptionMode::Cascade)   // Default: AesGcmSiv
     .with_chunk_size(65536)               // Default: 65536 (64 KB)
 ```
+
+## Error Correction (`.aerocorrect`)
+
+Since 0.5.0 the crate ships the unified `.aerocorrect` Reed-Solomon recovery sidecar: a detached, content-SHA-bound recovery file for any byte stream. It protects `.aerovault` containers or ordinary files, repair is atomic and all-or-nothing, and the format v2 sidecar is self-healing so a lightly-corrupted recovery file still recovers. The format is shared byte-for-byte with AeroFTP v4, pinned by a cross-implementation fixture.
+
+```rust
+use aerovault::{correct_generate, correct_repair, correct_verify};
+
+fn protect_and_repair() -> Result<(), Box<dyn std::error::Error>> {
+    // Generate a sidecar at ~15% overhead (None = default level)
+    let report = correct_generate("my-vault.aerovault", 15, None)?;
+    println!("wrote {}", report.sidecar);
+
+    // Verify against the bound content hash
+    let verified = correct_verify("my-vault.aerovault", None)?;
+    if !verified.verified {
+        // Repair is fail-closed: the rebuilt stream is re-verified
+        // against the bound SHA-256 before the original is replaced
+        let repaired = correct_repair("my-vault.aerovault", None)?;
+        println!("status: {}", repaired.status);
+    }
+    Ok(())
+}
+```
+
+| Function | Description |
+|----------|-------------|
+| `correct_generate(path, overhead_pct, parity)` | Write a `.aerocorrect` sidecar for the file |
+| `correct_verify(path, parity)` | Check the file against its sidecar without modifying it |
+| `correct_repair(path, parity)` | Reconstruct damaged regions in place, fail-closed |
+
+Generation and repair run in 64 MiB windows and read parity on demand, so memory is bounded regardless of file size (the sidecar is capped at 1 GiB). Overhead levels map to storage targets: `low` ~7%, `medium` ~15%, `quartile` ~25%, `high` ~30%, or a numeric 5-50%. The full binary layout is in [`AEROCORRECT-SPEC.md`](https://github.com/axpnet/aerovault/blob/main/docs/AEROCORRECT-SPEC.md). For the application-level operational surface (vault scrub/repair, sync sidecars), see [Error Correction (`.aerocorrect`)](/security/error-correction).
 
 ## File Format
 

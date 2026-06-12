@@ -151,6 +151,25 @@ The `.aerovault` binary format consists of three sections:
 
 AeroVault files are registered as a MIME type on all platforms with dedicated icons in 8 PNG sizes (16 px to 512 px), SVG, ICO, and ICNS. Double-clicking a `.aerovault` file opens it directly in AeroFTP via the deep-link handler, with single-instance argv forwarding for already-running instances.
 
+## AeroVault v3 and v4
+
+AeroVault v2 (described above) is the stable default. Two newer formats extend it without breaking it.
+
+**v3 (Experimental)** is the first wrapper-stack vault. It keeps the single-file `.aerovault` portability of v2 while adding content-defined chunking (Gear-CDC), per-chunk zstd compression, deduplication, and a forward-compatible extension directory. The write pipeline is chunk-first: chunk → keyed-BLAKE3 chunk id → zstd → AES-256-GCM-SIV → BLAKE3-256 cipher hash. It is gated behind the Experimental tier in the vault-create dialog; v2 stays the default and there is no automatic migration.
+
+**v4 = v3 + Error Correction.** v4 adds a fourth wrapper, Reed-Solomon parity, as a non-critical extension, so `v3 + ECC = v4` and a v3-only reader skips the parity it does not understand and still opens the container.
+
+### Error Correction
+
+Error correction repairs bit rot in a sealed vault before decryption: on USB sticks, consumer NAS disks, optical media, and cold-storage archives, a single bad sector is the difference between an encrypted backup surviving and being gone. It does not change confidentiality; AES-256-GCM-SIV remains the sole authority on tampering, and redundancy is strictly for recovery.
+
+- **Detached by default.** Parity lives in a sibling `.aerocorrect` recovery sidecar, so the container stays byte-identical to a plain v3 vault. `embedded` (parity inside the container) and `both` placements are also available.
+- **Content-addressed.** The sidecar binds to the SHA-256 of the protected content, not a path or salt, so it follows the file when you move, rename, or copy it. The same format protects ordinary files and synced backups, not just vaults.
+- **Self-healing.** The v2 sidecar framing stores its locator metadata in triplicate with per-copy checksums, so a lightly-corrupted recovery file still works.
+- **Fail-closed repair.** Rebuilt bytes are re-verified against the bound content hash and the vault's authenticated header MAC and manifest cipher hash before the original is replaced, so a corrupt or foreign sidecar can only make a repair fail, never overwrite good data.
+
+Create an Error Correction vault with `vault create --error-correction --recovery-level medium`, verify it with `vault scrub`, repair it with `vault repair`, and add or refresh a sidecar for an existing vault with `vault export-parity`. For the full operational guide, overhead levels, and the security model, see [Error Correction (`.aerocorrect`)](../security/error-correction.md) and the [Wrapper Stack](../security/wrapper-stack.md).
+
 ## Standalone Crate
 
 The AeroVault v2 encryption engine is published as a standalone Rust crate on [crates.io](https://crates.io/crates/aerovault), available for use in any Rust project. A companion CLI (`aerovault-cli`) provides 11 commands for creating, listing, adding, extracting, moving, renaming, copying, and managing vaults from the terminal.

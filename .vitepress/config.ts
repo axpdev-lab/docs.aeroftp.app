@@ -318,6 +318,7 @@ export default defineConfig({
             { text: 'Overview', link: '/security/overview' },
             { text: 'Encryption', link: '/security/encryption' },
             { text: 'Wrapper Stack', link: '/security/wrapper-stack' },
+            { text: 'Error Correction', link: '/security/error-correction' },
             { text: 'rclone crypt', link: '/features/rclone-crypt' },
             { text: 'Credentials', link: '/security/credentials' },
             { text: 'Credential Isolation', link: '/credential-isolation' },

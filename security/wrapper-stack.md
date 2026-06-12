@@ -30,7 +30,8 @@ plaintext
   -> chunking (content-defined boundaries; BLAKE3 chunk id; dedup index step)
   -> compression (per chunk)
   -> encryption (AEAD per chunk)
-  -> error correction (parity over cipher blocks)   [AeroVault v4 / dedicated track]
+  -> cipher hash (BLAKE3-256, pre-decryption integrity)
+  -> error correction (Reed-Solomon parity over cipher blocks)   [AeroVault v4]
   -> container / object store
 ```
 
@@ -56,17 +57,17 @@ Compression and chunking are both more effective the more data they can look at.
 
 A format that lives for years must be able to swap an algorithm without breaking older artifacts. Every wrapper layer carries an explicit `algorithm_id` and `algorithm_version` in the frame header; a reader dispatches on those fields instead of hard-coding primitives.
 
-| Wrapper | AeroVault v3 default | Version |
-| ------- | -------------------- | ------- |
+| Wrapper | AeroVault default | Version |
+| ------- | ----------------- | ------- |
 | `packing` | `small-file-batching` | 1 |
 | `chunking` | `gear-cdc` | 1 |
 | `chunk_id` | `blake3-keyed-128` | 1 |
 | `compression` | `zstd` | 1 |
 | `crypt` | `aes-256-gcm-siv` | 1 |
 | `cipher_hash` | `blake3-256` | 1 |
-| `ecc` | absent in v3 (reserved extension slot) | n/a |
+| `ecc` | `reed-solomon` (v4, non-critical extension) | 2 |
 
-v4 reuses the same header layout and only adds the `ecc` field, so **v3 + error correction = v4** and a v3-only build opens a v4 vault for the data it understands.
+v4 reuses the same header layout and only adds the `ecc` field, so **v3 + error correction = v4** and a v3-only build opens a v4 vault for the data it understands, skipping the non-critical parity extension it does not. The detached form of the parity lives in a sibling `.aerocorrect` sidecar.
 
 A teaching example most Linux users already have on disk: `.tar.gz` and `.pkg.tar.zst`. Both tape-archive (`tar`) before compressing. The Arch package format moved from an older compressor to Zstandard without changing the "archive then compress" shape: exactly the algorithm-versioning move applied to a real-world format.
 
@@ -103,14 +104,16 @@ A counter-intuitive point: the same word "chunk" hides two opposite RAM curves. 
 
 When an at-rest chunking wrapper produces the objects, a transfer-level chunk-size flag is redundant: the unit on the wire is already the wrapper's chunk. When both are set AeroFTP keeps the wrapper boundary authoritative and logs that the transfer flag is inert. The transfer flag stays useful only for the no-wrapper case (a plain large-file upload to a provider with a part-size sweet spot).
 
-## Error correction (AeroVault v4 / dedicated track)
+## Error correction (AeroVault v4)
 
-Error correction is the fourth wrapper, and it is structurally different: compression, chunking and encryption transform the data; error correction adds parity *alongside* it, so `v3 + ECC = v4` and a v3 reader simply skips the parity it does not understand. It sits as the outermost layer, over the cipher blocks. It repairs damage *before* decryption; AES-256-GCM-SIV remains the sole authority on tampering. Redundancy is for recovery, not for trust. On cloud backends durability is already redundant; on USB sticks, consumer NAS disks, optical media and cold-storage archives it is the difference between an encrypted backup surviving a bad sector and being gone. Candidate schemes (Reed-Solomon over chunks, Parchive-style recovery blocks, a hybrid) and the operational `scrub` / `repair` surface are tracked as `T-AEROVAULT-ECC` and are not part of v3.
+Error correction is the fourth wrapper, and it is structurally different: compression, chunking and encryption transform the data; error correction adds parity *alongside* it, so `v3 + ECC = v4` and a v3 reader simply skips the parity it does not understand. It sits as the outermost layer, over the cipher blocks. It repairs damage *before* decryption; AES-256-GCM-SIV remains the sole authority on tampering. Redundancy is for recovery, not for trust. On cloud backends durability is already redundant; on USB sticks, consumer NAS disks, optical media and cold-storage archives it is the difference between an encrypted backup surviving a bad sector and being gone.
+
+The scheme is **Reed-Solomon parity in a detached, par2-style `.aerocorrect` sidecar** that protects any byte stream: a `.aerovault` container, a synced backup file, or an ordinary file. It is content-addressed (it binds to the SHA-256 of the protected content, not a path or salt) and its v2 framing is self-healing, so a lightly-corrupted sidecar still recovers. Repair is fail-closed and all-or-nothing: rebuilt bytes are re-verified against the bound content hash (and, for a vault, its authenticated header MAC and manifest `cipher_hash`) before the original is replaced, so a foreign or corrupt sidecar can only make a repair fail, never overwrite good data. The operational surface is shipped: standalone `aeroftp correct gen|verify|repair`, vault `scrub` / `repair` / `export-parity` / `strip-parity`, and `sync --error-correction`. The full guide is [Error Correction (`.aerocorrect`)](/security/error-correction).
 
 ## Where this is today
 
 - **AeroVault v3 (Beta, opt-in):** packing, chunking, per-chunk zstd, per-chunk AES-256-GCM-SIV, BLAKE3 chunk id and cipher hash, the extension slot reserved for v4 ECC. The format stays Beta and is not the default tier until it has had a public spec review pass.
-- **AeroSync:** the streaming surface inherits the wrappers progressively; chunk-first ordering is non-negotiable there because the product depends on "edit one byte, move one chunk".
-- **Error correction:** v4 / dedicated track, scheme selection open.
+- **AeroSync:** the streaming surface inherits the wrappers progressively; chunk-first ordering is non-negotiable there because the product depends on "edit one byte, move one chunk". `sync --error-correction` writes an `.aerocorrect` sidecar alongside each transferred file.
+- **Error correction (AeroVault v4):** shipped. Reed-Solomon parity in a detached, content-addressed, self-healing `.aerocorrect` sidecar, with embedded and `both` placements for vaults. See [Error Correction (`.aerocorrect`)](/security/error-correction).
 
-The authoritative format specification is [`AEROVAULT-V3-SPEC.md`](https://github.com/axpdev-lab/aeroftp/blob/main/docs/AEROVAULT-V3-SPEC.md). This page is the intuition; the spec is the contract.
+The authoritative format specifications are [`AEROVAULT-V3-SPEC.md`](https://github.com/axpdev-lab/aeroftp/blob/main/docs/AEROVAULT-V3-SPEC.md) for the container (section 11 covers the v4 error-correction extension) and [`AEROCORRECT-SPEC.md`](https://github.com/axpnet/aerovault/blob/main/docs/AEROCORRECT-SPEC.md) for the detached `.aerocorrect` sidecar. This page is the intuition; the specs are the contract.
