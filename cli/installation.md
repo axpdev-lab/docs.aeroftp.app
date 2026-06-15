@@ -26,7 +26,7 @@ The binary name is `aeroftp-cli`. On `.deb` and `.rpm` installs, a symlink `aero
 
 ```bash
 # Both are equivalent on .deb/.rpm installs
-aeroftp-cli --version
+aeroftp --version
 aeroftp-cli --version
 ```
 
@@ -41,13 +41,70 @@ sudo ln -s /Applications/AeroFTP.app/Contents/MacOS/aeroftp-cli /usr/local/bin/a
 sudo ln -s "$(pwd)/squashfs-root/usr/bin/aeroftp-cli" /usr/local/bin/aeroftp
 ```
 
+## Shorter Command Names: `aftp` and the `aero` Alias
+
+Typing `aeroftp-cli` in full gets tedious for interactive use. Two shorter names are available, and both run exactly the same binary.
+
+### `aftp` (built-in)
+
+`aftp` is a built-in four-character name for the CLI. It is always present, with no setup required. Anything that works under `aeroftp-cli` works under `aftp`:
+
+```bash
+aftp ls sftp://user@host/
+aftp sync ./local sftp://user@host/backup
+```
+
+### `aero` (opt-in alias)
+
+`aero` is provided as an opt-in alias you enable with a single command. It is deliberately not shipped as a global binary, because a package owning `/usr/bin/aero` would fail to install on any system where another package already owns that path (a file conflict at the package-manager level).
+
+The same command both enables and disables the alias (toggle):
+
+```bash
+# Enable: creates ~/.local/bin/aero -> dispatcher
+aeroftp-cli alias-toggle aero
+# The 'aero' alias is now On
+
+# Run it again to disable
+aeroftp-cli alias-toggle aero
+# The 'aero' alias is now Off
+```
+
+The command is idempotent and exits with code 0 in both directions. The default target directory is `~/.local/bin`; pass `--bin-dir <path>` to override. If the target directory is not on your `PATH`, a one-line note on stderr explains how to add it.
+
+The toggle refuses to overwrite an existing non-symlink file at the target path, and refuses to remove a symlink that does not point at the current AeroFTP binary. This protects user-owned files and foreign installations.
+
+For scripting, use `--json`:
+
+```bash
+aeroftp-cli --json alias-toggle aero
+# {"alias":"aero","path":".../aero","path_in_env":false,"state":"on"}
+```
+
+Once enabled, anything that works under `aeroftp-cli` works under `aero`: `aero ls`, `aero sync`, `aero vault`, `aero mcp`, and so on.
+
+### Manual alias (alternative)
+
+If you prefer to wire the alias yourself, the snippets below are equivalent to the toggle command. They do not need root and they do not touch the package layout.
+
+| Shell | File | Line |
+|-------|------|------|
+| bash | `~/.bashrc` | `alias aero='aeroftp-cli'` |
+| zsh | `~/.zshrc` | `alias aero='aeroftp-cli'` |
+| fish | `~/.config/fish/config.fish` | `alias aero 'aeroftp-cli'` then `funcsave aero` |
+| PowerShell | `$PROFILE` | `Set-Alias -Name aero -Value aeroftp-cli` |
+
+After editing the file, reopen the shell or `source` it, then verify with `aero --version`.
+
+The shorter names (`aftp`, `aero`) were added at the community's request in [discussion #273](https://github.com/axpdev-lab/aeroftp/discussions/273).
+
 ## Verify Installation
 
 After installing, confirm the CLI is working:
 
 ```bash
 aeroftp-cli --version
-# Output: aeroftp 3.7.0
+# Output: aeroftp 4.0.3
 
 aeroftp-cli --help
 # Output: full command listing with descriptions
