@@ -294,6 +294,23 @@ aeroftp-cli cleanup --profile "server" /remote/path/ --force
 
 Dry-run by default. JSON output includes `orphans`, `bytes`, and `bytes_freed`.
 
+### alias-toggle
+
+Enable or disable the optional `aero` short alias. The same command toggles it on and off, and is idempotent (exit code 0 in both directions).
+
+```bash
+# Toggle the 'aero' alias on/off
+aeroftp-cli alias-toggle aero
+
+# Override the target directory (default: ~/.local/bin)
+aeroftp-cli alias-toggle aero --bin-dir ~/bin
+
+# JSON output for scripting
+aeroftp-cli --json alias-toggle aero
+```
+
+The `aftp` short name is built in and always present, so it needs no toggle. See [Shorter Command Names](/cli/installation#shorter-command-names-aftp-and-the-aero-alias) for the full explanation. Added at the community's request ([discussion #273](https://github.com/axpdev-lab/aeroftp/discussions/273)).
+
 ### sync
 
 ```bash
