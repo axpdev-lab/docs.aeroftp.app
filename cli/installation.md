@@ -45,9 +45,9 @@ sudo ln -s "$(pwd)/squashfs-root/usr/bin/aeroftp-cli" /usr/local/bin/aeroftp
 
 Typing `aeroftp-cli` in full gets tedious for interactive use. Two shorter names are available, and both run exactly the same binary.
 
-### `aftp` (built-in)
+### `aftp` (built-in on Linux)
 
-`aftp` is a built-in four-character name for the CLI. It is always present, with no setup required. Anything that works under `aeroftp-cli` works under `aftp`:
+`aftp` is a four-character name for the CLI. On the Linux packages (`.deb`, `.rpm`, `.snap`) it is installed automatically alongside `aeroftp`, with no setup required. On Windows and macOS, where the binary is not auto-added to `PATH`, set it up with the manual alias shown below for now (native `aftp` in the Windows installer is on the way). Anything that works under `aeroftp-cli` works under `aftp`:
 
 ```bash
 aftp ls sftp://user@host/
@@ -57,6 +57,8 @@ aftp sync ./local sftp://user@host/backup
 ### `aero` (opt-in alias)
 
 `aero` is provided as an opt-in alias you enable with a single command. It is deliberately not shipped as a global binary, because a package owning `/usr/bin/aero` would fail to install on any system where another package already owns that path (a file conflict at the package-manager level).
+
+> The `alias-toggle` command currently runs on Linux and macOS. On Windows it is not available yet (native support is on the way): use the manual PowerShell recipe in the table below in the meantime.
 
 The same command both enables and disables the alias (toggle):
 
