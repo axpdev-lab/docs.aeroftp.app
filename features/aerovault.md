@@ -175,8 +175,6 @@ Create an Error Correction vault with `vault create --error-correction --recover
 Two distinct surfaces share the AeroVault name, and it is worth being clear about which is which:
 
 - **In the app and the CLI.** The AeroVault that ships inside AeroFTP uses the newer container format (v3, and v4 with error correction) and is exposed as a first-class CLI subcommand: `aeroftp vault ...` (equivalently `aftp vault ...`, or `aero vault ...` if you enable the opt-in alias). It is reached through the same single entry point as every other command, so there is no separate `avault` binary to install or remember.
-- **The standalone crate.** The `aerovault` crate on [crates.io](https://crates.io/crates/aerovault) is the stable v2 encryption library, with a companion CLI (`aerovault-cli`) exposing 11 commands for creating, listing, adding, extracting, moving, renaming, copying, and managing vaults from the terminal or any Rust project.
-
-The standalone crate currently tracks the stable v2 format. The newer format work lives in the app while it matures, and the public crate will be consolidated to cover it once that format is finalized and reviewed.
+- **The standalone crate.** The `aerovault` crate on [crates.io](https://crates.io/crates/aerovault) is the reusable encryption library, with a companion CLI (`aerovault-cli`) exposing 11 commands for creating, listing, adding, extracting, moving, renaming, copying, and managing vaults from the terminal or any Rust project.
 
 For Rust API documentation, code examples, and integration guides, see the [AeroVault Crate Reference](/advanced/aerovault-crate.html).
