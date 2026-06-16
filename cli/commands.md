@@ -531,7 +531,7 @@ Jobs are persisted in SQLite (`~/.config/aeroftp/jobs.db`) and survive daemon re
 
 ### crypt
 
-Zero-knowledge encrypted storage on any provider. Content encrypted with AES-256-GCM (64KB blocks, hardware accelerated), filenames encrypted with AES-256-SIV, key derivation via Argon2id.
+Zero-knowledge encrypted storage on any provider: the CLI surface of the [AeroCrypt overlay](/features/aerocrypt). Content encrypted with AES-256-GCM-SIV (64 KB blocks) under a per-file random key wrapped with AES-256-KW, filenames encrypted with AES-256-SIV, key derivation via Argon2id (128 MiB). New objects are written as the hardened v3 (`AECR`) format; legacy v1/v2 overlays stay readable.
 
 ```bash
 # Initialize encrypted overlay

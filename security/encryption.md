@@ -9,9 +9,9 @@ AeroFTP applies encryption across several distinct layers:
 | Layer | Purpose | Primary Algorithm |
 | ----- | ------- | ----------------- |
 | AeroVault v2 | Stable encrypted file containers (default) | AES-256-GCM-SIV (RFC 8452) |
-| AeroVault v3 (Experimental) | Wrapper-stack container with content-defined chunking, dedup and per-chunk zstd | AES-256-GCM-SIV (RFC 8452) over zstd chunks |
-| AeroVault v4 error correction | Detached `.aerocorrect` recovery sidecar over the ciphertext (repair, not confidentiality) | Reed-Solomon parity, SHA-256 content binding |
-| AeroFTP-Crypt overlay | Streaming per-file encryption on top of any provider profile | AES-256-GCM with HKDF-derived per-file keys |
+| AeroVault v3 (Archive tier) | Wrapper-stack container with content-defined chunking, dedup and per-chunk zstd | AES-256-GCM-SIV (RFC 8452) over zstd chunks |
+| AeroVault v4 (v3 + error correction) | v3 container plus a detached `.aerocorrect` recovery sidecar over the ciphertext (repair, not confidentiality) | Reed-Solomon parity, SHA-256 content binding |
+| AeroCrypt overlay (native) | Per-file encryption on top of any provider profile (`AECR` format) | AES-256-GCM-SIV content, AES-256-KW DEK wrap, AES-256-SIV filenames |
 | Archive encryption | Password-protected ZIP/7z | AES-256 |
 | rclone crypt interoperability | Compatibility decryption for existing remotes | XSalsa20-Poly1305 content + standard filename decryption |
 | Credential storage | vault.db secrets | AES-256-GCM + Argon2id |
@@ -87,9 +87,9 @@ The key derivation parameters exceed OWASP 2024 minimum recommendations:
 
 AeroFTP can also create and browse Cryptomator vault format 8 containers, using scrypt + AES-256-KW + AES-256-SIV + AES-256-GCM.
 
-## AeroVault v3 (Experimental)
+## AeroVault v3 (Archive tier)
 
-AeroVault v3 is the first wrapper-stack vault format. It keeps the single-file `.aerovault` portability of v2 while adding content-defined chunking, per-chunk zstd compression, deduplication, and a forward-compatible extension directory shaped around the future v4 ECC (error-correction) layer. The format is implementation-draft and gated behind the Experimental security tier in the vault-create dialog. v2 remains the default and there is no automatic v2 → v3 migration until v3 leaves Experimental.
+AeroVault v3 is the first wrapper-stack vault format. It keeps the single-file `.aerovault` portability of v2 while adding content-defined chunking, per-chunk zstd compression, deduplication, and a forward-compatible extension directory used by the v4 error-correction layer. It ships as the **`Archive`** security tier in the vault-create dialog (the simpler Standard, Advanced and Paranoid tiers stay on v2), after its public spec review pass in the [#276 design thread](https://github.com/axpdev-lab/aeroftp/discussions/276). v2 remains the default for the other tiers and there is no automatic v2 → v3 migration.
 
 The canonical reference is the in-repo specification at [`docs/AEROVAULT-V3-SPEC.md`](https://github.com/axpdev-lab/aeroftp/blob/main/docs/AEROVAULT-V3-SPEC.md).
 
@@ -179,24 +179,24 @@ AeroVault v3 uses AES-256-GCM-SIV by default. The wrapper stack is designed so t
 
 ### Tauri command surface
 
-Fifteen Tauri commands cover the v3 lifecycle and are exposed once the Experimental tier is selected: `vault_v3_create`, `vault_v3_open`, `vault_v3_add_files`, `vault_v3_add_files_to_dir`, `vault_v3_create_directory`, `vault_v3_extract_entry`, `vault_v3_delete_entry`, `vault_v3_delete_entries`, `vault_v3_move_entry`, `vault_v3_rename_entry`, `vault_v3_copy_entry`, `vault_v3_change_password`, `vault_v3_add_directory`, `vault_v3_security_info`, `is_vault_v3`.
+Fifteen Tauri commands cover the v3 lifecycle and are exposed via the `Archive` tier: `vault_v3_create`, `vault_v3_open`, `vault_v3_add_files`, `vault_v3_add_files_to_dir`, `vault_v3_create_directory`, `vault_v3_extract_entry`, `vault_v3_delete_entry`, `vault_v3_delete_entries`, `vault_v3_move_entry`, `vault_v3_rename_entry`, `vault_v3_copy_entry`, `vault_v3_change_password`, `vault_v3_add_directory`, `vault_v3_security_info`, `is_vault_v3`.
 
-## AeroVault container vs AeroFTP-Crypt overlay
+## AeroVault container vs AeroCrypt overlay
 
-AeroVault and AeroFTP-Crypt are two different shapes for two different needs, and the choice between them depends on whether you want a sealed object or an ongoing transformation.
+AeroVault and AeroCrypt are two different shapes for two different needs, and the choice between them depends on whether you want a sealed object or an ongoing transformation. They are not the same thing: AeroVault is a container, AeroCrypt is a per-file overlay. See [AeroCrypt Overlay](/features/aerocrypt) for the full overlay guide.
 
-| Property | AeroVault (`.aerovault`) | AeroFTP-Crypt overlay |
-| -------- | ------------------------ | --------------------- |
-| Shape | Single sealed file, OS-integrated MIME type, double-clickable | Streaming per-file overlay on top of any provider profile |
+| Property | AeroVault (`.aerovault`) | AeroCrypt overlay |
+| -------- | ------------------------ | ----------------- |
+| Shape | Single sealed file, OS-integrated MIME type, double-clickable | Per-file overlay on top of any provider profile |
 | Granularity | Whole-container operation, manifest indexes all entries | Per-file: each remote object is independently encrypted |
 | Best for | Sharing several files as one bundle (email, instant messenger, USB stick, cold-storage snapshot) | Ongoing folder mirror on a provider you do not trust at rest |
-| Visibility | Browseable in AeroFTP and (for v3) addressable through the vault commands | Cleartext through an AeroMount mount; encrypted blobs if you open the underlying provider panel directly |
+| Visibility | Browseable in AeroFTP and (for v3) addressable through the vault commands | Browsed like a normal server in the dual panel once unlocked; encrypted blobs if you open the underlying provider panel directly |
 | Single-file aspect | Yes (the load-bearing feature) | No |
-| Format owner | AeroFTP (v2 and v3 specs) | AeroFTP (CLI-defined `.aeroftp-crypt.json` config + per-file AES-256-GCM with HKDF-derived keys) |
+| Format owner | AeroFTP (v2 and v3 specs) | AeroFTP (`AECR` format: per-file AES-256-GCM-SIV under a random DEK wrapped with AES-256-KW, AES-256-SIV filenames, `.aeroftp-crypt.json` config with a key-bound MAC) |
 
-The mental model: if the question is "send a sealed bundle to one person" or "shelve a snapshot on portable media", that is AeroVault. If the question is "keep this folder continuously mirrored on kDrive but the server must never see plaintext", that is the AeroFTP-Crypt overlay. The two coexist on purpose.
+The mental model: if the question is "send a sealed bundle to one person" or "shelve a snapshot on portable media", that is AeroVault. If the question is "keep this folder continuously mirrored on kDrive but the server must never see plaintext", that is the AeroCrypt overlay. The two coexist on purpose. There is no default cipher: you actively pick AeroCrypt (native) or [Rclone Crypt](/features/rclone-crypt) (interop).
 
-Cipher-strength badges in the connection UI follow this distinction: `E2E 128-bit` / `E2E 256-bit` for providers whose vendor performs client-side end-to-end encryption (MEGA, Filen, Internxt), and a plain `128-bit` / `256-bit` (no `E2E` prefix) for AeroFTP-Crypt overlaid on a server-side-encrypted backend, because the server holds no key but the cipher is ours, not the vendor's.
+Cipher-strength badges in the connection UI follow this distinction: `E2E 128-bit` / `E2E 256-bit` for providers whose vendor performs client-side end-to-end encryption (MEGA, Filen, Internxt), and a plain `128-bit` / `256-bit` (no `E2E` prefix) for AeroCrypt overlaid on a server-side-encrypted backend, because the server holds no key but the cipher is ours, not the vendor's.
 
 ## rclone crypt interoperability
 
