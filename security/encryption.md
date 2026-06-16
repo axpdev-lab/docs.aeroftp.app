@@ -13,7 +13,7 @@ AeroFTP applies encryption across several distinct layers:
 | AeroVault v4 (v3 + error correction) | v3 container plus a detached `.aerocorrect` recovery sidecar over the ciphertext (repair, not confidentiality) | Reed-Solomon parity, SHA-256 content binding |
 | AeroCrypt overlay (native) | Per-file encryption on top of any provider profile (`AECR` format) | AES-256-GCM-SIV content, AES-256-KW DEK wrap, AES-256-SIV filenames |
 | Archive encryption | Password-protected ZIP/7z | AES-256 |
-| rclone crypt interoperability | Compatibility decryption for existing remotes | XSalsa20-Poly1305 content + standard filename decryption |
+| rclone crypt interoperability | Full read/write interoperability with existing rclone crypt remotes | XSalsa20-Poly1305 content + EME filename encryption |
 | Credential storage | vault.db secrets | AES-256-GCM + Argon2id |
 | Transport security | Wire encryption | TLS 1.2/1.3, SSH |
 
@@ -202,7 +202,7 @@ Cipher-strength badges in the connection UI follow this distinction: `E2E 128-bi
 
 AeroFTP also includes a compatibility layer for existing `rclone crypt` remotes.
 
-- Scope today is read-only access for browsing and decrypting existing data
+- Full read/write: browse and decrypt existing data, and re-encrypt on upload, so files written by AeroFTP open cleanly in the rclone CLI
 - Crypto runs locally in the Rust backend
 - This is documented separately from AeroVault because AeroFTP does not own the `rclone crypt` format
 

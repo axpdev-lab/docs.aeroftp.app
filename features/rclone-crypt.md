@@ -1,6 +1,6 @@
 # rclone crypt interoperability
 
-`rclone crypt` is one of the most important encryption formats in the cloud storage ecosystem. AeroFTP supports compatibility workflows so you can inspect and decrypt existing rclone-encrypted storage without leaving the app.
+`rclone crypt` is one of the most important encryption formats in the cloud storage ecosystem. AeroFTP provides full read/write interoperability so you can browse, decrypt and re-encrypt rclone-encrypted storage without leaving the app, and files written by AeroFTP open cleanly in the rclone CLI.
 
 ## Current scope
 
@@ -28,17 +28,31 @@ All cryptographic work happens locally in the Rust backend.
 
 AeroFTP does not send encryption passwords to any external service. The cloud provider only sees the already encrypted object names and ciphertext that were produced by rclone.
 
-## How this differs from AeroFTP crypt and AeroVault
+## CLI
 
-These features solve different problems:
+`rclone crypt` has a dedicated CLI surface, separate from the native [AeroCrypt](/features/aerocrypt) `crypt` subcommand. `rclone-crypt put` writes the rclone crypt format, and `cryptcheck` verifies a local tree against an encrypted rclone remote:
 
-| Feature | Owner of the format | Current AeroFTP role |
-| --- | --- | --- |
-| AeroVault | AeroFTP | Native encrypted container format with full product ownership |
-| AeroFTP crypt overlay | AeroFTP | Native encrypted overlay for any provider, including upload and download workflows |
-| `rclone crypt` | rclone ecosystem | Full read/write interoperability layer through a transparent overlay session |
+```bash
+# encrypt and upload a file in the rclone crypt format
+AEROFTP_RCLONE_CRYPT_PASSWORD=secret aeroftp-cli --profile "S3" \
+  rclone-crypt put ./report.pdf _ /encrypted
 
-If you want a format that AeroFTP controls end to end, use AeroVault or the AeroFTP crypt overlay. If you already have data encrypted by rclone, use this compatibility layer.
+# verify a local directory against an encrypted rclone remote
+AEROFTP_RCLONE_CRYPT_PASSWORD=secret aeroftp-cli --profile "S3" \
+  cryptcheck _ ./local /encrypted --checksum
+```
+
+Passwords come from the environment (`AEROFTP_RCLONE_CRYPT_PASSWORD`, plus an optional secondary salt), never the command line. The GUI provides the full browse, download and upload surface for rclone crypt remotes in the dual panel; the CLI focuses on the write (`put`) and integrity (`cryptcheck`) paths, and `--filename-encryption standard|off|obfuscate` matches rclone's modes. See [CLI Commands](/cli/commands) for the full flags.
+
+## AeroCrypt, rclone crypt and AeroVault
+
+These are three different things, and AeroFTP keeps them apart:
+
+- **`rclone crypt`** (this page) is the **interop** overlay: rclone's own format, so files written by AeroFTP open cleanly in the rclone CLI.
+- **[AeroCrypt](/features/aerocrypt)** is the **native** overlay: AeroFTP's own `AECR` format (AES-256-GCM-SIV), the one AeroFTP leads with for new encrypted scopes.
+- **[AeroVault](/security/encryption)** is the **container**: a single sealed `.aerovault` file, the Cryptomator-class vault.
+
+For the full side-by-side comparison and the shared-crypto-core note, see [AeroCrypt Overlay](/features/aerocrypt). Use `rclone crypt` when you already have data encrypted by rclone.
 
 ## Recommended use cases
 
@@ -56,7 +70,7 @@ That means:
 
 - We document the compatibility layer in both Features and Security
 - We follow the rclone format spec strictly so files written by AeroFTP open cleanly in the rclone CLI
-- We keep the native AeroFTP encryption story separate from the rclone one (AeroVault and the AeroFTP crypt overlay are the AeroFTP-owned formats)
+- We keep the native AeroFTP encryption story separate from the rclone one (AeroVault and the [AeroCrypt overlay](/features/aerocrypt) are the AeroFTP-owned formats)
 
 For profile import and export through `rclone.conf`, see [rclone Bridge](/features/rclone).
 
