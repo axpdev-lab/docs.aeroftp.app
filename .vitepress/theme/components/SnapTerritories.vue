@@ -34,7 +34,7 @@ const loading = ref(true)
 const hovered = ref<string | null>(null)
 
 const territoryMap = computed(() => new Map(territories.value.map(t => [t.code, t.percent])))
-const top10 = computed(() => territories.value.slice(0, 10))
+const sortedTerritories = computed(() => [...territories.value].sort((a, b) => b.percent - a.percent))
 
 function getColor(percent: number): string {
   const intensity = Math.min(percent / 0.15, 1)
@@ -127,13 +127,18 @@ onMounted(async () => {
       </template>
     </div>
 
-    <!-- Top countries -->
-    <div v-if="!loading && top10.length > 0" class="snap-top">
-      <div v-for="t in top10" :key="t.code" class="snap-badge">
+    <!-- All territories -->
+    <div v-if="!loading && sortedTerritories.length > 0" class="snap-top">
+      <div v-for="t in sortedTerritories" :key="t.code" class="snap-badge">
         <span class="snap-badge-name">{{ COUNTRY_NAMES[t.code] || t.code }}</span>
         <span class="snap-badge-pct">{{ (t.percent * 100).toFixed(1) }}%</span>
       </div>
     </div>
+
+    <!-- Disclaimer -->
+    <p v-if="!loading && sortedTerritories.length > 0" class="snap-disclaimer">
+      This map is real. The data comes exclusively from Snapcraft (the Linux Snap Store), so it does not include Windows and macOS installs nor other distribution channels: it is indicative of the spread, not an exhaustive count.
+    </p>
   </section>
 </template>
 
@@ -226,4 +231,12 @@ onMounted(async () => {
 }
 .snap-badge-name { font-weight: 600; color: var(--vp-c-text-1); }
 .snap-badge-pct { color: #38bdf8; }
+.snap-disclaimer {
+  max-width: 720px;
+  margin: 1.25rem auto 0;
+  text-align: center;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--vp-c-text-3);
+}
 </style>
