@@ -246,11 +246,11 @@ Generation and repair run in 64 MiB windows and read parity on demand, so memory
 
 The `.aerovault` format consists of:
 
-1. **Header** (512 bytes) - magic bytes, version, encryption mode, Argon2id salt, AES-KW wrapped key, HMAC-SHA512 MAC
-2. **Manifest** - AES-SIV encrypted JSON index of all entries (filenames, sizes, offsets, timestamps)
-3. **Data blocks** - AES-256-GCM-SIV encrypted chunks (64 KB each), optionally double-encrypted with ChaCha20-Poly1305 in cascade mode
+1. **Header** (1024 bytes in v3, 512 in v2) - magic bytes, version, Argon2id salt, AES-KW wrapped master and MAC keys, HMAC-SHA512 MAC
+2. **Manifest** - encrypted JSON index of all entries (filenames, sizes, offsets, timestamps)
+3. **Data blocks** - AES-256-GCM-SIV encrypted chunks, optionally double-encrypted with ChaCha20-Poly1305 in cascade mode
 
-The format specification is available in the [GitHub repository](https://github.com/axpdev-lab/aerovault).
+The current version is **v4 = v3 container + Error Correction**. The full container specification is in [`AEROVAULT-V3-SPEC.md`](https://github.com/axpdev-lab/aerovault/blob/main/docs/AEROVAULT-V3-SPEC.md) (header, wrapper pipeline, manifest, cryptography matrix, and the v4 Error Correction layer); the v2 base layout it builds on is in [`AEROVAULT-V2-SPEC.md`](https://github.com/axpdev-lab/aerovault/blob/main/docs/AEROVAULT-V2-SPEC.md).
 
 ## Cross-Platform Implementations
 
