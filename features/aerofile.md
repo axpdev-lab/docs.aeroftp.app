@@ -1,6 +1,6 @@
 # AeroFile
 
-AeroFile is AeroFTP's professional local file manager. Toggle between remote server mode and local-only mode to get a full-featured file browser without needing a server connection. AeroFile includes tabbed browsing, a Places sidebar with drive detection, three view modes, file tags, Quick Look previews, batch rename, and comprehensive keyboard shortcuts.
+AeroFile is AeroFTP's professional local file manager. Toggle between remote server mode and local-only mode to get a full-featured file browser without needing a server connection. AeroFile includes tabbed browsing, a Places sidebar with drive detection, three view modes, rubber-band selection, file tags, Quick Look previews, an in-app image editor (AeroImage), batch rename, and comprehensive keyboard shortcuts.
 
 ## Activating AeroFile Mode
 
@@ -91,7 +91,7 @@ Switch between three view modes using the toolbar buttons or keyboard shortcuts.
 All view modes support:
 
 - Column sorting (List mode: click column headers)
-- Selection (click, Shift+click for range, Ctrl+click for toggle)
+- Selection (click, Shift+click for range, Ctrl+click for toggle, rubber-band drag to marquee-select, click an empty area to deselect)
 - Drag and drop
 - File tag badges
 
@@ -144,6 +144,22 @@ Press `Space` to preview the selected file in a modal overlay. Press `Space` aga
 ### Navigation
 
 While Quick Look is open, use arrow keys to navigate between files. The preview updates instantly without closing the overlay.
+
+## AeroImage (Image Editor)
+
+When you open an image in Quick Look, AeroImage is the viewer and editor: view with pan and zoom, then use the editing tools and Save As. All editing runs locally in the Rust backend.
+
+### Operations
+
+| Group | Operations |
+|-------|------------|
+| Geometry | Crop, Resize (Lanczos3), Rotate 90 / 180 / 270, Flip horizontal / vertical |
+| Adjustments | Brightness, Contrast, Hue rotate, Grayscale, Invert |
+| Effects | Blur, Sharpen |
+
+### Save As, with honest lossless / lossy labels
+
+The **Save As** dialog lets you choose the output filename, format, and (for JPEG) quality. Every edit is marked **Lossless** or **Lossy** with an accurate per-operation and per-format mapping: JPEG and GIF re-encode lossy, while PNG, WebP, BMP and TIFF stay lossless. A per-format note in the dialog tells you what the chosen format will do before you commit, and a close guard warns before discarding unsaved edits.
 
 ## Properties Dialog
 
@@ -264,6 +280,9 @@ Hold `Ctrl` while dragging to copy instead of move.
 | `Ctrl+A` | Select all files |
 | `Ctrl+Click` | Toggle individual selection |
 | `Shift+Click` | Range selection |
+| Drag on empty space | Rubber-band (marquee) selection in all three views, with edge auto-scroll |
+| `Ctrl` / `Shift` + drag | Extend the marquee selection instead of replacing it |
+| Click empty space | Clear the selection |
 | `Escape` | Clear selection |
 
 ### File Operations
