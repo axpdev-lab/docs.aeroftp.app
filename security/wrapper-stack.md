@@ -112,7 +112,8 @@ The scheme is **Reed-Solomon parity in a detached, par2-style `.aerocorrect` sid
 
 ## Where this is today
 
-- **AeroVault v3 (Beta, opt-in):** packing, chunking, per-chunk zstd, per-chunk AES-256-GCM-SIV, BLAKE3 chunk id and cipher hash, the extension slot reserved for v4 ECC. The format stays Beta and is not the default tier until it has had a public spec review pass.
+- **AeroVault v3 (shipped, the `Archive` vault tier):** packing, chunking, per-chunk zstd, per-chunk AES-256-GCM-SIV, BLAKE3 chunk id and cipher hash, the extension slot used by v4 error correction. It had its public spec review pass in the [#276 design thread](https://github.com/axpdev-lab/aeroftp/discussions/276) and ships as the `Archive` security tier in the vault-create dialog; the simpler Standard, Advanced and Paranoid tiers stay on v2.
+- **The `crypt` wrapper as an overlay:** applied per object on top of a provider instead of inside a container, the encryption wrapper is the [AeroCrypt overlay](/features/aerocrypt) (native, AES-256-GCM-SIV) or [Rclone Crypt](/features/rclone-crypt) (interop). Same wrapper, overlay shape instead of the sealed-container shape. AeroCrypt is not AeroVault: AeroVault seals many files into one `.aerovault`, AeroCrypt encrypts each remote object in place.
 - **AeroSync:** the streaming surface inherits the wrappers progressively; chunk-first ordering is non-negotiable there because the product depends on "edit one byte, move one chunk". `sync --error-correction` writes an `.aerocorrect` sidecar alongside each transferred file.
 - **Error correction (AeroVault v4):** shipped. Reed-Solomon parity in a detached, content-addressed, self-healing `.aerocorrect` sidecar, with embedded and `both` placements for vaults. See [Error Correction (`.aerocorrect`)](/security/error-correction).
 
