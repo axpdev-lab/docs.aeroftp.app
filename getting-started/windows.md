@@ -1,6 +1,6 @@
 # Windows Installation
 
-AeroFTP provides two distribution formats for Windows 10 and later.
+AeroFTP provides three distribution formats for Windows 10 and later: the MSI installer, the NSIS `.exe` installer, and a no-install portable ZIP.
 
 ## .msi Installer (Recommended)
 
@@ -17,14 +17,26 @@ The MSI installer:
 - Adds a Start Menu shortcut
 - Supports standard Add/Remove Programs uninstallation
 
-## .exe Portable
+## .exe Installer (NSIS)
 
-For users who prefer not to use the MSI format:
+For users who prefer not to use the MSI format, AeroFTP also ships an NSIS-based `.exe` installer:
 
 1. Download `AeroFTP_3.7.0_x64-setup.exe` from [GitHub Releases](https://github.com/axpnet/aeroftp/releases)
-2. Run the executable directly
+2. Run the executable and follow the wizard
 
-> **Note:** The `.exe` bundle is an NSIS installer that extracts and installs AeroFTP. For a truly portable experience, the AppImage format on Linux is more suitable.
+> **Note:** Despite being a single `.exe`, this is an installer (it extracts and installs AeroFTP, adds a Start Menu entry, and supports Add/Remove Programs). For a no-install, run-from-anywhere build, use the portable ZIP below.
+
+## .zip Portable (no install)
+
+The portable ZIP is the true run-from-anywhere build: no installer, no admin rights, no registry footprint.
+
+1. Download `AeroFTP-<version>-portable-windows-x64.zip` from [GitHub Releases](https://github.com/axpnet/aeroftp/releases)
+2. Extract it to any folder you can write to (Desktop, USB drive, network share)
+3. Double-click `AeroFTP.exe` to launch
+
+All your data (saved servers, AeroAgent chats, AeroVault, cache, logs) stays inside the extracted folder under `data\`, so you can move the whole folder to another machine and pick up where you left off. To uninstall, delete the folder.
+
+> **Command-line tools (since v4.0.8):** the portable ZIP also ships `aeroftp-cli.exe` and `aeroftp-dispatch.exe` next to `AeroFTP.exe`. They are not added to `PATH`: run `.\aeroftp-cli.exe --help` from the extracted folder, or add the folder to your `PATH`. The CLI shares the same portable `data\` folder, so the servers and vault you set up in the GUI are visible from the command line. See the [CLI installation guide](../cli/installation.md) for the full reference.
 
 ## Windows SmartScreen
 

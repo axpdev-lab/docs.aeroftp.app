@@ -10,7 +10,7 @@ URL-based connections are available for the transport protocols and direct-auth 
 
 ## Included with Every Desktop Package
 
-The CLI binary ships inside every AeroFTP desktop package. No separate installation step is required. After installing the desktop app, the binary is available at the following paths:
+The CLI binary ships inside every AeroFTP desktop package, and since v4.0.8 inside the Windows portable ZIP as well. No separate installation step is required. After installing the desktop app (or extracting the portable ZIP), the binary is available at the following paths:
 
 | Package Format | Binary Path | In PATH |
 |----------------|-------------|---------|
@@ -20,7 +20,10 @@ The CLI binary ships inside every AeroFTP desktop package. No separate installat
 | Linux `.AppImage` | Bundled inside the AppImage | No |
 | Windows `.msi` | `C:\Program Files\AeroFTP\aeroftp-cli.exe` | Depends on installer options |
 | Windows `.exe` (NSIS) | `C:\Program Files\AeroFTP\aeroftp-cli.exe` | Depends on installer options |
+| Windows `.zip` (portable) | `aeroftp-cli.exe` next to `AeroFTP.exe` in the extracted folder | No (run `.\aeroftp-cli.exe`) |
 | macOS `.dmg` | `/Applications/AeroFTP.app/Contents/MacOS/aeroftp-cli` | No |
+
+> **Windows portable ZIP (since v4.0.8):** the `AeroFTP-<version>-portable-windows-x64.zip` build bundles `aeroftp-cli.exe` (and the `aeroftp-dispatch.exe` shim that powers the `aftp` / `aero` names) next to `AeroFTP.exe`. It is not added to `PATH`: run it as `.\aeroftp-cli.exe` from the extracted folder, or add that folder to your `PATH`. The portable CLI shares the portable `data\` folder with the GUI, so the servers and vault you set up in the app are visible to the CLI and vice versa.
 
 The binary name is `aeroftp-cli`. On `.deb` and `.rpm` installs, a symlink `aeroftp` pointing to `aeroftp-cli` is created in `/usr/bin/`, so both names work interchangeably:
 
