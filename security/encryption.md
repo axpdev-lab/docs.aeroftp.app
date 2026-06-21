@@ -8,9 +8,9 @@ AeroFTP applies encryption across several distinct layers:
 
 | Layer | Purpose | Primary Algorithm |
 | ----- | ------- | ----------------- |
-| AeroVault v2 | Stable encrypted file containers (default) | AES-256-GCM-SIV (RFC 8452) |
-| AeroVault v3 (Archive tier) | Wrapper-stack container with content-defined chunking, dedup and per-chunk zstd | AES-256-GCM-SIV (RFC 8452) over zstd chunks |
-| AeroVault v4 (v3 + error correction) | v3 container plus a detached `.aerocorrect` recovery sidecar over the ciphertext (repair, not confidentiality) | Reed-Solomon parity, SHA-256 content binding |
+| AeroVault format v2 | Stable encrypted file containers (default) | AES-256-GCM-SIV (RFC 8452) |
+| AeroVault format v3 (Archive tier) | Wrapper-stack container with content-defined chunking, dedup and per-chunk zstd | AES-256-GCM-SIV (RFC 8452) over zstd chunks |
+| AeroVault format v4 (v3 + Error Correction) | v3 container plus a detached `.aerocorrect` recovery sidecar over the ciphertext (repair, not confidentiality) | Reed-Solomon parity, SHA-256 content binding |
 | AeroCrypt overlay (native) | Per-file encryption on top of any provider profile (`AECR` format) | AES-256-GCM-SIV content, AES-256-KW DEK wrap, AES-256-SIV filenames |
 | Archive encryption | Password-protected ZIP/7z | AES-256 |
 | rclone crypt interoperability | Full read/write interoperability with existing rclone crypt remotes | XSalsa20-Poly1305 content + EME filename encryption |

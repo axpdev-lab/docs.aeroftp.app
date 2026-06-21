@@ -212,7 +212,7 @@ CreateOptions::new(path, password)
 
 ## Error Correction (`.aerocorrect`)
 
-Since 0.5.0 the crate ships the unified `.aerocorrect` Reed-Solomon recovery sidecar: a detached, content-SHA-bound recovery file for any byte stream. It protects `.aerovault` containers or ordinary files, repair is atomic and all-or-nothing, and the format v2 sidecar is self-healing so a lightly-corrupted recovery file still recovers. The format is shared byte-for-byte with AeroFTP v4, pinned by a cross-implementation fixture.
+Since 0.5.0 the crate ships the unified `.aerocorrect` Reed-Solomon recovery sidecar: a detached, content-SHA-bound recovery file for any byte stream. It protects `.aerovault` containers or ordinary files, repair is atomic and all-or-nothing, and the format v2 sidecar is self-healing so a lightly-corrupted recovery file still recovers. The format is shared byte-for-byte with the AeroFTP app, pinned by a cross-implementation fixture.
 
 ```rust
 use aerovault::{correct_generate, correct_repair, correct_verify};
