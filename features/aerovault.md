@@ -151,7 +151,7 @@ The `.aerovault` binary format consists of three sections:
 
 AeroVault files are registered as a MIME type on all platforms with dedicated icons in 8 PNG sizes (16 px to 512 px), SVG, ICO, and ICNS. Double-clicking a `.aerovault` file opens it directly in AeroFTP via the deep-link handler, with single-instance argv forwarding for already-running instances.
 
-## AeroVault v3 and v4
+## AeroVault format v3 and v4 (Error Correction)
 
 AeroVault v2 (described above) is the stable default. Two newer formats extend it without breaking it.
 
