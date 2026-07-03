@@ -4,7 +4,9 @@ AeroFTP is distributed as a `.dmg` disk image for macOS 12 (Monterey) and later.
 
 ## Installing
 
-1. Download `AeroFTP_3.7.0_aarch64-beta.dmg` from [GitHub Releases](https://github.com/axpnet/aeroftp/releases)
+1. Download the right `.dmg` for your Mac from [GitHub Releases](https://github.com/axpdev-lab/aeroftp/releases):
+   - Apple Silicon (M1/M2/M3/M4): `AeroFTP_<version>_aarch64-beta.dmg`
+   - Intel: `AeroFTP_<version>_x64-beta.dmg`
 2. Open the `.dmg` file
 3. Drag **AeroFTP** into your **Applications** folder
 4. Eject the disk image
@@ -23,9 +25,14 @@ Alternatively, you can right-click (or Control-click) the app in Finder and sele
 
 > **Tip:** You only need to do this once. After the first launch, macOS will remember your choice.
 
-## Apple Silicon
+## Apple Silicon vs Intel
 
-The current release provides an Intel (x64) build. It runs on Apple Silicon (M1/M2/M3/M4) Macs via Rosetta 2 translation. A native ARM64 build may be available in future releases.
+Every release ships two native builds. Pick the one that matches your Mac:
+
+- **Apple Silicon (M1/M2/M3/M4):** download `AeroFTP_<version>_aarch64-beta.dmg`. It runs natively on arm64, no Rosetta 2 required.
+- **Intel:** download `AeroFTP_<version>_x64-beta.dmg`.
+
+If you are unsure which Mac you have, open the Apple menu > About This Mac and check the Chip / Processor line.
 
 ## Launch on Startup
 
