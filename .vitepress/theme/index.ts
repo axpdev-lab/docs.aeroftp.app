@@ -1,5 +1,6 @@
 import DefaultTheme from 'vitepress/theme'
 import ProviderPlanCard from './components/ProviderPlanCard.vue'
+import ArchiveFormatCard from './components/ArchiveFormatCard.vue'
 import './custom.css'
 
 export default {
@@ -7,5 +8,6 @@ export default {
   enhanceApp({ app }) {
     DefaultTheme.enhanceApp?.({ app })
     app.component('ProviderPlanCard', ProviderPlanCard)
+    app.component('ArchiveFormatCard', ArchiveFormatCard)
   }
 }

@@ -350,6 +350,175 @@
   }
 }
 
+/* Archive format openness snapshot */
+.archive-format-card {
+  margin: 1.25rem 0 2rem;
+  padding: 1rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  background: var(--vp-c-bg-soft);
+}
+
+.archive-format-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.archive-format-card__eyebrow {
+  margin: 0 0 0.15rem;
+  color: var(--vp-c-text-2);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.archive-format-card h2 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+
+.archive-format-card__legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
+
+.archive-format-card__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.archive-format-card__row {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  background: var(--vp-c-bg);
+}
+
+.archive-format-card__row-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.archive-format-card__name {
+  min-width: 3.5rem;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.archive-format-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.archive-format-card__badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  border: 1px solid transparent;
+}
+
+.archive-format-card__badge--open,
+.archive-format-card__badge--create {
+  color: #166534;
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
+.archive-format-card__badge--proprietary,
+.archive-format-card__badge--readonly {
+  color: #991b1b;
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.archive-format-card__badge--extract,
+.archive-format-card__badge--aes256 {
+  color: #374151;
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.dark .archive-format-card__badge--open,
+.dark .archive-format-card__badge--create {
+  color: #bbf7d0;
+  background: rgba(22, 101, 52, 0.32);
+  border-color: rgba(134, 239, 172, 0.35);
+}
+
+.dark .archive-format-card__badge--proprietary,
+.dark .archive-format-card__badge--readonly {
+  color: #fecaca;
+  background: rgba(153, 27, 27, 0.32);
+  border-color: rgba(252, 165, 165, 0.35);
+}
+
+.dark .archive-format-card__badge--extract,
+.dark .archive-format-card__badge--aes256 {
+  color: #e5e7eb;
+  background: rgba(75, 85, 99, 0.32);
+  border-color: rgba(156, 163, 175, 0.35);
+}
+
+.archive-format-card__note {
+  margin: 0.5rem 0 0;
+  color: var(--vp-c-text-2);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.archive-format-card__tip {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.85rem;
+  padding: 0.7rem 0.8rem;
+  border-left: 3px solid var(--vp-c-brand-1);
+  border-radius: 6px;
+  background: var(--vp-c-bg);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.archive-format-card__source {
+  margin: 0.75rem 0 0;
+  color: var(--vp-c-text-2);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 720px) {
+  .archive-format-card__header {
+    display: block;
+  }
+
+  .archive-format-card__legend {
+    justify-content: flex-start;
+    margin-top: 0.75rem;
+  }
+
+  .archive-format-card__tip {
+    display: block;
+  }
+}
+
 /* Code blocks */
 .vp-doc div[class*="language-"] {
   border-radius: 8px !important;

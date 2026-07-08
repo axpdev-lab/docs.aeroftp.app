@@ -216,7 +216,9 @@ AeroFTP supports creating and extracting password-protected archives:
 | ------ | -------------------- | -------------- | ----- |
 | ZIP | AES-256 (WinZip AE-2) | PBKDF2-SHA1 | Industry-standard, wide compatibility |
 | 7z | AES-256-CBC | SHA-256 based (2^19 rounds) | Strong encryption, 7-Zip compatible |
-| RAR | AES-256-CBC | PBKDF2-HMAC-SHA256 | Extract-only (no creation) |
+| RAR | AES-256-CBC | PBKDF2-HMAC-SHA256 | Extract-only, no creation, because the RAR format is proprietary |
+
+RAR is the one archive format AeroFTP cannot create: its format is proprietary and only the closed WinRAR/`rar` tool can write .rar, so AeroFTP is limited to reading and decrypting existing RAR archives. See the [format openness snapshot](/features/archives) on the Archives page for how each format compares.
 
 Archive passwords are zeroized in memory immediately after use via the `secrecy` crate's `SecretString` type. The password is unwrapped only at the point of use (passing to the compression library) and automatically zeroed when the `SecretString` is dropped.
 
