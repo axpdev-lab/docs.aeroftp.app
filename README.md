@@ -44,7 +44,7 @@ Comprehensive documentation for AeroFTP covering:
 - **AeroPlayer** - Integrated media player with 10-band EQ, 14 visualizer modes, 6 WebGL shaders
 - **AeroTools** - Security toolkit (Hash Forge, CryptoLab, Password Forge) in Cyber theme
 - **AeroFile** - Local file manager with tabs, tags, and Finder-style color labels
-- **CLI** - 14 commands, batch scripting (.aeroftp), glob patterns, JSON output, exit codes
+- **CLI** - 90 commands, batch scripting (.aeroftp), glob patterns, JSON output, exit codes
 - **Security** - Universal Vault (AES-256-GCM + Argon2id), TOTP 2FA, SFTP TOFU, credential isolation for AI agents
 - **GitHub Integration** - File browsing, commits, branches, PRs, releases with CHANGELOG import, GitHub Pages monitoring, App co-authoring with dual avatars
 - **Advanced** - Provider reference, AI provider marketplace, plugin development
