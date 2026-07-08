@@ -1,18 +1,22 @@
 # Archives
 
+<ArchiveFormatCard />
+
 AeroFTP includes a full archive management system for browsing, creating, and extracting compressed archives. Both local and remote archives are supported across all 7 transport protocols and the 20+ native provider integrations. The system handles seven archive formats with optional AES-256 encryption for ZIP and 7z.
 
 ## Supported Formats
 
-| Format | Create | Extract | Encryption | Compression | Notes |
-| ------ | ------ | ------- | ---------- | ----------- | ----- |
-| ZIP | Yes | Yes | AES-256 (WinZip AE-2) | Deflate | Most widely compatible format |
-| 7z | Yes | Yes | AES-256 | LZMA2 | Best compression ratio, strong encryption |
-| TAR | Yes | Yes | -- | None | Uncompressed tape archive, preserves Unix permissions |
-| GZ | Yes | Yes | -- | Gzip (Deflate) | Single-file compression, commonly paired with TAR |
-| XZ | Yes | Yes | -- | LZMA2 | High compression ratio, slower than GZ |
-| BZ2 | Yes | Yes | -- | Bzip2 | Good compression, moderate speed |
-| RAR | -- | Yes | -- | RAR | Extract only (no creation due to proprietary format) |
+| Format | Openness | Create | Extract | Encryption | Compression | Notes |
+| ------ | -------- | ------ | ------- | ---------- | ----------- | ----- |
+| ZIP | Open | Yes | Yes | AES-256 (WinZip AE-2) | Deflate | Most widely compatible format |
+| 7z | Open | Yes | Yes | AES-256 | LZMA2 | Best compression ratio, strong encryption |
+| TAR | Open | Yes | Yes | -- | None | Uncompressed tape archive, preserves Unix permissions |
+| GZ | Open | Yes | Yes | -- | Gzip (Deflate) | Single-file compression, commonly paired with TAR |
+| XZ | Open | Yes | Yes | -- | LZMA2 | High compression ratio, slower than GZ |
+| BZ2 | Open | Yes | Yes | -- | Bzip2 | Good compression, moderate speed |
+| RAR | Proprietary (read-only) | -- | Yes | -- | RAR | Extract only, no creation, because the RAR format is proprietary |
+
+> **Openness legend:** *Open* formats have a public specification, so AeroFTP can both create and extract them. *RAR* is proprietary: RARLAB's source-available UnRAR allows extraction only, and only the closed WinRAR/`rar` tool can create .rar, so no AeroFTP tool can write it. This is a format limitation, not an AeroFTP scope choice. AeroFTP's own native containers (.aerovault, .aerozip, .aeroftp) are open and documented.
 
 ## Archive Browser
 
