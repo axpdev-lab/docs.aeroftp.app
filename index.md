@@ -49,9 +49,12 @@ features:
 
 <script setup>
 import SnapTerritories from './.vitepress/theme/components/SnapTerritories.vue'
+import SourceForgeReach from './.vitepress/theme/components/SourceForgeReach.vue'
 </script>
 
 <SnapTerritories />
+
+<SourceForgeReach />
 
 <h2 align="center">Integrations</h2>
 
