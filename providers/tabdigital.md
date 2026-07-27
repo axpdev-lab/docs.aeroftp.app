@@ -1,36 +1,36 @@
 ---
-title: Tab.digital with AeroFTP
-description: Connect Tab.digital to AeroFTP using its Nextcloud-as-a-Service WebDAV preset, EU/GDPR positioning, 8 GB free tier, and OCS share links.
+title: TAB.DIGITAL with AeroFTP
+description: Connect TAB.DIGITAL to AeroFTP using its Nextcloud-as-a-Service WebDAV preset, EU/GDPR positioning, 8 GB free tier, and OCS share links.
 ---
 
-# Tab.digital
+# TAB.DIGITAL
 
 <ProviderPlanCard id="tabdigital" />
 
-[Tab.digital](https://tab.digital) is an EU-based, GDPR-positioned Nextcloud-as-a-Service provider with an 8 GB free tier. AeroFTP connects to Tab.digital through its dedicated **Tab.digital preset**, built on top of the standard WebDAV + OCS API stack already used for Nextcloud and Felicloud. Shipped in **v3.7.4**.
+[TAB.DIGITAL](https://tab.digital) is an EU-based, GDPR-positioned Nextcloud-as-a-Service provider with an 8 GB free tier. AeroFTP connects to TAB.DIGITAL through its dedicated **TAB.DIGITAL preset**, built on top of the standard WebDAV + OCS API stack already used for Nextcloud and Felicloud. Shipped in **v3.7.4**.
 
 ## Connection Settings
 
 | Field | Value |
 | --- | --- |
 | WebDAV URL | `https://cloud.tab.digital/remote.php/dav/files/{username}/` |
-| Username | Your Tab.digital account username (or email-based identifier) |
+| Username | Your TAB.DIGITAL account username (or email-based identifier) |
 | Password | Your account password or app token |
 | OCS Endpoint | `https://cloud.tab.digital/ocs/v2.php/` (automatic) |
 | Port | 443 (HTTPS) |
 
-## Why Use AeroFTP with Tab.digital
+## Why Use AeroFTP with TAB.DIGITAL
 
 - desktop file access to a hosted EU-only cloud service
 - saved profiles for recurring upload, download, and sync workflows
 - a familiar Nextcloud-style WebDAV path pattern
-- one client for Tab.digital, Nextcloud, Felicloud, Quotaless WebDAV, and generic WebDAV servers
+- one client for TAB.DIGITAL, Nextcloud, Felicloud, Quotaless WebDAV, and generic WebDAV servers
 - OCS share-link badge in the IntroHub `ServerCard` and Discover catalog
 
 ## How to Connect
 
 1. Sign up at [tab.digital](https://tab.digital) and confirm your account.
-2. Open AeroFTP and pick **Tab.digital** from the **WebDAV** tier in **Discover Services**.
+2. Open AeroFTP and pick **TAB.DIGITAL** from the **WebDAV** tier in **Discover Services**.
 3. Enter your username (or email-based account identifier) and password / app token.
 4. Confirm the default DAV path: `https://cloud.tab.digital/remote.php/dav/files/{username}/`. AeroFTP auto-substitutes `{username}`.
 5. Click **Connect** and save the profile.
@@ -39,15 +39,15 @@ description: Connect Tab.digital to AeroFTP using its Nextcloud-as-a-Service Web
 
 - **Native WebDAV**: list, upload, download, mkdir, rename, delete, move all use the standard WebDAV verbs (PROPFIND, PUT, GET, MOVE, MKCOL, DELETE).
 - **OCS share links**: native share-link generation with optional password and expiry through Nextcloud's OCS API. The OCS badge in the IntroHub `ServerCard` confirms the OCS API is reachable.
-- **Trash recovery**: Tab.digital's WebDAV exposes the standard Nextcloud trash endpoint at `/remote.php/dav/trashbin/{username}/trash/`. AeroFTP's WebDAV provider lists the trash folder when navigating up from root.
+- **Trash recovery**: TAB.DIGITAL's WebDAV exposes the standard Nextcloud trash endpoint at `/remote.php/dav/trashbin/{username}/trash/`. AeroFTP's WebDAV provider lists the trash folder when navigating up from root.
 - **Real-time quota**: AeroFTP polls the standard WebDAV quota properties (`{DAV:}quota-used-bytes`, `{DAV:}quota-available-bytes`) for the storage badge in the StatusBar.
-- **healthCheckUrl preset**: Server Health Check probes Tab.digital's status endpoint to surface DNS / TCP / TLS / HTTP latency in IntroHub Pro.
+- **healthCheckUrl preset**: Server Health Check probes TAB.DIGITAL's status endpoint to surface DNS / TCP / TLS / HTTP latency in IntroHub Pro.
 
 ## Recommended Defaults
 
-- use the **Tab.digital** preset instead of generic WebDAV
+- use the **TAB.DIGITAL** preset instead of generic WebDAV
 - keep HTTPS enabled on port 443
-- prefer an app token if Tab.digital exposes one in the security settings
+- prefer an app token if TAB.DIGITAL exposes one in the security settings
 - keep the default `/remote.php/dav/files/{username}/` path format
 
 ## Common Issues
@@ -63,11 +63,11 @@ description: Connect Tab.digital to AeroFTP using its Nextcloud-as-a-Service Web
 ## CLI
 
 ```bash
-aeroftp-cli ls --profile "MyTabDigital"
-aeroftp-cli put --profile "MyTabDigital" ./docs/*.pdf /Documents/
-aeroftp-cli get --profile "MyTabDigital" "/Photos/*" ./backups/
-aeroftp-cli sync --profile "MyTabDigital" ./important /backup/important
-aeroftp-cli link --profile "MyTabDigital" /Documents/share.pdf --expires 7d
+aeroftp-cli ls --profile "My TAB.DIGITAL"
+aeroftp-cli put --profile "My TAB.DIGITAL" ./docs/*.pdf /Documents/
+aeroftp-cli get --profile "My TAB.DIGITAL" "/Photos/*" ./backups/
+aeroftp-cli sync --profile "My TAB.DIGITAL" ./important /backup/important
+aeroftp-cli link --profile "My TAB.DIGITAL" /Documents/share.pdf --expires 7d
 ```
 
 ## Related Documentation
@@ -75,4 +75,4 @@ aeroftp-cli link --profile "MyTabDigital" /Documents/share.pdf --expires 7d
 - [Nextcloud](/providers/nextcloud) - parent Nextcloud preset
 - [Felicloud](/providers/felicloud) - sibling EU Nextcloud-as-a-Service preset
 - [WebDAV](/protocols/webdav) - protocol-level technical reference
-- [Tab.digital Website](https://tab.digital)
+- [TAB.DIGITAL Website](https://tab.digital)

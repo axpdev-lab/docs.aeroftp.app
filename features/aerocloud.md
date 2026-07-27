@@ -13,7 +13,7 @@ AeroCloud supports the sync surface exposed by the desktop wizard. The maturity 
 | FTP | Username / Password | Beta | Requires MFMT support for reliable timestamps. |
 | FTPS | Username / Password | Beta | Requires MFMT support for reliable timestamps. |
 | SFTP | Password / Key / Agent | Stable | Best overall fit for full AeroCloud sync. |
-| WebDAV family | Username / Password | Stable | Covers generic WebDAV plus hosted variants such as Nextcloud, Seafile, Tab.digital, Felicloud, CloudMe, InfiniCLOUD, Jianguoyun, and similar presets. |
+| WebDAV family | Username / Password | Stable | Covers generic WebDAV plus hosted variants such as Nextcloud, Seafile, TAB.DIGITAL, Felicloud, CloudMe, InfiniCLOUD, Jianguoyun, and similar presets. |
 | S3 family | Access Key / Secret | Stable | Covers AWS S3, Cloudflare R2, Backblaze S3, Wasabi, DigitalOcean Spaces, MinIO, Oracle Cloud, S3Drive, and similar S3-compatible presets. |
 | Azure Blob | Connection string / SAS | Stable | Treated as a first-class object-storage sync target in the wizard. |
 | Google Drive | OAuth 2.0 PKCE | Stable | Native Google API path with strong sync behavior. |

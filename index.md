@@ -117,7 +117,7 @@ import SourceForgeReach from './.vitepress/theme/components/SourceForgeReach.vue
     <td align="center" width="130"><a href="/providers/s3drive"><img src="/icons/providers/s3drive.png" width="36" /></a><br><sub>S3Drive</sub></td>
     <td align="center" width="130"><a href="/providers/nextcloud"><img src="/icons/providers/nextcloud.png" width="36" /></a><br><sub>Nextcloud</sub></td>
     <td align="center" width="130"><a href="/providers/felicloud"><img src="/icons/providers/felicloud.png" width="36" /></a><br><sub>Felicloud</sub></td>
-    <td align="center" width="130"><a href="/providers/tabdigital"><img src="/icons/providers/tabdigital.png" width="36" /></a><br><sub>Tab.digital</sub></td>
+    <td align="center" width="130"><a href="/providers/tabdigital"><img src="/icons/providers/tabdigital.png" width="36" /></a><br><sub>TAB.DIGITAL</sub></td>
     <td align="center" width="130"><a href="/providers/cloudme"><img src="/icons/providers/cloudme.png" width="36" /></a><br><sub>CloudMe</sub></td>
   </tr>
   <tr>
