@@ -59,7 +59,7 @@ The **Tier Snapshot** column reuses the same markers from the plan snapshots abo
 | WebDAV Server (generic) | WebDAV | `BYO` Capacity, trials, and billing depend on the upstream provider. | Uses the underlying provider account and quota model. |
 | Nextcloud | WebDAV / Self-hosted | `SELF-HOST` `BYO` Capacity depends on your hosting. | Full control, but you own the hosting, backups, and maintenance. |
 | Seafile | WebDAV / Self-hosted or hosted | `SELF-HOST` `BYO` `TRIAL` Self-hosted is bring-your-own storage. Hosted Seafile Plus trial was observed at 1 GB total for up to 3 users. | Observed hosted trial also showed 300 GB monthly traffic and 6 AI credits. Per-user quota is admin-configurable and excluded from the pricing comparison. |
-| Tab.digital | WebDAV / Hosted Nextcloud | `FREE` `PAY` 8 GB free. | Hosted Nextcloud with OCS / WebDAV, EU-hosted, privacy-first positioning. |
+| TAB.DIGITAL | WebDAV / Hosted Nextcloud | `FREE` `PAY` 8 GB free. | Hosted Nextcloud with OCS / WebDAV, EU-hosted, privacy-first positioning. |
 | CloudMe | WebDAV / Cloud | `FREE` `PAY` 3 GB free. | One of the few remaining simple consumer WebDAV services. |
 | InfiniCLOUD | WebDAV / Cloud | `FREE` `PAY` 20 GB free. | Personal WebDAV URL per account. Long-term bonus increases storage over time on paid plans. |
 | Jianguoyun / DriveHQ / other hosted WebDAV vendors | WebDAV / Cloud | `FREE` `PAY` Free quotas and trial packaging vary by vendor. | Hosted WebDAV providers change packaging often; verify the current commercial plan on the vendor page before publishing card-level pricing. |
@@ -130,7 +130,7 @@ The **Tier Snapshot** column reuses the same markers from the plan snapshots abo
 | <img src="/icons/providers/webdav.png" width="20" /> | WebDAV Server | Any WebDAV-compatible server | [WebDAV reference](/protocols/webdav) |
 | <img src="/icons/providers/nextcloud.png" width="20" /> | Nextcloud | Self-hosted, OCS API | [Setup guide](/providers/nextcloud) |
 | <img src="/icons/providers/felicloud.png" width="20" /> | Felicloud | Hosted Nextcloud, EU/GDPR | [Setup guide](/providers/felicloud) |
-| <img src="/icons/providers/tabdigital.png" width="20" /> | Tab.digital | Hosted Nextcloud-as-a-Service, EU/GDPR, 8 GB free | [Setup guide](/providers/tabdigital) |
+| <img src="/icons/providers/tabdigital.png" width="20" /> | TAB.DIGITAL | Hosted Nextcloud-as-a-Service, EU/GDPR, 8 GB free | [Setup guide](/providers/tabdigital) |
 | <img src="/icons/providers/cloudme.png" width="20" /> | CloudMe | Swedish cloud, 3 GB free | [Setup guide](/providers/cloudme) |
 | <img src="/icons/providers/infiniCloud.png" width="20" /> | InfiniCLOUD | Japanese cloud, 20 GB free | [Setup guide](/providers/infinicloud) |
 | <img src="/icons/providers/jianguoyun.png" width="20" /> | Jianguoyun | Chinese cloud, 3 GB free | [Setup guide](/providers/jianguoyun) |
