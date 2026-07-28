@@ -27,7 +27,7 @@ Today, the supported happy path is:
 - remote requirement: stock `rsync` server reachable via SSH on the remote host
 - client requirement: **none** - AeroFTP ships [AeroRsync](/features/aerorsync), a native rsync protocol 31 implementation in pure Rust. No `rsync` binary needed on Linux/macOS/Windows
 - product path: AeroSync / sync tree flows that request delta policy
-- validation scope: Linux + macOS + Windows (cross-OS first-class as of v3.6.1, byte-identical to stock rsync 3.4.1 in CI)
+- validation scope: Linux + macOS + Windows (cross-OS first-class as of v3.6.1, byte-identical to stock rsync 3.2.7 in CI - see [AeroRsync](/features/aerorsync) for which fixture carries which version)
 
 When those conditions are met, AeroFTP can use the real rsync-over-SSH delta path and report the savings in the UI.
 
