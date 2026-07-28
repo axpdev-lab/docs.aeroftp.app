@@ -110,6 +110,7 @@ export default defineConfig({
             { text: 'S3-Compatible', link: '/protocols/s3' },
             { text: 'Backblaze B2', link: '/protocols/backblaze' },
             { text: 'Azure Blob', link: '/protocols/azure' },
+            { text: 'Checksums and Hashes', link: '/protocols/checksums' },
           ],
         },
         {
