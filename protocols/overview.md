@@ -34,7 +34,7 @@ Authenticated through the provider's OAuth2 PKCE flow. AeroFTP opens a browser w
 | [Dropbox](dropbox.md) | OAuth2 PKCE | HTTPS + at-rest | 2 GB |
 | [OneDrive](onedrive.md) | OAuth2 PKCE | HTTPS + at-rest | 5 GB |
 | [Box](box.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
-| [pCloud](pcloud.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
+| [pCloud Drive](pcloud.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
 | [Zoho WorkDrive](zoho.md) | OAuth2 PKCE (8 regional endpoints) | HTTPS + at-rest | Team plan |
 | [Koofr](koofr.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
 | [Yandex Disk](yandex.md) | OAuth2 Token | HTTPS | 5 GB |

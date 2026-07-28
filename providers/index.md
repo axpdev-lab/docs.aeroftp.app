@@ -32,26 +32,26 @@ The **Tier Snapshot** column reuses the same markers from the plan snapshots abo
 | Dropbox | Cloud / OAuth | `FREE` `TRIAL` `PAY` 2 GB free. Time-limited paid trials appear periodically. | Free tier is small. Strong sharing ecosystem. |
 | MEGA | Cloud / E2E + S4 | `FREE` `PAY` 20 GB, expandable with achievements / referral. | One of the most generous free tiers. Strong client-side encryption. |
 | Box | Cloud / OAuth | `FREE` `TRIAL` `PAY` 10 GB on Personal. Business plans may offer trials. | Strong enterprise collaboration focus. |
-| pCloud | Cloud / OAuth | `FREE` `PAY` 10 GB max on the free tier (2 GB base + bonuses). | Lifetime plans remain a major differentiator. Swiss privacy positioning. |
+| pCloud Drive | Cloud / OAuth | `FREE` `PAY` 10 GB max on the free tier (2 GB base + bonuses). | Lifetime plans remain a major differentiator. Swiss privacy positioning. |
 | Filen | Cloud / E2E + Local S3/WebDAV | `FREE` `PAY` 10 GB permanent free storage. | Zero-knowledge E2E. Very aggressive entry pricing. |
 | Internxt | Cloud / E2E | `FREE` `PAY` 1 GB free. | Open-source and privacy-first. |
 | Koofr | Cloud / API + WebDAV | `FREE` `PAY` 10 GB forever. | EU-based. Can aggregate other clouds. |
-| kDrive (Infomaniak) | Cloud / OAuth | `FREE` `TRIAL` `PAY` 15 GB free. Trials may unlock larger paid bundles temporarily. | Swiss / EU positioning with strong privacy messaging. |
+| kDrive | Cloud / OAuth | `FREE` `TRIAL` `PAY` 15 GB free. Trials may unlock larger paid bundles temporarily. | Swiss / EU positioning with strong privacy messaging. |
 | FileLu | Cloud + S3 + WebDAV | `FREE` `PAY` 1 GB at signup, with possible bonus storage via tasks / referral / dev program. | Free plan is constrained: slower speeds and practical download limits. |
 | Zoho WorkDrive | Cloud / OAuth | `FREE` `TRIAL` `PAY` 5 GB on the Individual tier. Team plans may expose trials. | Best fit when already inside the Zoho suite. |
-| Drime Cloud | Cloud / API | `FREE` `PAY` 20 GB free. | EU positioning, collaboration, and privacy messaging. |
+| Drime | Cloud / API | `FREE` `PAY` 20 GB free. | EU positioning, collaboration, and privacy messaging. |
 | Jottacloud | Cloud / API | `FREE` `PAY` 5 GB free. | Norwegian provider with backup-heavy positioning. |
 | 4shared | Cloud / OAuth | `FREE` `PAY` 15 GB free. | Sharing-oriented service. WebDAV endpoint also exists. |
 | OpenDrive | Cloud / API + WebDAV | `FREE` `PAY` 5 GB free with bandwidth / speed limits. | Free plan has aggressive throughput limits. |
 | Yandex Disk | Cloud / OAuth + Object + WebDAV | `FREE` `PAY` 5 GB free. | Russia-based service; geo and compliance considerations may matter. |
 | Backblaze B2 | Native + S3-compatible | `FREE` `PAY` 10 GB permanent free allowance. | Very low cost. Free egress up to 3x stored data. |
-| Amazon S3 | S3 | `TRIAL` `PAY` `CARD` New AWS accounts get a time-limited free allowance / credits for eligible S3 use. | Egress pricing can dominate the bill. |
+| AWS S3 | S3 | `TRIAL` `PAY` `CARD` New AWS accounts get a time-limited free allowance / credits for eligible S3 use. | Egress pricing can dominate the bill. |
 | Cloudflare R2 | S3-compatible | `FREE` `PAY` `CARD` 10 GB-month plus request allowances on the free tier. | Zero egress fee. Strong fit for public assets and edge-heavy workloads. |
 | Google Cloud Storage | S3-compatible | `FREE` `TRIAL` `PAY` `CARD` 5 GB-month always free in select US regions, plus trial credits for new accounts. | Always-free scope is region-limited. |
 | IDrive e2 | S3-compatible | `FREE` `PAY` 10 GB permanent. | Very aggressive pricing. Egress is free up to 3x stored data. |
 | Wasabi | S3-compatible | `TRIAL` `PAY` `CARD` No permanent free tier; trial availability varies. | No egress or API fees, but 90-day minimum retention applies. |
 | Storj | S3-compatible | `PAY` No meaningful permanent free tier tracked here. | Decentralized storage economics differ from classic S3 vendors. |
-| Alibaba Cloud OSS | S3-compatible | `FREE` `TRIAL` `PAY` `CARD` Small always-free allowance plus temporary trial quota for new accounts. | Stronger fit for Asia-centric deployments. |
+| Alibaba OSS | S3-compatible | `FREE` `TRIAL` `PAY` `CARD` Small always-free allowance plus temporary trial quota for new accounts. | Stronger fit for Asia-centric deployments. |
 | DigitalOcean Spaces | S3-compatible | `TRIAL` `PAY` `CARD` No permanent free tier; introductory credits / trials are common. | Simple pricing and good developer ergonomics. |
 | Oracle Cloud | S3-compatible | `FREE` `TRIAL` `PAY` `CARD` 20 GB Always Free object storage plus time-limited onboarding credits. | Signup normally requires a credit or debit card even for the free tier. |
 | S3Drive | S3-compatible | `FREE` `PAY` 12 GB free. | Built on Storj. AeroFTP can transfer normally, but the S3 API does not expose quota back to the status bar. |
@@ -87,14 +87,14 @@ The **Tier Snapshot** column reuses the same markers from the plan snapshots abo
 | <img src="/icons/providers/dropbox.png" width="20" /> | Dropbox | OAuth | [Setup guide](/providers/dropbox) |
 | <img src="/icons/providers/mega.png" width="20" /> | MEGA | E2E | [Setup guide](/providers/mega) |
 | <img src="/icons/providers/box.png" width="20" /> | Box | OAuth | [Setup guide](/providers/box) |
-| <img src="/icons/providers/pcloud.png" width="20" /> | pCloud | OAuth | [Setup guide](/providers/pcloud) |
+| <img src="/icons/providers/pcloud.png" width="20" /> | pCloud Drive | OAuth | [Setup guide](/providers/pcloud) |
 | <img src="/icons/providers/filen.png" width="20" /> | Filen | E2E | [Setup guide](/providers/filen) |
 | <img src="/icons/providers/internxt.png" width="20" /> | Internxt | E2E | [Setup guide](/providers/internxt) |
 | <img src="/icons/providers/ZohoWorkDrive.png" width="20" /> | Zoho WorkDrive | OAuth | [Setup guide](/providers/zoho) |
 | <img src="/icons/providers/Koofr.png" width="20" /> | Koofr | API | [Setup guide](/providers/koofr) |
 | <img src="/icons/providers/kdrive.png" width="20" /> | kDrive | API | [Setup guide](/providers/kdrive) |
 | <img src="/icons/providers/jottacloud.png" width="20" /> | Jottacloud | API | [Setup guide](/providers/jottacloud) |
-| <img src="/icons/providers/drime.png" width="20" /> | Drime Cloud | API | [Setup guide](/providers/drime) |
+| <img src="/icons/providers/drime.png" width="20" /> | Drime | API | [Setup guide](/providers/drime) |
 | <img src="/icons/providers/filelu.png" width="20" /> | FileLu | API | [Setup guide](/providers/filelu) |
 | <img src="/icons/providers/opendrive.png" width="20" /> | OpenDrive | API | [Setup guide](/providers/opendrive) |
 | <img src="/icons/providers/YandexDisk.png" width="20" /> | Yandex Disk | OAuth | [Setup guide](/providers/yandex) |
@@ -111,8 +111,8 @@ The **Tier Snapshot** column reuses the same markers from the plan snapshots abo
 | <img src="/icons/providers/wasabi.png" width="20" /> | Wasabi | No egress fees | [Setup guide](/providers/wasabi) |
 | <img src="/icons/providers/cloudfare.png" width="20" /> | Cloudflare R2 | Zero egress fees | [Setup guide](/providers/cloudflare-r2) |
 | <img src="/icons/providers/digitalocean.png" width="20" /> | DigitalOcean Spaces | Region-based endpoints | [Setup guide](/providers/digitalocean-spaces) |
-| <img src="/icons/providers/tencent.png" width="20" /> | Tencent Cloud COS | APPID-style bucket naming | [Setup guide](/providers/tencent-cloud-cos) |
-| <img src="/icons/providers/alibabacloud.png" width="20" /> | Alibaba Cloud OSS | China & global regions | [Setup guide](/providers/alibaba-cloud-oss) |
+| <img src="/icons/providers/tencent.png" width="20" /> | Tencent COS | APPID-style bucket naming | [Setup guide](/providers/tencent-cloud-cos) |
+| <img src="/icons/providers/alibabacloud.png" width="20" /> | Alibaba OSS | China & global regions | [Setup guide](/providers/alibaba-cloud-oss) |
 | <img src="/icons/providers/oracle_cloud.png" width="20" /> | Oracle Cloud | Namespace-based endpoints, 20 GB free | [Setup guide](/providers/oracle-cloud) |
 | <img src="/icons/providers/storj.png" width="20" /> | Storj | Decentralized S3 gateways | [Setup guide](/providers/storj) |
 | <img src="/icons/providers/idrive_e2.png" width="20" /> | IDrive e2 | 10 GB free hot storage | [Setup guide](/providers/idrive-e2) |
