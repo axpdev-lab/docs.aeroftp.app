@@ -1,126 +1,202 @@
 # AeroRsync - Native rsync Protocol in Pure Rust
 
-**AeroRsync** is AeroFTP's native implementation of the rsync wire protocol 31 written in pure Rust. It powers AeroFTP's delta sync path on SFTP without requiring any external `rsync` binary on the client - neither on Linux/macOS nor on Windows. This is the engine behind the [Delta Sync](/features/delta-sync) feature you see in AeroSync.
+**AeroRsync** is AeroFTP's implementation of the rsync **wire protocol 31**, written from scratch in Rust. It powers AeroFTP's delta sync path on SFTP without requiring an external `rsync` binary on the client - not on Linux, not on macOS, not on Windows. It is the engine behind the [Delta Sync](/features/delta-sync) feature you see in AeroSync.
 
-> **Status**: Production, shipped in v3.6.1 as the **first cross-OS file manager with native rsync protocol 31 support in pure Rust**. No `rsync.exe` bundle. No WSL requirement. Byte-identical to stock rsync 3.4.1 in CI.
+> **Status**: Production since v3.6.1, the first cross-OS file manager to speak native rsync protocol 31 in pure Rust. No `rsync.exe` bundle. No WSL requirement. Verified byte-identical against a stock `rsync --server` in CI.
 
-> **As of v3.6.6** the delta path is wired into three product entry points, not just AeroSync:
->
-> - **AeroSync** delta transfers (the original entry point).
-> - **Cross-Profile Transfer** SFTP-to-SFTP with key-based auth, so only the bytes that differ from the destination travel on the wire.
-> - **AeroTools Code Editor** save against a remote SFTP file, so a one-line change to a 5 MB file ships only the diff.
+AeroRsync **does not replace rsync**. It *talks to* rsync: on the far end there is still a standard `rsync --server`. What it removes is the dependency on the rsync binary **on your machine**.
+
+*Page last verified against the code on 28 July 2026.*
 
 ## Why It Exists
 
-Before AeroRsync, AeroFTP shelled out to the local `rsync` binary over an SSH channel for delta sync. That worked on Linux and macOS where `rsync` is universally installed, but it created two ugly choices on Windows:
+Before AeroRsync, AeroFTP shelled out to the local `rsync` binary over an SSH channel. That worked on Linux and macOS, where `rsync` is universally installed, and it left two bad options on Windows:
 
-1. **Bundle a GPL `rsync.exe`** - license complexity, large download, manual updates per release
-2. **Require WSL** - barrier-to-entry that most Windows users reject outright
+1. **Bundle a GPL `rsync.exe`** - license complexity, larger download, manual updates every release.
+2. **Require WSL** - a barrier most Windows users reject outright.
 
-Both options would have permanently divided AeroFTP into a "first-class Unix" and "second-class Windows" product. We chose neither. Instead we wrote our own native rsync client in Rust.
+Either would have permanently split AeroFTP into a first-class Unix product and a second-class Windows one. We chose neither and wrote a native rsync client in Rust instead.
 
-## What It Does
+## Feature Matrix vs rsync
 
-AeroRsync re-implements the rsync remote-shell protocol - the wire format that `rsync -e ssh` speaks to a remote `rsync --server` peer - entirely in Rust:
+🟢 present · 🟡 partial or conditional · 🔴 not present
 
-- **Wire protocol 31** - the protocol every modern rsync server (3.0+) speaks
-- **Block signatures + rolling checksums** - the algorithm that lets the receiver tell the sender which 64 KiB chunks are missing
-- **Multiplexed I/O** - the message framing that interleaves data, errors, and progress on a single SSH channel
-- **xxh128 file-level checksum** - the trailing integrity check
-- **zstd literal compression** - the on-the-wire compression negotiated with the server
-- **Cross-OS** - same binary on Linux, macOS, Windows (`#![cfg(unix)]` removed surgically, only the Unix-specific *fallback* to the legacy classic-binary wrapper stays gated)
+Where a row is 🔴 for AeroRsync, the **Why** column says whether that is a deliberate boundary or unfinished work. Conflating those two is the fastest way to misread this table.
 
-The result: when you run AeroSync against a remote SFTP server with `rsync` installed, AeroFTP transfers only the bytes that actually changed - and the entire delta computation happens in a Rust process you trust, with no shell-out, no subprocess, no binary bundle.
+### Protocol and wire
 
-## How It Compares
+| Capability | rsync | AeroRsync | Why |
+|---|---|---|---|
+| Wire protocol 31 | 🟢 | 🟢 | Speaks bytes-on-wire to stock `rsync --server` |
+| Protocols 27-30 | 🟢 | 🔴 | Deliberate: protocol-31-only. Older endpoints are served by the stock binary |
+| Rolling Adler-32 signatures | 🟢 | 🟢 | Identical algorithm |
+| Block strong hash: md5 | 🟢 | 🟢 | Live-verified |
+| Block strong hash: md4 | 🟢 | 🟢 | Live-verified. Seeding mirrors rsync 3.2.7 `checksum.c` |
+| Block strong hash: sha1 | 🟡 | 🟢 | AeroRsync implements it; **rsync dropped sha1 after 3.2.7**, so a 3.4.1 peer refuses it |
+| Block strong hash: xxh64 / xxh3 / xxh128 | 🟢 | 🟢 | Live-verified, all three |
+| Whole-file checksum trailer verify | 🟢 | 🟢 | Computed and verified in both directions |
+| Literal compression: zstd | 🟢 | 🟢 | Tokens compatible with `token.c::send_zstd_token` |
+| Literal compression: zlib | 🟢 | 🔴 | zstd only |
+| Multiplexed I/O framing | 🟢 | 🟢 | |
 
-| | Classic rsync wrapper | AeroRsync (this) |
-|---|---|---|
-| Client requires `rsync` binary | Yes (Unix only - Windows blocked entirely) | **No** |
-| Cross-OS support | Unix only | **Linux + macOS + Windows** |
-| Bundle size impact | ~5 MiB extra binary on Windows | **0** (pure Rust, statically linked) |
-| Delta savings on small edits | Yes | **Yes** |
-| Wire compatibility with stock `rsync --server` | N/A | **Byte-identical to rsync 3.2.7 / 3.4.1** |
-| Memory profile | Streaming via subprocess pipes | Currently in-memory up to 256 MiB per file (P3-T01 will remove this cap) |
-| Process model | spawn + IPC | In-process, async |
+### Transport and session
+
+| Capability | rsync | AeroRsync | Why |
+|---|---|---|---|
+| SSH remote-shell transport | 🟢 | 🟢 | |
+| Daemon mode `rsync://` | 🟢 | 🔴 | Deliberate: a different transport, not a missing piece of a wire-31 client |
+| Local pipe / batch files | 🟢 | 🔴 | Deliberate |
+| SSH key auth | 🟢 | 🟢 | |
+| SSH password auth | 🟢 | 🟢 | With cross-leg host-key pinning |
+| SSH agent auth | 🟢 | 🟡 | Unix via `SSH_AUTH_SOCK`; Windows Pageant is a follow-up |
+| GSSAPI / keyboard-interactive | 🟢 | 🔴 | Deliberate |
+| Mandatory host-key pinning | 🔴 | 🟢 | Part of the module flow, not left to `known_hosts` |
+| One session for many files | 🟢 | 🟢 | `AerorsyncBatch` reuses one SSH session for N files |
+| Recursive tree in one invocation | 🟢 | 🔴 | **Unfinished work.** AeroSync owns the tree today; tracked as capstone Y-RSC.7 |
+
+### Metadata preserved
+
+| Capability | rsync | AeroRsync | Why |
+|---|---|---|---|
+| Modification time | 🟢 | 🟢 | |
+| Permissions | 🟢 | 🟢 | Applied at atomic finalize |
+| Symlinks | 🟢 | 🟢 | Unix, both directions. Never followed; target sanitised against a hostile server |
+| `user.*` extended attributes (`-X`) | 🟢 | 🟢 | Unix, single-file **and** batch. Windows off: no direct `user.*` analogue |
+| Other xattr namespaces | 🟢 | 🔴 | Deliberate: `user.*` only |
+| POSIX ACL (`-A`) | 🟢 | 🔴 | **Unfinished work** - the next real candidate |
+| Owner / group (`-o` / `-g`) | 🟢 | 🔴 | **Unfinished work.** uid/gid already travel on the wire; nothing applies them. Needs a privileged receiver |
+| Devices and special files | 🟢 | 🔴 | **Unfinished work.** Unix-only, privileged create |
+| Hardlinks (`-H`) | 🟢 | 🔴 | **Structurally blocked** until recursive scope: detecting that two paths share an inode needs the whole file list |
+
+### Transfer behaviour
+
+| Capability | rsync | AeroRsync | Why |
+|---|---|---|---|
+| Single-file block delta | 🟢 | 🟢 | The core capability |
+| Atomic destination write | 🟢 | 🟢 | `.aerotmp` + rename, with a kill-9 invariant |
+| Streaming, RSS bounded | 🟢 | 🟢 | Both directions; no in-memory file cap |
+| Sparse destination writes | 🟢 | 🟢 | Opt-in hole-punched writes; output reads back byte-identical |
+| `--delete` / `--backup` / `--link-dest` | 🟢 | 🔴 | Deliberate: deletion and retention belong to the sync layer, which has its own safety gates |
+| Filters `--exclude` / `--include` | 🟢 | 🔴 | Deliberate: AeroFTP filters one layer up with `.aeroignore` |
+| `--inplace` / `--append` / `--partial-dir` | 🟢 | 🔴 | Deliberate: `--inplace` would weaken the atomic-rename invariant |
+| `--mkpath` (create remote parents) | 🟢 | 🔴 | **Not implemented.** Earlier documentation claimed it was; that was wrong |
+
+### Deployment
+
+| Capability | rsync | AeroRsync | Why |
+|---|---|---|---|
+| Works with no client binary installed | 🔴 | 🟢 | The reason the module exists |
+| Windows without WSL / MSYS2 / Cygwin | 🔴 | 🟢 | The only delta path AeroFTP has on Windows |
+| In-process, no fork+exec | 🔴 | 🟢 | Linked inside the app |
+| Memory-safe implementation | 🔴 | 🟢 | Rust, no `unsafe` in the module beyond thin libc xattr wrappers |
+| Usable as a standalone library | 🟢 | 🔴 | The `aerorsync` crate on crates.io is a **name reservation** with no public API |
+
+## Performance vs stock rsync
+
+Measured 28 July 2026 on an idle 24-core machine: both engines back-to-back, same 50 MB fixtures, same container, SSH over loopback.
+
+**How the comparison was made fair.** The rsync side ran with `-logDtprcz`, the client flags that produce `--server -logDtprcze.iLsfxCIvu` - byte-for-byte the argument string AeroRsync sends. That was verified, not assumed: a wrapper script on the container logged the actual server command line for each candidate flag set.
+
+The everyday `-az` was deliberately **not** used for the published numbers. With it the delta scenarios measure nothing: the two 50 MB fixtures share a size *and* an mtime, so rsync's quick check declares them identical and skips the transfer entirely. The `c` (`--checksum`) in the strict set is what forces a real comparison.
+
+| Scenario | AeroRsync | stock rsync 3.2.7 | Bytes on the wire |
+|---|---|---|---|
+| Cold upload, 50 MB incompressible | **1.068 s** | 1.367 s | 52 436 493 vs 52 440 795 |
+| Delta upload, 640 × 4 KiB regions changed | 2.000 s | **1.358 s** | 3 748 322 vs 3 743 589 |
+| Delta download, same change set | **1.310 s** | 1.344 s | 43 481 sent vs 50 737 |
+| Redundant upload, nothing to do | **0.461 s** | 1.260 s | 49 B vs 82 B |
+| 20 × 256 KiB, one session per file | **4.981 s** | 25.249 s | - |
+| 20 × 256 KiB, one recursive `rsync` call | *no recursive scope* | **1.308 s** | - |
+
+Three different results, and the reading matters more than the score:
+
+1. **AeroRsync wins wherever a process would have to be spawned.** Cold upload, no-op, and twenty small files transferred one at a time. `rsync` pays a fresh `ssh` plus `rsync` fork per file - roughly 1.25 s each - while AeroRsync opens an in-process session. That is the 5.1× on the small-file batch and the 2.7× on the no-op.
+2. **AeroRsync loses the delta upload by about 30%, while putting the same work on the wire.** 3 748 322 bytes against 3 743 589 is a 0.13% difference, so the protocol decisions agree; the gap is CPU in the Rust encode path against thirty years of tuned C.
+3. **The real gap is the row that has no AeroRsync number.** rsync does the whole 20-file tree in *one* invocation in 1.308 s - 3.8× better than the per-file path. That is recursive scope, and `AerorsyncBatch` is what closes it at the transport layer. This benchmark exercises the per-file path on purpose, so it does not show the batch improvement.
+
+**Reproducibility.** Across three runs the wall-clock figures move by a few percent - AeroRsync's cold upload measured 1.005, 1.049 and 1.068 s - while the byte counts are identical every time, which is what you would expect from a deterministic protocol on a fixed payload.
+
+**A caveat that works against us, stated anyway.** The delta fixtures are compressible - `A_base.bin` compresses 9.1:1, and its mutated regions are largely reconstructible from blocks elsewhere in the basis, so rsync reports only 119 800 bytes of literal data on the download. Real-world delta ratios on incompressible payloads will be worse. The *comparison* stays valid, because both engines see identical bytes. The cold-upload fixture is genuinely incompressible (1.0:1), so that row is a clean transport measurement.
 
 ## Validation
 
-AeroRsync is not theoretical. The wire format is pinned against real-rsync behavior on multiple levels:
+AeroRsync is not theoretical. The wire format is pinned at several levels, all of which run in CI.
 
-- **386 unit tests** verify encode/decode round-trips against frozen byte transcripts captured from rsync 3.2.7
-- **CI lane 3** runs a full end-to-end upload against rsync 3.2.7 in Docker and asserts the result is **byte-identical** (sha256 match) - fails the build on any regression
-- **Live integration tests** target rsync 3.4.1 (Alpine + OpenSSH stock) for both upload and download
-- **Cross-OS CI** (`windows-native` job in `delta-sync-integration.yml`) runs `cargo check` + `cargo test --lib` on `windows-latest` - keeps the Windows path green on every push
+| Layer | What it proves | Count |
+|---|---|---|
+| Unit tests on the module | Encode/decode round-trips against frozen byte transcripts captured from rsync 3.2.7 | **599** |
+| CI lane 3, live | End-to-end against a real `rsync --server` in Docker: byte-identical upload (sha256 match), streaming upload, symlinks both directions, and `user.*` xattrs inline / out-of-band / binary-with-NUL / empty | **9** |
+| Checksum matrix, live | The production upload and download transports driven once per negotiated algorithm: xxh128, xxh3, xxh64, md5, md4, sha1 | **8** |
+| Product path, live | `integration_delta_sync` confirms the real product selects the native transport for a host-key-pinned SFTP profile | in CI |
+| Cross-OS | `cargo check` and `cargo test --lib` on `windows-2022` every push, plus a `--no-default-features` gate proving the classic-only fallback surface still compiles | in CI |
+
+**Which rsync, precisely.** Two fixtures, two versions, and the distinction is worth stating because this page used to blur it:
+
+| Fixture | Port | rsync | Base image | Serves |
+|---|---|---|---|---|
+| `aeroftp-rsync-real` | 2224 | **3.2.7** | Debian 12 bookworm | CI lane 3 and the checksum matrix |
+| `aeroftp-delta-sync-fixture` | 2222 | **3.4.1** | Alpine 3.19 | the `integration_delta_sync` product-path job |
+
+So "byte-identical" is verified against **rsync 3.2.7**. Version 3.4.1 is also exercised in CI, by the product-path job rather than by the byte-identical test.
 
 ## Architecture
 
-AeroRsync lives in [`src-tauri/src/aerorsync/`](https://github.com/axpdev-lab/aeroftp/tree/main/src-tauri/src/aerorsync) (~20 600 LOC across 23 files):
+AeroRsync lives in [`src-tauri/src/aerorsync/`](https://github.com/axpdev-lab/aeroftp/tree/main/src-tauri/src/aerorsync) - 23 files, roughly 35 800 lines.
 
-| Module | LOC | Role |
+| Module | Lines | Role |
 |---|---|---|
-| `real_wire.rs` | 5 700 | Wire format encode/decode (varint, varlong, preamble, file-list, sum_head, sum_block, delta ops, summary frame, multiplex) |
-| `native_driver.rs` | 3 700 | Session state machine (preamble exchange → file list → signatures → delta → summary) |
-| `tests.rs` | 3 700 | 300+ unit tests against frozen rsync 3.2.7 transcripts |
-| `delta_transport_impl.rs` | 1 100 | `AerorsyncDeltaTransport` - bridges the driver to the production `DeltaTransport` trait |
-| `ssh_transport.rs` | 800 | SSH exec channel with pinned host key fingerprint |
-| `events.rs` | 900 | Event bus for progress, warnings, completion |
-| Other 17 files | ~4 700 | types, planner, engine adapter, fallback policy, remote command, mock, fixtures |
+| `native_driver.rs` | 9 600 | Session state machine: preamble exchange → file list → signatures → delta → summary |
+| `real_wire.rs` | 7 750 | Wire encode/decode: varint, varlong, preamble, file list, `sum_head`, `sum_block`, delta ops, summary frame, multiplex |
+| `delta_transport_impl.rs` | 4 660 | `AerorsyncDeltaTransport` and `AerorsyncBatch`, bridging the driver to the production `DeltaTransport` trait |
+| `tests.rs` | 2 690 | Unit tests against frozen rsync 3.2.7 transcripts |
+| `engine_adapter.rs` | 2 540 | Streaming signature and delta application |
+| `ssh_transport.rs` / `russh_session_transport.rs` | 2 350 | The two SSH legs, with pinned host-key fingerprints |
+| `events.rs` | 875 | Progress, warnings, completion |
+| `xattr_fs.rs`, `streaming_writer.rs`, `live_tests.rs`, and 14 more | ~5 300 | xattr read/apply, atomic writes, live lanes, types, planner, fallback policy, remote command, mocks |
 
-The integration point in production is [`SftpProvider::delta_transport()`](https://github.com/axpdev-lab/aeroftp/blob/main/src-tauri/src/providers/sftp.rs):
-
-- On Unix, it can dispatch to either AeroRsync (when the runtime toggle `native_rsync_enabled` is on) **or** the classic `RsyncBinaryTransport` wrapper (the legacy path)
-- On Windows, only AeroRsync exists - there is no classic-binary fallback because there is no `rsync.exe` to fall back to. If AeroRsync declines (file too large for the 256 MiB cap), the transfer drops cleanly to plain SFTP without delta optimization
+The production entry point is [`SftpProvider::delta_transport()`](https://github.com/axpdev-lab/aeroftp/blob/main/src-tauri/src/providers/sftp.rs). On Unix it dispatches to AeroRsync or to the classic `RsyncBinaryTransport`; on Windows only AeroRsync exists, and when it declines the transfer drops cleanly to plain SFTP with no delta optimisation.
 
 ## Configuration
 
-The Cargo feature `aerorsync` is **compiled by default** since v3.6.1, but the **runtime toggle stays OFF by default** - there is one outstanding host-key-algorithm negotiation asymmetry between the SSH library used for classic SFTP (`ssh2`) and the one used by AeroRsync (`russh`) that needs to be resolved before flipping the first-run default to ON. The toggle is stored in `~/.config/aeroftp/native_rsync.toml`:
+The Cargo feature `aerorsync` is **compiled by default**, and the runtime toggle has been **ON by default in `Auto` mode since v3.8.0** - the host-key algorithm negotiation asymmetry between the `ssh2` leg and the `russh` leg was resolved in May 2026, and the default was flipped after that.
 
-```toml
-enabled = true
+From the GUI: **Settings → Advanced → Delta backend**. From the CLI:
+
+```bash
+aeroftp-cli aerorsync mode get          # auto | native | classic
+aeroftp-cli aerorsync mode set native
 ```
 
-You can also flip it from the AeroFTP GUI: **Settings > AeroSync > Delta backend**.
+`Auto` attempts the native engine first and keeps the classic binary as a fallback on Unix. **Soft** conditions - file below the minimum size, no key on disk, no remote `rsync` - route back to a plain upload silently. **Security** failures - host-key mismatch, permission denied - are hard errors and are never silently downgraded.
 
-When enabled, AeroRsync activates for any SFTP session that meets the [Delta Sync eligibility rules](/features/delta-sync) (key auth, remote `rsync` available). Otherwise the transfer takes the classic SFTP path automatically. **Soft fallbacks** (file too small, no key on disk, missing remote helper) silently route back to the classic upload path; security-critical failures (host-key mismatch, permission denied) are treated as hard errors and never silently downgraded.
+## Limitations
 
-## Limitations (Today)
+Stated as boundaries rather than as a backlog, because they are not the same thing.
 
-AeroRsync is intentionally narrow in scope. It **does not** currently:
+**Deliberate.** One file per invocation: AeroRsync is a delta accelerator, not a tree walker. Enumeration, deletion and retention stay with AeroSync, which carries its own safety gates - implementing `--delete` at wire level would install a second, weaker deletion authority underneath the hardened one. Filters are applied one layer up by `.aeroignore`. The destination write strategy belongs to the atomic writer. No `rsync://` daemon mode. Protocol 31 only.
 
-- Support `--delete*`, `--inplace`, `--append`, `--mkpath`, `--partial-dir`, `--sparse`, xattrs, ACLs, hard links, devices, special files
-- Run the rsync **daemon** mode (`rsync://`) — only the SSH remote-shell mode is implemented
-- Cross-provider delta — AeroRsync is SFTP-only by design
+**Unfinished.** ACL is the next real candidate. Owner/group are emitted on the wire but never applied, and doing so needs a privileged receiver that rarely matches a desktop deployment. Device and special files are unimplemented. Hardlinks are structurally blocked until recursive scope exists.
 
-These boundaries are the natural scope of "delta accelerator on top of SSH for typical SFTP servers". They are **not** blockers for the current production use case (incremental backups to NAS, deploys to web servers, sync against rsync-equipped Linux/BSD hosts).
+**Version-dependent.** Upstream rsync dropped `sha1` from the negotiated checksum list between 3.2.7 and 3.4.1. AeroRsync still implements it and it works against peers that still offer it, but a modern rsync will refuse it - that is the peer declining, not AeroRsync failing.
 
-The 256 MiB streaming cap and the per-file SSH-session overhead that were on the roadmap have both been resolved — see the next section.
-
-## Maturity milestones (delivered)
-
-The **P3-T01 industrialization wave** is now shipped:
-
-1. **Streaming upload** — rolling-checksum producer with chunked source reading. Files above 256 MiB stream end-to-end on the upload path without going through memory.
-2. **Streaming download** — chunked baseline reader + writer-driven `apply_delta`. Files above 256 MiB stream end-to-end on the download side too. **Result: the 256 MiB cap is gone in both directions.**
-3. **Session-cached batch transport** — the new `AerorsyncBatch` trait opens one SSH session for N files within a sync batch (~80% RTT saving on 100-small-file syncs against typical 50 ms latency)
-4. **`sync_tree_core` integration** — the AeroSync product path opens / closes batches around the sync loop and surfaces `delta_files[]` (per-file breakdown) and `bytes_on_wire` (cumulative wire savings) in the SyncReport, visible in SyncPanel.
+**Not yet a library.** The `aerorsync` crate on crates.io is a reserved name at `0.0.x` with no public API. Extraction depends on three gates: stock-rsync interop green end to end, the dependency direction inverted from AeroFTP to aerorsync, and a separate clean-room commit history. No date is attached to that.
 
 ## Origin Story
 
-AeroRsync started as **Strada C** - the third option in a fork in the road. We had:
+AeroRsync started as **Strada C**, the third option at a fork in the road:
 
-- **Strada A** (the wrapper): use the local `rsync` binary. Worked on Unix, blocked Windows.
-- **Strada B** (rclone-style block hashing): write our own delta primitives in the `StorageProvider` trait. Wide compatibility but requires every provider to expose remote read/write of partial blocks - most don't.
-- **Strada C** (this): re-implement the rsync wire protocol natively in Rust. Narrow scope (SFTP only), but unlocks a real cross-OS delta path with no client-side dependencies.
+- **Strada A**, the wrapper: use the local `rsync` binary. Worked on Unix, blocked Windows.
+- **Strada B**, rclone-style block hashing: write our own delta primitives in the `StorageProvider` trait. Wide compatibility, but it requires every provider to expose remote partial-block read/write, and most do not.
+- **Strada C**, this one: reimplement the rsync wire protocol natively in Rust. Narrow scope, SFTP only, but a real cross-OS delta path with no client-side dependency.
 
-Strada C took ~10 days of intense wire-protocol archaeology to converge on byte-identical behavior with stock rsync - three composed wire bugs (algo list separator, protocol min-negotiation, sender phase loop) had to be unblocked via wire-dump tooling before the first end-to-end live upload to rsync 3.4.1 turned green with a sha256 match.
+Strada C took about ten days of wire-protocol archaeology to converge on byte-identical behaviour. Three composed wire bugs - the algorithm-list separator, protocol min-negotiation, and the sender phase loop - had to be unpicked with wire-dump tooling before the first end-to-end live upload came back with a matching sha256.
 
-The codename `aerorsync` was adopted as the 6th member of the Aero family - the others being **AeroSync** (the sync UX), **AeroVault** (encryption), **AeroPlayer** (audio), **AeroAgent** (AI), and **AeroTools** (developer surface). The crate stub is published on [crates.io](https://crates.io/crates/aerorsync) at the official name.
+The name is the sixth member of the Aero family, alongside **AeroSync** (sync UX), **AeroVault** (encryption), **AeroPlayer** (audio), **AeroAgent** (AI) and **AeroTools** (developer surface).
 
 ## Related Pages
 
 - [Delta Sync](/features/delta-sync) - the user-facing UI built on top of AeroRsync
 - [AeroSync](/features/aerosync) - the higher-level sync workflow
-- [SFTP](/protocols/sftp) - the underlying protocol (the only target AeroRsync currently runs against)
-- [MCP Overview](/mcp/overview) - the `aeroftp_sync_tree` MCP tool uses this engine when applicable
-- [CLI Commands](/cli/commands) - `aeroftp-cli sync --watch` activates the delta path automatically when eligible
+- [SFTP](/protocols/sftp) - the underlying protocol
+- [MCP Overview](/mcp/overview) - `aeroftp_sync_tree` uses this engine when applicable
+- [CLI Commands](/cli/commands) - `aeroftp-cli sync --watch` activates the delta path when eligible
