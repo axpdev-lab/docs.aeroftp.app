@@ -35,8 +35,9 @@ Where a row is 🔴 for AeroRsync, the **Why** column says whether that is a del
 | Block strong hash: sha1 | 🟡 | 🟢 | AeroRsync implements it; **rsync dropped sha1 after 3.2.7**, so a 3.4.1 peer refuses it |
 | Block strong hash: xxh64 / xxh3 / xxh128 | 🟢 | 🟢 | Live-verified, all three |
 | Whole-file checksum trailer verify | 🟢 | 🟢 | Computed and verified in both directions |
-| Literal compression: zstd | 🟢 | 🟢 | Tokens compatible with `token.c::send_zstd_token` |
-| Literal compression: zlib | 🟢 | 🔴 | zstd only |
+| Literal compression: zstd | 🟢 | 🟢 | Tokens compatible with `token.c::send_zstd_token`. Only rsync 3.2.0 and later offer it |
+| Literal compression: zlibx | 🟢 | 🟢 | Raw deflate, one session-wide stream, `Z_SYNC_FLUSH` per record. Pinned against captured **rsync 3.1.3** bytes, which is the pre-zstd vintage that NAS firmware ships |
+| Literal compression: zlib | 🟢 | 🔴 | The one family left out, and not for effort: plain `zlib` also runs matched-block data through the compressor history on both ends (`token.c::see_deflate_token`), which is not modelled. A peer that lands there gets a typed negotiation error and the classic fallback, never a wrong reconstruction |
 | Multiplexed I/O framing | 🟢 | 🟢 | |
 
 ### Transport and session
@@ -124,35 +125,36 @@ AeroRsync is not theoretical. The wire format is pinned at several levels, all o
 
 | Layer | What it proves | Count |
 |---|---|---|
-| Unit tests on the module | Encode/decode round-trips against frozen byte transcripts captured from rsync 3.2.7 | **599** |
-| CI lane 3, live | End-to-end against a real `rsync --server` in Docker: byte-identical upload (sha256 match), streaming upload, symlinks both directions, and `user.*` xattrs inline / out-of-band / binary-with-NUL / empty | **9** |
+| Unit tests on the module | Encode/decode round-trips against frozen byte transcripts captured from rsync 3.2.7, plus a captured-wire oracle from rsync 3.1.3 for the deflate token path | **605** |
+| CI lane 3, live | End-to-end against a real `rsync --server` in Docker: byte-identical upload (sha256 match), streaming upload, symlinks both directions, `user.*` xattrs inline / out-of-band / binary-with-NUL / empty, the batch path over one session, and a symlink proving it does not inherit its target attributes | **11** |
 | Checksum matrix, live | The production upload and download transports driven once per negotiated algorithm: xxh128, xxh3, xxh64, md5, md4, sha1 | **8** |
 | Product path, live | `integration_delta_sync` confirms the real product selects the native transport for a host-key-pinned SFTP profile | in CI |
 | Cross-OS | `cargo check` and `cargo test --lib` on `windows-2022` every push, plus a `--no-default-features` gate proving the classic-only fallback surface still compiles | in CI |
 
-**Which rsync, precisely.** Two fixtures, two versions, and the distinction is worth stating because this page used to blur it:
+**Which rsync, precisely.** Three fixtures, three versions, and the distinction is worth stating because this page used to blur it:
 
 | Fixture | Port | rsync | Base image | Serves |
 |---|---|---|---|---|
 | `aeroftp-rsync-real` | 2224 | **3.2.7** | Debian 12 bookworm | CI lane 3 and the checksum matrix |
 | `aeroftp-delta-sync-fixture` | 2222 | **3.4.1** | Alpine 3.19 | the `integration_delta_sync` product-path job |
+| `aeroftp-rsync-313-deflate` | 2225 | **3.1.3** | SHA-pinned source build | the deflate oracle: both peers pinned to protocol 31 with no zstd, so `zlibx` is what the negotiation actually picks |
 
-So "byte-identical" is verified against **rsync 3.2.7**. Version 3.4.1 is also exercised in CI, by the product-path job rather than by the byte-identical test.
+So "byte-identical" is verified against **rsync 3.2.7**. Version 3.4.1 is also exercised in CI, by the product-path job rather than by the byte-identical test. Version 3.1.3 is there for a different reason: it is old enough to predate zstd, which is the only way to exercise the deflate token path against a real peer rather than against our own assumptions about it.
 
 ## Architecture
 
-AeroRsync lives in [`src-tauri/src/aerorsync/`](https://github.com/axpdev-lab/aeroftp/tree/main/src-tauri/src/aerorsync) - 23 files, roughly 35 800 lines.
+AeroRsync lives in [`src-tauri/src/aerorsync/`](https://github.com/axpdev-lab/aeroftp/tree/main/src-tauri/src/aerorsync) - 23 files, roughly 36 870 lines.
 
 | Module | Lines | Role |
 |---|---|---|
-| `native_driver.rs` | 9 600 | Session state machine: preamble exchange → file list → signatures → delta → summary |
-| `real_wire.rs` | 7 750 | Wire encode/decode: varint, varlong, preamble, file list, `sum_head`, `sum_block`, delta ops, summary frame, multiplex |
-| `delta_transport_impl.rs` | 4 660 | `AerorsyncDeltaTransport` and `AerorsyncBatch`, bridging the driver to the production `DeltaTransport` trait |
-| `tests.rs` | 2 690 | Unit tests against frozen rsync 3.2.7 transcripts |
+| `native_driver.rs` | 9 760 | Session state machine: preamble exchange → file list → signatures → delta → summary |
+| `real_wire.rs` | 8 050 | Wire encode/decode: varint, varlong, preamble, file list, `sum_head`, `sum_block`, delta ops, summary frame, multiplex |
+| `delta_transport_impl.rs` | 5 060 | `AerorsyncDeltaTransport` and `AerorsyncBatch`, bridging the driver to the production `DeltaTransport` trait |
+| `tests.rs` | 2 790 | Unit tests against frozen rsync 3.2.7 transcripts, plus the captured rsync 3.1.3 deflate wire oracle |
 | `engine_adapter.rs` | 2 540 | Streaming signature and delta application |
-| `ssh_transport.rs` / `russh_session_transport.rs` | 2 350 | The two SSH legs, with pinned host-key fingerprints |
+| `ssh_transport.rs` / `russh_session_transport.rs` | 2 400 | The two SSH legs, with pinned host-key fingerprints |
 | `events.rs` | 875 | Progress, warnings, completion |
-| `xattr_fs.rs`, `streaming_writer.rs`, `live_tests.rs`, and 14 more | ~5 300 | xattr read/apply, atomic writes, live lanes, types, planner, fallback policy, remote command, mocks |
+| `xattr_fs.rs`, `streaming_writer.rs`, `live_tests.rs`, and 14 more | ~5 390 | xattr read/apply, atomic writes, live lanes, types, planner, fallback policy, remote command, mocks |
 
 The production entry point is [`SftpProvider::delta_transport()`](https://github.com/axpdev-lab/aeroftp/blob/main/src-tauri/src/providers/sftp.rs). On Unix it dispatches to AeroRsync or to the classic `RsyncBinaryTransport`; on Windows only AeroRsync exists, and when it declines the transfer drops cleanly to plain SFTP with no delta optimisation.
 
@@ -177,7 +179,7 @@ Stated as boundaries rather than as a backlog, because they are not the same thi
 
 **Unfinished.** ACL is the next real candidate. Owner/group are emitted on the wire but never applied, and doing so needs a privileged receiver that rarely matches a desktop deployment. Device and special files are unimplemented. Hardlinks are structurally blocked until recursive scope exists.
 
-**Version-dependent.** Upstream rsync dropped `sha1` from the negotiated checksum list between 3.2.7 and 3.4.1. AeroRsync still implements it and it works against peers that still offer it, but a modern rsync will refuse it - that is the peer declining, not AeroRsync failing.
+**Version-dependent.** Upstream rsync dropped `sha1` from the negotiated checksum list between 3.2.7 and 3.4.1. AeroRsync still implements it and it works against peers that still offer it, but a modern rsync will refuse it - that is the peer declining, not AeroRsync failing. The compression side cuts the other way: zstd arrived in 3.2.0, so anything older negotiates `zlibx` instead, which is why that path is driven and pinned rather than left to the fallback. Plain `zlib` is the one compressor AeroRsync declines, and it declines it loudly: the peer gets a typed negotiation error and the transfer drops to the classic path, rather than a delta reconstruction built on literals it decoded wrong.
 
 **Not yet a library.** The `aerorsync` crate on crates.io is a reserved name at `0.0.x` with no public API. Extraction depends on three gates: stock-rsync interop green end to end, the dependency direction inverted from AeroFTP to aerorsync, and a separate clean-room commit history. No date is attached to that.
 
