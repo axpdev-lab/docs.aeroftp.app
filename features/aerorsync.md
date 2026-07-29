@@ -91,7 +91,7 @@ Where a row is 🔴 for AeroRsync, the **Why** column says whether that is a del
 | Works with no client binary installed | 🔴 | 🟢 | The reason the module exists |
 | Windows without WSL / MSYS2 / Cygwin | 🔴 | 🟢 | The only delta path AeroFTP has on Windows |
 | In-process, no fork+exec | 🔴 | 🟢 | Linked inside the app |
-| Memory-safe implementation | 🔴 | 🟢 | Rust, no `unsafe` in the module beyond thin libc xattr wrappers |
+| Memory-safe implementation | 🔴 | 🟢 | Rust. **13 `unsafe` blocks**, all POSIX calls with no Rust equivalent and each with a `SAFETY` note: 10 xattr wrappers, plus `utimensat` for mtime and the user and group name lookups. Every wire byte is decoded in safe Rust, which is where parsing untrusted input would earn a buffer-overflow CVE in C. This row understated the count until 2026-07-29 |
 | Usable as a standalone library | 🟢 | 🔴 | The `aerorsync` crate on crates.io is a **name reservation** with no public API |
 
 ## Performance vs stock rsync
