@@ -27,7 +27,7 @@ export default defineConfig({
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }],
     ['meta', { name: 'apple-mobile-web-app-title', content: 'AeroFTP Docs' }],
     ['meta', { name: 'author', content: 'axpdev-lab' }],
-    ['meta', { name: 'keywords', content: 'AeroFTP, FTP client, SFTP client, S3 client, WebDAV client, file manager, cloud storage, file transfer, Google Drive, Dropbox, OneDrive, MEGA, ImageKit, Uploadcare, Cloudinary, Immich, Nextcloud, Tab.digital, encryption, AeroVault, AeroSync, AeroCloud, AeroAgent, CLI, MCP' }],
+    ['meta', { name: 'keywords', content: 'AeroFTP, FTP client, SFTP client, S3 client, WebDAV client, file manager, cloud storage, file transfer, Google Drive, Dropbox, OneDrive, MEGA, ImageKit, Uploadcare, Cloudinary, Immich, Nextcloud, TAB.DIGITAL, encryption, AeroVault, AeroSync, AeroCloud, AeroAgent, CLI, MCP' }],
     // Open Graph
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:site_name', content: 'AeroFTP Documentation' }],
@@ -155,7 +155,7 @@ export default defineConfig({
                 { text: 'Nextcloud', link: '/providers/nextcloud' },
                 { text: 'Quotaless (WebDAV)', link: '/providers/quotaless' },
                 { text: 'Seafile', link: '/providers/seafile' },
-                { text: 'Tab.digital', link: '/providers/tabdigital' },
+                { text: 'TAB.DIGITAL', link: '/providers/tabdigital' },
               ],
             },
             {
