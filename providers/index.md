@@ -15,7 +15,7 @@ Each provider guide now starts with a **Plan snapshot** that separates storage q
 | --- | --- |
 | `FREE` | A usable no-cost plan or monthly free allowance exists. |
 | `TRIAL` | No-cost use is time-limited or credit-limited. |
-| `PAY` | Paid plan or pay-as-you-go billing applies. |
+| `PAY` | **No free tier — the provider is paid only.** Nearly every provider sells paid plans, so this badge is only used where there is no no-cost option at all; it never appears next to `FREE`. |
 | `CARD` | The free tier or trial normally requires billing/payment setup. |
 | `SELF-HOST` / `BYO` / `LOCAL` | Capacity depends on your own server, external provider, or local bridge. |
 
