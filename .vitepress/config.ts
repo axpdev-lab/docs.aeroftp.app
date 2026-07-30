@@ -163,6 +163,7 @@ export default defineConfig({
               collapsed: true,
               items: [
                 { text: '4shared', link: '/providers/4shared' },
+                { text: 'Blomp', link: '/providers/blomp' },
                 { text: 'Box', link: '/providers/box' },
                 { text: 'Drime Cloud', link: '/providers/drime' },
                 { text: 'Dropbox', link: '/providers/dropbox' },
