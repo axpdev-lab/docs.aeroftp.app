@@ -1,35 +1,50 @@
 ---
 title: Blomp with AeroFTP
-description: Connect Blomp to AeroFTP using OpenStack Swift / S3 endpoints with 40 GB free storage. Currently in pipeline pending upstream proxy fix.
+description: Connect Blomp to AeroFTP over OpenStack Swift with 40 GB free storage. Production-ready, live-verified against a real account.
 ---
 
 # Blomp
 
 <ProviderPlanCard id="blomp" />
 
-[Blomp](https://blomp.com) is a cloud storage provider with a generous **40 GB free** tier, built on top of an OpenStack Swift backend with an S3-compatible front-door. AeroFTP exposes Blomp as a preset on top of the standard S3 protocol stack.
+[Blomp](https://blomp.com) is a cloud storage provider offering **40 GB free**, plus 40 GB for every referral who stays active, up to 400 GB. It is built on an OpenStack Swift backend, and AeroFTP connects to it through its **native Swift provider**, not through S3.
 
-::: warning Status: pipeline (preset)
-Blomp's S3 endpoint currently returns `403` on storage operations even after a successful authentication. The preset is shipped in AeroFTP for users who already have a working configuration, but the integration is gated on an upstream proxy fix from Blomp. Tracked in the [provider pipeline](https://github.com/axpdev-lab/aeroftp/blob/main/ROADMAP.md#provider-pipeline). The S3 logo, badge, and IntroHub card are already wired so the preset becomes fully functional once the upstream fix lands.
+::: tip Status: production
+Blomp graduated to production once its Swift backend was verified against a live account. Log in with your Blomp email and password and the container is discovered for you.
 :::
 
 ## Connection Settings
 
+You normally only supply the username and password; the preset fills in the rest.
+
 | Field | Value |
 | --- | --- |
-| Endpoint | Blomp's S3 gateway URL (verify in your Blomp account dashboard) |
-| Region | `us-east-1` (placeholder, S3 protocol requires a region) |
-| Bucket | Your Blomp container / bucket name |
-| Access Key ID | From Blomp dashboard > API Keys |
-| Secret Access Key | From the same panel |
-| Path-style addressing | Enabled (Blomp does not resolve bucket-as-subdomain) |
+| Protocol | OpenStack Swift (**not** S3) |
+| Auth endpoint | `https://authenticate.blomp.com` (Keystone v2) |
+| Username | Your Blomp login **email** |
+| Password | Your Blomp account password |
+| Tenant name | `storage` — fixed, identical for every Blomp account |
+| Container | Named after your login email; AeroFTP resolves it automatically |
+
+## Files Larger Than 5 GiB
+
+OpenStack Swift caps a single object at 5 GiB, and Blomp inherits that limit. **AeroFTP handles it for you.** Above 5 GiB the upload switches automatically to Swift **Static Large Objects**: the file is split into 1 GiB segments stored under `.file-segments/{object}/`, then a manifest is written at the real object path. You upload a 40 GB file the same way you upload a 40 KB one.
+
+Two things worth knowing:
+
+- The segments live in the same container under `.file-segments/`. Deleting that folder by hand breaks the large objects that reference it.
+- This is native Swift SLO, not a client-side chunking overlay. The object is a normal Swift large object, so other Swift clients read it correctly — you are not locked into AeroFTP to get your data back.
+
+::: info The 403 on account listing is expected
+Blomp forbids the account-level container listing that Swift normally offers, and answers `403` even for a correctly authenticated session. This is **by design on Blomp's side, not an error in your configuration and not an outage**. AeroFTP handles it by falling back to the deterministic container named after your username, so browsing and transfers work normally. If you have read older notes describing this as an unresolved upstream bug, they are out of date.
+:::
 
 ## Why Use AeroFTP with Blomp
 
-- 40 GB free storage is one of the most generous quotas among S3-compatible providers
-- one client for Blomp, AWS S3, Wasabi, Cloudflare R2, MinIO, and 13 other S3-compatible backends
+- 40 GB free storage, reaching 400 GB through referrals
+- one client for Blomp alongside S3, WebDAV, SFTP, FTP and 30+ other backends
 - saved profile in the encrypted vault, no plaintext credentials on disk
-- AeroSync, AeroVault overlay, and CLI all work transparently once the upstream proxy is fixed
+- AeroSync, AeroVault overlay, and the CLI all work against Blomp like any other backend
 
 ## How to Connect
 

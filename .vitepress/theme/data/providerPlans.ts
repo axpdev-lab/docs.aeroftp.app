@@ -10,6 +10,7 @@ export type ProviderBadge =
 export interface ProviderPlan {
   id: string
   name: string
+  category: string
   badges: ProviderBadge[]
   storage: string
   limits: string
@@ -27,6 +28,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   '4shared': {
     id: '4shared',
     name: '4shared',
+    category: 'S3-compatible / Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '15 GB free cloud storage.',
     limits: 'Free accounts are capped at 2 GB per uploaded file; premium raises storage and direct-download features.',
@@ -40,6 +42,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'alibaba-cloud-oss': {
     id: 'alibaba-cloud-oss',
     name: 'Alibaba Cloud OSS',
+    category: 'S3-compatible',
     badges: ['FREE', 'PAY', 'CARD'],
     storage: 'Standard LRS storage lists the first 0-5 GB as free; new-user OSS trials may add temporary quota.',
     limits: 'Traffic, requests, storage class, region, and data retrieval are billed separately once free allowances are exceeded.',
@@ -53,45 +56,49 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'aws-s3': {
     id: 'aws-s3',
     name: 'AWS S3',
+    category: 'S3-compatible',
     badges: ['TRIAL', 'PAY', 'CARD'],
-    storage: 'No permanent S3-only free tier. New AWS customers receive Free Tier credits that can be applied to eligible S3 usage.',
+    storage: 'No permanent S3-only free tier. Since 2025-07-15 new AWS customers receive up to $200 in Free Tier credits (available for 6 months, usable within 12 months of account creation) instead of the old 12-month allowances.',
     limits: 'Storage, requests, lifecycle transitions, retrieval, and internet egress are metered separately.',
     billing: 'Requires an AWS billing account. After credits or legacy 12-month allowances end, S3 is pay-as-you-go.',
     bestFor: 'Production S3 compatibility, IAM control, lifecycle policies, and multi-region infrastructure.',
     costTip: 'Create a budget alert before uploading, keep test buckets private, and delete multipart leftovers after failed uploads.',
     sourceLabel: 'AWS S3 pricing',
     sourceUrl: 'https://aws.amazon.com/s3/pricing/',
-    checked,
+    checked: '2026-07-30',
   },
   'backblaze-b2': {
     id: 'backblaze-b2',
     name: 'Backblaze B2',
+    category: 'S3-compatible',
     badges: ['FREE', 'PAY'],
     storage: 'First 10 GB of B2 storage is free.',
-    limits: 'Beyond the free storage, B2 bills per stored byte-hour; downloads are free up to the included egress policy and then metered.',
+    limits: 'Beyond the free storage, $6.95/TB/month. Egress is free up to 3x your average monthly stored volume, then $0.01/GB. No minimum file size and no minimum storage duration fees.',
     billing: 'Free for very small buckets; pay-as-you-go when storage or egress exceeds included allowances.',
     bestFor: 'Low-cost backup buckets and native B2 workflows with predictable object-storage pricing.',
     costTip: 'Keep test buckets under 10 GB and pair B2 with lifecycle rules for old versions.',
     sourceLabel: 'Backblaze B2 pricing',
     sourceUrl: 'https://www.backblaze.com/cloud-storage/pricing',
-    checked,
+    checked: '2026-07-30',
   },
   'blomp': {
     id: 'blomp',
     name: 'Blomp',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
-    storage: '40 GB free at signup, expandable up to 400 GB through active referrals.',
-    limits: 'AeroFTP support is currently gated by Blomp S3 proxy behavior; paid plans remove some account activity constraints.',
+    storage: '40 GB free at signup, plus 40 GB per active referral, up to 400 GB.',
+    limits: 'Reached over native OpenStack Swift, not S3. Blomp forbids account-level container listing and answers 403 by design; AeroFTP falls back to the container named after your login email, so this is not an error. Paid plans: 500 GB at $11.88/year, 2 TB at $2.99/month, 10 TB at $9.99/month.',
     billing: 'Free plan is available; paid tiers start when you need fixed larger capacity or no yearly login requirement.',
-    bestFor: 'Large no-cost personal storage once the S3-compatible endpoint is usable for your account.',
-    costTip: 'Treat it as a test provider in AeroFTP until listing/upload works reliably for your endpoint.',
+    bestFor: 'Large no-cost personal storage over Swift, and one of the most generous free quotas of any supported provider.',
+    costTip: 'Sign in with your Blomp email and password; the tenant is always `storage` and the container is named after your email. Referrals are the cheapest way to grow the quota.',
     sourceLabel: 'Blomp plans',
-    sourceUrl: 'https://www.blomp.com/index.html',
-    checked,
+    sourceUrl: 'https://www.blomp.com/',
+    checked: '2026-07-30',
   },
   'box': {
     id: 'box',
     name: 'Box',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '10 GB free on the Individual plan.',
     limits: 'Free personal uploads are limited to 250 MB per file.',
@@ -105,19 +112,21 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'cloudflare-r2': {
     id: 'cloudflare-r2',
     name: 'Cloudflare R2',
+    category: 'S3-compatible',
     badges: ['FREE', 'PAY', 'CARD'],
     storage: '10 GB-month of Standard storage is free each month.',
-    limits: 'Standard tier includes monthly free operation allowances; no R2 egress fee, but requests and storage above allowances are metered.',
+    limits: 'Free each month: 10 GB-month storage, 1 million Class A and 10 million Class B operations. Above that, $0.015/GB-month Standard ($0.01 Infrequent Access) plus $4.50 per million Class A and $0.36 per million Class B. Egress stays free.',
     billing: 'Requires Cloudflare billing setup for usage beyond free tier.',
     bestFor: 'Public assets and S3-compatible buckets where egress fees are the main concern.',
     costTip: 'Keep hot test objects in Standard, watch Class A writes, and avoid Infrequent Access unless retention economics are clear.',
     sourceLabel: 'Cloudflare R2 pricing',
     sourceUrl: 'https://developers.cloudflare.com/r2/pricing/',
-    checked,
+    checked: '2026-07-30',
   },
   'cloudinary': {
     id: 'cloudinary',
     name: 'Cloudinary',
+    category: 'Photo & media',
     badges: ['FREE', 'PAY'],
     storage: 'Free plan includes 25 GB of managed storage according to the current pricing page.',
     limits: 'Cloudinary also meters transformations, bandwidth, and other media activity through plan credits/limits.',
@@ -131,6 +140,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'cloudme': {
     id: 'cloudme',
     name: 'CloudMe',
+    category: 'WebDAV',
     badges: ['FREE', 'PAY'],
     storage: '3 GB free storage.',
     limits: 'Free accounts have a 150 MB maximum file size.',
@@ -144,6 +154,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'digitalocean-spaces': {
     id: 'digitalocean-spaces',
     name: 'DigitalOcean Spaces',
+    category: 'S3-compatible',
     badges: ['PAY', 'TRIAL', 'CARD'],
     storage: '$5/month base subscription includes 250 GiB Standard storage across buckets.',
     limits: 'The base subscription includes 1,024 GiB outbound transfer; extra storage and transfer are metered.',
@@ -152,11 +163,12 @@ export const providerPlans: Record<string, ProviderPlan> = {
     costTip: 'Delete all buckets to stop the Spaces subscription, and watch the 250 GiB and 1 TiB bundle boundaries.',
     sourceLabel: 'DigitalOcean Spaces pricing',
     sourceUrl: 'https://docs.digitalocean.com/products/spaces/details/pricing/',
-    checked,
+    checked: '2026-07-30',
   },
   'drime': {
     id: 'drime',
     name: 'Drime Cloud',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '20 GB free storage.',
     limits: 'Paid plans add larger storage and collaboration capacity.',
@@ -170,6 +182,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'drivehq': {
     id: 'drivehq',
     name: 'DriveHQ',
+    category: 'WebDAV',
     badges: ['FREE', 'PAY'],
     storage: '5 GB free personal cloud storage plus one sub-user license.',
     limits: 'Free service is for personal use or enterprise trial; bandwidth and advanced business features are limited.',
@@ -183,6 +196,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'dropbox': {
     id: 'dropbox',
     name: 'Dropbox',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '2 GB free with Dropbox Basic.',
     limits: 'Small storage pool; paid plans are needed for serious sync libraries.',
@@ -196,6 +210,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'felicloud': {
     id: 'felicloud',
     name: 'Felicloud',
+    category: 'WebDAV',
     badges: ['FREE', 'PAY'],
     storage: '10 GB free storage forever.',
     limits: 'Paid lifetime plans increase capacity; free plan keeps the same core cloud features.',
@@ -209,6 +224,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'filelu': {
     id: 'filelu',
     name: 'FileLu',
+    category: 'S3-compatible / Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '1 GB free at signup; referral programs may expand the free allowance.',
     limits: 'Free downloads are slower and more limited than premium; premium removes file size and parallel download limits.',
@@ -222,6 +238,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'filen': {
     id: 'filen',
     name: 'Filen',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '10 GB free encrypted storage.',
     limits: 'Referral bonuses may add space, but baseline free accounts should be planned around 10 GB.',
@@ -235,6 +252,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'filen-desktop': {
     id: 'filen-desktop',
     name: 'Filen Desktop local bridges',
+    category: 'Local bridge',
     badges: ['LOCAL', 'BYO'],
     storage: 'Uses the storage quota of your existing Filen account.',
     limits: 'The local WebDAV/S3 bridge depends on the desktop app session and account quota.',
@@ -248,6 +266,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'github': {
     id: 'github',
     name: 'GitHub',
+    category: 'Developer forge',
     badges: ['FREE', 'PAY'],
     storage: 'Unlimited public/private repositories on Free; 500 MB GitHub Packages storage is included.',
     limits: 'Git repositories are not general cloud storage; large files should use Git LFS or releases within GitHub limits.',
@@ -261,6 +280,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'gitlab': {
     id: 'gitlab',
     name: 'GitLab',
+    category: 'Developer forge',
     badges: ['FREE', 'PAY', 'SELF-HOST'],
     storage: 'GitLab.com Free projects include 10 GiB repository + LFS storage per project.',
     limits: 'Projects can become read-only if repository + LFS usage exceeds the limit; other storage categories have separate rules.',
@@ -274,19 +294,21 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'google-cloud-storage': {
     id: 'google-cloud-storage',
     name: 'Google Cloud Storage',
+    category: 'S3-compatible',
     badges: ['FREE', 'PAY', 'CARD'],
-    storage: 'Free Tier includes 5 GB-months of Standard storage in eligible regions.',
-    limits: 'Operations, network egress, storage class, and region matter; free allowances reset monthly and unused quota does not roll over.',
+    storage: 'Free Tier includes 5 GB-months of Standard storage, but only in us-east1, us-west1 and us-central1.',
+    limits: 'The monthly free allowance is 5,000 Class A and 50,000 Class B operations plus 100 GB egress from North America (excluding China and Australia). Allowances reset monthly and unused quota does not roll over; a bucket outside the three eligible regions gets none of this.',
     billing: 'Requires a Google Cloud billing account; usage outside free limits is pay-as-you-go.',
     bestFor: 'S3-interoperable HMAC access to Google Cloud buckets and small always-free test buckets.',
     costTip: 'Keep free-tier buckets in eligible regions and add budget alerts before enabling public downloads.',
     sourceLabel: 'Google Cloud Storage pricing',
     sourceUrl: 'https://cloud.google.com/storage/pricing',
-    checked,
+    checked: '2026-07-30',
   },
   'google-drive': {
     id: 'google-drive',
     name: 'Google Drive',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '15 GB free per Google Account, shared across Drive, Gmail, and Google Photos.',
     limits: 'Drive API traffic and file creation can be throttled; storage is shared with mail and photos.',
@@ -300,32 +322,35 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'hetzner-storage-box': {
     id: 'hetzner-storage-box',
     name: 'Hetzner Storage Box',
+    category: 'SFTP preset',
     badges: ['PAY'],
     storage: 'Paid storage product; no permanent free tier.',
-    limits: 'Monthly plans differ by capacity and protocol access; traffic rules depend on Hetzner product/network context.',
-    billing: 'Requires Hetzner account billing; monthly cancellation/testing is the practical trial path.',
+    limits: 'Traffic is unlimited on every plan. BX11 1 TB, BX21 5 TB, BX31 10 TB, BX41 20 TB; 10 concurrent connections and 100 sub-accounts on all sizes; snapshots scale with the plan (10/20/30/40).',
+    billing: 'Hourly billing capped at a monthly maximum, no setup fee, no minimum contract period and immediate cancellation. BX11 EUR 3.20/month, BX21 EUR 10.90, BX31 EUR 20.80, BX41 EUR 40.60 (excl. VAT). Storage in Germany or Finland.',
     bestFor: 'Low-cost European backup storage over SFTP, FTP(S), rsync, SMB, Borg, and WebDAV.',
-    costTip: 'Start with the smallest box, test restore speed, then resize upward only after backup retention is clear.',
+    costTip: 'Start with the smallest box, test restore speed, then resize upward only after backup retention is clear. For backup and sync a Storage Box is usually cheaper than Hetzner Object Storage: EUR 3.20 for 1 TB with unlimited traffic against EUR 6.49 for 1 TB with 1 TB of traffic included.',
     sourceLabel: 'Hetzner Storage Box',
     sourceUrl: 'https://www.hetzner.com/storage/storage-box/',
-    checked,
+    checked: '2026-07-30',
   },
   'idrive-e2': {
     id: 'idrive-e2',
     name: 'IDrive e2',
+    category: 'S3-compatible',
     badges: ['FREE', 'PAY'],
     storage: 'First 10 GB is advertised as free for IDrive e2.',
-    limits: 'Usage above the free allowance is billed as S3-compatible object storage.',
+    limits: 'Above the free allowance, $0.006/GB/month ($6/TB) with a 1 TB minimum charge regardless of how little you actually store. Downloads are free up to 3x your stored volume, then $0.01/GB.',
     billing: 'Free small-bucket tier is available; paid plans and pay-as-you-go cover larger storage.',
     bestFor: 'S3-compatible backup targets with a tiny no-cost starter allowance.',
-    costTip: 'Keep test buckets below 10 GB and verify renewal/first-year discounts before committing production archives.',
+    costTip: 'Keep test buckets below 10 GB and verify renewal/first-year discounts before committing production archives. Note the 1 TB minimum charge: storing 50 GB costs the same as storing 1 TB.',
     sourceLabel: 'IDrive e2 pricing',
     sourceUrl: 'https://www.idrive.com/s3-storage-e2/',
-    checked,
+    checked: '2026-07-30',
   },
   'imagekit': {
     id: 'imagekit',
     name: 'ImageKit',
+    category: 'Photo & media',
     badges: ['FREE', 'PAY'],
     storage: 'Free plan includes 3 GB DAM storage and 20 GB bandwidth per month.',
     limits: 'Video units, AI extension units, purge requests, users, and upload sizes have separate plan caps.',
@@ -339,6 +364,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'immich': {
     id: 'immich',
     name: 'Immich',
+    category: 'Photo & media',
     badges: ['SELF-HOST', 'BYO'],
     storage: 'No hosted free tier from Immich itself; capacity is whatever your server provides.',
     limits: 'Quota, backup retention, and bandwidth are controlled by your deployment and disk.',
@@ -352,6 +378,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'infinicloud': {
     id: 'infinicloud',
     name: 'InfiniCLOUD',
+    category: 'WebDAV',
     badges: ['FREE', 'PAY'],
     storage: '20 GB free storage for new accounts.',
     limits: 'Free accounts can be deleted after long inactivity; WebDAV is supported on free and paid plans.',
@@ -365,6 +392,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'internxt': {
     id: 'internxt',
     name: 'Internxt Drive',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '1 GB free storage for life on the free plan.',
     limits: 'Bonus-task storage has changed over time; plan around the guaranteed 1 GB unless your dashboard shows more.',
@@ -378,6 +406,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'jianguoyun': {
     id: 'jianguoyun',
     name: 'Jianguoyun',
+    category: 'WebDAV',
     badges: ['FREE', 'PAY'],
     storage: 'Free plan includes 3 GB storage.',
     limits: 'WebDAV requires an app-specific password; sync/upload limits may differ from raw storage quota.',
@@ -391,6 +420,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'jottacloud': {
     id: 'jottacloud',
     name: 'Jottacloud',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '5 GB free storage.',
     limits: 'Paid Personal advertises unlimited storage but upload speed can be reduced after high usage thresholds.',
@@ -404,6 +434,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'kdrive': {
     id: 'kdrive',
     name: 'kDrive',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '15 GB free kDrive storage.',
     limits: 'Paid plans expand storage substantially; some protocol features may depend on plan/account type.',
@@ -417,6 +448,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'koofr': {
     id: 'koofr',
     name: 'Koofr',
+    category: 'WebDAV / Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '10 GB free storage for all users.',
     limits: 'Referral expansion has been discontinued; plan around 10 GB unless your account is grandfathered.',
@@ -430,6 +462,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'mega': {
     id: 'mega',
     name: 'MEGA',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '20 GB free encrypted cloud storage.',
     limits: 'Transfer quota is separate from storage and can vary by region/load/account state.',
@@ -443,6 +476,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'mega-s4': {
     id: 'mega-s4',
     name: 'MEGA S4',
+    category: 'S3-compatible',
     badges: ['PAY'],
     storage: 'Requires a MEGA Pro/Flexi-style account; not a standalone permanent free S3 tier.',
     limits: 'S4 storage and transfer follow the attached MEGA object-storage subscription terms.',
@@ -456,6 +490,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'megacmd': {
     id: 'megacmd',
     name: 'MEGAcmd local WebDAV',
+    category: 'Local bridge',
     badges: ['LOCAL', 'BYO'],
     storage: 'Uses the quota of your existing MEGA account: 20 GB on the free MEGA plan, more on Pro.',
     limits: 'The local bridge inherits MEGA transfer quota and the running MEGAcmd session.',
@@ -469,6 +504,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'minio': {
     id: 'minio',
     name: 'MinIO',
+    category: 'S3-compatible',
     badges: ['SELF-HOST', 'BYO'],
     storage: 'No provider quota; storage equals your own disks or infrastructure.',
     limits: 'Costs depend on your server, drives, network, backups, and redundancy model.',
@@ -482,6 +518,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'nextcloud': {
     id: 'nextcloud',
     name: 'Nextcloud',
+    category: 'WebDAV',
     badges: ['SELF-HOST', 'BYO'],
     storage: 'No universal hosted free tier; quota depends on your server or chosen Nextcloud provider.',
     limits: 'Storage, transfer, version retention, and WebDAV behavior depend on deployment settings.',
@@ -495,6 +532,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'onedrive': {
     id: 'onedrive',
     name: 'OneDrive',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '5 GB free cloud storage with a Microsoft account, shared with Microsoft storage surfaces.',
     limits: 'Paid Microsoft 365 plans add storage; business accounts may have tenant policy restrictions.',
@@ -508,6 +546,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'opendrive': {
     id: 'opendrive',
     name: 'OpenDrive',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '5 GB free online storage.',
     limits: 'Free plan lists 100 MB max file size, 1 GB/day bandwidth, and 200 KB/s speed.',
@@ -521,6 +560,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'oracle-cloud': {
     id: 'oracle-cloud',
     name: 'Oracle Cloud Object Storage',
+    category: 'S3-compatible',
     badges: ['FREE', 'PAY', 'CARD'],
     storage: '20 GB total Always Free Object Storage per tenancy.',
     limits: 'Other OCI services, requests, and outbound traffic have separate free and paid rules.',
@@ -534,6 +574,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'pcloud': {
     id: 'pcloud',
     name: 'pCloud',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '2 GB at signup, unlockable up to 10 GB free.',
     limits: 'Free accounts include shared-link and upload-traffic limits; WebDAV behavior can require email approval with 2FA.',
@@ -547,6 +588,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'pixelunion': {
     id: 'pixelunion',
     name: 'PixelUnion',
+    category: 'Photo & media',
     badges: ['FREE', 'PAY'],
     storage: '16 GB free photo storage.',
     limits: 'Paid plans add larger photo/video libraries; service is focused on Immich-style media backup.',
@@ -560,6 +602,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'quotaless': {
     id: 'quotaless',
     name: 'Quotaless',
+    category: 'S3-compatible / WebDAV',
     badges: ['TRIAL', 'PAY'],
     storage: 'No permanent free storage tier advertised; current site lists a 3-day free trial.',
     limits: 'Plans are built around unlimited storage/bandwidth claims with setup fees and recurring billing.',
@@ -573,6 +616,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   's3drive': {
     id: 's3drive',
     name: 'S3Drive',
+    category: 'S3-compatible',
     badges: ['FREE', 'PAY', 'BYO'],
     storage: 'AeroFTP docs track the S3Drive bundled storage plan as 12 GB free; S3Drive also works with external providers.',
     limits: 'App license features and backend storage quota are separate; external S3/WebDAV providers keep their own limits.',
@@ -586,6 +630,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'seafile': {
     id: 'seafile',
     name: 'Seafile',
+    category: 'WebDAV',
     badges: ['TRIAL', 'SELF-HOST', 'BYO'],
     storage: 'Self-hosted Seafile uses your own storage. In an observed Seafile Plus hosted account, the Team Plan Trial exposed 1 GB total for up to 3 users.',
     limits: 'Observed hosted trial included 300 GB monthly traffic and 6 monthly AI credits. Per-user quota inside the organization is admin-configurable and should not be treated as plan data.',
@@ -599,6 +644,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'sourceforge': {
     id: 'sourceforge',
     name: 'SourceForge',
+    category: 'Developer forge',
     badges: ['FREE'],
     storage: 'Free hosting for open-source project files and releases rather than personal cloud storage.',
     limits: 'Use is project/release oriented and subject to SourceForge project policies.',
@@ -612,19 +658,21 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'storj': {
     id: 'storj',
     name: 'Storj',
+    category: 'S3-compatible',
     badges: ['TRIAL', 'PAY'],
     storage: 'Current get-started page advertises 25 GB storage and bandwidth free for 30 days.',
-    limits: 'After the trial, storage tier, egress, and product choice determine cost; active archive differs from standard object storage.',
-    billing: 'Trial first; production storage is paid.',
+    limits: 'CHAPTER 11: Storj Labs filed for reorganisation on 2026-07-26 (case 5:26-bk-00512); it says it keeps operating, but do not make it your only copy. After the trial: $7/TB stored and $7/TB egress, with a $5/month account minimum (waived when paying in STORJ token), 50 KB minimum billable object and a 30-day minimum retention on Standard.',
+    billing: 'Trial first; production storage is paid. Storj Labs, Inc. filed for Chapter 11 reorganisation on 2026-07-26 (case 5:26-bk-00512, N.D. West Virginia). The company states it continues to operate normally and expects no service interruption, but this is a bankruptcy at a vendor holding your data.',
     bestFor: 'Distributed S3-compatible object storage and media/archive workflows.',
-    costTip: 'Do not treat older permanent-free-tier references as current; export trial data before the 30-day window ends.',
+    costTip: 'Do not treat older permanent-free-tier references as current, and export trial data before the 30-day window ends. Given the Chapter 11 filing, keep a second copy elsewhere rather than making Storj your only destination.',
     sourceLabel: 'Storj get started',
     sourceUrl: 'https://www.storj.io/get-started',
-    checked,
+    checked: '2026-07-30',
   },
   'tabdigital': {
     id: 'tabdigital',
     name: 'TAB.DIGITAL',
+    category: 'WebDAV',
     badges: ['FREE', 'PAY'],
     storage: '8 GB free Nextcloud account.',
     limits: 'Free accounts receive self-service/community support; paid plans add direct support and larger storage.',
@@ -638,6 +686,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'tencent-cloud-cos': {
     id: 'tencent-cloud-cos',
     name: 'Tencent Cloud COS',
+    category: 'S3-compatible',
     badges: ['TRIAL', 'PAY', 'CARD'],
     storage: 'New COS users receive 50 GB Standard storage usage for 6 months.',
     limits: 'Free quota applies to Standard storage in eligible public cloud regions; traffic and operations can still matter.',
@@ -651,6 +700,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'uploadcare': {
     id: 'uploadcare',
     name: 'Uploadcare',
+    category: 'Photo & media',
     badges: ['FREE', 'PAY'],
     storage: 'Free plan includes 1 GB storage.',
     limits: 'Free plan also lists 5 GB/month traffic, 1,000 operations/month, and 500 MB max file size.',
@@ -664,19 +714,21 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'wasabi': {
     id: 'wasabi',
     name: 'Wasabi',
+    category: 'S3-compatible',
     badges: ['TRIAL', 'PAY'],
     storage: '30-day free trial includes up to 1 TB storage.',
-    limits: 'Paid Wasabi accounts have minimum storage/retention rules; trial is time-limited.',
+    limits: 'Paid pay-as-you-go starts at $7.99/TB/month with no egress or API request fees. Paid accounts have minimum storage/retention rules; the trial is time-limited.',
     billing: 'Trial does not require a credit card; paid account required after 30 days.',
     bestFor: 'Testing S3-compatible backup workflows with a large short-term trial bucket.',
     costTip: 'Do restore tests during the 30-day window and account for minimum retention before paid churn-heavy backups.',
     sourceLabel: 'Wasabi trial data limit',
     sourceUrl: 'https://docs.wasabi.com/docs/trial-data-limit',
-    checked,
+    checked: '2026-07-30',
   },
   'yandex': {
     id: 'yandex',
     name: 'Yandex Disk',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY'],
     storage: '5 GB free when you sign up for Yandex Disk.',
     limits: 'Paid Yandex 360 plans add larger file limits and storage; WebDAV may be less suitable for infrastructure-style heavy use.',
@@ -690,6 +742,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'yandex-object-storage': {
     id: 'yandex-object-storage',
     name: 'Yandex Object Storage',
+    category: 'S3-compatible',
     badges: ['FREE', 'PAY', 'CARD'],
     storage: 'First 1 GB of Standard storage per month is free.',
     limits: 'Monthly free operations include 10,000 write/list operations and 100,000 read/head/options operations; first 100 GB outgoing traffic is free.',
@@ -703,6 +756,7 @@ export const providerPlans: Record<string, ProviderPlan> = {
   'zoho': {
     id: 'zoho',
     name: 'Zoho WorkDrive',
+    category: 'Cloud (OAuth/API)',
     badges: ['FREE', 'PAY', 'TRIAL'],
     storage: 'WorkDrive Individual starts with 5 GB free storage.',
     limits: 'Team plans have 15-day trials and team storage pools; paid plans have minimum-user assumptions.',
