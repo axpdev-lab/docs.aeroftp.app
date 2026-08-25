@@ -105,14 +105,14 @@ plaintext
   -> AES-256-GCM-SIV encrypt each compressed chunk
   -> BLAKE3-256 over the ciphertext (pre-decryption integrity)
   -> manifest + block table
-  -> optional extension blocks (reserved for v4 ECC)
+  -> optional extension blocks (reserved for v4 error correction)
 ```
 
 Chunking must precede compression: running a single zstd stream over the whole plaintext destroys content-defined chunk boundaries because a byte shift in the source cascades through the compressed output and relocates every boundary the chunker would have found. That defeats deduplication, defeats resume, and breaks the chunk-range semantics that AeroSync depends on. Per-chunk zstd also keeps random access cheap because a reader can decompress one logical block without inflating the rest of the vault.
 
 ### Wrapper identifiers
 
-Every wrapper layer carries both an algorithm id and an algorithm version. Readers dispatch on these fields, not on the container version alone, which is what lets v4 add ECC blocks as a non-critical extension without breaking v3 readers.
+Every wrapper layer carries both an algorithm id and an algorithm version. Readers dispatch on these fields, not on the container version alone, which is what lets v4 add error-correction blocks as a non-critical extension without breaking v3 readers.
 
 | Wrapper | v3 default | Version | Notes |
 | ------- | ---------- | ------- | ----- |
@@ -121,8 +121,12 @@ Every wrapper layer carries both an algorithm id and an algorithm version. Reade
 | `chunk_id` | `blake3-keyed-128` | 1 | 32-byte keyed BLAKE3 truncated to 16 bytes, doubles as dedup key |
 | `compression` | `zstd` | 1 | Per chunk, profile-selected level: `fast=3`, `balanced=9` (default), `archive=19` |
 | `crypt` | `aes-256-gcm-siv` | 1 | RFC 8452, 96-bit random nonce per chunk, AAD bound to block index + chunk id |
-| `cipher_hash` | `blake3-256` | 1 | Stored per block, verified before decryption (also the hook point for v4 ECC scrub) |
+| `cipher_hash` | `blake3-256` | 1 | Stored per block, verified before decryption (also the hook point for the v4 error-correction scrub) |
 | `ecc` | absent in v3, `reed-solomon` in v4 | 2 | Non-critical extension; v4 fills the slot v3 reserves |
+
+::: info ECC here means error-correcting code
+In the AeroVault sections of this page, `ecc` is an **error-correcting code**: the Reed-Solomon parity that repairs a damaged vault. It is not Elliptic Curve Cryptography, which is the usual reading of the abbreviation in a security document. The vault format uses no elliptic-curve primitive at all; its cipher is AES-256-GCM-SIV and its hash is BLAKE3. The elliptic-curve names further down this page (ECDH, ECDHE, ECDSA in the transport table) belong to the TLS and SSH layers, which are a separate subject.
+:::
 
 ### Key schedule
 
@@ -138,7 +142,7 @@ Storing two wrapped keys means content encryption and header integrity never sha
 
 The 1024-byte fixed header carries an HMAC-SHA512 tag at a fixed offset. `verify_mac()` runs before `unwrap_key()`: if any header byte has been tampered with, the reader stops before Argon2id even runs. This closes the budget-burning attack where an adversary modifies a header on cold media to force a victim's machine through a multi-hundred-MiB KDF on every open attempt.
 
-The header also reserves an extension directory and an extension payload region. v3 writers emit an empty extensions array; v3 readers reject unknown extensions only when they are marked `critical = true` and silently skip non-critical ones. That structural contract is what lets v4 ship as "v3 plus ECC blocks in the extension area" with no header or manifest layout change.
+The header also reserves an extension directory and an extension payload region. v3 writers emit an empty extensions array; v3 readers reject unknown extensions only when they are marked `critical = true` and silently skip non-critical ones. That structural contract is what lets v4 ship as "v3 plus error-correction blocks in the extension area" with no header or manifest layout change.
 
 ### Manifest
 
@@ -164,7 +168,7 @@ These do not replace a hardened deserializer, but they make the easy "give the r
 
 ### Error correction (v4, shipped)
 
-v4 is intentionally shaped as "v3 plus ECC". The cipher chain (chunk → compress → encrypt) and the chunk hash trail (keyed BLAKE3-128 for dedup, BLAKE3-256 for pre-decryption integrity) do not change for v4. The error-correction wrapper ships as:
+v4 is intentionally shaped as "v3 plus error correction". The cipher chain (chunk → compress → encrypt) and the chunk hash trail (keyed BLAKE3-128 for dedup, BLAKE3-256 for pre-decryption integrity) do not change for v4. The error-correction wrapper ships as:
 
 1. **Reed-Solomon parity**, carried as a non-critical extension. No refactor of v3 primitives, so a v3-only reader skips it and still opens the container.
 2. **A detached, content-addressed `.aerocorrect` sidecar** as the default placement (`embedded` and `both` are also available), shared byte-for-byte with the standalone `aerovault` crate and with AeroSync. The sidecar binds to the SHA-256 of the protected content and its v2 framing is self-healing.
