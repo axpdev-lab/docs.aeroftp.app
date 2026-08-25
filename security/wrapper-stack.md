@@ -67,8 +67,8 @@ A format that lives for years must be able to swap an algorithm without breaking
 | `cipher_hash` | `blake3-256` | 1 |
 | `ecc` | `reed-solomon` (v4, non-critical extension) | 2 |
 
-::: info ECC here means error-correcting code
-The `ecc` wrapper is an **error-correcting code**: the Reed-Solomon parity that repairs a damaged vault. It is not Elliptic Curve Cryptography, which is the usual reading of the abbreviation on a security page. The AeroVault format uses no elliptic-curve primitive at all; its cipher is AES-256-GCM-SIV and its hash is BLAKE3, both named in the table above.
+::: info Naming: EC, not ECC
+Error correction is abbreviated **EC** throughout AeroFTP documentation, and **ECC** is reserved for Elliptic Curve Cryptography. The `ecc` wrapper above is the Reed-Solomon parity that repairs a damaged vault, not an elliptic-curve primitive: the AeroVault format uses none at all, its cipher is AES-256-GCM-SIV and its hash is BLAKE3, both named in the table. The field keeps its `ecc` spelling because it is a wire-format name and cannot be renamed without breaking the format.
 :::
 
 v4 reuses the same header layout and only adds the `ecc` field, so **v3 + error correction = v4** and a v3-only build opens a v4 vault for the data it understands, skipping the non-critical parity extension it does not. The detached form of the parity lives in a sibling `.aerocorrect` sidecar.
