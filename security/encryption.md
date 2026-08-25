@@ -125,7 +125,7 @@ Every wrapper layer carries both an algorithm id and an algorithm version. Reade
 | `ecc` | absent in v3, `reed-solomon` in v4 | 2 | Non-critical extension; v4 fills the slot v3 reserves |
 
 ::: info Naming: EC, not ECC
-Error correction is abbreviated **EC** throughout AeroFTP documentation, and **ECC** is reserved for Elliptic Curve Cryptography. The `ecc` wrapper above is the Reed-Solomon parity that repairs a damaged vault: the AeroVault format uses no elliptic-curve primitive at all, its cipher is AES-256-GCM-SIV and its hash is BLAKE3. The elliptic-curve names further down this page (ECDH, ECDHE, ECDSA in the transport table) are genuine ones and belong to the TLS and SSH layers, which are a separate subject. The field keeps its `ecc` spelling because it is a wire-format name and cannot be renamed without breaking the format.
+In prose, error correction is abbreviated **EC**, and **ECC** is left to mean Elliptic Curve Cryptography. The `ecc` wrapper above is the Reed-Solomon parity that repairs a damaged vault: the AeroVault format uses no elliptic-curve primitive at all, its cipher is AES-256-GCM-SIV and its hash is BLAKE3. The elliptic-curve names further down this page (ECDH, ECDHE, ECDSA in the transport table) are genuine ones and belong to the TLS and SSH layers, which are a separate subject. The field keeps its `ecc` spelling because it identifies something rather than describing it: it is a wire-format name, and renaming it would change the format.
 :::
 
 ### Key schedule
