@@ -157,7 +157,7 @@ AeroVault v2 (described above) is the stable default. Two newer formats extend i
 
 **v3 (the `Archive` tier)** is the first wrapper-stack vault. It keeps the single-file `.aerovault` portability of v2 while adding content-defined chunking (Gear-CDC), per-chunk zstd compression, deduplication, and a forward-compatible extension directory. The write pipeline is chunk-first: chunk → keyed-BLAKE3 chunk id → zstd → AES-256-GCM-SIV → BLAKE3-256 cipher hash. It ships as the `Archive` security tier in the vault-create dialog; the simpler Standard, Advanced and Paranoid tiers stay on v2, and there is no automatic migration.
 
-**v4 = v3 + Error Correction.** v4 adds a fourth wrapper, Reed-Solomon parity, as a non-critical extension, so `v3 + ECC = v4` and a v3-only reader skips the parity it does not understand and still opens the container.
+**v4 = v3 + Error Correction.** v4 adds a fourth wrapper, Reed-Solomon parity, as a non-critical extension, so `v3 + error correction = v4` and a v3-only reader skips the parity it does not understand and still opens the container.
 
 ### Error Correction
 

@@ -21,8 +21,15 @@ This bridge page covers profile interoperability through `rclone.conf`. If you n
 
 - Exports your server profiles to a standard `rclone.conf` file
 - Passwords are obfuscated using rclone's own scheme for full compatibility
+- **OAuth profiles are exported too**, for every provider with a matching rclone backend: Google Drive, Dropbox, OneDrive, Box, pCloud, Yandex Disk, Zoho WorkDrive and Jottacloud. Each remote is written with its `client_id`, `client_secret` and `token`, so it is usable and refreshable without re-authorising
 - Use it to share configurations, set up rclone on a server, or simply keep a portable backup
 - Available in the GUI (Settings > Export/Import > Export to rclone)
+
+The OAuth export needs all three credentials in the vault, which is the case for a profile you authorised in AeroFTP with your own OAuth app. When one of them is missing, the remote is still written and a comment tells you to run `rclone config reconnect <remote>:` before use, rather than emitting a silently broken half-remote. Jottacloud is the one exception in shape: it carries an OIDC refresh token that rclone exchanges on first use, so no interactive re-login is needed there either.
+
+Keep in mind that AeroFTP and rclone use different redirect URIs. Register both under the same app in the provider's developer console so one `client_id` and `client_secret` pair works in both tools.
+
+The providers with no rclone export today are 4shared, Internxt and kDrive; those entries are emitted as `# manual setup required` comments instead.
 
 No vendor lock-in. Your data, your choice.
 

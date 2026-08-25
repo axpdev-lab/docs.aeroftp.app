@@ -67,6 +67,10 @@ A format that lives for years must be able to swap an algorithm without breaking
 | `cipher_hash` | `blake3-256` | 1 |
 | `ecc` | `reed-solomon` (v4, non-critical extension) | 2 |
 
+::: info ECC here means error-correcting code
+The `ecc` wrapper is an **error-correcting code**: the Reed-Solomon parity that repairs a damaged vault. It is not Elliptic Curve Cryptography, which is the usual reading of the abbreviation on a security page. The AeroVault format uses no elliptic-curve primitive at all; its cipher is AES-256-GCM-SIV and its hash is BLAKE3, both named in the table above.
+:::
+
 v4 reuses the same header layout and only adds the `ecc` field, so **v3 + error correction = v4** and a v3-only build opens a v4 vault for the data it understands, skipping the non-critical parity extension it does not. The detached form of the parity lives in a sibling `.aerocorrect` sidecar.
 
 A teaching example most Linux users already have on disk: `.tar.gz` and `.pkg.tar.zst`. Both tape-archive (`tar`) before compressing. The Arch package format moved from an older compressor to Zstandard without changing the "archive then compress" shape: exactly the algorithm-versioning move applied to a real-world format.
@@ -106,7 +110,7 @@ When an at-rest chunking wrapper produces the objects, a transfer-level chunk-si
 
 ## Error correction (AeroVault format v4)
 
-Error correction is the fourth wrapper, and it is structurally different: compression, chunking and encryption transform the data; error correction adds parity *alongside* it, so `v3 + ECC = v4` and a v3 reader simply skips the parity it does not understand. It sits as the outermost layer, over the cipher blocks. It repairs damage *before* decryption; AES-256-GCM-SIV remains the sole authority on tampering. Redundancy is for recovery, not for trust. On cloud backends durability is already redundant; on USB sticks, consumer NAS disks, optical media and cold-storage archives it is the difference between an encrypted backup surviving a bad sector and being gone.
+Error correction is the fourth wrapper, and it is structurally different: compression, chunking and encryption transform the data; error correction adds parity *alongside* it, so `v3 + error correction = v4` and a v3 reader simply skips the parity it does not understand. It sits as the outermost layer, over the cipher blocks. It repairs damage *before* decryption; AES-256-GCM-SIV remains the sole authority on tampering. Redundancy is for recovery, not for trust. On cloud backends durability is already redundant; on USB sticks, consumer NAS disks, optical media and cold-storage archives it is the difference between an encrypted backup surviving a bad sector and being gone.
 
 The scheme is **Reed-Solomon parity in a detached, par2-style `.aerocorrect` sidecar** that protects any byte stream: a `.aerovault` container, a synced backup file, or an ordinary file. It is content-addressed (it binds to the SHA-256 of the protected content, not a path or salt) and its v2 framing is self-healing, so a lightly-corrupted sidecar still recovers. Repair is fail-closed and all-or-nothing: rebuilt bytes are re-verified against the bound content hash (and, for a vault, its authenticated header MAC and manifest `cipher_hash`) before the original is replaced, so a foreign or corrupt sidecar can only make a repair fail, never overwrite good data. The operational surface is shipped: standalone `aeroftp correct gen|verify|repair`, vault `scrub` / `repair` / `export-parity` / `strip-parity`, and `sync --error-correction`. The full guide is [Error Correction (`.aerocorrect`)](/security/error-correction).
 
