@@ -139,7 +139,7 @@ Now that you are connected, there is much more to discover:
 - **[Interface Overview](interface.md)** -- Detailed tour of every UI element
 - **[AeroSync](../features/aerosync.md)** -- Intelligent directory synchronization with conflict resolution
 - **[AeroVault](../features/aerovault.md)** -- Military-grade encrypted file containers
-- **[AeroAgent](../features/aeroagent.md)** -- AI assistant with 43 tools for file management and code analysis
+- **[AeroAgent](../features/aeroagent.md)** -- AI assistant with 39 tools for file management and code analysis
 - **[AeroTools](../features/aerotools.md)** -- Integrated code editor (Monaco), terminal, and development tools
 - **[Protocols Overview](../protocols/overview.md)** -- Guide to all 22 supported protocols
 

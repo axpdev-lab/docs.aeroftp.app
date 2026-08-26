@@ -22,7 +22,7 @@ Bidirectional file synchronization with real-time transfer progress, speed graph
 
 ## DevTools & AeroAgent
 
-Integrated code editor (Monaco), SSH terminal, and AI assistant with 43 tools - all in resizable panels.
+Integrated code editor (Monaco), SSH terminal, and AI assistant with 39 tools - all in resizable panels.
 
 ![DevTools & AeroAgent](/screenshots/devtools-aeroagent.png)
 

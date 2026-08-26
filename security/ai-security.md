@@ -1,6 +1,6 @@
 # AI Tool Security
 
-AeroFTP's AI assistant (AeroAgent) provides 43 tools for file management, server operations, and automation. Because AI models can be influenced by prompt injection or produce unexpected outputs, all mutative tool execution is subject to backend-enforced security controls that cannot be bypassed by the web frontend.
+AeroFTP's AI assistant (AeroAgent) provides 39 tools for file management, server operations, and automation. Because AI models can be influenced by prompt injection or produce unexpected outputs, all mutative tool execution is subject to backend-enforced security controls that cannot be bypassed by the web frontend.
 
 ## Backend Approval Model
 
