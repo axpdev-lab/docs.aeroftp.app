@@ -194,7 +194,7 @@ aeroftp-cli check --profile "server" /local/dir /remote/dir
 # Compare by SHA-256 checksum (downloads the remote bytes for hashing)
 aeroftp-cli check --profile "server" /local/ /remote/ --checksum
 
-# One-way: only check files present locally — ignore extra files on the remote
+# One-way: only check files present locally, ignore extra files on the remote
 aeroftp-cli check --profile "server" /local/ /remote/ --one-way
 
 # Machine-readable output for CI / scripting
@@ -236,7 +236,7 @@ The `suggested_next_command` field is the natural follow-up: a `sync --dry-run` 
 
 | Code | Meaning |
 |---|---|
-| `0` | OK — no differences |
+| `0` | OK: no differences |
 | `4` | Differences found (any of `differ`, `missing_local`, `missing_remote`) |
 | `5` | Local path is not a directory |
 | `6` | Connection / authentication failed |
@@ -802,7 +802,7 @@ When `-o <path>` is provided the envelope replaces the `aeroignore` field with `
 
 | Code | Meaning |
 |---|---|
-| `0` | OK — conversion successful |
+| `0` | OK: conversion successful |
 | `2` | Input file not found |
 | `9` | Output file already exists and `--force` was not given |
 | `11` | I/O error (failed to read stdin, write the output, etc.) |
@@ -872,7 +872,7 @@ The `--bwlimit` flag accepts either a **plain rate** (`1M`, `500K`, `2G`, ...) o
 "HH:MM,RATE HH:MM,RATE ..."
 ```
 
-Each entry is a comma-separated pair: a time of day (24-hour `HH:MM`, **local time**) and a rate. Use the literal `off` (or `0`) to mean "unlimited". Whitespace separates entries; entries can be in any order — they are sorted internally before lookup.
+Each entry is a comma-separated pair: a time of day (24-hour `HH:MM`, **local time**) and a rate. Use the literal `off` (or `0`) to mean "unlimited". Whitespace separates entries; entries can be in any order, they are sorted internally before lookup.
 
 ```bash
 # Throttle to 512 KB/s during business hours, ramp up to 10 MB/s at lunch,
@@ -899,13 +899,13 @@ Times are interpreted in the local timezone of the machine running the CLI (matc
 
 #### Validation
 
-- `HH` must be in `0..=23`, `MM` must be in `0..=59`. Malformed entries (e.g. `25:00,1M` or `10:99,2M`) are silently skipped — they cannot brick a schedule because the parser treats them as no-op.
+- `HH` must be in `0..=23`, `MM` must be in `0..=59`. Malformed entries (e.g. `25:00,1M` or `10:99,2M`) are silently skipped, they cannot brick a schedule because the parser treats them as no-op.
 - A schedule with **only** a plain rate and no `,` is treated as a global cap (`--bwlimit "1M"`).
 - A schedule with **only** malformed entries falls back to "no limit" rather than crashing.
 
 #### Limitation: rate is resolved once per command
 
-The active rate is computed when the command starts. A long-running `sync --watch` that crosses a scheduled boundary (e.g. starts at 17:55 with `"18:00,off"`) will **not** automatically downshift at 18:00 in the current implementation. If this matters for your workflow, file a feature request — the design is documented in [APPENDIX-U §13.2](https://github.com/axpnet/AeroFTP) and the live re-poll is a 1-2h follow-up.
+The active rate is computed when the command starts. A long-running `sync --watch` that crosses a scheduled boundary (e.g. starts at 17:55 with `"18:00,off"`) will **not** automatically downshift at 18:00 in the current implementation. If this matters for your workflow, file a feature request: the design is documented in [APPENDIX-U §13.2](https://github.com/axpnet/AeroFTP) and the live re-poll is a 1-2h follow-up.
 
 ## Output Hygiene
 

@@ -7,8 +7,8 @@ description: How AeroFTP schedules every file transfer through a shared, provide
 
 *Released in v4.0.0 (2026-05-24). Status: production.*
 
-Every file transfer in AeroFTP — single file, batch, sync, intra-file
-segmented download, cross-provider copy — schedules through one
+Every file transfer in AeroFTP (single file, batch, sync, intra-file
+segmented download, cross-provider copy) schedules through one
 shared, provider-agnostic node-graph engine. This page is the
 long-form architectural walk-through. The summary tier lives next to
 the code at [`docs/DAG-TRANSFER-ENGINE.md`](https://github.com/axpdev-lab/aeroftp/blob/main/docs/DAG-TRANSFER-ENGINE.md).
@@ -172,7 +172,7 @@ advertises `server_side_copy` (S3 `x-amz-copy-source`, B2
 `b2_copy_file`, WebDAV `COPY`, ImageKit `copyFile`, plus 14 other
 native providers). The transfer core collapses into a single
 `ServerSideCopy` node that holds only an `api_slot`. No disk I/O,
-no file slot, no chunk slot — the server moves the bytes.
+no file slot, no chunk slot: the server moves the bytes.
 
 ```
 … → AcquireResource → ServerSideCopy → VerifyChecksum → …
@@ -279,7 +279,7 @@ For multipart uploads, the commit node:
    when commit already finished.
 
 2. **Sorts the receipts.** Parts are sorted by `part_number`
-   ascending — matching the S3 / B2 / Azure contract every multipart
+   ascending, matching the S3 / B2 / Azure contract every multipart
    backend in the matrix happens to follow.
 
 3. **Submits to `complete_multipart_upload(handle, parts)`.** The
@@ -416,7 +416,7 @@ async fn abort_multipart_upload(
 ```
 
 `MultipartHandle` is opaque: `upload_id` (whatever the backend uses
-to identify a session — S3 `UploadId`, B2 `fileId`, …) plus
+to identify a session: S3 `UploadId`, B2 `fileId`, …) plus
 `remote_path` (so the runner can correlate handles with shaped-graph
 nodes).
 
@@ -469,9 +469,9 @@ the internal design history and decision logs live in
 
 ## See also
 
-- [Provider Reference](/advanced/provider-reference) — capability
+- [Provider Reference](/advanced/provider-reference): capability
   matrix per backend.
-- [Wrapper Stack](/security/wrapper-stack) — how AeroVault and
+- [Wrapper Stack](/security/wrapper-stack): how AeroVault and
   rclone-crypt overlays integrate with the engine.
-- [Contributing → Architecture](/contributing/architecture) —
+- [Contributing → Architecture](/contributing/architecture):
   developer-facing layout walk-through.

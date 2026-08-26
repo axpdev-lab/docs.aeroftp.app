@@ -1,12 +1,12 @@
 # MCP Server
 
-The AeroFTP MCP (Model Context Protocol) server exposes 73 file management tools to AI assistants via JSON-RPC over stdio. It connects Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client to AeroFTP's full integration surface - **7 transport protocols + 20+ native provider integrations + 40+ pre-configured presets** - without custom integration code.
+The AeroFTP MCP (Model Context Protocol) server exposes 39 file management tools to AI assistants via JSON-RPC over stdio. Most are registered under two names, one `aeroftp_`-prefixed and one `remote_`-prefixed, so a client lists 77 entries in total for those 39 capabilities. It connects Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client to AeroFTP's full integration surface - **7 transport protocols + 20+ native provider integrations + 40+ pre-configured presets** - without custom integration code.
 
 ## What is MCP?
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) is an open standard that lets AI assistants call external tools through a structured JSON-RPC interface. Instead of generating shell commands, the AI calls typed tools with validated parameters and receives structured responses.
 
-AeroFTP implements an MCP server that wraps its CLI into 73 tools with connection pooling (auto-reset on stale handles), per-profile request serialization, schema validation, request cancellation, rate limiting, and audit logging.
+AeroFTP implements an MCP server that wraps its CLI into 39 tools with connection pooling (auto-reset on stale handles), per-profile request serialization, schema validation, request cancellation, rate limiting, and audit logging.
 
 The official VS Code extension [`axpdev-lab.aeroftp-mcp`](https://marketplace.visualstudio.com/items?itemName=axpdev-lab.aeroftp-mcp) configures this server in one click for Claude Code, Claude Desktop, Cursor, and Windsurf simultaneously.
 

@@ -1,6 +1,6 @@
 # Google Photos
 
-> **Not supported in production — Google removed the scope this integration depends on.**
+> **Not supported in production: Google removed the scope this integration depends on.**
 >
 > On **1 April 2025** Google removed the `photoslibrary.readonly`, `photoslibrary.sharing` and `photoslibrary` scopes from the Photos Library API. Since then the library endpoints return **only media your own application created**, so an existing Google Photos library cannot be enumerated by any third-party app, AeroFTP included. This is a change on Google's side, not a defect in AeroFTP, and no setting or credential works around it.
 >
@@ -8,7 +8,7 @@
 >
 > Everything below describes the integration as designed. **Treat the browse and download sections as currently non-functional against a pre-existing library.** Upload still works.
 >
-> Source: [Google Photos APIs — authorization scopes](https://developers.google.com/photos/library/guides/authorization). Last checked: **2026-07-30**.
+> Source: [Google Photos APIs: authorization scopes](https://developers.google.com/photos/library/guides/authorization). Last checked: **2026-07-30**.
 
 Browse, download and upload photos and videos from your Google Photos library. Albums are shown as folders, media items as files.
 
@@ -147,7 +147,7 @@ This means either:
 
 1. **Photos Library API not enabled**: Go to Google Cloud Console > APIs & Services > Library > search "Photos Library API" > Enable
 2. **Wrong project**: Make sure you're enabling the API in the **same project** where your OAuth Client ID was created. Check the Client ID under Google Auth Platform > Client
-3. **Scopes not added**: Go to Google Auth Platform > Data Access > Add the `photoslibrary.appendonly` scope. Note that `photoslibrary.readonly` was **removed by Google on 2025-04-01** and can no longer be granted — if the consent screen rejects it, that is expected, not a misconfiguration on your side.
+3. **Scopes not added**: Go to Google Auth Platform > Data Access > Add the `photoslibrary.appendonly` scope. Note that `photoslibrary.readonly` was **removed by Google on 2025-04-01** and can no longer be granted: if the consent screen rejects it, that is expected, not a misconfiguration on your side.
 4. **Stale token**: If you enabled the API after your first sign-in, the old token is invalid. Open AeroFTP DevTools console (Ctrl+Shift+I) and run:
 ```javascript
 await __TAURI_INTERNALS__.invoke('delete_credential', { account: 'oauth_googlephotos' })
