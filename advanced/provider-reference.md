@@ -1,6 +1,6 @@
 # Provider Reference
 
-Technical reference for all 22 storage protocols supported by AeroFTP. Protocols are grouped by connection type.
+Technical reference for the 22 storage protocols and providers documented on this page, grouped by connection type. Blomp, GitLab, native Backblaze B2, Immich and Drime are supported too and have their own pages.
 
 ## Server Protocols
 

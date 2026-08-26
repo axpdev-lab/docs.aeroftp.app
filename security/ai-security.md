@@ -56,7 +56,7 @@ When the AI calls `server_exec` to operate on a saved server, the backend:
 3. Executes the operation
 4. Closes the connection
 
-At no point does the AI model receive passwords, tokens, or connection secrets. The model sees only the operation result. This isolation applies to all 22 supported protocols.
+At no point does the AI model receive passwords, tokens, or connection secrets. The model sees only the operation result. This isolation applies to every supported protocol.
 
 ## Additional Controls
 

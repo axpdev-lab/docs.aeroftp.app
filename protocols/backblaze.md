@@ -188,4 +188,4 @@ For CI/CD, point the CLI at credentials via environment variables and use a dedi
 
 - [Backblaze B2 setup guide](/providers/backblaze-b2): quick walkthrough for first-time users.
 - [S3-Compatible Storage](/protocols/s3): the legacy path through AeroFTP's S3 stack.
-- [Provider Reference](/advanced/provider-reference): feature matrix across all 22 providers.
+- [Provider Reference](/advanced/provider-reference): feature matrix across the protocols and providers documented there.
