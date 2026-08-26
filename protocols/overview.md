@@ -75,7 +75,7 @@ These connect to servers or buckets you control. You provide the hostname, port,
 - **WebDAV** - HTTP-based file access over HTTPS. Used by Nextcloud, Seafile, and many NAS devices. Supports Basic and Digest authentication.
 - **S3** - Object storage using the S3 API. Works with AWS, Wasabi, Backblaze B2, and any S3-compatible endpoint.
 - **Azure Blob** - Enterprise object storage with HMAC signing or SAS tokens.
-- **OpenStack Swift** - Object storage using the OpenStack Swift API. Works with Blomp, OVH, Rackspace, and any Swift-compatible endpoint. Authenticates via Keystone v3 or TempAuth.
+- **OpenStack Swift** - Object storage using the OpenStack Swift API. Works with Blomp, OVH, Rackspace, and any Swift-compatible endpoint, with one condition since v4.1.8: if authentication used HTTPS, a catalog that points object storage at a plain-HTTP host is refused rather than followed silently, because the storage endpoint carries the account's bearer token. Blomp connects because its preset declares that exception. Authenticates via Keystone v3 or TempAuth.
 
 ### Native Provider Integrations
 

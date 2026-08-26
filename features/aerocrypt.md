@@ -72,7 +72,7 @@ AeroCrypt has two salt modes.
 
 **Per-vault (the default).** Every overlay gets a fresh 32-byte random salt, stored in the marker. Two vaults with the identical password derive different master keys and produce different encrypted filenames.
 
-**Default salt (opt-in).** The overlay derives from a single public constant instead, so the password alone reconstructs the master key anywhere, with no marker, no kit and no keystore to carry — the rclone-analog portability mode. There is exactly **one** such salt; the `128-bit` / `256-bit` radios next to the toggle set **how strong your password has to be**, not the size of the salt.
+**Default salt (opt-in).** The overlay derives from a single public constant instead, so the password alone reconstructs the master key anywhere, with no marker, no kit and no keystore to carry: the rclone-analog portability mode. There is exactly **one** such salt, 32 bytes, identical for every default-salt vault. Both create surfaces (the connection form and the native AeroCrypt dialog) print its value next to the toggle, as a copy button, so you can check it against the preimage below without transcribing 64 hex characters by hand.
 
 The constant is nothing-up-my-sleeve: it is `SHA-256("AeroCrypt default salt v1")`, 32 bytes.
 
@@ -88,7 +88,12 @@ Recompute it yourself at any time:
 printf 'AeroCrypt default salt v1' | sha256sum
 ```
 
-Because the salt is a shared public constant, a weak password there is crackable across every default-salt vault at once with a single Argon2id precomputation. That is why the mode is gated: it requires a generated password rated Strong and at least 20 characters on the `128-bit` tier, or 39 on the `256-bit` tier, plus an explicit attestation. The remaining trade-off is linkability: two default-salt vaults that reuse the exact same password produce identical encrypted names, which is visible to the provider without the key.
+Because the salt is a shared public constant, a weak password there is crackable across every default-salt vault at once with a single Argon2id precomputation. That is why the mode is gated, and the gate differs by surface:
+
+- **In the GUI** there is a single floor: a generated password rated Strong and at least 20 characters. Turning the toggle on is the whole intent, with no second control behind it. Weakening the password afterwards blocks the save instead of quietly writing a per-vault-salt vault while the toggle still reads as on.
+- **In the CLI** the floor is selectable, because a script has no strength meter to look at: `--salt-strength 128` (the default, 20 characters) or `--salt-strength 256` (39 characters), and `--use-default-salt` additionally requires the explicit `--i-understand-linkability` flag.
+
+The remaining trade-off is linkability: two default-salt vaults that reuse the exact same password produce identical encrypted names, which is visible to the provider without the key.
 
 ## AeroCrypt vs rclone crypt vs AeroVault
 
