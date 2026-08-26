@@ -76,7 +76,7 @@ The integration code path itself is correct (it is a thin S3 wrapper), so the pr
 
 | Problem | Cause | Solution |
 | ------- | ----- | -------- |
-| `403 Forbidden` on listing or upload | Upstream Blomp proxy bug (auth ok, storage 403) | Pending upstream fix. Track the [provider pipeline](https://github.com/axpdev-lab/aeroftp/blob/main/ROADMAP.md#provider-pipeline). |
+| `403 Forbidden` on the account-level container listing | Blomp forbids that call by design, for every client | Nothing to do. AeroFTP falls back to the container named after your username, so browsing and transfers work. See the note "The 403 on account listing is expected" above. |
 | `404 Not Found` on bucket | Wrong bucket name or endpoint | Verify the exact bucket and endpoint in your Blomp dashboard. |
 | `SignatureDoesNotMatch` | Time skew, wrong region, or wrong path-style setting | Ensure path-style is enabled and the system clock is in sync. |
 
