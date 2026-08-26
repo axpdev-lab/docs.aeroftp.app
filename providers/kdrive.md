@@ -20,7 +20,9 @@ To connect AeroFTP to your kDrive account, you need to generate a Personal API T
 9. Click **Create the token** and copy the generated token into AeroFTP.
 
 **Drive ID:**
-You can optionally specify a **Drive ID** (a number) if you have multiple drives. If left blank, AeroFTP will automatically connect to your default primary drive.
+A **Drive ID** is required, and it must be numeric: kDrive addresses every API call by drive, so there is no default to fall back to, and Connect stays disabled while the field is empty.
+
+You do not have to go looking for it. With the API token filled in, click **Fetch** next to the field and AeroFTP lists the drives that token can reach, by name, so you pick one instead of copying a number out of a browser address bar. The button reads **Refresh** once a list has been fetched. Typing the ID by hand still works if you already know it.
 
 > [!WARNING]
 > **Read-only Root and Base Directories**

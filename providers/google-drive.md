@@ -52,7 +52,7 @@ By default, AeroFTP uses its own OAuth client for Google Drive. If you prefer to
 1. Open **APIs & Services > Credentials**.
 2. Click **Create credentials > OAuth client ID**.
 3. Select **Web application** as the type.
-4. Under **Authorized redirect URIs**, add `http://127.0.0.1` (AeroFTP handles the port automatically).
+4. Under **Authorized redirect URIs**, add `http://127.0.0.1:18514/callback`. That is the exact address AeroFTP listens on for the Google callback: the port is fixed, not chosen at run time, and the OAuth panel in AeroFTP shows the same string so you can copy it rather than trust this page. An existing `http://127.0.0.1` entry with no port keeps working for a **Desktop app** client, where Google ignores the loopback port, so there is no need to remove it; add the full address as well if your client is a **Web application**, which matches the exact URI.
 5. Click **Create** and copy the **Client ID** and **Client Secret**.
 6. Paste both into **Settings > Cloud Providers > Google Drive** in AeroFTP.
 
@@ -157,7 +157,7 @@ aeroftp ls --profile "Google Drive" / -l --json
 | Cannot delete files | Insufficient permissions on a Shared Drive | Verify your access level on the Shared Drive in Google Drive's web interface |
 | Token refresh fails | OAuth tokens revoked or expired | Disconnect and reconnect to Google Drive to re-authorize |
 | `invalid_client` | Wrong custom Client ID/Secret, or the OAuth client is not a "Web application" | Re-check the Client ID and Secret, and confirm the OAuth client type is **Web application** |
-| `redirect_uri_mismatch` | `http://127.0.0.1` is missing from the authorized redirect URIs, or AeroFTP was not running during authorization | Add `http://127.0.0.1` under the OAuth client's **Authorized redirect URIs** and keep AeroFTP open while authorizing |
+| `redirect_uri_mismatch` | The address AeroFTP listens on is missing from the authorized redirect URIs, or AeroFTP was not running during authorization | Add `http://127.0.0.1:18514/callback` under the OAuth client's **Authorized redirect URIs**, the value the OAuth panel shows, and keep AeroFTP open while authorizing |
 | `access_denied` | **Allow** was not clicked on the consent screen, or the Google account lacks Drive access / is not a registered test user | Re-run the flow and click **Allow**; for an External app in testing add the account under **Test users** |
 | Large-file upload stalls or daily-limit error | Google Drive enforces a ~750 GB/day upload ceiling per account | Spread very large transfers across days; AeroFTP already uses resumable sessions for files over 5 MB |
 
