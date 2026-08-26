@@ -98,7 +98,7 @@ Legend: ✅ full pass · ◑ partial pass · ⏳ pending benchmark · ❌ fail �
 
 Several additional providers (pCloud, Filen, Internxt, MEGA, 4shared, Zoho WorkDrive, Drime, FileLu WebDAV, Box, OneDrive, Google Drive, Jottacloud) are covered in internal test runs with mixed status. They will enter the public matrix once their scoring stabilizes across the full rubric.
 
-2026-04-19 note — the internal sweep validated `ls /` on 25 of 31 vault profiles post-fix batch. Jottacloud is now fully re-runnable (`grant_type=refresh_token` lowercase fix) but not yet scored on the full rubric.
+2026-04-19 note: the internal sweep validated `ls /` on 25 of 31 vault profiles post-fix batch. Jottacloud is now fully re-runnable (`grant_type=refresh_token` lowercase fix) but not yet scored on the full rubric.
 
 ## Update policy
 

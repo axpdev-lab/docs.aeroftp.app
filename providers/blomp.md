@@ -23,7 +23,7 @@ You normally only supply the username and password; the preset fills in the rest
 | Auth endpoint | `https://authenticate.blomp.com` (Keystone v2) |
 | Username | Your Blomp login **email** |
 | Password | Your Blomp account password |
-| Tenant name | `storage` — fixed, identical for every Blomp account |
+| Tenant name | `storage`: fixed, identical for every Blomp account |
 | Container | Named after your login email; AeroFTP resolves it automatically |
 
 ## Files Larger Than 5 GiB
@@ -33,7 +33,7 @@ OpenStack Swift caps a single object at 5 GiB, and Blomp inherits that limit. **
 Two things worth knowing:
 
 - The segments live in the same container under `.file-segments/`. Deleting that folder by hand breaks the large objects that reference it.
-- This is native Swift SLO, not a client-side chunking overlay. The object is a normal Swift large object, so other Swift clients read it correctly — you are not locked into AeroFTP to get your data back.
+- This is native Swift SLO, not a client-side chunking overlay. The object is a normal Swift large object, so other Swift clients read it correctly, you are not locked into AeroFTP to get your data back.
 
 ::: info The 403 on account listing is expected
 Blomp forbids the account-level container listing that Swift normally offers, and answers `403` even for a correctly authenticated session. This is **by design on Blomp's side, not an error in your configuration and not an outage**. AeroFTP handles it by falling back to the deterministic container named after your username, so browsing and transfers work normally. If you have read older notes describing this as an unresolved upstream bug, they are out of date.

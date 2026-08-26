@@ -8,13 +8,13 @@ AeroFTP now provides full read/write interoperability with `rclone crypt` remote
 
 - Unlock an existing `rclone crypt` remote locally with the password (and optional secondary salt)
 - Decrypt filenames for browsing and decrypt file content for local read and download flows
-- **Re-encrypt on the upload path** — files dropped into the overlay are encrypted with the same key derivation, chunking, and filename obfuscation as the standard rclone crypt format, so the provider never sees plaintext
+- **Re-encrypt on the upload path**: files dropped into the overlay are encrypted with the same key derivation, chunking, and filename obfuscation as the standard rclone crypt format, so the provider never sees plaintext
 - Rename, delete, and move operations stay within the encrypted overlay; the underlying provider sees only opaque ciphertext blobs and obfuscated names
 - Keep raw encrypted data on the provider fully compatible with the rclone CLI and other rclone-aware tools
 
 Limitations:
 
-- No migration wizard yet that converts `rclone crypt` storage into AeroVault (the two formats coexist by design — pick the one whose ecosystem matches your tooling)
+- No migration wizard yet that converts `rclone crypt` storage into AeroVault (the two formats coexist by design: pick the one whose ecosystem matches your tooling)
 - Compatibility target is the standard rclone crypt format (XSalsa20-Poly1305 content + EME filename encryption) as used in real-world remotes today
 
 ## Security model

@@ -97,7 +97,7 @@ OAuth tokens follow a two-tier storage strategy:
 1. **Primary**: Stored in vault.db, encrypted at rest with AES-256-GCM
 2. **Fallback**: If the vault is locked or unavailable at the moment of token receipt, tokens are held in an in-memory `Mutex` for the session duration
 
-Tokens are never written to disk unencrypted. All token values across all 22 provider implementations are wrapped in `secrecy::SecretString` to prevent accidental logging or debug output. Tokens are unwrapped (`.expose_secret()`) only at the exact point where they are inserted into HTTP Authorization headers.
+Tokens are never written to disk unencrypted. All token values across every provider implementation are wrapped in `secrecy::SecretString` to prevent accidental logging or debug output. Tokens are unwrapped (`.expose_secret()`) only at the exact point where they are inserted into HTTP Authorization headers.
 
 ## Import and Export
 

@@ -79,7 +79,7 @@ Executes read operations on any saved server. The backend resolves credentials i
 
 All operations create a temporary connection, execute, and disconnect. Credentials cross no process boundary.
 
-Mutative operations (`put`, `get`, `rm`, `mv`, `mkdir`) are also exposed through `server_exec` with the same credential isolation — passwords are resolved from the vault inside Rust and never appear in CLI output, JSON, or the agent's transcript.
+Mutative operations (`put`, `get`, `rm`, `mv`, `mkdir`) are also exposed through `server_exec` with the same credential isolation: passwords are resolved from the vault inside Rust and never appear in CLI output, JSON, or the agent's transcript.
 
 ## Native MCP Server
 
