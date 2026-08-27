@@ -6,7 +6,7 @@ The AeroFTP MCP (Model Context Protocol) server exposes 39 file management tools
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) is an open standard that lets AI assistants call external tools through a structured JSON-RPC interface. Instead of generating shell commands, the AI calls typed tools with validated parameters and receives structured responses.
 
-AeroFTP implements an MCP server that wraps its CLI into 39 tools with connection pooling (auto-reset on stale handles), per-profile request serialization, schema validation, request cancellation, rate limiting, and audit logging.
+AeroFTP implements an MCP server that wraps its CLI into 77 tools (39 primary plus 38 aliases) with connection pooling (auto-reset on stale handles), per-profile request serialization, schema validation, request cancellation, rate limiting, and audit logging.
 
 The official VS Code extension [`axpdev-lab.aeroftp-mcp`](https://marketplace.visualstudio.com/items?itemName=axpdev-lab.aeroftp-mcp) configures this server in one click for Claude Code, Claude Desktop, Cursor, and Windsurf simultaneously.
 
