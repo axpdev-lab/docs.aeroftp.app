@@ -1,6 +1,6 @@
 ---
 title: Backblaze B2 Native API
-description: Connect AeroFTP to Backblaze B2 with the native v4 API for first-class behavior: proper folder semantics, atomic renames, file versioning, and 24-hour token reauthorization.
+description: "Connect AeroFTP to Backblaze B2 with the native v4 API for first-class behavior: proper folder semantics, atomic renames, file versioning, and 24-hour token reauthorization."
 ---
 
 # Backblaze B2
