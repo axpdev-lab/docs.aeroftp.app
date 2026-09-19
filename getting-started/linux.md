@@ -105,12 +105,8 @@ AeroFTP can start automatically when you log in. Enable this in **Settings > Gen
 
 ## Configuration Data Location
 
-AeroFTP stores its configuration, encrypted vault, chat history, and sync journals in:
+AeroFTP stores its configuration, encrypted vault, chat history, and sync journals in `~/.config/aeroftp/`. Interface state kept by the web view lives under `~/.local/share/`, in `app.aeroftp.AeroFTP/` and, for installations made before v4.2.0, `com.aeroftp.AeroFTP/`.
 
-```text
-~/.config/aeroftp/
-```
-
-To perform a clean uninstall, remove this directory after uninstalling the package.
+For a clean uninstall, remove every one of these directories that exists after uninstalling the package, and the keyring entry described in [Privacy](/security/privacy).
 
 > **Next step:** Follow the [Quick Start](quick-start.md) guide to connect to your first server.

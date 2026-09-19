@@ -44,6 +44,10 @@ Cloudflare R2 is an S3-compatible object storage platform known for zero egress 
 - use the built-in R2 preset
 - copy the Account ID directly from the Cloudflare dashboard
 
+## Jurisdictions
+
+A bucket created in an R2 jurisdiction answers only on its own host. The Cloudflare R2 form has a jurisdiction picker next to the Account ID: **Default (no jurisdiction)** uses `<account-id>.r2.cloudflarestorage.com`, **European Union (eu)** uses `<account-id>.eu.r2.cloudflarestorage.com`, and **United States (us)** uses `<account-id>.us.r2.cloudflarestorage.com`. The jurisdiction is fixed when the bucket is created, so pick the one the bucket was created with. Profiles saved before this option keep the default.
+
 ## Troubleshooting
 
 | Problem | Cause | Solution |
