@@ -128,6 +128,7 @@ export default defineConfig({
                 { text: 'Backblaze B2', link: '/providers/backblaze-b2' },
                 { text: 'Cloudflare R2', link: '/providers/cloudflare-r2' },
                 { text: 'DigitalOcean Spaces', link: '/providers/digitalocean-spaces' },
+                { text: 'Filebase', link: '/providers/filebase' },
                 { text: 'FileLu S3', link: '/providers/filelu' },
                 { text: 'Google Cloud Storage', link: '/providers/google-cloud-storage' },
                 { text: 'IDrive e2', link: '/providers/idrive-e2' },
