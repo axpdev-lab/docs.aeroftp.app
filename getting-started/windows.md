@@ -6,7 +6,7 @@ AeroFTP provides three distribution formats for Windows 10 and later: the MSI in
 
 The MSI installer is the recommended way to install AeroFTP on Windows:
 
-1. Download `AeroFTP_3.7.0_x64-setup.msi` from [GitHub Releases](https://github.com/axpnet/aeroftp/releases)
+1. Download `AeroFTP_<version>_x64_en-US.msi` from [GitHub Releases](https://github.com/axpdev-lab/aeroftp/releases/latest)
 2. Double-click the `.msi` file to launch the installer
 3. Follow the installation wizard
 4. AeroFTP will appear in your Start Menu
@@ -21,7 +21,7 @@ The MSI installer:
 
 For users who prefer not to use the MSI format, AeroFTP also ships an NSIS-based `.exe` installer:
 
-1. Download `AeroFTP_3.7.0_x64-setup.exe` from [GitHub Releases](https://github.com/axpnet/aeroftp/releases)
+1. Download `AeroFTP_<version>_x64-setup.exe` from [GitHub Releases](https://github.com/axpdev-lab/aeroftp/releases/latest)
 2. Run the executable and follow the wizard
 
 > **Note:** Despite being a single `.exe`, this is an installer (it extracts and installs AeroFTP, adds a Start Menu entry, and supports Add/Remove Programs). For a no-install, run-from-anywhere build, use the portable ZIP below.

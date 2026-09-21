@@ -75,6 +75,7 @@ Each provider guide now starts with a **Plan snapshot** that separates storage q
 | <img src="/icons/providers/oracle_cloud.png" width="20" /> | Oracle Cloud | Namespace-based endpoints | [Setup guide](/providers/oracle-cloud) |
 | <img src="/icons/providers/storj.png" width="20" /> | Storj | Decentralized S3 gateways | [Setup guide](/providers/storj) |
 | <img src="/icons/providers/idrive_e2.png" width="20" /> | IDrive e2 | Low-cost hot object storage | [Setup guide](/providers/idrive-e2) |
+| <img src="/icons/providers/filebase.png" width="20" /> | Filebase | S3-compatible storage with a fixed endpoint | [Setup guide](/providers/filebase) |
 | <img src="/icons/providers/minio.png" width="20" /> | MinIO | Self-hosted S3 | [Setup guide](/providers/minio) |
 | <img src="/icons/providers/yandexcloud.png" width="20" /> | Yandex Object Storage | S3-compatible, Russia | [Setup guide](/providers/yandex-object-storage) |
 | <img src="/icons/providers/mega.png" width="20" /> | MEGA S4 | MEGA's S3-compatible object storage | [Setup guide](/providers/mega-s4) |

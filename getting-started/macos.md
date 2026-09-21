@@ -40,11 +40,14 @@ To start AeroFTP automatically when you log in, enable **Settings > General > La
 
 ## Uninstalling
 
-Drag AeroFTP from the Applications folder to the Trash. To remove configuration data:
+Drag AeroFTP from the Applications folder to the Trash. To remove its data:
 
 ```bash
-rm -rf ~/Library/Application\ Support/com.aeroftp.AeroFTP
-rm -rf ~/Library/Caches/com.aeroftp.AeroFTP
+rm -rf ~/Library/Application\ Support/aeroftp
+rm -rf ~/Library/Application\ Support/com.aeroftp.AeroFTP ~/Library/Application\ Support/app.aeroftp.AeroFTP
+rm -rf ~/Library/Caches/com.aeroftp.AeroFTP ~/Library/Caches/app.aeroftp.AeroFTP
 ```
+
+The first line removes the vault, the saved servers and every database; the others remove caches and downloaded models where present. If the vault is protected by the system keyring, also delete the Keychain entry named `com.aeroftp.AeroFTP` (see [Privacy](/security/privacy)).
 
 > **Next step:** Follow the [Quick Start](quick-start.md) guide to connect to your first server.

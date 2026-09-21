@@ -23,7 +23,7 @@ For the full sync workflow around these indicators, see [AeroSync](/features/aer
 Today, the supported happy path is:
 
 - protocol: `SFTP`
-- authentication: SSH key-based session
+- authentication: an SSH key, or a password saved in the profile
 - remote requirement: stock `rsync` server reachable via SSH on the remote host
 - client requirement: **none** - AeroFTP ships [AeroRsync](/features/aerorsync), a native rsync protocol 31 implementation in pure Rust. No `rsync` binary needed on Linux/macOS/Windows
 - product path: AeroSync / sync tree flows that request delta policy
@@ -31,14 +31,18 @@ Today, the supported happy path is:
 
 When those conditions are met, AeroFTP can use the real rsync-over-SSH delta path and report the savings in the UI.
 
+### S3 delta uploads (v4.2.0)
+
+`aeroftp-cli put --delta` on an S3 profile sends only the changed parts of a file larger than 200 MiB, when the object was uploaded by this client before. AeroFTP keeps a local record of per-part digests of what it uploaded, compares the local file against it without reading the object back, and rebuilds the object with a multipart upload whose unchanged parts are server-side copies pinned to the object's ETag. Anything else (no record, a changed object, an archive storage class, an endpoint without ranged copy, a crypt overlay) falls back to a normal upload.
+
 ## When Delta Sync Does Not Activate
 
 Delta sync does not activate in these cases:
 
-- SFTP sessions authenticated by password only
+- SFTP sessions with no host key fingerprint pinned from the session
 - FTP / FTPS
 - WebDAV / WebDAVS
-- S3-compatible storage
+- S3-compatible storage, except the S3 delta upload described above
 - OAuth cloud APIs such as Google Drive, Dropbox, OneDrive, Box, pCloud, and similar providers
 
 Those transfers still work normally. They just use the classic transfer path instead of delta.
@@ -50,7 +54,7 @@ This is the current documented validation state as of April 23, 2026:
 | Target / class | Delta status | Validation state | Notes |
 | --- | --- | --- | --- |
 | Generic SFTP with SSH key auth + remote `rsync` | Supported | Validated | Confirmed on the live Docker SFTP fixture using the real product path |
-| SFTP password-only sessions | Classic only | Validated | Confirmed on the password-only Docker fixture |
+| SFTP password-only sessions | Classic only | Superseded (May 2026): eligible when the password is saved in the profile | Confirmed on the password-only Docker fixture |
 | WD MyCloud HD (`SSH MyCloud HD`) | Classic only | Validated | Real saved profile; password-auth makes the session non-eligible by design |
 | Synology DSM | Expected to be eligible if configured with key auth + `rsync` | Pending wider validation | Not yet available in the current workspace matrix |
 | TrueNAS SCALE | Expected to be eligible if configured with key auth + `rsync` | Pending wider validation | Not yet available in the current workspace matrix |
@@ -80,8 +84,8 @@ The tooltip explains the sanitized fallback reason when one is available.
 
 Check these points in order:
 
-1. Make sure the server is an SFTP target, not FTP, WebDAV, S3, or an OAuth cloud provider.
-2. Make sure the session uses SSH key authentication, not password-only login.
+1. Make sure the server is an SFTP target (or, for a large upload, an S3 object this client uploaded before).
+2. Make sure the SFTP session has a pinned host key and either an SSH key or a saved password.
 3. Make sure `rsync` is installed on the remote host and available to the same user AeroFTP logs in with.
 4. Make sure the sync flow is actually running with delta policy enabled.
 5. If the transfer completed with no badge at all, AeroFTP likely stayed on the classic path from the beginning.

@@ -109,7 +109,7 @@ After installing, confirm the CLI is working:
 
 ```bash
 aeroftp-cli --version
-# Output: aeroftp 4.0.3
+# Output: aeroftp X.Y.Z
 
 aeroftp-cli --help
 # Output: full command listing with descriptions
@@ -206,11 +206,11 @@ The CLI uses semantic exit codes for scripting:
 | 1 | Connection / network error |
 | 2 | File / directory not found |
 | 3 | Permission denied |
-| 4 | Transfer failed |
+| 4 | Transfer failed or partial |
 | 5 | Configuration / usage error |
 | 6 | Authentication failure |
 | 7 | Operation not supported by protocol |
-| 8 | Timeout |
+| 8 | Stopped at a limit and nothing failed: a timeout on most commands, the `--max-transfer` budget on `sync` (with `--json`, a reached budget reports `over_budget`) |
 | 9 | Already exists / directory not empty (`--immutable`, `--no-clobber`) |
 | 10 | Server error / parse error |
 | 11 | I/O error |

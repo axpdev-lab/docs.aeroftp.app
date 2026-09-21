@@ -27,6 +27,8 @@ The native preset bypasses the S3 compatibility layer entirely.
 - File version history surfaced through `list_versions` / `download_version` / `restore_version` so deleted or overwritten objects can be recovered from the AeroFTP UI.
 - Endpoint discovery: `b2_authorize_account` returns the `apiUrl` and `downloadUrl` for your account, so you do not need to know the regional S3 hostname in advance.
 
+Since v4.2.0 a native Backblaze B2 profile card shows what the bucket reports about default server-side encryption: enabled (with the algorithm Backblaze names), not enabled, or unknown when the application key may not read the setting. AeroFTP reads it from the native B2 API only, because the S3-compatible endpoint answers `AES256` for every bucket.
+
 ### Setup
 
 1. Open the [Backblaze App Keys page](https://secure.backblaze.com/app_keys.htm) and create a new application key.

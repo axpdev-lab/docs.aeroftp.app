@@ -514,6 +514,6 @@ aeroftp-cli sync --profile "server" ./build/ /var/www/ --delete --max-delete 25%
 
 6. **Pipe JSON to jq for filtering** - `aeroftp-cli ls --json | jq '.[] | select(.size > 1000000)'` is more reliable than parsing human-readable output.
 
-7. **Check exit codes** - every CLI command returns a semantic exit code (0 for success, 1-8 for specific failure categories, 99 for unknown errors).
+7. **Check exit codes** - every CLI command returns a semantic exit code (0 for success, 1 to 11 for specific failure categories, 99 for unknown errors, 130 when interrupted).
 
 > **Note:** For the complete list of exit codes and their meanings, see the [Installation](installation.md) page.

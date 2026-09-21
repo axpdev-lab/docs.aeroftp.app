@@ -1,13 +1,13 @@
 # Batch Scripting
 
-AeroFTP CLI includes a built-in batch scripting engine for automating multi-step file operations. Batch scripts use the `.aeroftp` file extension and provide variables, error policies, quoting, and all core CLI operations in a simple line-oriented format.
+AeroFTP CLI includes a built-in batch scripting engine for automating multi-step file operations. Batch scripts use the `.aeroftp-script` file extension and provide variables, error policies, quoting, and all core CLI operations in a simple line-oriented format.
 
 ## Running a Batch Script
 
 ```bash
-aeroftp-cli batch deploy.aeroftp
-aeroftp-cli batch backup.aeroftp --verbose
-aeroftp-cli batch script.aeroftp --json
+aeroftp-cli batch deploy.aeroftp-script
+aeroftp-cli batch backup.aeroftp-script --verbose
+aeroftp-cli batch script.aeroftp-script --json
 ```
 
 When `--json` is specified, all command output within the script is emitted as structured JSON to stdout, with errors going to stderr.
@@ -152,9 +152,9 @@ When a script aborts due to `ON_ERROR FAIL`, the CLI exits with the exit code of
 ## Real-World Example: Nightly Backup
 
 ```bash
-# backup.aeroftp - Nightly backup of production server
-# Run: aeroftp-cli batch backup.aeroftp
-# Cron: 0 2 * * * /usr/bin/aeroftp-cli batch /opt/scripts/backup.aeroftp >> /var/log/aeroftp-backup.log 2>&1
+# backup.aeroftp-script - Nightly backup of production server
+# Run: aeroftp-cli batch backup.aeroftp-script
+# Cron: 0 2 * * * /usr/bin/aeroftp-cli batch /opt/scripts/backup.aeroftp-script >> /var/log/aeroftp-backup.log 2>&1
 
 SET server=sftp://backupuser@prod.example.com
 SET remote=/var/www/html
@@ -187,14 +187,14 @@ Schedule it via cron:
 
 ```bash
 # crontab -e
-0 2 * * * /usr/bin/aeroftp-cli batch /opt/scripts/backup.aeroftp >> /var/log/aeroftp-backup.log 2>&1
+0 2 * * * /usr/bin/aeroftp-cli batch /opt/scripts/backup.aeroftp-script >> /var/log/aeroftp-backup.log 2>&1
 ```
 
 ## Real-World Example: Multi-Server Deployment
 
 ```bash
-# deploy.aeroftp - Deploy build artifacts to 3 servers
-# Run: aeroftp-cli batch deploy.aeroftp
+# deploy.aeroftp-script - Deploy build artifacts to 3 servers
+# Run: aeroftp-cli batch deploy.aeroftp-script
 
 SET build_dir=./dist
 SET app_path=/var/www/app
@@ -245,7 +245,7 @@ jobs:
 
       - name: Create batch script
         run: |
-          cat > deploy.aeroftp << 'SCRIPT'
+          cat > deploy.aeroftp-script << 'SCRIPT'
           SET server=sftp://${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}
           SET remote=/var/www/html
 
@@ -256,7 +256,7 @@ jobs:
           SCRIPT
 
       - name: Deploy
-        run: aeroftp-cli batch deploy.aeroftp --json
+        run: aeroftp-cli batch deploy.aeroftp-script --json
         env:
           NO_COLOR: 1
 ```
