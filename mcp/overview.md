@@ -70,7 +70,7 @@ The MCP server exposes the following curated tools (names use the `aeroftp_` pre
 
 | Tool | Description |
 |------|-------------|
-| `list_servers` | List saved server profiles from the encrypted vault (names + protocol + tags + per-profile `auth_state` - never credentials). Supports a `filter` arg |
+| `list_servers` | List saved server profiles from the encrypted vault (names + protocol + tags + per-profile `auth_state` - never credentials). Every entry carries `cryptOverlay` (`aerocrypt`, `rclone-crypt`, or `null`) and `protocolClass` (`Crypt` for a profile bound to an encrypted overlay), so an agent can tell an encrypted remote from a plain one. Supports a `filter` arg |
 | `mcp_info` | Diagnostics about the running MCP process: version, supported protocols, capabilities |
 | `agent_connect` | Single-shot connect surface (added v3.6.6): one JSON envelope with `connect` + `capabilities` + `quota` + `path` blocks, replacing the boilerplate sequence `connect → about → df → ls /` |
 | `list_files` | List files and directories at a given path. Pagination, sort, files-only / dirs-only filters |

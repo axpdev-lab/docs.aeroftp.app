@@ -60,7 +60,11 @@ AeroFTP is privacy-enhanced, not anonymous. Network connections to remote server
 
 To remove all AeroFTP data from a system:
 
-1. Uninstall the application
-2. Delete `~/.config/aeroftp/` (Linux), `~/Library/Application Support/aeroftp/` (macOS), or `%APPDATA%\aeroftp\` (Windows)
+1. Uninstall the application.
+2. Delete every AeroFTP data directory that exists. After an update more than one can exist, because a directory named after the previous application identifier is left in place:
+   - Linux: `~/.config/aeroftp/`, `~/.local/share/app.aeroftp.AeroFTP/` and `~/.local/share/com.aeroftp.AeroFTP/`
+   - macOS: `~/Library/Application Support/aeroftp/`, and any `app.aeroftp.AeroFTP` or `com.aeroftp.AeroFTP` folder under `~/Library/Application Support/`, `~/Library/Caches/` and `~/Library/WebKit/`
+   - Windows: `%APPDATA%\aeroftp\`, and any `app.aeroftp.AeroFTP` or `com.aeroftp.AeroFTP` folder under `%APPDATA%` and `%LOCALAPPDATA%`
+3. If the vault is protected by the system keyring rather than by a master password, delete the keyring entry too. It is stored under the service name `com.aeroftp.AeroFTP` (account `vault-passphrase`, or `vault-passphrase-portable`, `vault-passphrase-flatpak` or `vault-passphrase-snap` for those installations), and deleting the directories above does not remove it. The per-platform commands are in [PRIVACY.md](https://github.com/axpdev-lab/aeroftp/blob/main/PRIVACY.md).
 
-No data remains elsewhere on the system. AeroFTP does not write to system registries (Linux/macOS), does not create cloud accounts, and does not store data on external servers.
+AeroFTP does not create cloud accounts and does not store data on external servers.

@@ -216,7 +216,7 @@ Each entry is classified into exactly one of:
 
 ```json
 {
-  "status": "ok" | "differences_found",
+  "status": "ok" | "differences_found" | "partial",
   "match_count": 1234,
   "differ_count": 0,
   "missing_local": 5,
@@ -237,7 +237,7 @@ The `suggested_next_command` field is the natural follow-up: a `sync --dry-run` 
 | Code | Meaning |
 |---|---|
 | `0` | OK: no differences |
-| `4` | Differences found (any of `differ`, `missing_local`, `missing_remote`) |
+| `4` | Differences found, or the result is `partial` (a scan could not read its whole tree or left out a path it can name, listed in `local_scan_boundaries` / `remote_scan_boundaries`), or the run was refused because a scan has a gap it cannot name |
 | `5` | Local path is not a directory |
 | `6` | Connection / authentication failed |
 | `2` | Remote path not found |
@@ -645,6 +645,15 @@ After the table renders, `-i` drops into a compact prompt loop with two-characte
 
 Both orderings (number-then-letter and letter-then-number) are accepted. The loop reuses the running binary via `current_exe()` so the output is byte-for-byte identical to the standalone subcommand the same row would invoke.
 
+### pwd
+
+Print the base path every relative path resolves against. It reads the saved profile and opens no connection, so it answers while the server is down.
+
+```bash
+aeroftp-cli pwd "My NAS"          # path on stdout, context on stderr
+aeroftp-cli pwd "My NAS" --json   # profile, id, protocol, host, base, resolved_root
+```
+
 ### ai-models
 
 ```bash
@@ -837,6 +846,13 @@ aeroftp-cli cat github://token:PAT@owner/repo /README.md
 | `--two-factor <code>` | 2FA code for Filen/Internxt (env: `AEROFTP_2FA`) |
 | `--limit-rate <speed>` | Speed limit (e.g., `1M`, `500K`) |
 | `--bwlimit <schedule>` | Bandwidth schedule (e.g., `"08:00,512k 18:00,off"` or `"1M"`) |
+| `--parallel <n>` | Parallel transfer workers for recursive and bulk operations (default 4, up to 32). Each provider has its own ceiling (SFTP 16 connections, FTP 5, S3 and B2 their clone pools, single-session providers 1); when the ceiling is lower than the request the CLI prints a note in text mode |
+| `--checkers <n>` | Directories listed at once by the remote scan of `sync`, `reconcile`, `check` and `cryptcheck` (default 8, range 1-64), capped by the provider's list pool |
+| `--multi-thread-streams <n>` | Concurrent range streams for one large download (default 4, env `AEROFTP_MULTI_THREAD_STREAMS`); `1` restores a single stream. Used by S3, Azure, SFTP (independent connections), and by WebDAV and Koofr after a strict 206 probe |
+| `--multi-thread-cutoff <size>` | Minimum file size for a multi-stream download (default `250M`, env `AEROFTP_MULTI_THREAD_CUTOFF`) |
+| `--sftp-readahead <N>` | SFTP read-ahead window (2 to 1024). Default 32 when unset; `AEROFTP_SFTP_READAHEAD=off` (or `0`) restores one read per round trip; a bandwidth cap always uses the serial loop |
+| `--skip-restricted` | Recursive `put`: skip files or folders whose name the destination forbids, upload the rest and report each skip; the run ends `partial` (exit 4). By default the whole batch is refused before anything is uploaded |
+| `--partial` | Resume interrupted transfers when the provider supports partial files or remote offsets |
 | `--bucket <name>` | S3 bucket name |
 | `--region <region>` | S3/Azure region |
 | `--container <name>` | Azure container name |
@@ -848,7 +864,7 @@ aeroftp-cli cat github://token:PAT@owner/repo /README.md
 | `--max-size <size>` | Max file size filter |
 | `--min-age <duration>` | Skip files newer than (`7d`, `24h`) |
 | `--max-age <duration>` | Skip files older than |
-| `--max-transfer <size>` | Abort after N bytes transferred (`10G`, `500M`). Exit code 8 |
+| `--max-transfer <size>` | Stop after N bytes transferred (`10G`, `500M`). Exit code 8, "stopped at a limit and nothing failed"; on `sync` a timeout that fails a transfer reports 4 instead. With `--json` the budget is named by an `over_budget` count of the files it left behind |
 | `--retries <n>` | Retry failed transfers N times (default: 3) |
 | `--retries-sleep <dur>` | Delay between retries (`5s`, `1m`, `500ms`). Default: 1s |
 | `--max-backlog <n>` | Max queued parallel tasks (default: 10000) |
@@ -926,15 +942,16 @@ Respects `NO_COLOR`, `CLICOLOR`, and `CLICOLOR_FORCE` environment variables.
 | 1 | Connection / network error |
 | 2 | Not found |
 | 3 | Permission denied |
-| 4 | Transfer failed |
+| 4 | Transfer failed or partial |
 | 5 | Configuration / usage error |
 | 6 | Authentication failed |
 | 7 | Not supported by protocol |
-| 8 | Timeout |
+| 8 | Stopped at a limit and nothing failed: a timeout on most commands, the `--max-transfer` budget on `sync` (with `--json`, a reached budget reports `over_budget`) |
 | 9 | Already exists / directory not empty (`--immutable`, `--no-clobber`) |
 | 10 | Server error / parse error |
 | 11 | I/O error |
 | 99 | Unknown error |
+| 130 | Interrupted by SIGINT (Ctrl+C) |
 
 ## CI/CD Example
 
