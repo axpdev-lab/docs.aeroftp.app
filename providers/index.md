@@ -76,6 +76,7 @@ Each provider guide now starts with a **Plan snapshot** that separates storage q
 | <img src="/icons/providers/storj.png" width="20" /> | Storj | Decentralized S3 gateways | [Setup guide](/providers/storj) |
 | <img src="/icons/providers/idrive_e2.png" width="20" /> | IDrive e2 | Low-cost hot object storage | [Setup guide](/providers/idrive-e2) |
 | <img src="/icons/providers/filebase.png" width="20" /> | Filebase | S3-compatible storage with a fixed endpoint | [Setup guide](/providers/filebase) |
+| <img src="/icons/providers/ibm-cloud.png" width="20" /> | IBM Cloud Object Storage | Regional, cross-region and single data center endpoints | [Setup guide](/providers/ibm-cloud-object-storage) |
 | <img src="/icons/providers/minio.png" width="20" /> | MinIO | Self-hosted S3 | [Setup guide](/providers/minio) |
 | <img src="/icons/providers/yandexcloud.png" width="20" /> | Yandex Object Storage | S3-compatible, Russia | [Setup guide](/providers/yandex-object-storage) |
 | <img src="/icons/providers/mega.png" width="20" /> | MEGA S4 | MEGA's S3-compatible object storage | [Setup guide](/providers/mega-s4) |
@@ -96,6 +97,7 @@ Each provider guide now starts with a **Plan snapshot** that separates storage q
 | <img src="/icons/providers/jianguoyun.png" width="20" /> | Jianguoyun | Chinese cloud | [Setup guide](/providers/jianguoyun) |
 | <img src="/icons/providers/seafile.png" width="20" /> | Seafile | Open-source, self-hosted or hosted | [Setup guide](/providers/seafile) |
 | <img src="/icons/providers/drivehq.png" width="20" /> | DriveHQ | Enterprise file sharing | [Setup guide](/providers/drivehq) |
+| <img src="/icons/providers/mailru-cloud.png" width="20" /> | Mail.ru Cloud | Russian cloud, app password | [Setup guide](/providers/mailru-cloud) |
 | <img src="/icons/providers/Koofr.png" width="20" /> | Koofr (WebDAV) | EU-based | [Setup guide](/providers/koofr) |
 | <img src="/icons/providers/quotaless.png" width="20" /> | Quotaless | ownCloud-based WebDAV | [Setup guide](/providers/quotaless) |
 | <img src="/icons/providers/filelu.png" width="20" /> | FileLu WebDAV | FileLu via WebDAV | [Setup guide](/providers/filelu) |
