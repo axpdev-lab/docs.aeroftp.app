@@ -53,6 +53,7 @@ Each provider guide now starts with a **Plan snapshot** that separates storage q
 | <img src="/icons/providers/Koofr.png" width="20" /> | Koofr | API | [Setup guide](/providers/koofr) |
 | <img src="/icons/providers/kdrive.png" width="20" /> | kDrive | API | [Setup guide](/providers/kdrive) |
 | <img src="/icons/providers/jottacloud.png" width="20" /> | Jottacloud | API | [Setup guide](/providers/jottacloud) |
+| <img src="/icons/providers/twake.png" width="20" /> | Twake Drive | OAuth | [Setup guide](/providers/twake) |
 | <img src="/icons/providers/drime.png" width="20" /> | Drime | API | [Setup guide](/providers/drime) |
 | <img src="/icons/providers/filelu.png" width="20" /> | FileLu | API | [Setup guide](/providers/filelu) |
 | <img src="/icons/providers/opendrive.png" width="20" /> | OpenDrive | API | [Setup guide](/providers/opendrive) |
