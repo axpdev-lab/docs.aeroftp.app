@@ -45,6 +45,7 @@ Each provider guide now starts with a **Plan snapshot** that separates storage q
 | <img src="/icons/providers/onedrive.png" width="20" /> | OneDrive | OAuth | [Setup guide](/providers/onedrive) |
 | <img src="/icons/providers/dropbox.png" width="20" /> | Dropbox | OAuth | [Setup guide](/providers/dropbox) |
 | <img src="/icons/providers/mega.png" width="20" /> | MEGA | E2E | [Setup guide](/providers/mega) |
+| <img src="/icons/providers/protondrive.png" width="20" /> | Proton Drive | CLI | [Setup guide](/providers/proton-drive) |
 | <img src="/icons/providers/box.png" width="20" /> | Box | OAuth | [Setup guide](/providers/box) |
 | <img src="/icons/providers/pcloud.png" width="20" /> | pCloud Drive | OAuth | [Setup guide](/providers/pcloud) |
 | <img src="/icons/providers/filen.png" width="20" /> | Filen | E2E | [Setup guide](/providers/filen) |
