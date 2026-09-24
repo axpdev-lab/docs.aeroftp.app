@@ -181,6 +181,7 @@ export default defineConfig({
                 { text: 'OneDrive', link: '/providers/onedrive' },
                 { text: 'OpenDrive', link: '/providers/opendrive' },
                 { text: 'pCloud', link: '/providers/pcloud' },
+                { text: 'Proton Drive', link: '/providers/proton-drive' },
                 { text: 'Twake Drive', link: '/providers/twake' },
                 { text: 'Yandex Disk', link: '/providers/yandex' },
                 { text: 'Zoho WorkDrive', link: '/providers/zoho' },
