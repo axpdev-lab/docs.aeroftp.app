@@ -6,7 +6,7 @@
 
 AeroRsync **does not replace rsync**. It *talks to* rsync: on the far end there is still a standard `rsync --server`. What it removes is the dependency on the rsync binary **on your machine**.
 
-*Page last verified against the code on 28 July 2026.*
+*Page last verified against `main` `4ab49265` on 25 September 2026. The July timings below are unchanged: they are the last loopback comparison, not a new run.*
 
 ## Why It Exists
 
@@ -66,7 +66,7 @@ Where a row is 🔴 for AeroRsync, the **Why** column says whether that is a del
 | Symlinks | 🟢 | 🟢 | Unix, both directions. Never followed; target sanitised against a hostile server |
 | `user.*` extended attributes (`-X`) | 🟢 | 🟢 | Unix, single-file **and** batch. Windows off: no direct `user.*` analogue |
 | Other xattr namespaces | 🟢 | 🔴 | Deliberate: `user.*` only |
-| POSIX ACL (`-A`) | 🟢 | 🔴 | **Unfinished work** - the next real candidate |
+| POSIX ACL (`-A`) | 🟢 | 🟢 | Linux, single file, both directions, opt-in. Named user and an explicit mask are covered live. Directory default ACL waits on recursive entries. Windows and macOS stay off |
 | Owner / group (`-o` / `-g`) | 🟢 | 🔴 | **Unfinished work.** uid/gid already travel on the wire; nothing applies them. Needs a privileged receiver |
 | Devices and special files | 🟢 | 🔴 | **Unfinished work.** Unix-only, privileged create |
 | Hardlinks (`-H`) | 🟢 | 🔴 | **Structurally blocked** until recursive scope: detecting that two paths share an inode needs the whole file list |
@@ -91,7 +91,7 @@ Where a row is 🔴 for AeroRsync, the **Why** column says whether that is a del
 | Works with no client binary installed | 🔴 | 🟢 | The reason the module exists |
 | Windows without WSL / MSYS2 / Cygwin | 🔴 | 🟢 | The only delta path AeroFTP has on Windows |
 | In-process, no fork+exec | 🔴 | 🟢 | Linked inside the app |
-| Memory-safe implementation | 🔴 | 🟢 | Rust. **13 `unsafe` blocks**, all POSIX calls with no Rust equivalent and each with a `SAFETY` note: 10 xattr wrappers, plus `utimensat` for mtime and the user and group name lookups. Every wire byte is decoded in safe Rust, which is where parsing untrusted input would earn a buffer-overflow CVE in C. This row understated the count until 2026-07-29 |
+| Memory-safe implementation | 🔴 | 🟢 | Rust. **19 `unsafe` blocks**, counted on `main` `4ab49265`, all POSIX calls with no Rust equivalent and each with a `SAFETY` note: 10 xattr wrappers, 5 ACL fd calls, 3 in the transport (`utimensat`, user lookup, group lookup) and 1 `fchmod` on the still-open temp file before the ACL apply. Every wire byte is decoded in safe Rust. The July page said 13, which was the count before the ACL calls landed |
 | Usable as a standalone library | 🟢 | 🔴 | The `aerorsync` crate on crates.io is a **name reservation** with no public API |
 
 ## Performance vs stock rsync
@@ -100,7 +100,9 @@ Measured 28 July 2026 on an idle 24-core machine: both engines back-to-back, sam
 
 **How the comparison was made fair.** The rsync side ran with `-logDtprcz`, the client flags that produce `--server -logDtprcze.iLsfxCIvu` - byte-for-byte the argument string AeroRsync sends. That was verified, not assumed: a wrapper script on the container logged the actual server command line for each candidate flag set.
 
-The everyday `-az` was deliberately **not** used for the published numbers. With it the delta scenarios measure nothing: the two 50 MB fixtures share a size *and* an mtime, so rsync's quick check declares them identical and skips the transfer entirely. The `c` (`--checksum`) in the strict set is what forces a real comparison.
+The everyday `-az` was left out of the published numbers on purpose. With it the delta scenarios measure nothing: the two 50 MB fixtures share a size and an mtime, so rsync's quick check declares them identical and skips the transfer. The `c` (`--checksum`) in the strict set is what forces a real comparison.
+
+![AeroRsync and stock rsync on 50 MB fixtures](/images/aerorsync-vs-rsync-2026-07-28.png)
 
 | Scenario | AeroRsync | stock rsync 3.2.7 | Bytes on the wire |
 |---|---|---|---|
@@ -110,6 +112,8 @@ The everyday `-az` was deliberately **not** used for the published numbers. With
 | Redundant upload, nothing to do | **0.461 s** | 1.260 s | 49 B vs 82 B |
 | 20 × 256 KiB, one session per file | **4.981 s** | 25.249 s | - |
 | 20 × 256 KiB, one recursive `rsync` call | *no recursive scope* | **1.308 s** | - |
+
+![Twenty files of 256 KiB, per file against one recursive rsync call](/images/aerorsync-smallfiles-2026-07-28.png)
 
 Three different results, and the reading matters more than the score:
 
@@ -127,8 +131,8 @@ AeroRsync is not theoretical. The wire format is pinned at several levels, all o
 
 | Layer | What it proves | Count |
 |---|---|---|
-| Unit tests on the module | Encode/decode round-trips against frozen byte transcripts captured from rsync 3.2.7, plus a captured-wire oracle from rsync 3.1.3 for the deflate token path | **605** |
-| CI lane 3, live | End-to-end against a real `rsync --server` in Docker: byte-identical upload (sha256 match), streaming upload, symlinks both directions, `user.*` xattrs inline / out-of-band / binary-with-NUL / empty, the batch path over one session, and a symlink proving it does not inherit its target attributes | **11** |
+| Unit tests on the module | Encode/decode round-trips against frozen byte transcripts captured from rsync 3.2.7, plus a captured-wire oracle from rsync 3.1.3 for the deflate token path. The workflow asserts a floor, not a snapshot: 692 selected, 15 ignored, **677 executed** | **677** |
+| CI lane 3, live | End-to-end against a real `rsync --server` in Docker: byte-identical upload (sha256 match), streaming upload, symlinks both directions, `user.*` xattrs inline / out-of-band / binary-with-NUL / empty, the batch path over one session, a symlink proving it does not inherit its target attributes, and POSIX ACL named-user upload and download | **15** |
 | Checksum matrix, live | The production upload and download transports driven once per negotiated algorithm: xxh128, xxh3, xxh64, md5, md4, sha1 | **8** |
 | Product path, live | `integration_delta_sync` confirms the real product selects the native transport for a host-key-pinned SFTP profile | in CI |
 | Cross-OS | `cargo check` and `cargo test --lib` on `windows-2022` every push, plus a `--no-default-features` gate proving the classic-only fallback surface still compiles | in CI |
@@ -145,20 +149,20 @@ So "byte-identical" is verified against **rsync 3.2.7**. Version 3.4.1 is also e
 
 ## Architecture
 
-AeroRsync lives in [`src-tauri/src/aerorsync/`](https://github.com/axpdev-lab/aeroftp/tree/main/src-tauri/src/aerorsync) - 23 files, roughly 36 870 lines.
+AeroRsync lives in [`src-tauri/src/aerorsync/`](https://github.com/axpdev-lab/aeroftp/tree/main/src-tauri/src/aerorsync). On `main` `4ab49265` the Rust sources in that directory are about 42 900 lines. Line counts move with every edit; the roles do not.
 
-| Module | Lines | Role |
-|---|---|---|
-| `native_driver.rs` | 9 760 | Session state machine: preamble exchange → file list → signatures → delta → summary |
-| `real_wire.rs` | 8 050 | Wire encode/decode: varint, varlong, preamble, file list, `sum_head`, `sum_block`, delta ops, summary frame, multiplex |
-| `delta_transport_impl.rs` | 5 060 | `AerorsyncDeltaTransport` and `AerorsyncBatch`, bridging the driver to the production `DeltaTransport` trait |
-| `tests.rs` | 2 790 | Unit tests against frozen rsync 3.2.7 transcripts, plus the captured rsync 3.1.3 deflate wire oracle |
-| `engine_adapter.rs` | 2 540 | Streaming signature and delta application |
-| `ssh_transport.rs` / `russh_session_transport.rs` | 2 400 | The two SSH legs, with pinned host-key fingerprints |
-| `events.rs` | 875 | Progress, warnings, completion |
-| `xattr_fs.rs`, `streaming_writer.rs`, `live_tests.rs`, and 14 more | ~5 390 | xattr read/apply, atomic writes, live lanes, types, planner, fallback policy, remote command, mocks |
+| Module | Lines on `4ab49265` | Role |
+|---|---:|---|
+| `native_driver.rs` | 11 175 | Session state machine: preamble exchange, file list, signatures, delta, summary |
+| `real_wire.rs` | 8 992 | Wire encode/decode: varint, varlong, preamble, file list, `sum_head`, `sum_block`, delta ops, summary frame, multiplex |
+| `delta_transport_impl.rs` | 5 213 | `AerorsyncDeltaTransport` and `AerorsyncBatch`, bridging the driver to the production `DeltaTransport` trait |
+| `tests.rs` | 3 091 | Unit tests against frozen rsync 3.2.7 transcripts, plus the captured rsync 3.1.3 deflate wire oracle |
+| `engine_adapter.rs` | 2 551 | Streaming signature and delta application |
+| `ssh_transport.rs` and `russh_session_transport.rs` | 2 667 | The two SSH legs, with pinned host-key fingerprints |
+| `events.rs` | 1 228 | Progress, warnings, completion |
+| `acl_fs.rs`, `xattr_fs.rs`, `streaming_writer.rs`, and the rest | ~7 980 | ACL and xattr read/apply, atomic writes, live lanes, types, planner, fallback policy |
 
-The production entry point is [`SftpProvider::delta_transport()`](https://github.com/axpdev-lab/aeroftp/blob/main/src-tauri/src/providers/sftp.rs). On Unix it dispatches to AeroRsync or to the classic `RsyncBinaryTransport`; on Windows only AeroRsync exists, and when it declines the transfer drops cleanly to plain SFTP with no delta optimisation.
+The production entry point is [`SftpProvider::delta_transport()`](https://github.com/axpdev-lab/aeroftp/blob/main/src-tauri/src/providers/sftp.rs). It builds the native transport when the parent SFTP session has pinned a host key. On Unix, the stock `rsync` binary takes that place only when the native transport cannot be constructed, or when no host key was pinned. On Windows there is no stock binary, so those two cases are a plain SFTP transfer. A native session that has already started and then fails does not start the stock binary either: the file goes out as a plain SFTP transfer, with no delta, on every platform. Host-key mismatch and the other hard refusals are shown to the user and are not retried.
 
 ## Configuration
 
@@ -171,19 +175,19 @@ aeroftp-cli aerorsync mode get          # auto | native | classic
 aeroftp-cli aerorsync mode set native
 ```
 
-`Auto` attempts the native engine first and keeps the classic binary as a fallback on Unix. **Soft** conditions - file below the minimum size, no key on disk, no remote `rsync` - route back to a plain upload silently. **Security** failures - host-key mismatch, permission denied - are hard errors and are never silently downgraded.
+`Auto` attempts the native engine first. The stock `rsync` binary is the Unix stand-in for a native transport that was never built, not the recovery path after a native error. A file below the minimum size, an SSH identity file the profile requires but does not have on disk, or no remote `rsync` goes out as a plain SFTP transfer, with no notice. A host-key mismatch or a permission refusal stops and is shown. Mode `native` does not use the stock binary at all.
 
 ## Limitations
 
-Stated as boundaries rather than as a backlog, because they are not the same thing.
+Two lists, because a boundary and a backlog are not the same sentence.
 
-**Deliberate.** One file per invocation: AeroRsync is a delta accelerator, not a tree walker. Enumeration, deletion and retention stay with AeroSync, which carries its own safety gates - implementing `--delete` at wire level would install a second, weaker deletion authority underneath the hardened one. Filters are applied one layer up by `.aeroignore`. The destination write strategy belongs to the atomic writer. No `rsync://` daemon mode. Protocol 31 only.
+**Deliberate.** One file per invocation: AeroRsync is a delta accelerator, and the tree belongs to AeroSync. Enumeration, deletion and retention stay there, with their own safety gates. Implementing `--delete` on the wire would install a second, weaker deletion authority under the one that was hardened. Filters are applied one layer up by `.aeroignore`. The destination write strategy belongs to the atomic writer. No `rsync://` daemon mode. Protocol 31 only. `AerorsyncBatch` still reuses one SSH session for many files: that is session reuse, not a recursive file list.
 
-**Unfinished.** ACL is the next real candidate. Owner/group are emitted on the wire but never applied, and doing so needs a privileged receiver that rarely matches a desktop deployment. Device and special files are unimplemented. Hardlinks are structurally blocked until recursive scope exists.
+**Unfinished.** Owner and group travel on some historical captures and are not applied. Applying them needs a privileged receiver, which rarely matches a desktop deployment. Device and special files are unimplemented. Hardlinks stay blocked until recursive scope exists: two paths that share an inode can only be seen from the whole file list. Directory default ACL waits on that same scope. Access ACL on a single Linux file already ships, in both directions.
 
-**Version-dependent.** Upstream rsync dropped `sha1` from the negotiated checksum list between 3.2.7 and 3.4.1. AeroRsync still implements it and it works against peers that still offer it, but a modern rsync will refuse it - that is the peer declining, not AeroRsync failing. The compression side cuts the other way: zstd arrived in 3.2.0, so anything older negotiates `zlibx` instead, which is why that path is driven and pinned rather than left to the fallback.
+**Version-dependent.** Upstream rsync dropped `sha1` from the negotiated checksum list between 3.2.7 and 3.4.1. AeroRsync still implements it and it works against peers that still offer it, but a modern rsync will refuse it - that is the peer declining, not AeroRsync failing. The compression side cuts the other way: zstd arrived in 3.2.0, so anything older negotiates `zlibx`. That path is driven and pinned against a captured rsync 3.1.3 transcript, which is the only way an old peer actually selects it.
 
-**Why the advertised list is shorter than rsync's.** The negotiated winner is the first name in *your own* advertised list that the peer also offers, computed the same way on both sides (`compat.c::parse_negotiate_str`). That makes the list a promise rather than a wish: every name in it is one the peer may hand you. Mirroring stock rsync's `zstd lz4 zlibx zlib none` verbatim was a real defect, because stock ranks `lz4` above `zlibx` and AeroRsync has no lz4 codec at all: a peer built with lz4 but without zstd made the negotiation settle on a codec we could not drive, and the transfer fell back to the classic wrapper while a working `zlibx` sat one position lower. AeroRsync now advertises `zstd zlibx none` and drives all three. The trailing `none` is what keeps the two lists from ever failing to intersect, so a peer offering only codecs we decline still gets a delta transfer, just an uncompressed one, instead of dropping off the native path. A test sweeps every subset of stock's list and fails if any of them can negotiate something undrivable.
+**Why the advertised list is shorter than rsync's.** The negotiated winner is the first name in *your own* advertised list that the peer also offers, computed the same way on both sides (`compat.c::parse_negotiate_str`). That makes the list a promise: every name in it is one the peer may hand you. Mirroring stock rsync's `zstd lz4 zlibx zlib none` verbatim was a real defect, because stock ranks `lz4` above `zlibx` and AeroRsync has no lz4 codec at all: a peer built with lz4 but without zstd made the negotiation settle on a codec we could not drive, and the file left the native path while a working `zlibx` sat one position lower. AeroRsync now advertises `zstd zlibx none` and drives all three. The trailing `none` is what keeps the two lists from ever failing to intersect, so a peer offering only codecs we decline still gets a delta transfer, just an uncompressed one, instead of dropping off the native path. A test sweeps every subset of stock's list and fails if any of them can negotiate something undrivable.
 
 **Not yet a library.** The `aerorsync` crate on crates.io is a reserved name at `0.0.x` with no public API. Extraction depends on three gates: stock-rsync interop green end to end, the dependency direction inverted from AeroFTP to aerorsync, and a separate clean-room commit history. No date is attached to that.
 
