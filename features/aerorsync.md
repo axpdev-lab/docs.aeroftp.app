@@ -175,7 +175,7 @@ aeroftp-cli aerorsync mode get          # auto | native | classic
 aeroftp-cli aerorsync mode set native
 ```
 
-`Auto` attempts the native engine first. The stock `rsync` binary is the Unix stand-in for a native transport that was never built, not the recovery path after a native error. A file below the minimum size, a missing key, or no remote `rsync` goes out as a plain SFTP transfer, with no notice. A host-key mismatch or a permission refusal stops and is shown. Mode `native` does not use the stock binary at all.
+`Auto` attempts the native engine first. The stock `rsync` binary is the Unix stand-in for a native transport that was never built, not the recovery path after a native error. A file below the minimum size, an SSH identity file the profile requires but does not have on disk, or no remote `rsync` goes out as a plain SFTP transfer, with no notice. A host-key mismatch or a permission refusal stops and is shown. Mode `native` does not use the stock binary at all.
 
 ## Limitations
 
