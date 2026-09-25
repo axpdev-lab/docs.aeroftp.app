@@ -443,7 +443,7 @@ the capability never reaches them.
 | Hand-rolled `JoinSet` sliding-window batch orchestrator | `execute_batch_dag` is the only batch path.          |
 | Multipart upload was internal to `provider.upload()`   | Multipart is an engine concern: N `UploadPart` nodes governed by the shared chunk budget. |
 | Server-side copy was an ad-hoc per-provider method     | One `ServerSideCopy` node, one `api_slot`, one shape. |
-| Five distinct routing shims (`if dag_enabled { … }`)   | Zero shims; the graph engine is the production path.  |
+| Five distinct routing shims (`if dag_enabled { … }`)   | The three rollout flags are gone. Batch, sync, copy and segmented download go through the shared core. A single-file legacy override and a few adapters remain. |
 
 ## Source map
 
@@ -462,10 +462,46 @@ the capability never reaches them.
 | `src-tauri/src/providers/multi_thread.rs`         | Segmented download runner.            |
 
 The code lives in the [`aeroftp` repo](https://github.com/axpdev-lab/aeroftp).
-The summary tier of this document lives at
-[`docs/DAG-TRANSFER-ENGINE.md`](https://github.com/axpdev-lab/aeroftp/blob/main/docs/DAG-TRANSFER-ENGINE.md);
-the internal design history and decision logs live in
-[`docs/dev/roadmap/APPENDIX-DAG-ENGINE/`](https://github.com/axpdev-lab/aeroftp/tree/main/docs/dev/roadmap/APPENDIX-DAG-ENGINE).
+The summary that tracks the code lives at
+[`docs/DAG-TRANSFER-ENGINE.md`](https://github.com/axpdev-lab/aeroftp/blob/main/docs/DAG-TRANSFER-ENGINE.md).
+
+## Measured results, September 2026
+
+Campaign results. Each table names the date, the link, the binary and the number of repetitions. A single run stays a single run. Two results from this campaign are omitted on purpose: a download "resume" whose file had already finished, and a claimed 17 percent upload gain on one mixed tree that a later pass measured at -2.0 points against a 13.4 percent noise floor.
+
+### SFTP, 5,000 files of 4 KiB
+
+Wired gigabit, RTT 47.4 ms, 8 September 2026, `--parallel 4`. One run per cell. Before is `3417fcb46`. After is `38d5c0b96`, the build that reuses the SFTP session across the tree. rclone on the same link barely moved, which is the check that the window itself did not drift.
+
+![Five thousand small files over SFTP, before and after session reuse](/images/dag-sftp-smallfiles-2026-09-08.png)
+
+| Operation | AeroFTP before | AeroFTP after | rclone before | rclone after |
+|---|---:|---:|---:|---:|
+| Upload | 1391.20 s | 330.52 s | 687.47 s | 643.64 s |
+| Download | 1294.21 s | 272.76 s | 421.92 s | 431.57 s |
+
+The same binary at `--parallel 16` stayed flat (upload 316.02 s, download 264.41 s) because the session ceiling on that build was 4. rclone at 16 streams went to 344.00 s upload and 109.89 s download. On current `main` the ceiling is 16 and the default parallelism is still 4, so this table is the binary with the ceiling of 4, not a timing of today's ceiling. At 16 streams the download was still behind rclone (264 s against 110 s). The upload had moved ahead (316 s against 344 s).
+
+### S3 and WebDAV, same day, two repetitions
+
+Same station and link, 5,000 files of 4 KiB, two interleaved repetitions. Each uploaded tree was read back by the other tool. The quiet-window spread on AeroFTP was 3.3 percent on S3 and 4.9 percent on WebDAV. A third binary, `7336fa6b5`, removed an extra size probe that had doubled small-file downloads on the middle build (S3 download mean 68.35 s, then 126.35 s, then 68.54 s). Upload did not move.
+
+| Cell | AeroFTP upload, two runs | rclone upload, two runs |
+|---|---|---|
+| S3, before `3417fcb46` | 62.98 s, 66.19 s | 119.79 s, 114.23 s |
+| S3, third `7336fa6b5` | 70.49 s, 65.15 s | 124.37 s, 123.62 s |
+| WebDAV, before | 62.27 s, 67.16 s | 199.81 s, 191.58 s |
+| WebDAV, third | 62.35 s, 60.78 s | 195.16 s, 198.24 s |
+
+Upload of this tree is about twice rclone on S3. On WebDAV the before build is about 3.0 times rclone and the third build is about 3.2 times.
+
+### One resume the review kept
+
+5 September 2026, a wide-area link of about 53 ms, one 300 MiB S3 upload. The kill arrived at 60 s of a transfer that takes about 128 s. AeroFTP resumed in 82.8 s. rclone started over and took 128.4 s. One run. The download rows from that session are omitted: the download had already finished.
+
+### Not a current S3 download time
+
+On 19 September a 300 MB S3 download read 31.51 s against rclone at 16.95 s while the client announced four streams and used one. The size probe read `content_length` from a HEAD response, which is 0. Those seconds describe that broken path. They are not a before and they are not an after.
 
 ## See also
 
