@@ -28,7 +28,7 @@ Where a row is 🔴 for AeroRsync, the **Why** column says whether that is a del
 | Capability | rsync | AeroRsync | Why |
 |---|---|---|---|
 | Wire protocol 31 | 🟢 | 🟢 | Speaks bytes-on-wire to stock `rsync --server` |
-| Protocols 27-30 | 🟢 | 🔴 | Deliberate: protocol-31-only. Older endpoints are served by the stock binary |
+| Protocols 27-30 | 🟢 | 🔴 | Deliberate: protocol-31-only. The native path refuses the peer before any data moves and sends the file as plain SFTP, with no delta. Delta needs mode `classic`, which runs the stock binary and exists on Unix only |
 | Rolling Adler-32 signatures | 🟢 | 🟢 | Identical algorithm |
 | Block strong hash: md5 | 🟢 | 🟢 | Live-verified |
 | Block strong hash: md4 | 🟢 | 🟢 | Live-verified. Seeding mirrors rsync 3.2.7 `checksum.c` |
@@ -131,7 +131,7 @@ AeroRsync is not theoretical. The wire format is pinned at several levels, all o
 
 | Layer | What it proves | Count |
 |---|---|---|
-| Unit tests on the module | Encode/decode round-trips against frozen byte transcripts captured from rsync 3.2.7, plus a captured-wire oracle from rsync 3.1.3 for the deflate token path. The workflow asserts a floor, not a snapshot: 692 selected, 15 ignored, **677 executed** | **677** |
+| Unit tests on the module | Encode/decode round-trips against frozen byte transcripts captured from rsync 3.2.7, plus a captured-wire oracle from rsync 3.1.3 for the deflate token path. Measured on main `c713857e`: 713 selected, 15 ignored, **698 executed**. The workflow still fails the job below 677 | **698** |
 | CI lane 3, live | End-to-end against a real `rsync --server` in Docker: byte-identical upload (sha256 match), streaming upload, symlinks both directions, `user.*` xattrs inline / out-of-band / binary-with-NUL / empty, the batch path over one session, a symlink proving it does not inherit its target attributes, and POSIX ACL named-user upload and download | **15** |
 | Checksum matrix, live | The production upload and download transports driven once per negotiated algorithm: xxh128, xxh3, xxh64, md5, md4, sha1 | **8** |
 | Product path, live | `integration_delta_sync` confirms the real product selects the native transport for a host-key-pinned SFTP profile | in CI |
@@ -162,7 +162,7 @@ AeroRsync lives in [`src-tauri/src/aerorsync/`](https://github.com/axpdev-lab/ae
 | `events.rs` | 1 228 | Progress, warnings, completion |
 | `acl_fs.rs`, `xattr_fs.rs`, `streaming_writer.rs`, and the rest | ~7 980 | ACL and xattr read/apply, atomic writes, live lanes, types, planner, fallback policy |
 
-The production entry point is [`SftpProvider::delta_transport()`](https://github.com/axpdev-lab/aeroftp/blob/main/src-tauri/src/providers/sftp.rs). It builds the native transport when the parent SFTP session has pinned a host key. On Unix, the stock `rsync` binary takes that place only when the native transport cannot be constructed, or when no host key was pinned. On Windows there is no stock binary, so those two cases are a plain SFTP transfer. A native session that has already started and then fails does not start the stock binary either: the file goes out as a plain SFTP transfer, with no delta, on every platform. Host-key mismatch and the other hard refusals are shown to the user and are not retried.
+The production entry point is [`SftpProvider::delta_transport()`](https://github.com/axpdev-lab/aeroftp/blob/main/src-tauri/src/providers/sftp.rs). It builds the native transport when the parent SFTP session has pinned a host key. On Unix, the stock `rsync` binary takes that place only when the native transport cannot be constructed, or when no host key was pinned. On Windows there is no stock binary, so those two cases are a plain SFTP transfer. A native session that has already started and then fails does not start the stock binary either: the file goes out as a plain SFTP transfer, with no delta, on every platform. Host-key mismatch and the other hard refusals are shown to the user and are not retried. A rsync 3.1.x peer negotiates no algorithm strings and is spoken natively (MD5, classic flag bytes, zlibx via `--new-compress`). A peer below protocol 31, including 27, 28, 29 and 30, is refused before any data moves and the file goes over that same plain SFTP transfer. A frame that is actually corrupt stays a hard error and is shown.
 
 ## Configuration
 
