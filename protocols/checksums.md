@@ -10,8 +10,8 @@ AeroFTP never downloads a remote file in order to hash it. A digest either comes
 
 | Backend | Server-side digests | Notes |
 | --- | --- | --- |
-| FTP | MD5, SHA-1, SHA-256, CRC32 (negotiated) | Depends on what the server advertises in FEAT: `HASH` (algorithm chosen by the server), or the older `XMD5` / `XSHA1` / `XCRC`. A server advertising none offers no digest. |
-| FTPS | MD5, SHA-1, SHA-256, CRC32 (negotiated) | Depends on what the server advertises in FEAT: `HASH` (algorithm chosen by the server), or the older `XMD5` / `XSHA1` / `XCRC`. A server advertising none offers no digest. |
+| FTP | MD5, SHA-1, SHA-256, SHA-512, CRC32 (negotiated) | Depends on what the server advertises in FEAT: `HASH` (algorithm selected per request with `OPTS HASH`, from the list the server gives), or the older `XMD5` / `XSHA1` / `XCRC`. A server advertising none offers no digest. |
+| FTPS | MD5, SHA-1, SHA-256, SHA-512, CRC32 (negotiated) | Depends on what the server advertises in FEAT: `HASH` (algorithm selected per request with `OPTS HASH`, from the list the server gives), or the older `XMD5` / `XSHA1` / `XCRC`. A server advertising none offers no digest. |
 | SFTP | SHA-256 | Computed by the remote host with `sha256sum` over an SSH exec channel: the bytes are read on the server, never sent to us. Omitted if the host has no `sha256sum`. |
 | WebDAV | SHA-1, MD5, Adler-32 (negotiated) | Only ownCloud and Nextcloud publish the `oc:checksums` property, and only for files uploaded by a client that sent one. Every other WebDAV server omits it. |
 | S3 | MD5 | The ETag is the object MD5 only for single-part, non-SSE-KMS objects. For a multipart or KMS-encrypted object the digest is omitted rather than guessed. |
@@ -49,6 +49,8 @@ A backend's own scheme keeps its own name. Dropbox's `content_hash` is a SHA-256
 ## Reading the table
 
 **"(negotiated)"** means the list is what the *protocol* can carry, not a promise from your particular server. FTP announces its hash commands in the `FEAT` reply, and a server offering only `XCRC` can produce CRC32 and nothing else; AeroFTP narrows the Checksum tab to what your server actually advertised as soon as you connect. WebDAV is the same story: only ownCloud and Nextcloud publish `oc:checksums`, and only for files whose uploading client sent one.
+
+**FTP `HASH`** lets the client pick the algorithm: AeroFTP selects the one you ask for with `OPTS HASH`, in the spelling the server listed, before sending `HASH`, and reads the digest from the reply whether it comes in one line or several. This, and SHA-512 over `HASH`, ships in the release after AeroFTP v4.2.0. On v4.2.0 a checksum from a server that implements `HASH` fails, and a reply to the older `XMD5` / `XSHA1` / `XCRC` commands can show the server's status code as part of the value.
 
 **A dash** means no server-side digest at all. That is not always "not implemented yet": Azure publishes `Content-MD5` only for blobs whose uploader chose to send one, MEGA, Filen and Internxt hash client-side under their own end-to-end encryption scheme, and the media CDNs address assets by id rather than by content.
 
