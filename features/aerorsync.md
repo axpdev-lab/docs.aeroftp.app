@@ -91,7 +91,7 @@ Where a row is 🔴 for AeroRsync, the **Why** column says whether that is a del
 | Works with no client binary installed | 🔴 | 🟢 | The reason the module exists |
 | Windows without WSL / MSYS2 / Cygwin | 🔴 | 🟢 | The only delta path AeroFTP has on Windows |
 | In-process, no fork+exec | 🔴 | 🟢 | Linked inside the app |
-| Memory-safe implementation | 🔴 | 🟢 | Rust. **19 `unsafe` blocks**, counted on `main` `4ab49265`, all POSIX calls with no Rust equivalent and each with a `SAFETY` note: 10 xattr wrappers, 5 ACL fd calls, 3 in the transport (`utimensat`, user lookup, group lookup) and 1 `fchmod` on the still-open temp file before the ACL apply. Every wire byte is decoded in safe Rust. The July page said 13, which was the count before the ACL calls landed |
+| Memory-safe implementation | 🔴 | 🟢 | Rust. **21 `unsafe` blocks**, counted on `main` `ba6ea3df0`, all POSIX calls with no Rust equivalent and each with a `SAFETY` note: 10 xattr wrappers, 5 ACL fd calls, 3 in the transport (`utimensat`, user lookup, group lookup) and 3 in the streaming writer (`fchmod` on the still-open temp file before the ACL apply, and `statfs` with the read of the buffer it fills, which decides whether the temporary can be locked). Every wire byte is decoded in safe Rust. The July page said 13, which was the count before the ACL calls landed |
 | Usable as a standalone library | 🟢 | 🔴 | The `aerorsync` crate on crates.io is a **name reservation** with no public API |
 
 ## Performance vs stock rsync
