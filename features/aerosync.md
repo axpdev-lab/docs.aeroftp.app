@@ -181,6 +181,33 @@ The bandwidth limiter auto-detects whether the active backend is FTP (where thro
 
 Define multiple local-to-remote path mappings within a single sync configuration. Each pair syncs independently, allowing you to synchronize different directories to different remote locations in one operation. The Multi-Path Editor provides CRUD controls for adding, editing, and removing path pairs.
 
+## Versioned Backup (v4.2.1)
+
+When the versioned-backup switch is on, AeroSync keeps the old copy of every file a run is about to overwrite or delete - on **remote destinations too**, not only on local ones. Before the destination file is touched, the old copy is moved, together with its `.aerocorrect` error-correction sidecar, to:
+
+```
+<backup folder>/<date and time of the run>/<original path>
+```
+
+- Copies are **never overwritten**: a second copy of the same file in one run is kept as `name.1.ext`.
+- The backup folder, and every folder a nested one sits in, is **never compared**, so a later Mirror run cannot delete the old copies it holds.
+- The Plan tab says before the run how the server moves files into the backup folder, and keeps **Execute** off on a backend where the move cannot be guaranteed.
+- Exported sync scripts (`.aeroftp-script`, `.sh`, `.ps1`) carry the backup folder along with the compare's default exclusions.
+
+## Folder Removal Safety (v4.2.1)
+
+A folder is removed only once it is empty, on every backend:
+
+- **A Mirror keeps what it did not complete.** A destination folder that still holds a file whose versioned-backup move failed, or a file the compare excluded (for example `.env`), is kept, and the sync result lists each kept folder with the reason.
+- **Removing a folder without asking for recursion refuses a non-empty one on every backend** - native guards on Box, pCloud, OneDrive and the object stores, a listing check elsewhere. `aeroftp-cli rmdir` exits 9 on a full folder, FTP and SFTP included.
+- **`sync --delete` removes the directories its deletes emptied**, deepest first, on every backend, and fails when a removal is refused for another reason.
+
+## Plan Tab Exclude Patterns (v4.2.1)
+
+The Plan tab gains **exclude patterns for every path pair**, shared with the Local mirror tab and the templates, and shows the matching `aeroftp-cli sync` command for the same run - or the reason there is none.
+
+Exclude patterns now follow one rule everywhere (Compare, Plan, Local mirror, AeroCloud and the CLI): a bare name such as `node_modules` excludes the whole directory of that name, matching is case-insensitive, and an invalid pattern is reported instead of matching nothing. Because patterns may now match *more* than before, review exclude lists written under the old, narrower reading. See [CLI Commands - sync](/cli/commands#sync) for the full matcher rules.
+
 ## Dry-Run Export
 
 Before executing a sync, run a dry-run to preview exactly what will happen. The dry-run scans both sides, computes the diff, and exports the planned operations as either:
