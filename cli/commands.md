@@ -133,6 +133,8 @@ aeroftp-cli rm --profile "server" /missing-file --force  # idempotent delete (su
 aeroftp-cli mv sftp://user@host /docs/draft.md /docs/final.md
 ```
 
+Since v4.2.1, `rm` without `-r` never erases a folder that still holds files: on every backend a non-recursive delete lists first and refuses a non-empty folder (exit 9), and a listing that fails removes nothing. `rm --dry-run` on a non-empty directory exits 9 like the real run.
+
 ### cat / stat / find / df / tree
 
 ```bash
@@ -365,9 +367,36 @@ aeroftp-cli sync --profile "server" ./local/ /remote/ --resync
 
 # Backup before overwrite/delete
 aeroftp-cli sync --profile "server" ./local/ /remote/ --delete --backup-dir /tmp/bak
+
+# One-way update (v4.2.1): leave a destination copy that is newer than the source
+aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload --update
+
+# One-way conflict handling (v4.2.1): skip a changed pair the dates cannot order
+aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload --conflict-mode skip
+
+# Compare same-size files by server-side checksum instead of time (v4.2.1)
+aeroftp-cli sync --profile "server" ./local/ /remote/ --checksum --dry-run
+
+# Modification window (v4.2.1): seconds within which two times are the same instant
+aeroftp-cli sync --profile "server" ./local/ /remote/ --direction download --modify-window 60
 ```
 
 Bisync (`--direction both`, the default) saves a `.aeroftp-bisync.json` snapshot after each successful sync, enabling delta detection and bidirectional delete propagation. Conflict modes: `newer` (default), `older`, `larger`, `smaller`, `skip`, `rename`.
+
+One-way sync (`--direction upload` or `download`, v4.2.1) has its own rules:
+
+- Two times within 2 s - or `--modify-window SECS` - are the same instant; the window is raised to the precision the backend keeps, and a backend with no comparable time is compared by size only, which the run says on stderr and in the JSON result.
+- `--update` applies to a changed pair only: it leaves one alone when the destination copy is newer than the source, as rsync's `--update` does. It is refused with `--direction both`.
+- A changed pair the dates cannot order is a conflict: `--conflict-mode source` (the one-way default) transfers it, `--conflict-mode skip` leaves it. Every pair left open is named on stderr and listed in the JSON result under `conflicts_open`.
+- `--checksum` compares same-size files by content (the backend's server-side checksum against a local digest, strongest algorithm first); it cannot be combined with `--size-only` / `--skip-matching`.
+
+Other v4.2.1 corrections:
+
+- A percentage `--max-delete N%` caps each side on its own at N percent of the files the scan found there, **rounded down**: `--max-delete 50%` allows 1 delete of 3 files and none of 1, so a cap under 100% never empties a side.
+- Under `--immutable`, a planned transfer whose destination exists with a **different size** is refused as an error (exit 4, named in the JSON `errors`) - it is most often the partial an interrupted upload left - and one of the same size is counted in `skipped`.
+- With `--delete`, a one-way sync also removes the destination directories its deletes left empty, deepest first, on every backend. The dry run lists them as `RMDIR (..., if empty after the deletes)`; the JSON result counts the removed ones in `dirs_deleted` and lists every folder kept after a refused removal, with the reason, under `dirs_kept`.
+- `--exclude` (repeatable, joined by the global `--exclude-global` and `--exclude-from`) is read by `sync`, `sync --watch`, `sync-doctor` and `reconcile` with the matcher the desktop app uses, **case-insensitively**. A bare name such as `node_modules` or `.git` matches any folder or file of that name, and an excluded folder takes everything under it with it; a pattern with `/` matches that run of folders anywhere in the tree, and a leading `/` anchors it at the sync root. An invalid pattern, or an `--exclude-from` file that cannot be read, is a usage error (exit 5): before v4.2.1 an invalid pattern was dropped silently. Patterns may now match *more* than before, so review exclude lists written under the old, narrower reading.
+- Ctrl+C stops a `sync` in any phase and ends it with exit 130 and `"status": "interrupted"`; `get -r`, `put -r` and `get` / `put` with a glob do the same. A second Ctrl+C force-exits.
 
 ### reconcile
 
@@ -706,7 +735,7 @@ The `protocol_features` map collapses what used to require N `agent-connect` cal
 
 ### import rclone
 
-Import server profiles from rclone configuration files. Supports 17 rclone backend types with automatic password de-obfuscation.
+Import server profiles from rclone configuration files. Supports 23 rclone backend types with automatic password de-obfuscation.
 
 ```bash
 # Auto-detect rclone.conf location
@@ -719,7 +748,11 @@ aeroftp-cli import rclone /path/to/rclone.conf
 aeroftp-cli import rclone --json
 ```
 
-Supported rclone types: `ftp`, `sftp`, `s3` (all providers), `webdav` (Nextcloud, ownCloud), `drive`, `dropbox`, `onedrive`, `mega`, `box`, `pcloud`, `azureblob`, `swift`, `yandexdisk`, `koofr`, `jottacloud`, `b2`, `opendrive`. Passwords are revealed from rclone's reversible AES-256-CTR obfuscation. Use the GUI import flow (Settings > Export/Import > Import from rclone) to store credentials in the encrypted vault.
+Supported rclone types: `ftp`, `sftp`, `s3` (all providers), `webdav` (Nextcloud, ownCloud), `drive`, `dropbox`, `onedrive`, `mega`, `internxt`, `filen`, `box`, `pcloud`, `azureblob`, `swift`, `yandexdisk`, `zohoworkdrive`, `koofr`, `jottacloud`, `b2`, `opendrive`, `drime`, `cloudinary`, `imagekit`. Passwords are revealed from rclone's reversible AES-256-CTR obfuscation. Use the GUI import flow (Settings > Export/Import > Import from rclone) to store credentials in the encrypted vault.
+
+::: warning Re-import profiles imported before v4.2.1
+Before v4.2.1, keys rclone writes in plain text (S3, Azure Blob, Swift and B2 keys, and the Drime, Cloudinary and ImageKit secrets) went through the reveal codec on import, and a small share was stored corrupted (0.4% of B2 application keys, 2.2% of Cloudinary secrets). Since v4.2.1 they are imported exactly as written. **A profile imported from rclone that fails to sign in should be imported again.**
+:::
 
 For compatibility details about existing `rclone crypt` remotes, see [rclone crypt interoperability](/features/rclone-crypt).
 
@@ -870,7 +903,7 @@ aeroftp-cli cat github://token:PAT@owner/repo /README.md
 | `--max-backlog <n>` | Max queued parallel tasks (default: 10000) |
 | `--files-from <file>` | Transfer only files listed in file (one per line, `#` comments) |
 | `--files-from-raw <file>` | Like `--files-from` but preserves whitespace and empty lines |
-| `--immutable` | Never overwrite existing files on destination |
+| `--immutable` | Never overwrite existing files on destination. Since v4.2.1, an existing destination of a **different size** is refused as an error (exit 4) rather than skipped - it is most often the partial an interrupted upload left - and one of the same size is counted as skipped |
 | `--no-check-dest` | Skip remote listing during sync (assume empty destination) |
 | `--max-depth <n>` | Maximum recursion depth for ls, find, sync, get -r, put -r |
 | `--default-time <ts>` | Fallback mtime when backend returns None (ISO 8601, RFC 3339, or `now`) |
@@ -951,7 +984,7 @@ Respects `NO_COLOR`, `CLICOLOR`, and `CLICOLOR_FORCE` environment variables.
 | 10 | Server error / parse error |
 | 11 | I/O error |
 | 99 | Unknown error |
-| 130 | Interrupted by SIGINT (Ctrl+C) |
+| 130 | Interrupted by SIGINT (Ctrl+C). Since v4.2.1 this covers every transfer phase: `sync`, recursive and glob `get`/`put`, and single-file `get`/`put`/`pget`, with `"status": "interrupted"` in JSON output. A second Ctrl+C force-exits |
 
 ## CI/CD Example
 

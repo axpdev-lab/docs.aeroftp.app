@@ -10,7 +10,7 @@ description: Connect Mail.ru Cloud to AeroFTP over WebDAV with the built-in pres
 Mail.ru Cloud (Облако Mail) is the cloud storage of the Mail.ru mailbox. AeroFTP connects to it over **WebDAV** with a built-in preset that fills in the server for you.
 
 ::: info Availability
-The Mail.ru Cloud preset ships in the release after AeroFTP v4.2.0. On v4.2.0, use the generic **WebDAV** form with the server `https://webdav.cloud.mail.ru` and the same app password.
+The Mail.ru Cloud preset ships in AeroFTP v4.2.1. On v4.2.0, use the generic **WebDAV** form with the server `https://webdav.cloud.mail.ru` and the same app password.
 :::
 
 ## What You Need

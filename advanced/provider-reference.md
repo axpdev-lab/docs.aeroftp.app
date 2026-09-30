@@ -2,7 +2,7 @@
 
 Technical reference for the storage protocols and providers documented on this page, grouped by connection type. This page is a selection, not the catalogue: Blomp, GitLab, native Backblaze B2, Immich and Drime are supported too and have their own pages.
 
-AeroFTP v4.2.0 supports **7 transport protocols**, **24 native provider integrations** and **45 pre-configured presets**, reaching **52 providers** over **66 connection methods**. Those figures are generated from the code into [`docs/PROVIDER-INVENTORY.json`](https://github.com/axpdev-lab/aeroftp/blob/v4.2.0/docs/PROVIDER-INVENTORY.json) (at the v4.2.0 tag) and CI fails when they drift, so quote them from there rather than counting the tables on this page.
+AeroFTP v4.2.1 supports **7 transport protocols**, **26 native provider integrations** and **47 pre-configured presets**, reaching **56 providers** over **70 connection methods**. Those figures are generated from the code into [`docs/PROVIDER-INVENTORY.json`](https://github.com/axpdev-lab/aeroftp/blob/v4.2.1/docs/PROVIDER-INVENTORY.json) (at the v4.2.1 tag) and CI fails when they drift, so quote them from there rather than counting the tables on this page.
 
 ## Server Protocols
 
@@ -42,7 +42,7 @@ Direct server connections using standard protocols.
 | API | RFC 4918 |
 | XML parser | quick-xml 0.39 (event-based) |
 | Upload | Streaming `PUT` |
-| Presets | Nextcloud, Seafile, CloudMe, custom |
+| Presets | Nextcloud, Seafile, CloudMe, Mail.ru Cloud (v4.2.1), custom |
 | Special | Root boundary enforcement (`initial_path`) |
 
 ### S3-Compatible
@@ -53,7 +53,7 @@ Direct server connections using standard protocols.
 | Auth | AWS Signature v4 (HMAC-SHA256) |
 | Upload | Multipart (5 MB parts) |
 | Pagination | `continuation-token` loop |
-| Presets | AWS, Wasabi, DigitalOcean Spaces, Backblaze B2, Cloudflare R2, Storj, Alibaba OSS, Tencent COS, Yandex Object Storage, MinIO, custom |
+| Presets | AWS, Wasabi, DigitalOcean Spaces, Backblaze B2, Cloudflare R2, Storj, Alibaba OSS, Tencent COS, Yandex Object Storage, MinIO, IBM Cloud Object Storage (v4.2.1), custom |
 | Special | R2 Account ID field with auto-computed endpoint |
 
 ## OAuth Cloud Providers
@@ -293,14 +293,14 @@ All protocols implement a unified `StorageProvider` trait with 18 methods:
 
 | Crate | Version | Used By |
 |-------|---------|---------|
-| suppaftp | 8.0.3 (pinned) | FTP, FTPS |
+| suppaftp | 12.1.0 (pinned, v4.2.1) | FTP, FTPS |
 | russh | 0.57 | SFTP |
 | ssh2 | 0.9 (vendored OpenSSL) | SFTP upload backend (some embedded servers) |
 | reqwest | 0.13 | All HTTP-based protocols |
-| quick-xml | 0.39 | WebDAV, Azure Blob, S3 |
+| quick-xml | 0.42 (v4.2.1) | WebDAV, Azure Blob, S3 |
 | tokio-util | 0.7 | Streaming I/O |
 | secrecy | 0.8 | All credential handling |
 
 ::: warning suppaftp Pin
-`suppaftp` is pinned to `=8.0.3` (the latest 8.0.x line). The Windows-breaking `std::os::fd::AsFd` reference is still present upstream but is feature-gated behind `tokio-async-native-tls`, which AeroFTP does not enable (we use `tokio-rustls-aws-lc-rs`). The pin keeps the FTP layer stable across Linux, macOS, and Windows while picking up the 14 upstream fixes between 8.0.1 and 8.0.3 (UB in TLS, panics on EPSV/SIZE/MDTM, infinite loops in async `feat()` and `read_response_in()`, MLSX `cdir`/`pdir`, EPRT for IPv6).
+Since v4.2.1 the FTP library is `suppaftp` **12.1.0** (from 10.0.2), pinned to a forked release commit, whose control replies are capped at 256 KiB. The move fixed implicit-FTPS transfers against vsftpd: AeroFTP now asks for protected data connections after login. Earlier versions pinned `=8.0.3` to keep the FTP layer stable across Linux, macOS, and Windows.
 :::

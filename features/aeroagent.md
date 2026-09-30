@@ -58,12 +58,22 @@ When using providers that support reasoning (Anthropic extended thinking, OpenAI
 
 ## Tool Approval
 
-When AeroAgent calls a tool rated as **medium** or **high** danger, an approval dialog appears showing the tool name, parameters, and danger level.
+When AeroAgent calls a tool rated as **medium** or **high** danger, an approval dialog appears showing the tool name, parameters, and danger level. Since AeroAgent 1.5 (AeroFTP v4.2.1) approvals open in a **dedicated AeroFTP window** instead of the system message box: only that window can grant an approval, and it holds its own minimal capability.
 
 ![Tool approval dialog](/images/aeroagent-tools.png)
 <!-- SCREENSHOT: Tool approval dialog showing a medium-danger tool call (e.g., local_write) with the tool name, parameters preview, and Approve/Reject buttons -->
 
+A tool can be **allowed for the rest of the chat** (unticked by default), so approving three folders takes one approval instead of three. The option is refused for every high-danger tool and any tool the app does not know, and it is never offered for delete, trash, shell or extraction. Approvals **fail closed**: the approval window is never skipped for delete, trash, shell, extraction, a mutating server command or a sync start.
+
 For batch tool calls, a **BatchToolApproval** dialog presents all pending tools at once, allowing you to approve or reject each individually or approve all.
+
+## AeroAgent 1.5 (AeroFTP v4.2.1)
+
+- **Provider-native reasoning continuations**: reasoning models keep their provider-native state across tool calls (OpenAI Responses, Anthropic content blocks, compatible Chat), with scope checks so a changed provider, model or endpoint cannot replay another turn's state.
+- **Exact capability discovery**: NVIDIA and Alibaba Model Studio capabilities are discovered exactly, and public OpenRouter metadata enriches its models. Custom providers can be added more than once and named.
+- **Stop reaches the tools**: the Send button becomes **Stop** during generation, and Stop cancels both the follow-up request of a multi-step answer and the tools still running for that turn.
+- **Progressive tool loading**: each turn starts with four core tools and loads more through a local tool search that never grants approval.
+- `aeroftp-cli agent --provider anthropic` reaches the right endpoint again, Ctrl-C exits 130 with the partial answer, and provider errors reach the user bounded and with keys removed.
 
 ## AI Settings
 

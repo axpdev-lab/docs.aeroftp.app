@@ -10,7 +10,7 @@ description: Connect IBM Cloud Object Storage to AeroFTP with the built-in S3 pr
 IBM Cloud Object Storage (COS) is IBM's S3-compatible object storage. AeroFTP includes a dedicated **IBM Cloud Object Storage** preset that builds the endpoint from the location you pick, so you only enter your keys, the bucket and its location.
 
 ::: info Availability
-The IBM Cloud Object Storage preset ships in the release after AeroFTP v4.2.0. On v4.2.0, use the generic **S3 Compatible** form with the endpoint `https://s3.<location>.cloud-object-storage.appdomain.cloud`, the bucket location as region, and path-style access enabled.
+The IBM Cloud Object Storage preset ships in AeroFTP v4.2.1. On v4.2.0, use the generic **S3 Compatible** form with the endpoint `https://s3.<location>.cloud-object-storage.appdomain.cloud`, the bucket location as region, and path-style access enabled.
 :::
 
 ## What You Need
