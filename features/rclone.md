@@ -29,9 +29,13 @@ The OAuth export needs all three credentials in the vault, which is the case for
 
 Keep in mind that AeroFTP and rclone use different redirect URIs. Register both under the same app in the provider's developer console so one `client_id` and `client_secret` pair works in both tools.
 
-The providers with no rclone export today are 4shared, Internxt and kDrive; those entries are emitted as `# manual setup required` comments instead.
+Since v4.2.1 the export also covers **Internxt** (email + obscured password; rclone derives the rest on `rclone config reconnect <remote>:` - note that some Internxt plans, the free one included, do not allow rclone access), and **Drime, Cloudinary and ImageKit** export to and import from `rclone.conf` in both directions. The providers with no rclone export today are 4shared, kDrive, FileLu and Proton Drive; those entries are emitted as `# manual setup required` comments instead (FileLu and Proton Drive hold credentials rclone cannot use: rclone's FileLu backend signs in with the separate FileLu Rclone key, and Proton Drive is reached through Proton's own CLI without a stored password).
 
 No vendor lock-in. Your data, your choice.
+
+::: warning Re-import profiles imported before v4.2.1
+Before v4.2.1, keys rclone writes in plain text (S3, Azure Blob, Swift and B2 keys, and the Drime, Cloudinary and ImageKit secrets) went through the reveal codec on import, and a small share was stored corrupted. Since v4.2.1 they are imported exactly as written. **A profile imported from rclone that fails to sign in should be imported again.**
+:::
 
 ## Supported rclone backends
 
@@ -60,12 +64,18 @@ No vendor lock-in. Your data, your choice.
 | `jottacloud` | Jottacloud | OAuth (re-auth required) | Profile imported |
 | `b2` | S3 (Backblaze B2) | Account Key (vault stored) | Mapped to S3-compatible endpoint |
 | `opendrive` | OpenDrive | Password (vault stored) | Username + password |
+| `internxt` | Internxt | Password (revealed + vault stored) | Also exported by AeroFTP; needs one `rclone config reconnect` before use |
+| `filen` | Filen | Password + CLI API key (vault stored) | Native API mode |
+| `zohoworkdrive` | Zoho WorkDrive | OAuth (re-auth required) | Profile imported |
+| `drime` | Drime Cloud | API token (as written) | Remotes pinned to a workspace or root folder id are skipped with the reason |
+| `cloudinary` | Cloudinary | Cloud name + API key + secret (as written) | Remotes on a regional `upload_prefix` are skipped with the reason |
+| `imagekit` | ImageKit | URL endpoint + public key + private key (as written) | Export needs the public key, which a profile created in AeroFTP does not hold |
 
-**17 rclone types mapped to 13 AeroFTP protocols**, covering the most widely used cloud and server backends.
+**23 rclone types mapped to AeroFTP protocols**, covering the most widely used cloud and server backends.
 
 ## What about unsupported backends?
 
-rclone supports 70+ backends. We currently map 17 of them. Remotes with unsupported types (e.g., `fichier`, `compress`, `union`, `chunker`) are listed in the import dialog with their type name so you know exactly what was skipped and why.
+rclone supports 70+ backends. We currently map 23 of them. Remotes with unsupported types (e.g., `fichier`, `compress`, `union`, `chunker`) are listed in the import dialog with their type name so you know exactly what was skipped and why.
 
 The bridge works both ways, though. AeroFTP natively supports several providers that rclone does not integrate, including **GitHub** and **GitLab** (repository and release browsing), **KDrive** (Infomaniak), and **4shared**. We are also the first file manager to offer native integration with **[Immich](https://immich.app)**, the open-source, self-hosted photo and video management platform. As a fellow open-source project, supporting Immich felt like a natural fit. These providers are exclusive to AeroFTP and are not part of the rclone import/export mapping.
 

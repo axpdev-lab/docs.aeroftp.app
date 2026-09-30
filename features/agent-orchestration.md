@@ -105,9 +105,11 @@ External agents control the approval behavior:
 | Flag | Behavior |
 |------|----------|
 | `--auto-approve safe` | Only read-only tools execute automatically |
-| `--auto-approve medium` | Read + write operations (local files, uploads) |
-| `--auto-approve high` | All except destructive operations |
-| `--auto-approve all` or `-y` | Everything, including delete and shell commands |
+| `--auto-approve medium` | Also remote listings and metadata, local writes, and remote writes that delete nothing (upload, download, mkdir, rename, edit) |
+| `--auto-approve high` | Also remote reads (`remote_read`, `server_exec`, file content sent to the model); never a delete, a trash, a sync control or the shell |
+| `--auto-approve all` or `-y` | Everything, including delete, trash, sync control and shell commands |
+
+The difference between `high` and `all` exists since AeroFTP v4.2.1: before, `high` was the same level as `all`.
 
 In non-interactive mode (no TTY), tools that require approval are denied rather than blocking.
 

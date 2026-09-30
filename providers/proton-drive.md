@@ -10,7 +10,7 @@ description: Use Proton Drive in AeroFTP through the official Proton Drive CLI, 
 Proton Drive has no API open to third-party apps yet, but Proton publishes an official command-line client, the **Proton Drive CLI**. AeroFTP drives that CLI and gives it a graphical interface: you sign in to Proton in your browser through the CLI, and AeroFTP never sees your Proton password. The session stays in your operating system's secret store, managed by the CLI.
 
 ::: info Availability
-Proton Drive ships in the release after AeroFTP v4.2.0. AeroFTP v4.2.0 has no Proton Drive connection.
+Proton Drive ships in AeroFTP v4.2.1. AeroFTP v4.2.0 has no Proton Drive connection.
 :::
 
 ::: warning Third-party application
