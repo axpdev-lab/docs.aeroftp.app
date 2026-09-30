@@ -10,7 +10,7 @@ description: Connect Twake Drive (Linagora Twake Workplace, now home of Cozy Clo
 Twake Drive is the file storage of **Twake Workplace**, the open-source workspace by Linagora (France). Cozy Cloud is now part of Twake Workplace, so existing Cozy instances work the same way. AeroFTP connects through the native files API of your instance with a browser sign-in: there is no developer app to create and no password to paste.
 
 ::: info Availability
-Twake Drive ships in the release after AeroFTP v4.2.0. AeroFTP v4.2.0 has no Twake Drive connection.
+Twake Drive ships in AeroFTP v4.2.1. AeroFTP v4.2.0 has no Twake Drive connection.
 :::
 
 ## What You Need
@@ -46,6 +46,10 @@ AeroFTP registers itself on your instance during the sign-in. It then appears in
 - **Modification times**: kept on upload and restored on download
 - **AeroSync and the CLI**: supported, including parallel transfers
 - **Trash**: deleted files go to the Twake trash and keep counting against the quota until you empty it from the Twake web interface
+
+Not yet available: listing or restoring the Twake trash from AeroFTP, and share links.
+
+AeroFTP never revokes the OAuth client it registered on your instance: if you sign in more than once, older clients stay listed under **Settings**, **Connected devices** until you remove them there.
 
 ## Troubleshooting
 
