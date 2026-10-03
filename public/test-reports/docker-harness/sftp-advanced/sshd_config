@@ -1,0 +1,29 @@
+# Standard settings
+Port 22
+ListenAddress 0.0.0.0
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+Subsystem sftp /usr/lib/ssh/sftp-server
+
+# Default to secure
+PasswordAuthentication no
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+
+# User specific overrides
+
+# 1. Password only
+Match User user_pwd
+    PasswordAuthentication yes
+    PubkeyAuthentication no
+
+# 2. Key only
+Match User user_key
+    PasswordAuthentication no
+    PubkeyAuthentication yes
+
+# 3. Mixed auth (requires both key AND password)
+Match User user_mixed
+    PasswordAuthentication yes
+    PubkeyAuthentication yes
+    AuthenticationMethods publickey,password
