@@ -1,3 +1,7 @@
+---
+description: "A code editor, an SSH terminal and the AI assistant in one tabbed panel at the bottom of the window."
+---
+
 # AeroTools
 
 AeroTools is AeroFTP's integrated development panel, combining a code editor, SSH terminal, and AI assistant in a tabbed interface at the bottom of the application window.

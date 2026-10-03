@@ -1,3 +1,7 @@
+---
+description: "Let external AI agents delegate file and server work to AeroAgent through the CLI, without exposing credentials."
+---
+
 # External Agent Orchestration
 
 AeroAgent can be orchestrated by external AI agents - Claude Code, Codex, Cursor, Devin, or any tool that can invoke CLI commands. The external agent uses `aeroftp-cli agent` to delegate file operations, server management, and multi-protocol tasks to AeroAgent, which resolves credentials from the encrypted vault without ever exposing them.

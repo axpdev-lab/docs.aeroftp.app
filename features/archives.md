@@ -1,3 +1,7 @@
+---
+description: "Browse, create and extract archives, local or remote, with optional AES-256 encryption for ZIP and 7z."
+---
+
 # Archives
 
 <ArchiveFormatCard />

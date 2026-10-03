@@ -1,3 +1,7 @@
+---
+description: "How AeroFTP is designed to be driven by AI agents as well as by people."
+---
+
 # Agent-Ready Architecture
 
 AeroFTP is built for both humans and AI agents. As agentic AI becomes the standard way to interact with computers, file management across servers and cloud providers is a fundamental capability that every agent needs. Yet most file transfer tools were designed exclusively for human interaction through GUIs.

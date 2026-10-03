@@ -1,3 +1,7 @@
+---
+description: "On eligible SFTP sessions, send only the blocks that changed and see the savings in the sync view."
+---
+
 # Delta Sync
 
 Delta sync is AeroFTP's bandwidth-saving transfer path for eligible SFTP sessions. Instead of re-sending an entire file after a small edit, AeroFTP can transfer only the changed blocks and show the savings directly in the sync UI.
