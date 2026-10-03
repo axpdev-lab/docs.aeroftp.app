@@ -1,3 +1,7 @@
+---
+description: "Bidirectional sync across every protocol and provider, with conflict resolution, scheduling, throttling and resume."
+---
+
 # AeroSync
 
 AeroSync is AeroFTP's professional file synchronization engine. It supports bidirectional sync across all transport protocols (FTP, FTPS, SFTP, WebDAV, S3, Azure Blob) and the **20+ native provider integrations** with conflict resolution, scheduling, bandwidth throttling, transfer journaling, and checkpoint-based resume. AeroSync operates through a two-tab interface: **Quick Sync** for common scenarios and **Advanced** for granular control over every aspect of the sync process.

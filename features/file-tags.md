@@ -1,3 +1,7 @@
+---
+description: "Finder-style color labels for local files, to group and flag them without moving anything."
+---
+
 # File Tags
 
 AeroFTP supports Finder-style color labels for organizing local files. Tags provide a visual categorization system that works across directories, letting you mark files for review, flag important assets, or create ad-hoc groupings without moving files into folders. Tags are stored in a local SQLite database and persist across sessions.

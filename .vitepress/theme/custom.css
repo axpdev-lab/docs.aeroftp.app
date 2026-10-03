@@ -934,3 +934,84 @@
 .dag-fig .head-warn { fill: var(--dag-warn); }
 .dag-fig .head-ok { fill: var(--dag-ok); }
 .dag-fig .mask { fill: var(--dag-card); }
+
+/* ===========================================================
+ * Features overview (features/index.md, FeatureGrid.vue)
+ * =========================================================== */
+.feature-overview { margin-top: 8px; }
+.feature-group { margin-top: 40px; }
+.feature-group__title {
+  margin: 0 0 4px !important;
+  padding-top: 0 !important;
+  border-top: none !important;
+  font-size: 20px !important;
+  letter-spacing: -0.01em;
+}
+.feature-group__blurb {
+  margin: 0 0 16px !important;
+  color: var(--vp-c-text-2);
+  font-size: 15px;
+}
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+.vp-doc a.feature-card,
+a.feature-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 18px 14px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+a.feature-card:hover {
+  border-color: var(--vp-c-brand-1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+}
+.dark a.feature-card:hover { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35); }
+a.feature-card:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 2px;
+}
+.feature-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  margin-bottom: 4px;
+  border-radius: 10px;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+}
+.feature-card__icon svg { width: 22px; height: 22px; }
+.feature-card__title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--vp-c-text-1);
+}
+.feature-card__desc {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--vp-c-text-2);
+}
+.feature-card__more {
+  margin-top: auto;
+  padding-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--vp-c-brand-1);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+a.feature-card:hover .feature-card__more,
+a.feature-card:focus-visible .feature-card__more { opacity: 1; }
+@media (hover: none) { .feature-card__more { opacity: 1; } }

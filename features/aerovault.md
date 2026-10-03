@@ -1,3 +1,7 @@
+---
+description: "Portable encrypted containers that hold any number of files and folders under authenticated encryption."
+---
+
 # AeroVault
 
 AeroVault is AeroFTP's encrypted container system. It creates portable `.aerovault` files that can store any number of files and directories under strong authenticated encryption. AeroVault v2 provides military-grade cryptography with seven distinct layers, surpassing Cryptomator in key derivation strength, nonce-misuse resistance, and optional cascade encryption.

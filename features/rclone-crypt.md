@@ -1,3 +1,7 @@
+---
+description: "Read and write rclone crypt storage: browse, decrypt and re-encrypt, and the files still open in rclone."
+---
+
 # rclone crypt interoperability
 
 `rclone crypt` is one of the most important encryption formats in the cloud storage ecosystem. AeroFTP provides full read/write interoperability so you can browse, decrypt and re-encrypt rclone-encrypted storage without leaving the app, and files written by AeroFTP open cleanly in the rclone CLI.
