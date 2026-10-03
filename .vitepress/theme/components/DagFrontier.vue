@@ -93,8 +93,8 @@
         <text x="44" y="313" class="t-s" font-weight="600">Endpoint lease</text>
         <text x="44" y="328" class="t-xs">256 jobs per endpoint</text>
         <rect x="210" y="296" width="166" height="40" rx="7" class="card" />
-        <text x="222" y="313" class="t-s" font-weight="600">Bandwidth bucket</text>
-        <text x="222" y="328" class="t-xs">one --limit-rate for all jobs</text>
+        <text x="222" y="313" class="t-s" font-weight="600">Speed limits</text>
+        <text x="222" y="328" class="t-xs">up and down, for all jobs</text>
         <rect x="388" y="296" width="166" height="40" rx="7" class="card" />
         <text x="400" y="313" class="t-s" font-weight="600">Part memory pool</text>
         <text x="400" y="328" class="t-xs">multipart buffers, shared</text>

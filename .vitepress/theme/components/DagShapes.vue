@@ -70,7 +70,7 @@
         <!-- Card 2: multipart fan-out -->
         <rect x="264" y="142" width="232" height="150" rx="10" class="card" />
         <text x="278" y="166" class="t-b">Multipart fan-out</text>
-        <text x="278" y="184" class="t-mono">multipart, chunk slots &gt; 1</text>
+        <text x="278" y="184" class="t-mono">parts may run in parallel</text>
         <circle cx="290" cy="231" r="5" class="dot" />
         <path d="M295,231 C314,231 314,204 333,204" class="edge-io" marker-end="url(#dsh-ah-io)" />
         <path d="M295,231 C314,231 314,222 333,222" class="edge-io" marker-end="url(#dsh-ah-io)" />
@@ -89,12 +89,12 @@
         <path d="M424,240 C445,240 445,231 464,231" class="edge" />
         <path d="M424,258 C445,258 445,231 464,231" class="edge" />
         <circle cx="470" cy="231" r="5" class="dot" />
-        <text x="278" y="280" class="t-xs">N parts on independent workers</text>
+        <text x="278" y="280" class="t-xs">parallel only on independent workers</text>
 
         <!-- Card 3: ordered parts -->
         <rect x="508" y="142" width="232" height="150" rx="10" class="card" />
         <text x="522" y="166" class="t-b">Ordered parts</text>
-        <text x="522" y="184" class="t-mono">multipart, chunk slots ≤ 1</text>
+        <text x="522" y="184" class="t-mono">parts must arrive in order</text>
         <circle cx="534" cy="232" r="5" class="dot" />
         <line x1="539" y1="232" x2="555" y2="232" class="edge" marker-end="url(#dsh-ah)" />
         <rect x="556" y="219" width="40" height="26" rx="6" class="node-io" />
@@ -107,7 +107,7 @@
         <text x="684" y="236.5" text-anchor="middle" class="t-s t-io">N</text>
         <line x1="704" y1="232" x2="718" y2="232" class="edge" marker-end="url(#dsh-ah)" />
         <circle cx="724" cy="232" r="5" class="dot" />
-        <text x="522" y="280" class="t-xs">one at a time (pCloud)</text>
+        <text x="522" y="280" class="t-xs">Google Drive, OneDrive, Yandex</text>
 
         <!-- Card 4: segmented download -->
         <rect x="20" y="306" width="232" height="150" rx="10" class="card" />

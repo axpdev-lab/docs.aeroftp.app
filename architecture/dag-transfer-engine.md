@@ -7,7 +7,7 @@ description: How AeroFTP schedules file transfers through a shared, provider-agn
 
 *Released in v4.0.0 (2026-05-24). Status: production.*
 
-Single-file transfers, batches, sync, segmented downloads and same-provider copies schedule through one shared, provider-agnostic node-graph engine. Three paths stay outside it: plain WebDAV and Nextcloud single-file downloads, which the router sends to the provider-direct path; cross-profile transfers, which download to a temporary file and upload from it; and local-to-local copies. This page is the
+Router-selected single-file transfers, batches, non-dry-run sync, segmented downloads and same-provider copies schedule through one shared, provider-agnostic node-graph engine. Outside it stay plain WebDAV and Nextcloud single-file downloads, which the router sends to the provider-direct path; any single-file transfer forced onto that path with `--transfer-engine legacy` or `AEROFTP_TRANSFER_ENGINE=legacy`; the CLI's `--partial` resume path; cross-profile transfers, which download to a temporary file and upload from it; and local-to-local copies. A sync dry-run only plans, so it builds no graph. This page is the
 long-form architectural walk-through. The summary tier lives next to
 the code at [`docs/DAG-TRANSFER-ENGINE.md`](https://github.com/axpdev-lab/aeroftp/blob/main/docs/DAG-TRANSFER-ENGINE.md).
 
@@ -147,7 +147,7 @@ direction) below the multipart-capability threshold. Reserves one
 
 For an upload above the provider's multipart threshold on a provider that gives each part an independent worker (S3, Backblaze B2, Azure Blob, Nextcloud chunked v2, Dropbox, Box, Filen, Drime, Uploadcare). The transfer core fans out into N `UploadPart`
 nodes, one per chunk. Each part node reserves one `chunk_slot`, so
-the shared chunk budget governs how many parts upload in parallel. A provider whose parts must arrive in order (pCloud) gets a strict chain instead, and a provider that cannot give independent workers runs its parts one at a time on one session: N part nodes are N scheduled operations, not N concurrent requests.
+the shared chunk budget governs how many parts upload in parallel. A provider whose upload session takes parts only in order (Google Drive, OneDrive, Yandex Disk) declares one chunk slot and gets a strict chain instead. A provider that allows parallel parts but cannot give each one an independent worker (pCloud today) keeps the fan-out shape and runs the parts one at a time on its single session: N part nodes are N scheduled operations, not N concurrent requests.
 `VerifyChecksum` joins every `UploadPart` node, so it cannot fire
 until the last part lands.
 
@@ -294,7 +294,7 @@ The executor only dispatches a node when:
 
 Batches and sync do not build one graph for the whole job. Work items stream from the source (the entry list, or the sync plan once the scan has finished) into a bounded backlog, 10,000 items by default (`--max-backlog`), which pauses the source when full. At most a window of file slots plus a little headroom is admitted at a time; each admitted file gets its own `shaped_file` subgraph, which is dropped when the file is done. Resident graph memory therefore follows the active window, not the size of the job. A failed file is recorded without stopping the others, and sync deletions start only after the last transfer.
 
-Above every job sits one process-wide governor. An endpoint lease keyed by protocol, host and account caps concurrent jobs per endpoint (256 by default, foreground jobs first, a waiting background job served after eight bypasses); it counts jobs, not network connections. A shared bandwidth bucket applies one `--limit-rate` to all jobs together, one memory pool holds every multipart part buffer, and each local disk device has its own read and write slots (8 per direction by default). The governor lives in one process: the desktop app and a separate CLI process do not share it.
+Above every job sits one process-wide governor. An endpoint lease keyed by protocol, host and account caps concurrent jobs per endpoint (256 by default, foreground jobs first, a waiting background job served after eight bypasses); it counts jobs, not network connections. The user speed limit (`--limit-rate`, `--bwlimit`, the GUI setting) arms one upload bucket and one download bucket shared by all jobs, `AEROFTP_GLOBAL_BANDWIDTH_BPS` adds an optional cap over both directions combined, one memory pool holds every multipart part buffer, and each local disk device has its own read and write slots (8 per direction by default). The governor lives in one process: the desktop app and a separate CLI process do not share it.
 
 <DagFrontier />
 
