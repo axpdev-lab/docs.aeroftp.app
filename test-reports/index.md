@@ -4,20 +4,20 @@ sidebar: false
 aside: false
 outline: false
 title: AeroFTP Test Reports
-description: Public record of AeroFTP integration tests, capability matrices, and community performance benchmarks
+description: "Public record of AeroFTP integration tests, capability matrices, comparative benchmarks against other clients, and community performance rounds"
 ---
 
 <div class="test-reports">
 
 # AeroFTP Test Reports
 
-Public record of AeroFTP tests across two distinct workflows: integration / capability runs (does it work, on which provider, with which command) and community performance benchmarks (how fast does it work, with statistical aggregates).
+Public record of AeroFTP tests across two distinct workflows: integration / capability runs (does it work, on which provider, with which command) and performance benchmarks (how fast does it work, measured against other clients on the same link or contributed by the community).
 
 ## Purpose
 
 - **Operational evidence**: for each area, a matrix showing what works on which provider with which command.
 - **Reproducibility**: exact commands and Docker environments documented so anyone can re-run.
-- **Transparency**: we publish every passing test, every environment, and every methodology.
+- **Transparency**: we publish passing and failing results, the environment and the method, and we say what was left out and why.
 
 This section is not user-facing documentation. For usage guides see [Getting Started](/getting-started/installation).
 
@@ -35,16 +35,19 @@ Binary checks: a feature works on a provider, or it does not. Driven by Docker h
 
 ## Performance and benchmarks
 
-Statistical numbers: how many Mbps, what p50, p95, latency. Driven by `aeroftp-cli benchmark` runs against real provider accounts, sanitized JSON reports submitted by the community.
+How fast it works. Two kinds of record: comparative batteries, where AeroFTP and other clients run the same cells on the same link with integrity checks on every download, and community rounds of `aeroftp-cli benchmark` against real provider accounts.
 
 | Document | Scope |
 |----------|-------|
-| [Community Benchmark](./community-benchmark/) | Performance rounds, contributed by the community via [issue #177](https://github.com/axpdev-lab/aeroftp/issues/177) |
-| [2026-05-07 baseline](./community-benchmark/2026-05-07) | Maintainer reference run, 35 sanitized reports, 5 fixes shipped |
+| [Comparative battery 2026-10-03](./comparison/2026-10-03) | AeroFTP 4.2.1 against rclone and Cyberduck CLI on SFTP, FTP with TLS, WebDAV and S3, two passes |
+| [DAG engine review, September 2026](./dag-review/2026-09) | Before and after measurements of the transfer fixes that shipped in 4.2.0, rclone as the control on every row |
+| [Community Benchmark](./community-benchmark/) | Performance rounds contributed by the community through the benchmark issue template |
+| [2026-05-07 baseline](./community-benchmark/2026-05-07) | Historical: maintainer reference run on v3.7.3 / v3.7.4, 35 sanitized reports, fixes shipped in 5 commits. Later releases changed several of these numbers |
 
 ## Methodology
 
 - [How to reproduce a run](./methodology)
 - [Docker harness](./methodology#docker-harness)
+- [Comparative benchmarks: pairs, controls, integrity](./methodology#comparative-benchmarks)
 
 </div>

@@ -156,7 +156,6 @@ Several providers that also expose a WebDAV surface are not yet scored on the pu
 | Box | `dav.box.com/dav` | Box native API | ⏳ deprioritised |
 | pCloud | `webdav.pcloud.com` | pCloud native API | ⏳ deprioritised |
 | Yandex Disk | `webdav.yandex.com` | Yandex native API | ⏳ deprioritised |
-| Jottacloud | `app.jottacloud.com/jfs` | Jotta native API | ⏳ deprioritised |
 
 ## Notes
 

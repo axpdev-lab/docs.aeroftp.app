@@ -1,0 +1,71 @@
+# AeroFTP local test harness: FTP, SFTP, WebDAV and S3 (MinIO) on localhost.
+# Run ./setup.sh first: it generates the SSH test keys in ./keys, which are
+# never committed. The FTP service is plain FTP: the image's configuration does
+# not enable TLS (the FTP-with-TLS comparisons on the docs site ran against a
+# lab server, not this container). SFTP uploads land in the users' home
+# directories inside the container and are discarded when it is recreated; the
+# sftp-data volume is not where the test users write. Image tags are not
+# pinned: the versions used for the 2026-04-18 matrix were not recorded.
+# Credentials are test-only (password123) and every port is bound to
+# 127.0.0.1 so the services are not reachable from the network.
+services:
+  sftp-advanced:
+    build:
+      context: ./sftp-advanced
+    container_name: aeroftp-test-sftp
+    ports:
+      - "127.0.0.1:2223:22"
+    volumes:
+      - ./keys/id_rsa_test.pub:/mnt/keys/id_rsa_test.pub:ro
+      - ./keys/id_ed25519_test.pub:/mnt/keys/id_ed25519_test.pub:ro
+      - sftp-data:/data
+    restart: "no"
+
+  ftps-server:
+    image: fauria/vsftpd
+    container_name: aeroftp-test-ftps
+    ports:
+      - "127.0.0.1:2121:21"
+      - "127.0.0.1:21100-21110:21100-21110"
+    environment:
+      - FTP_USER=ftpuser
+      - FTP_PASS=password123
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
+      - PASV_ADDRESS=127.0.0.1
+    volumes:
+      - ftps-data:/home/vsftpd
+    restart: "unless-stopped"
+
+  minio:
+    image: minio/minio
+    container_name: aeroftp-test-minio
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=password123
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+    restart: "no"
+
+  webdav:
+    image: bytemark/webdav
+    container_name: aeroftp-test-webdav
+    ports:
+      - "127.0.0.1:8080:80"
+    environment:
+      - AUTH_TYPE=Basic
+      - USERNAME=webdavuser
+      - PASSWORD=password123
+    volumes:
+      - webdav-data:/var/lib/dav
+    restart: "no"
+
+volumes:
+  sftp-data:
+  ftps-data:
+  minio-data:
+  webdav-data:

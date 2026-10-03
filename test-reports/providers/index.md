@@ -43,7 +43,11 @@ Speed is deliberately excluded: throughput depends on distance from the provider
 
 ## Stable Core
 
-Scores below reflect a full encoding sweep completed 2026-04-18 on live accounts for each provider, with SHA-256 end-to-end verification on 1 MB round-trip. Matrix refresh 2026-04-19:
+::: warning Dated matrix
+These scores were measured on 2026-04-18 and 2026-04-19 with AeroFTP 3.5. Client fixes for the S3 encoding failures have shipped since (see the notes below), and the totals on this page, on the detail pages and in their component columns do not agree in several places. They will be recomputed together at the next scored sweep; until then, read each score as the April result, not as the state of the current release.
+:::
+
+Scores below reflect an encoding sweep completed 2026-04-18 on live accounts (Seafile, Jianguoyun and CloudMe pending), with SHA-256 end-to-end verification on 1 MB round-trip. Matrix refresh 2026-04-19:
 
 - Reconciliation flipped to ✅ for SFTP and S3-compatible providers after the path canonicalization fix. `cmd_check`, `cmd_reconcile`, and `cmd_sync` now delegate to `sync_core::scan_remote_tree` + `compare_trees`, which track relative paths via the scan queue state instead of stripping the remote prefix from provider-returned absolute paths.
 - Alibaba OSS encoding lifted to 5/10 after the S3 listing panic on multibyte keys was fixed (byte-slice on XML preview replaced with char-aware truncation); Class promoted from C to B with Navigation full 15/15.
@@ -52,14 +56,14 @@ Scores below reflect a full encoding sweep completed 2026-04-18 on live accounts
 
 | Provider | Protocol | Class | Score | Integrity | Navigation | Advanced | Encoding | Reconcile |
 |----------|----------|:-----:|:-----:|:---------:|:----------:|:--------:|:--------:|:---------:|
-| <img class="provider-logo" src="/icons/providers/dropbox.png" alt=""> [Dropbox](./#dropbox) | Dropbox API | **A** | 95 | ✅ | ✅ | ✅ | ✅ 10/10 | ✅ |
-| <img class="provider-logo" src="/icons/providers/kdrive.png" alt=""> [kDrive](./#kdrive) | Infomaniak API | **A** | 93 | ✅ | ✅ | ✅ | ✅ 10/10 | ✅ |
-| <img class="provider-logo" src="/icons/providers/YandexDisk.png" alt=""> [Yandex Disk](./#yandex-disk) | Native API | **A** | 92 | ✅ | ✅ | ✅ | ✅ 10/10 | ✅ |
-| <img class="provider-logo" src="/icons/providers/filelu.png" alt=""> [FileLu API](./#filelu) | Native API | **A** | 92 | ✅ | ✅ | ✅ | ✅ 9/10 | ✅ |
+| <img class="provider-logo" src="/icons/providers/dropbox.png" alt=""> Dropbox | Dropbox API | **A** | 95 | ✅ | ✅ | ✅ | ✅ 10/10 | ✅ |
+| <img class="provider-logo" src="/icons/providers/kdrive.png" alt=""> kDrive | Infomaniak API | **A** | 93 | ✅ | ✅ | ✅ | ✅ 10/10 | ✅ |
+| <img class="provider-logo" src="/icons/providers/YandexDisk.png" alt=""> Yandex Disk | Native API | **A** | 92 | ✅ | ✅ | ✅ | ✅ 10/10 | ✅ |
+| <img class="provider-logo" src="/icons/providers/filelu.png" alt=""> FileLu API | Native API | **A** | 92 | ✅ | ✅ | ✅ | ✅ 9/10 | ✅ |
 | <img class="provider-logo" src="/icons/providers/felicloud.png" alt=""> [FeliCloud](./webdav#felicloud) | WebDAV (Nextcloud) | **A** | 90 | ✅ | ✅ | ✅ | ◑ 7/10 | ✅ |
-| <img class="provider-logo" src="/icons/protocols.svg" alt=""> [SSH MyCloud HD](./#ssh-mycloud) | SFTP (NAS) | **A** | 90 | ✅ | ✅ | ✅ | ✅ | ✅ |
+| <img class="provider-logo" src="/icons/protocols.svg" alt=""> SFTP server on a NAS | SFTP | **A** | 90 | ✅ | ✅ | ✅ | ✅ | ✅ |
 | <img class="provider-logo" src="/icons/providers/Amazon_Web_Services.png" alt=""> [AWS S3](./s3-compatible#aws-s3) | S3 | **A** | 90 | ✅ | ✅ | ✅ | ◑ 5/10 | ✅ |
-| <img class="provider-logo" src="/icons/providers/googlecloud.png" alt=""> [Google Cloud Storage](./s3-compatible#google-cloud) | S3 | **A** | 90 | ✅ | ✅ | ✅ | ◑ 7/10 | ✅ |
+| <img class="provider-logo" src="/icons/providers/googlecloud.png" alt=""> [Google Cloud Storage](./s3-compatible#google-cloud-storage) | S3 | **A** | 90 | ✅ | ✅ | ✅ | ◑ 7/10 | ✅ |
 | <img class="provider-logo" src="/icons/providers/idrive_e2.png" alt=""> [iDrive e2](./s3-compatible#idrive-e2) | S3 | **B** | 89 | ✅ | ✅ | ✅ | ◑ 6/10 | ✅ |
 | <img class="provider-logo" src="/icons/providers/mega.png" alt=""> [MEGA S4](./s3-compatible#mega-s4) | S3 | **B** | 89 | ✅ | ✅ | ✅ | ◑ 6/10 | ✅ |
 | <img class="provider-logo" src="/icons/providers/storj.png" alt=""> [Storj](./s3-compatible#storj) | S3 Gateway | **B** | 89 | ✅ | ✅ | ✅ | ◑ 6/10 | ✅ |
@@ -80,13 +84,13 @@ Legend: ✅ full pass · ◑ partial pass · ⏳ pending benchmark · ❌ fail �
 
 ### Notes on score dimensions
 
-- **Encoding Robustness** is now measured on live accounts for all providers in this matrix. The sweep covers 10 file names including unicode, emoji, spaces, and the ASCII special set `& ' # % ( ) +`.
+- **Encoding Robustness** is measured on live accounts for every provider in this matrix except Seafile, Jianguoyun and CloudMe, which are pending. The sweep covers 10 file names including unicode, emoji, spaces, and the ASCII special set `& ' # % ( ) +`.
 - **Native / API providers** (Dropbox, kDrive, Yandex, FileLu) handle all 10 names cleanly. FileLu is at 9/10 because emoji is stored correctly but rendered as `????` in the listing (server-side transliteration).
-- **S3-compatible providers** consistently trip on the same set (`%` signature mismatch, `+` reject, `&` / `'` XML split in listing, `#` URL fragment truncation). These are AeroFTP client issues, not provider issues, and are tracked for fix.
+- **S3-compatible providers** consistently trip on the same set (`%` signature mismatch, `+` reject, `&` / `'` XML split in listing, `#` URL fragment truncation). These were AeroFTP client issues, not provider issues. Fixes shipped in v3.6.6 (XML entity decoding in listing keys), v3.7.7 (per-segment key encoding) and v4.1.7 (whitespace kept inside listing keys). The encoding column still shows the 2026-04-18 sweep and will be refreshed at the next scored sweep.
 - **Reconciliation** on object-storage and cloud APIs is now ✅ after the 2026-04-19 path canonicalization fix. The previous `⚠️ requires explicit path` note referred to a client-side scan bug that has been eliminated; integrity of the transferred data was never affected.
 - **InfiniCloud JP**, **DriveHQ** were benchmarked on Navigation 2026-04-19 and promoted to 15/15 after `tree` + `find` validated the full recursive surface.
 - **Seafile**, **Jianguoyun**, and **CloudMe** entered the matrix at Class B after 2026-04-19 live listing + reconcile + navigation verification. Advanced features (share/versions/trash) and encoding sweep still pending - score will refresh once those dimensions are benchmarked.
-- **Alibaba OSS** moved to Class B after the S3 listing panic on multibyte keys was eliminated (F-P1 fix: `s3.rs` debug preview now uses char-aware truncation instead of a raw byte slice). It retains the S3-family encoding gaps on `%`, `&`, `'`, `#` which affect the whole S3 column and are tracked separately.
+- **Alibaba OSS** moved to Class B after the S3 listing panic on multibyte keys was eliminated (F-P1 fix: `s3.rs` debug preview now uses char-aware truncation instead of a raw byte slice). It shared the S3-family encoding gaps on `%`, `&`, `'`, `#` measured in April, for which client fixes have shipped since (see above).
 - **Symbol convention**: `◑` (partial) is used for real partial passes (e.g. encoding 5-9/10). `-` is used for `N/A` / `not exposed by API` / `not applicable` structural gaps - these are not errors and should not be read as warnings.
 
 ## Detail pages

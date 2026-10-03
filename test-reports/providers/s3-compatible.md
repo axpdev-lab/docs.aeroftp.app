@@ -19,14 +19,14 @@ description: Coverage scoring and matrix for AWS S3 and S3-compatible storage
 
 # S3-Compatible Providers
 
-All providers on this page speak the S3 API. AeroFTP uses native Signature V4, multipart uploads above 4 MB, and streaming chunked download.
+All providers on this page speak the S3 API. AeroFTP uses native Signature V4, multipart uploads above 200 MiB (16 MiB parts), and streaming chunked download.
 
 ## Comparative matrix
 
 | Provider | Endpoint | Class | Score | Core | Integrity | Navigation | Advanced | Encoding | Reconcile |
 |----------|----------|:-----:|:-----:|:----:|:---------:|:----------:|:--------:|:--------:|:---------:|
 | <img class="provider-logo" src="/icons/providers/Amazon_Web_Services.png" alt=""> [AWS S3](#aws-s3) | `s3.amazonaws.com` | **B** | 87 | 30/30 | 20/20 | 15/15 | 12/15 | 5/10 | 5/10 |
-| <img class="provider-logo" src="/icons/providers/googlecloud.png" alt=""> [Google Cloud Storage](#google-cloud) | `storage.googleapis.com` | **B** | 87 | 30/30 | 20/20 | 15/15 | 10/15 | 7/10 | 5/10 |
+| <img class="provider-logo" src="/icons/providers/googlecloud.png" alt=""> [Google Cloud Storage](#google-cloud-storage) | `storage.googleapis.com` | **B** | 87 | 30/30 | 20/20 | 15/15 | 10/15 | 7/10 | 5/10 |
 | <img class="provider-logo" src="/icons/providers/idrive_e2.png" alt=""> [iDrive e2](#idrive-e2) | `s3.{region}.idrivee2.com` | **B** | 86 | 30/30 | 20/20 | 15/15 | 10/15 | 6/10 | 5/10 |
 | <img class="provider-logo" src="/icons/providers/mega.png" alt=""> [MEGA S4](#mega-s4) | `s3.g.s4.mega.io` | **B** | 86 | 30/30 | 20/20 | 15/15 | 10/15 | 6/10 | 5/10 |
 | <img class="provider-logo" src="/icons/providers/storj.png" alt=""> [Storj](#storj) | `gateway.storjshare.io` | **B** | 86 | 30/30 | 20/20 | 15/15 | 10/15 | 6/10 | 5/10 |
@@ -37,7 +37,7 @@ All providers on this page speak the S3 API. AeroFTP uses native Signature V4, m
 | <img class="provider-logo" src="/icons/providers/tencent.png" alt=""> [Tencent COS](#tencent-cos) | `cos.{region}.myqcloud.com` | **B** | 85 | 30/30 | 20/20 | 15/15 | 10/15 | 5/10 | 5/10 |
 | <img class="provider-logo" src="/icons/providers/alibabacloud.png" alt=""> [Alibaba OSS](#alibaba-oss) | `oss-{region}.aliyuncs.com` | **B** | 73 | 30/30 | 20/20 | 15/15 | 10/15 | 5/10 | 5/10 |
 
-Encoding measured 2026-04-18 on live accounts with a 10-file special-name sweep. S3-compatible providers consistently fail on the same set (`%`, `+`, `&`, `'`, `#`); see [hub notes](./#notes-on-score-dimensions) for the AeroFTP client issues being tracked.
+Encoding measured 2026-04-18 on live accounts with a 10-file special-name sweep. In that sweep S3-compatible providers consistently failed on the same set (`%`, `+`, `&`, `'`, `#`), all AeroFTP client issues; see the [hub notes](./#notes-on-score-dimensions) for the fixes that shipped since. The scores here are the April results and will be recomputed at the next scored sweep.
 
 ## AWS S3
 
@@ -205,7 +205,7 @@ Tencent Cloud Object Storage via S3 compatibility API. Same encoding gaps as the
 
 **Class B - 73/100**
 
-Alibaba OSS via S3-compatible endpoint at `oss-{region}.aliyuncs.com`. Post-fix 2026-04-19: the S3 listing panic on multibyte keys was eliminated (F-P1: `s3.rs` debug preview now uses char-aware truncation instead of a raw byte slice), promoting Alibaba from Class C to Class B. Retains the common S3-family encoding gaps on `%`, `&`, `'`, `#` which affect the whole S3 column.
+Alibaba OSS via S3-compatible endpoint at `oss-{region}.aliyuncs.com`. Post-fix 2026-04-19: the S3 listing panic on multibyte keys was eliminated (F-P1: `s3.rs` debug preview now uses char-aware truncation instead of a raw byte slice), promoting Alibaba from Class C to Class B. In April it shared the common S3-family encoding gaps on `%`, `&`, `'`, `#`, fixed on the client side since.
 
 | Operation | Status |
 |-----------|:------:|

@@ -21,9 +21,9 @@ Performance numbers, not capability checks. Each round measures real upload, dow
 
 The community benchmark is a separate workflow from the integration tests in this section: those check whether a feature works at all on a given backend, the benchmark measures how fast it works once it does. The two answer different questions and live side by side.
 
-## Open issue and submission flow
+## Submission flow
 
-[axpdev-lab/aeroftp#177](https://github.com/axpdev-lab/aeroftp/issues/177) is the live submission point. The CLI ships `aeroftp-cli benchmark` since v3.7.3 (stabilized in v3.7.4) with strict sanitization: no hostnames, paths, credentials, bucket names, or account ids ever enter the JSON report.
+New reports go through the [Community Benchmark Report issue template](https://github.com/axpdev-lab/aeroftp/issues/new?template=benchmark-report.yml), one issue per report. The original call, [axpdev-lab/aeroftp#177](https://github.com/axpdev-lab/aeroftp/issues/177), is closed. The CLI ships `aeroftp-cli benchmark` since v3.7.3 (stabilized in v3.7.4) with strict sanitization: no hostnames, paths, credentials, bucket names, or account ids ever enter the JSON report.
 
 Anyone can contribute their own region and connection type by running:
 
@@ -32,13 +32,13 @@ aeroftp-cli --profile "Your Profile" benchmark standard \
   --consent-publish --report bench.json
 ```
 
-Then pasting the JSON between the BEGIN / END markers into a comment on the issue.
+Then open a new issue with the template and paste the block printed between `--- BEGIN BENCHMARK REPORT (paste into the GitHub Issue) ---` and `--- END BENCHMARK REPORT ---`.
 
 ## Rounds
 
 | Round | CLI version | Profiles covered | Status |
 |-------|------------|------------------|--------|
-| [2026-05-07 (maintainer baseline)](./2026-05-07) | v3.7.3 / v3.7.4 | 35 sanitized reports (27 full matrix + 5 partial + 3 verify) | published |
+| [2026-05-07 (maintainer baseline)](./2026-05-07) | v3.7.3 / v3.7.4 | 35 sanitized reports (18 full matrix + 14 partial + 3 verify) | published |
 
 ## Why the page exists
 
