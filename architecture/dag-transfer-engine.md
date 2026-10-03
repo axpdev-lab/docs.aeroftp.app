@@ -32,6 +32,10 @@ The CLI (`aeroftp-cli`), the desktop app and the MCP server (`aeroftp-mcp`) shar
 
 ## Why a DAG engine
 
+::: info What the engine is for
+A file-transfer client cannot add channels: the protocol, the server and the link decide how many are useful. [Parallelism on a fixed pipe](/architecture/dag-fixed-pipe) explains what the engine does inside that budget, where it helps, where it costs, and which direct routes exist.
+:::
+
 Three converging needs justified the convergence:
 
 1. **One lifecycle model.** Before v4.0.0 each transfer surface ran

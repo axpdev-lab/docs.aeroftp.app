@@ -307,6 +307,7 @@ export default defineConfig({
           collapsed: true,
           items: [
             { text: 'DAG Transfer Engine', link: '/architecture/dag-transfer-engine' },
+            { text: 'Parallelism on a Fixed Pipe', link: '/architecture/dag-fixed-pipe' },
           ],
         },
         {
