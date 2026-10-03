@@ -62,16 +62,17 @@ If the pipe is fixed, why open more than one channel at all? Because one stream 
 
 The same reason sets the limit. Once the channels together fill the link, or reach what the server accepts, one more channel adds a handshake and contention and no bytes.
 
-One 300 MiB download, channel count varied, two passes per point, 8 September 2026, lab targets. Seconds, lower is better.
+One 300 MiB download, channel count varied, two passes per point, 8 September 2026, lab targets, build `38d5c0b96`. Seconds, lower is better.
 
 | Target | 1 channel | 4 channels | 8 channels |
 |---|---|---|---|
 | SFTP | 146.61 / 142.89 | 47.30 / 41.89 | 27.90 / 23.03 |
 | WebDAV | 31.62 / 43.58 | 17.40 / 14.83 | 13.80 / 13.10 |
 | FTP | 29.65 / 32.95 | 16.81 / 17.22 | 19.83 / 15.99 |
-| S3 (MinIO) | 43.34 / 30.31 | 31.85 / 31.15 | 31.84 / 27.69 |
 
-A finer FTP curve on the same file, mean of two repetitions, with rclone as the control:
+The same sweep had an S3 row, left out here: on that build every S3 download ran on one stream whatever channel count was requested, because the size probe read 0 from a `HEAD` response ([aeroftp#881](https://github.com/axpdev-lab/aeroftp/pull/881)). Its points measured noise, not channels. S3 ranged downloads on a fixed build are in the [comparative battery](/test-reports/comparison/2026-10-03).
+
+A finer FTP curve on the same file, mean of two repetitions, with rclone as the control. AeroFTP ran over explicit TLS and rclone in plain FTP, so the two rows compare shapes, not tools:
 
 | Channels | 1 | 2 | 4 | 6 | 8 | 12 |
 |---|---:|---:|---:|---:|---:|---:|
@@ -79,7 +80,7 @@ A finer FTP curve on the same file, mean of two repetitions, with rclone as the 
 | rclone | 42.88 | 28.50 | 16.61 | | 15.71 | |
 
 - On SFTP and WebDAV, width pays a lot, up to 8 channels.
-- The FTP curve has its lowest observed mean at 8 channels, and 12 is about 7 percent slower. Two repetitions on a noisy link do not establish a universal optimum or a hard server ceiling. On this S3 target, going from 4 to 8 adds little.
+- The FTP curve has its lowest observed mean at 8 channels, and 12 is about 7 percent slower. Two repetitions on a noisy link do not establish a universal optimum or a hard server ceiling.
 - rclone also gains from more FTP channels, which points to the link and the server, though it does not isolate them from client costs.
 - These links are noisy: on FTP, identical runs differed by up to 42 percent. The two FTP tables come from different runs and should not be compared at one channel.
 
@@ -140,7 +141,7 @@ Where a path exposes real concurrency, an AIMD controller (additive increase, mu
 
 <DagAimd />
 
-The controller starts at the effective ceiling, or lower if the same endpoint congested in the last ten minutes. Only congestion and the recovery after it write that memory: an earlier loop that also learned from job throughput spiralled down until a server ran one file at a time, and was removed ([aeroftp#1021](https://github.com/axpdev-lab/aeroftp/pull/1021)). This is a congestion controller, not a search for maximum throughput: more workers can make a transfer slower through disk contention, CPU load or request overhead without any classified signal, and the controller does not see that.
+The controller starts at the effective ceiling, or lower if the same endpoint congested in the last ten minutes. From the release after 4.2.1, only congestion and the recovery after it write that memory: an earlier loop that also learned from job throughput spiralled down until a server ran one file at a time, and was removed ([aeroftp#1021](https://github.com/axpdev-lab/aeroftp/pull/1021)). Version 4.2.1 and earlier still have that loop. This is a congestion controller, not a search for maximum throughput: more workers can make a transfer slower through disk contention, CPU load or request overhead without any classified signal, and the controller does not see that.
 
 ### 5. Shares process resources across concurrent jobs
 

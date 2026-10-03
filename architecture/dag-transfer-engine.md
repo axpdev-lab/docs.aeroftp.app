@@ -326,7 +326,7 @@ below the ceiling, as the next paragraph explains. It only ever shrinks the in-f
 congestion signal, where a smaller dispatch target is the safer,
 faster choice.
 
-Within one process, the target an endpoint was pushed down to seeds the next job to that endpoint for ten minutes (DAG-P2-06). Only congestion and the recovery after it write that memory: a loop that also learned from job throughput spiralled down and was removed. Nothing persists across processes. AIMD is a congestion controller, not a search for the fastest width: a slowdown that produces no classified signal does not move it.
+Within one process, the target an endpoint was pushed down to seeds the next job to that endpoint for ten minutes (DAG-P2-06). From the release after 4.2.1, only congestion and the recovery after it write that memory: a loop that also learned from job throughput spiralled down and was removed ([aeroftp#1021](https://github.com/axpdev-lab/aeroftp/pull/1021)). Version 4.2.1 and earlier still have that loop. Nothing persists across processes. AIMD is a congestion controller, not a search for the fastest width: a slowdown that produces no classified signal does not move it.
 
 <DagAimd />
 
@@ -459,7 +459,7 @@ Wired gigabit, RTT 47.4 ms, 8 September 2026, `--parallel 4`. One run per cell. 
 | Upload | 1391.20 s | 330.52 s | 687.47 s | 643.64 s |
 | Download | 1294.21 s | 272.76 s | 421.92 s | 431.57 s |
 
-The same binary at `--parallel 16` stayed flat (upload 316.02 s, download 264.41 s) because the session ceiling on that build was 4. rclone at 16 streams went to 344.00 s upload and 109.89 s download. On current `main` the ceiling is 16 and the default parallelism is still 4, so this table is the binary with the ceiling of 4, not a timing of today's ceiling. At 16 streams the download was still behind rclone (264 s against 110 s). The upload had moved ahead (316 s against 344 s).
+The same binary at `--parallel 16` stayed flat (upload 316.02 s, download 264.41 s) because the session ceiling on that build was 4. rclone at 16 streams went to 344.00 s upload and 109.89 s download. Since 4.2.0 the ceiling is 16 ([aeroftp#761](https://github.com/axpdev-lab/aeroftp/pull/761)) and the default parallelism is still 4, so this table is the binary with the ceiling of 4, not a timing of today's ceiling. On that build, at 16 streams, the download was still behind rclone (264 s against 110 s) and the upload had moved ahead (316 s against 344 s). With the ceiling raised and the `stat` and `open` round trips overlapped ([aeroftp#782](https://github.com/axpdev-lab/aeroftp/pull/782)), the download at `--parallel 16` measured 101.54 s against rclone's 107.5 s in the same window, two runs; the [review record](/test-reports/dag-review/2026-09) has every run.
 
 ### S3 and WebDAV, same day, two repetitions
 
@@ -476,11 +476,11 @@ Upload of this tree is about twice rclone on S3. On WebDAV the before build is a
 
 ### One resume the review kept
 
-5 September 2026, a wide-area link of about 53 ms, one 300 MiB S3 upload. The kill arrived at 60 s of a transfer that takes about 128 s. AeroFTP resumed in 82.8 s. rclone started over and took 128.4 s. One run. The download rows from that session are omitted: the download had already finished.
+5 September 2026, the before build `3417fcb46`, a laptop on Wi-Fi over a wide-area link of about 53 ms, one 300 MiB S3 upload. The kill arrived at 60 s of a transfer that takes about 128 s. AeroFTP resumed in 82.8 s. rclone started over and took 128.4 s. One run. The download rows from that session are omitted: the download had already finished.
 
 ### Not a current S3 download time
 
-On 19 September a 300 MB S3 download read 31.51 s against rclone at 16.95 s while the client announced four streams and used one. The size probe read `content_length` from a HEAD response, which is 0. Those seconds describe that broken path. They are not a before and they are not an after.
+On 19 September a 300 MiB S3 download read 31.51 s against rclone at 16.95 s while the client announced four streams and used one. The size probe read `content_length` from a HEAD response, which is 0. Those seconds describe that broken path. They are not a before and they are not an after.
 
 ## See also
 

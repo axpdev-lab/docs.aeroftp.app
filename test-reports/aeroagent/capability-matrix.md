@@ -19,14 +19,16 @@ description: Real-world capability tests of AeroAgent across multiple AI provide
 
 Real-world capability tests performed with multiple AI providers. All prompts and responses shown below are from actual AeroAgent sessions.
 
+These tests ran on AeroFTP v3.0.3 (released 2026-03-18) and have not been re-run since. They record what AeroAgent did on that release, not a statement about the current one.
+
 ## Test Environment
 
 | Component | Details |
 |-----------|---------|
-| AeroFTP Version | v3.0.3 |
+| AeroFTP Version | v3.0.3 (released 2026-03-18) |
 | Primary Provider | **Google Gemini 3.1 Flash Lite Preview** (20 of 25 tests) |
 | Secondary Provider | Cohere Command A Reasoning 08 2025 (5 of 25 tests) |
-| Connection | FTP/TLS (Aruba hosting) |
+| Connection | FTP/TLS (shared hosting) |
 | Platform | Ubuntu 24.04.2 LTS, kernel 6.17.0 |
 
 ::: tip Provider Performance
