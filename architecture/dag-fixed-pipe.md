@@ -193,6 +193,7 @@ The single-file router decides **before** a transfer starts, from a fixed policy
 | Batches and non-dry-run sync | Streaming frontier with one graph per file | Not switched by the single-file override |
 | Segmented downloads | Range graph, also when a direct download uses ranges | One stream avoids the fan-out; the old scheduler exists only in tests |
 | Cross-profile copies, the CLI `--partial` resume path | Their own adapters | Not controlled by the override |
+| Single-file SFTP transfers that the delta path (AeroRsync) completes | Delta engine, tried before the router in the CLI and the desktop app | Not controlled by the override; when delta is not possible the transfer continues on the routed path above |
 
 The WebDAV route is an implemented policy backed by earlier benchmarks, not proof that the direct path is faster on every WebDAV server today, and a slowdown outside the routed single-file transfers cannot be fixed with `--transfer-engine legacy`.
 
