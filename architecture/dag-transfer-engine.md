@@ -304,7 +304,7 @@ Above every job sits one process-wide governor. An endpoint lease keyed by proto
 
 ## AIMD backpressure
 
-Where a path exposes real concurrency, an `AimdController` governs four classes (file, chunk, http, api). It classifies failures into three buckets:
+Where a path exposes real concurrency, an `AimdController` governs four classes (file, chunk, http, api). With AIMD enabled, the default (an operator can switch it off), it classifies failures into three buckets:
 
 - **Congestion signal** (429, 503, request timeout, connection
   reset, an FTP `421` too-many-connections refusal): the per-class
@@ -314,13 +314,15 @@ Where a path exposes real concurrency, an `AimdController` governs four classes 
   `AuthenticationFailed`, …): the target is left untouched. The
   failure is not a load signal.
 - **Quiet stretches**: after each quiet window without congestion
-  the target grows by one, up to the ceiling. After a congestion
+  the target grows by the regrowth step (one by default, operator-tunable), up to the ceiling. After a congestion
   event regrowth stops one below the level that failed until the
   recovery window has passed.
 
-The controller starts every class at its ceiling, so a transfer with
-no congestion dispatches every node immediately, identical to the
-pre-AIMD path. It only ever shrinks the in-flight set under a real
+On a fresh endpoint, or once its cached profile has expired, the
+controller starts every class at its ceiling, so a transfer with no
+congestion dispatches every node immediately, identical to the
+pre-AIMD path. An endpoint that congested recently seeds the next job
+below the ceiling, as the next paragraph explains. It only ever shrinks the in-flight set under a real
 congestion signal, where a smaller dispatch target is the safer,
 faster choice.
 
