@@ -1,3 +1,7 @@
+---
+description: "AeroFTP's own implementation of the rsync protocol in Rust: delta sync over SFTP with no external rsync binary."
+---
+
 # AeroRsync - Native rsync Protocol in Pure Rust
 
 **AeroRsync** is AeroFTP's implementation of the rsync **wire protocol 31**, written from scratch in Rust. It powers AeroFTP's delta sync path on SFTP without requiring an external `rsync` binary on the client - not on Linux, not on macOS, not on Windows. It is the engine behind the [Delta Sync](/features/delta-sync) feature you see in AeroSync.

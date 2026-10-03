@@ -1,3 +1,7 @@
+---
+description: "Client-side encryption over any server or provider: the remote holds only ciphertext, you browse the plain view."
+---
+
 # AeroCrypt Overlay
 
 AeroCrypt is AeroFTP's **native client-side encryption overlay**. It turns any server, protocol or provider into a high-security, zero-knowledge store: the remote only ever holds ciphertext and obfuscated names, while the decrypted view is browsed exactly like a normal server in the standard dual panel.

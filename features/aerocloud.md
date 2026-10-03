@@ -1,3 +1,7 @@
+---
+description: "Turn any server into a private cloud: background sync from the tray, file manager badges, selective sync and versioning."
+---
+
 # AeroCloud
 
 AeroCloud turns any server into a private personal cloud. It rides AeroFTP's full provider surface - **7 transport protocols + 20+ native provider integrations** - with maturity badges that classify each one by sync reliability. Background sync from the system tray, native file manager badges, selective sync, file versioning (`.aeroversions/`), `.aeroignore` patterns.

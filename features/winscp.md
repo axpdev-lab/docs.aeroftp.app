@@ -1,3 +1,7 @@
+---
+description: "Import and export server profiles with WinSCP through the shared WinSCP.ini format."
+---
+
 # WinSCP Bridge
 
 > [WinSCP](https://winscp.net) is one of the most established file transfer clients on Windows, trusted by system administrators for over two decades. If you have built up a library of saved sessions over the years, AeroFTP can import them so you do not have to re-type everything. And if you need to go the other way, AeroFTP can export your profiles back to WinSCP format.

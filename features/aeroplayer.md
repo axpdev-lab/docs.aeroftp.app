@@ -1,3 +1,7 @@
+---
+description: "A built-in audio player with real-time processing and visualization, for previewing audio inside the file manager."
+---
+
 # AeroPlayer
 
 AeroPlayer is AeroFTP's built-in audio player, designed for previewing audio files directly within the file manager. It uses native HTML5 `<audio>` with a Web Audio API processing graph for real-time audio manipulation and visualization. AeroPlayer replaced the Howler.js library with a direct Web Audio API architecture for lower latency and finer control over the audio pipeline.
