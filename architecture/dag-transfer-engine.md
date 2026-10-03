@@ -318,9 +318,11 @@ Where a path exposes real concurrency, an `AimdController` governs four classes 
   event regrowth stops one below the level that failed until the
   recovery window has passed.
 
-The controller starts every class at its ceiling, so a transfer with
-no congestion dispatches every node immediately, identical to the
-pre-AIMD path. It only ever shrinks the in-flight set under a real
+On a fresh endpoint, or once its cached profile has expired, the
+controller starts every class at its ceiling, so a transfer with no
+congestion dispatches every node immediately, identical to the
+pre-AIMD path. An endpoint that congested recently seeds the next job
+below the ceiling, as the next paragraph explains. It only ever shrinks the in-flight set under a real
 congestion signal, where a smaller dispatch target is the safer,
 faster choice.
 
