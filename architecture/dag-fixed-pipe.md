@@ -132,7 +132,7 @@ The opposite case: in September a build added one size probe before every small-
 
 ### 4. Narrows when the endpoint pushes back
 
-Where a path exposes real concurrency, an AIMD controller (additive increase, multiplicative decrease) governs four classes: file, chunk, http and api.
+Where a path exposes real concurrency, an AIMD controller (additive increase, multiplicative decrease) governs four classes: file, chunk, http and api. The rules below are its default behavior; an operator can switch it off or change the regrowth step.
 
 - A congestion signal (HTTP `429` or `503`, a timeout, a connection reset, an FTP `421`) halves the width for that class, and a server `Retry-After` holds regrowth for its cooldown.
 - Each quiet window adds one back, up to the ceiling; for a while regrowth stops one below the level that just failed.
@@ -191,7 +191,8 @@ The single-file router decides **before** a transfer starts, from a fixed policy
 | Single-file download, plain WebDAV or Nextcloud | Direct provider path | `--transfer-engine dag` forces the graph |
 | Other single-file network transfers | Graph | CLI `--transfer-engine legacy`; for the desktop app, start it with `AEROFTP_TRANSFER_ENGINE=legacy` |
 | Batches and non-dry-run sync | Streaming frontier with one graph per file | Not switched by the single-file override |
-| Segmented downloads | Range graph, also when a direct download uses ranges | One stream avoids the fan-out; the old scheduler exists only in tests |
+| Segmented downloads | Range graph, also when a direct download uses ranges; in the desktop app tried before the router | Not controlled by the override; one stream avoids the fan-out, and the old scheduler exists only in tests |
+| Resumed downloads in the desktop app (a partial `.aerotmp`) | Resume path, tried before the router | Not controlled by the override |
 | Cross-profile copies, the CLI `--partial` resume path | Their own adapters | Not controlled by the override |
 | Single-file SFTP transfers that the delta path (AeroRsync) completes | Delta engine, tried before the router in the CLI and the desktop app | Not controlled by the override; when delta is not possible the transfer continues on the routed path above |
 
