@@ -2,8 +2,7 @@
 set -e
 
 # Setup script for the Docker harness: generates the SSH test keys the SFTP
-# container trusts. The FTP container runs its image's own configuration and
-# takes no certificate from this script.
+# container trusts. The FTP container is plain FTP and takes no certificate.
 
 HARNESS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 KEYS_DIR="$HARNESS_DIR/keys"

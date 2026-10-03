@@ -26,11 +26,11 @@ description: "How AeroFTP integration tests and comparative benchmarks are run a
 
 ## Docker harness
 
-Full local environment, containers exposed on localhost only. The files are published in the docs repository under [`public/test-reports/docker-harness`](https://github.com/axpdev-lab/docs.aeroftp.app/tree/main/public/test-reports/docker-harness): the compose file, the SFTP image and `setup.sh`, which generates the SSH test keys on your machine. No key is committed, and the credentials below are for these local containers only.
+Full local environment, containers exposed on localhost only. The files are published in the docs repository under [`tools/docker-harness`](https://github.com/axpdev-lab/docs.aeroftp.app/tree/main/tools/docker-harness), outside the site's `public` tree so that generated keys can never be copied into a site build: the compose file, the SFTP image and `setup.sh`, which generates the SSH test keys on your machine. No key is committed, and the credentials below are for these local containers only.
 
 | Service | Host port | Protocol | Credentials |
 |---------|-----------|----------|-------------|
-| `aeroftp-test-ftps` | 2121 | FTP (vsftpd) | `ftpuser` / `password123` |
+| `aeroftp-test-ftps` | 2121 | FTP (vsftpd), plain FTP without TLS | `ftpuser` / `password123` |
 | `aeroftp-test-sftp` | 2223 | SFTP (OpenSSH) | `user_key` with key, `user_pwd` with password, `user_mixed` with key and password |
 | `aeroftp-test-webdav` | 8080 | WebDAV (bytemark/webdav) | `webdavuser` / `password123` |
 | `aeroftp-test-minio` | 9000 / 9001 | S3 (MinIO) | `admin` / `password123` |
@@ -90,7 +90,7 @@ Matrices are plain HTML tables without custom styling. The `test-reports` sectio
 The [DAG engine review](./dag-review/2026-09) and the [comparative battery](./comparison/2026-10-03) measure AeroFTP against other clients on the same link. They follow these rules:
 
 1. **The same cell, the same window.** Each tool runs the same payload against the same server back to back, with the other tools in the same operation. The tool order is reversed between passes, so a drift over time does not always land on the same tool.
-2. **A control on every row.** rclone runs every cell. When AeroFTP moves between two builds and rclone does not, the change belongs to the build; when both move, it belongs to the link or the station.
+2. **A control on every row.** rclone runs every cell. It is evidence about shared drift, not proof of cause: when AeroFTP moves between two builds and rclone does not, the change most likely belongs to the build, and when both move, the window most likely does. A change in the network or the server can still affect two clients differently.
 3. **Integrity before speed.** Every download is compared with the source by SHA-256, file by file for trees. A timing without that check is not published: a failed or truncated transfer can look fast. Exit codes are recorded but not trusted alone, since a client can exit 0 after a partial transfer.
 4. **Pairs, not single numbers.** Rows show each run or the spread. A single run is labelled as one run. The noise floor is measured per target and per tool, using the tool that does not change between arms.
 5. **Ratios, not absolute speed.** Ratios are the other tool's seconds over AeroFTP's seconds. The link is the bottleneck for every tool, so a ratio travels better than a throughput figure.

@@ -1,8 +1,13 @@
 # AeroFTP local test harness: FTP, SFTP, WebDAV and S3 (MinIO) on localhost.
-# Run ./setup.sh first: it generates the SSH test keys, which are never
-# committed. The FTP service runs the image's own configuration and uses no
-# certificate from setup.sh. Credentials are test-only (password123) and every
-# port is bound to 127.0.0.1 so the services are not reachable from the network.
+# Run ./setup.sh first: it generates the SSH test keys in ./keys, which are
+# never committed. The FTP service is plain FTP: the image's configuration does
+# not enable TLS (the FTP-with-TLS comparisons on the docs site ran against a
+# lab server, not this container). SFTP uploads land in the users' home
+# directories inside the container and are discarded when it is recreated; the
+# sftp-data volume is not where the test users write. Image tags are not
+# pinned: the versions used for the 2026-04-18 matrix were not recorded.
+# Credentials are test-only (password123) and every port is bound to
+# 127.0.0.1 so the services are not reachable from the network.
 services:
   sftp-advanced:
     build:
