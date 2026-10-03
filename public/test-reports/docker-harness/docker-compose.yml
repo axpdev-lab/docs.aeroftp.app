@@ -1,6 +1,7 @@
 # AeroFTP local test harness: FTP, SFTP, WebDAV and S3 (MinIO) on localhost.
-# Run ./setup.sh first: it generates the SSH test keys and the TLS certificate,
-# which are never committed. Credentials are test-only (password123) and every
+# Run ./setup.sh first: it generates the SSH test keys, which are never
+# committed. The FTP service runs the image's own configuration and uses no
+# certificate from setup.sh. Credentials are test-only (password123) and every
 # port is bound to 127.0.0.1 so the services are not reachable from the network.
 services:
   sftp-advanced:

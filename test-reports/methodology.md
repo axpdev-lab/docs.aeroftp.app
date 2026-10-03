@@ -26,7 +26,7 @@ description: "How AeroFTP integration tests and comparative benchmarks are run a
 
 ## Docker harness
 
-Full local environment, containers exposed on localhost only. The files are published in the docs repository under [`public/test-reports/docker-harness`](https://github.com/axpdev-lab/docs.aeroftp.app/tree/main/public/test-reports/docker-harness): the compose file, the SFTP image and `setup.sh`, which generates the SSH test keys and the TLS certificate on your machine. No key is committed, and the credentials below are for these local containers only.
+Full local environment, containers exposed on localhost only. The files are published in the docs repository under [`public/test-reports/docker-harness`](https://github.com/axpdev-lab/docs.aeroftp.app/tree/main/public/test-reports/docker-harness): the compose file, the SFTP image and `setup.sh`, which generates the SSH test keys on your machine. No key is committed, and the credentials below are for these local containers only.
 
 | Service | Host port | Protocol | Credentials |
 |---------|-----------|----------|-------------|
