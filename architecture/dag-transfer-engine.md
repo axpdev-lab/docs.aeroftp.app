@@ -1,15 +1,13 @@
 ---
 title: DAG Transfer Engine
-description: How AeroFTP schedules every file transfer through a shared, provider-agnostic node-graph engine. Architecture, shapes, multipart orchestration, server-side copy, AIMD backpressure, provider trait surface.
+description: How AeroFTP schedules file transfers through a shared, provider-agnostic node-graph engine. Architecture, shapes, multipart orchestration, server-side copy, AIMD backpressure, provider trait surface.
 ---
 
 # DAG Transfer Engine
 
 *Released in v4.0.0 (2026-05-24). Status: production.*
 
-Every file transfer in AeroFTP (single file, batch, sync, intra-file
-segmented download, cross-provider copy) schedules through one
-shared, provider-agnostic node-graph engine. This page is the
+Single-file transfers, batches, sync, segmented downloads and same-provider copies schedule through one shared, provider-agnostic node-graph engine. Three paths stay outside it: plain WebDAV and Nextcloud single-file downloads, which the router sends to the provider-direct path; cross-profile transfers, which download to a temporary file and upload from it; and local-to-local copies. This page is the
 long-form architectural walk-through. The summary tier lives next to
 the code at [`docs/DAG-TRANSFER-ENGINE.md`](https://github.com/axpdev-lab/aeroftp/blob/main/docs/DAG-TRANSFER-ENGINE.md).
 
@@ -28,24 +26,20 @@ The engine ships as three layers:
 | -------------------- | ---------------------------------------------------------------------- |
 | `transfer_dag` core  | Pure, provider-free graph engine: executor, graph, resources, AIMD, observers. |
 | `TransferDagBuilder` | Single source of truth for every production graph shape.               |
-| Three runners        | Thin bridges (`single_file`, `batch`, `sync`) that bind nodes to provider I/O. |
+| Runners              | Thin bridges (single-file, batch, sync, copy, ranges) that bind nodes to provider I/O. |
 
-The CLI (`aeroftp-cli`), the Tauri GUI (`aeroftp` desktop app), and
-the MCP server (`aeroftp-mcp`) all schedule transfers through the
-same runners, so wire-level behavior is identical across surfaces by
-construction.
+The CLI (`aeroftp-cli`), the desktop app and the MCP server (`aeroftp-mcp`) share these runners where their call paths reach them. Wire behavior still depends on the provider, the operation and each surface's adapter, so it is not identical across surfaces by construction.
 
 ## Why a DAG engine
 
 Three converging needs justified the convergence:
 
-1. **One observability surface.** Before v4.0.0 each transfer
-   surface emitted slightly different progress / completion events
-   through its own ad-hoc orchestrator. The shared engine produces
-   one `DagObserver` stream that every surface consumes. The GUI's
-   `transfer_event` channel, the CLI's exit-code-and-line semantics,
-   and the MCP `notifications/progress` stream are now three sinks
-   on top of the same per-node lifecycle.
+1. **One lifecycle model.** Before v4.0.0 each transfer surface ran
+   its own ad-hoc orchestrator with its own idea of start, completion
+   and failure. The engine gives every graph one node lifecycle
+   (`DagObserver`) and one failure model. Byte progress still comes
+   from the surface adapters and the provider callbacks, not from node
+   events.
 
 2. **Capability-aware shape.** A provider that advertises
    `multipart_upload`, `server_side_copy`, or
@@ -56,7 +50,8 @@ Three converging needs justified the convergence:
    capability snapshot and picks the right shape per transfer.
 
 3. **One scheduler, one place to fix.** Every scarce resource (file
-   slot, chunk slot, http slot, disk read, disk write, api slot)
+   slot, checker slot, chunk slot, http slot, api slot, disk read,
+   disk write, hash slot, part-buffer memory)
    lives in `transfer_dag/resources` and is governed once for every
    transfer. Backends pick what they reserve (a one-line
    `ResourceRequest` per node kind); they no longer own a scheduler
@@ -88,11 +83,12 @@ PreserveMetadata
  EmitProgress
 ```
 
-- `Discover{Local,Remote}`: resolve the transfer size. The remote
-  variant calls `provider.size(path)`; the local variant reads
-  `std::fs::metadata(path).len()`. Sync graphs replace this with a
-  global `DiscoverLocal` + `DiscoverRemote` → `Compare` prefix and
-  hang every per-file chain below `Compare`.
+- `Discover{Local,Remote}`: a structural anchor in the current
+  runners. The size comes from the listing or from the caller's own
+  stat and travels with the file, so no per-file probe is needed.
+  Sync no longer has a global discover/compare prefix in the graph:
+  the scan and the plan run before it, and each per-file subgraph's
+  discover node is a no-op.
 
 - `AcquireResource`: a structural anchor. Reserved for the future
   resume-checkpoint fetch; runs as a no-op today.
@@ -103,9 +99,12 @@ PreserveMetadata
   `ServerSideCopy`, or a `DownloadFile` + `UploadFile` pair for the
   no-server-side-copy fallback. See [Transfer-core shapes](#transfer-core-shapes).
 
-- `VerifyChecksum`: post-transfer integrity check. Joins every
-  transfer-core node so it cannot run until the last part / segment
-  lands.
+- `VerifyChecksum`: joins every transfer-core node, so it cannot run
+  until the last part or segment lands. On the durable single-file
+  multipart path it checks that every part receipt is present and that
+  the local source is unchanged, then records a `Verified` fact. It is
+  not a remote checksum comparison, and on the other paths it is
+  structural.
 
 - `PreserveMetadata`: restores the remote mtime on a downloaded
   file. A no-op on the upload direction; the upload's mtime is the
@@ -113,8 +112,9 @@ PreserveMetadata
 
 - `CommitTemp`: finalize the transfer atomically. For a single
   transfer core this is a no-op (the provider's own `.aerotmp`
-  finalize is internal). For multipart it submits the accumulated
-  parts to `complete_multipart_upload`.
+  finalize is internal). For multipart it submits the ordered receipts
+  to `complete_multipart_upload`; on the durable single-file path it
+  refuses to do so until `Verified` is recorded.
 
 - `EmitProgress`: terminal node. Its completion is the signal a
   `DagObserver` maps onto the GUI `complete` event or the CLI's
@@ -128,6 +128,8 @@ against its own budget.
 
 The shaped builders pick the transfer-core shape per transfer from
 the provider's `TransferCapabilities` and the source object's size.
+
+<DagShapes />
 
 ### Single transfer core
 
@@ -143,10 +145,9 @@ direction) below the multipart-capability threshold. Reserves one
 
 ### Multipart upload fan-out
 
-For an upload above one preferred chunk on a multipart-capable
-provider (S3, B2). The transfer core fans out into N `UploadPart`
+For an upload above the provider's multipart threshold on a provider that gives each part an independent worker (S3, Backblaze B2, Azure Blob, Nextcloud chunked v2, Dropbox, Box, Filen, Drime, Uploadcare). The transfer core fans out into N `UploadPart`
 nodes, one per chunk. Each part node reserves one `chunk_slot`, so
-the shared chunk budget governs how many parts upload in parallel.
+the shared chunk budget governs how many parts upload in parallel. A provider whose parts must arrive in order (pCloud) gets a strict chain instead, and a provider that cannot give independent workers runs its parts one at a time on one session: N part nodes are N scheduled operations, not N concurrent requests.
 `VerifyChecksum` joins every `UploadPart` node, so it cannot fire
 until the last part lands.
 
@@ -159,7 +160,7 @@ until the last part lands.
 ```
 
 Part-number to node-id mapping is a dense, 1-based `HashMap` built at
-runner setup time. The receipts collected by `upload_part` are sorted
+runner setup time. The receipts are sorted
 by `part_number` ascending before submission to
 `complete_multipart_upload`, matching the S3 / B2 contract. The
 protocol cap (S3 and B2 both ceiling at 10000 parts) is enforced by
@@ -184,9 +185,7 @@ When the capability is absent the graph degrades honestly:
 … → AcquireResource → DownloadFile → UploadFile → VerifyChecksum → …
 ```
 
-Two real transfers, two file slots, two real round-trips. The shape
-is fixed at build time, so the executor never has to second-guess
-the fallback at runtime.
+Two real transfers, two file slots, two real round-trips. When the capability is advertised but the server rejects the native copy with a recoverable error, the copy node completes as an observed fallback and the same two-node payload graph runs. Permission, not-found, authentication, quota and transport errors fail the copy instead of falling back.
 
 ### Segmented intra-file download
 
@@ -218,14 +217,10 @@ the single source of truth for every shape:
 
 | Builder method                       | Used by                                  | Outputs                                  |
 | ------------------------------------ | ---------------------------------------- | ---------------------------------------- |
-| `single_file(direction)`             | Legacy callers (kept for backward compat) | `SingleFileDag` (linear 7-node chain)   |
-| `shaped_file(direction, caps, size)` | `transfer_dag_single_file` runner        | `ShapedFileDag` (single-core or N × UploadPart) |
-| `from_batch(items)`                  | Legacy batch callers                     | `BatchDag` (one sub-DAG per item)        |
-| `from_batch_shaped(items, caps)`     | `transfer_dag_batch` runner              | `BatchDag` with per-item shaping         |
-| `from_sync_plan(plan)`               | Legacy sync callers                      | `SyncDag` (global discover/compare prefix + per-file chains) |
-| `from_sync_plan_shaped(plan, caps)`  | `transfer_dag_sync` runner               | `SyncDag` with per-file shaping          |
-| `shaped_copy(caps)`                  | Cross-bucket / cross-folder copy callers | `CopyDag` (server-side or download+upload) |
+| `shaped_file(direction, caps, size)` | Single-file runner (GUI and CLI), and every file the batch and sync streaming frontier admits | `ShapedFileDag` (single core, N × UploadPart, or an ordered part chain) |
+| `shaped_copy(caps)`                  | `execute_copy_dag` (GUI copy, CLI `cp`, CLI WebDAV `COPY`) | `CopyDag` (server-side or download+upload) |
 | `shaped_ranges(N)`                   | `providers::multi_thread::run_ranges_via_graph` | `ShapedRangesDag` (N × DownloadRange) |
+| `single_file`, `from_batch`, `from_batch_shaped`, `from_sync_plan`, `from_sync_plan_shaped` | No production caller since the streaming frontier (DAG-P2-04) builds one `shaped_file` subgraph per admitted file | Whole-job graphs, kept for tests |
 
 With `TransferCapabilities::default()` the shaped builders reproduce
 the legacy single-transfer-core shape byte-identically. The shaped
@@ -234,80 +229,26 @@ the capability set changes the shape.
 
 ## Multipart orchestration in detail
 
-The multipart fan-out shape is the most active part of the runner.
-For an upload above one preferred chunk on a multipart-capable
-provider, the runner allocates a per-transfer `MultipartCtx`:
+The multipart fan-out is the most active part of the single-file runner. On the durable single-file path each upload goes through a checkpointed lifecycle:
 
-```rust
-struct MultipartCtx {
-    /// Lazy session handle. The first UploadPart invocation that
-    /// wins the mutex opens the session; the rest reuse it.
-    handle: Arc<Mutex<Option<MultipartHandle>>>,
-    /// Receipts collected from successful upload_part calls.
-    parts: Arc<Mutex<Vec<UploadedPart>>>,
-    /// Maps UploadPart node id → 1-based part number.
-    node_to_part: Arc<HashMap<usize, u32>>,
-    part_size: u64,
-    total_size: u64,
-    content_type: String,
-}
-```
+1. **Begin, lazily.** The first `UploadPart` node to run opens the session with `begin_multipart_upload`; the others reuse the handle.
+2. **Send each part from disk.** The executor first acquires the part's disk and buffer-byte lease, then hands the part to the provider as a `PartBody` disk slice through `upload_part_body`. Providers that can stream a part (WebDAV and Nextcloud, Dropbox, Google Drive, OneDrive and others) read it one bounded window at a time; providers that must own the whole part to hash, sign or encrypt it (S3 signed payloads, B2, Box, Azure, MEGA, Filen) hold it in memory, inside the same lease.
+3. **Checkpoint each receipt.** Every successful receipt is written atomically to a durable checkpoint before its node completes.
+4. **Verify.** `VerifyChecksum` compares the checkpoint with a fresh look at the local source (every part present, source unchanged) and records `Verified`.
+5. **Commit, fail-closed.** `CommitTemp` sorts the receipts by part number, calls `complete_multipart_upload` only if `Verified` is recorded, and records `Committed` before the graph can report success.
 
-### Lifecycle of an `UploadPart` node
+<DagCompletion />
 
-1. **Lock `MultipartCtx::handle`.** If the slot is empty, this is
-   the first part to enter the runner: open the session through
-   `provider.begin_multipart_upload(remote, total_size, Some(content_type))`.
-   Subsequent invocations see an initialized handle and skip the call.
+### Failure and restart
 
-2. **Read the part's slice from disk.** The offset is
-   `(part_number - 1) * part_size`; the length is the lesser of
-   `part_size` and `total_size - offset` (the last part may be smaller).
-   The runner opens a fresh `tokio::fs::File`, seeks, and `read_exact`s
-   into a `Vec<u8>`.
+A failed or cancelled durable upload keeps its session and its valid receipts. The checkpoint identity binds the local path, size and mtime, the provider, the endpoint account, the remote path and the part layout, so a matching restart restores only validated receipts and sends only the missing parts. A conservative scavenger aborts a matching session only after its TTL has expired, and removes the record only after the abort succeeds.
 
-3. **Upload the part.** Calls
-   `provider.upload_part(&handle, part_number, data)`. The returned
-   `UploadedPart` receipt is pushed to `MultipartCtx::parts`.
-
-### Lifecycle of `CommitTemp`
-
-For multipart uploads, the commit node:
-
-1. **Takes the handle.** A `take()` on the handle mutex marks the
-   session as consumed: the failure-path abort below knows to skip
-   when commit already finished.
-
-2. **Sorts the receipts.** Parts are sorted by `part_number`
-   ascending, matching the S3 / B2 / Azure contract every multipart
-   backend in the matrix happens to follow.
-
-3. **Submits to `complete_multipart_upload(handle, parts)`.** The
-   handle is consumed by the call; the session is no longer valid
-   afterwards, success or failure.
-
-### Failure path
-
-When the DAG executor returns `Err`, the runner spawns a best-effort
-abort:
-
-```rust
-if outcome.is_err() {
-    if let Some(handle) = ctx.handle.lock().await.take() {
-        let _ = provider.abort_multipart_upload(handle).await;
-    }
-}
-```
-
-This is idempotent: if commit already consumed the handle, the
-`take()` returns `None` and the abort is skipped. If commit never
-ran, the abort releases the session-side state so the provider does
-not accumulate orphan upload IDs.
+Multipart inside a batch shares the part layout and the begin, part and complete steps, but not this checkpoint: there a failed file is aborted once, after its in-flight parts have drained.
 
 ## Resource governance
 
-The resource manager arbitrates dispatch against a per-transfer
-budget. Six classes:
+The resource manager arbitrates dispatch against a per-operation
+budget:
 
 | Class             | Meaning                                                |
 | ----------------- | ------------------------------------------------------ |
@@ -317,24 +258,26 @@ budget. Six classes:
 | `disk_read_slots` | Concurrent fs reads (one per `UploadPart` chunk read). |
 | `disk_write_slots` | Concurrent fs writes (one per `DownloadRange` write). |
 | `api_slots`       | Rate-limited API requests.                             |
+| `checker_slots`   | Concurrent pre-transfer checks (`--checkers`).         |
+| `hash_slots`      | Concurrent hashing.                                    |
+| `buffer_bytes`    | Part memory, in 64 KiB credits from one process-wide pool. |
 
 Each `ResourceRequest` is a one-line declaration on a node kind:
 
 ```rust
-// Single-file transfer:
-ResourceRequest::file_transfer()
-// = { file_slots: 1, disk_read_slots: 1, disk_write_slots: 1, .. }
+// Whole-file upload / download: one direction of local disk only.
+ResourceRequest::upload_file()    // { file_slots: 1, disk_read_slots: 1, .. }
+ResourceRequest::download_file()  // { file_slots: 1, disk_write_slots: 1, .. }
 
-// Multipart upload part:
-part_request(api_slots)
-// = { chunk_slots: 1, disk_read_slots: 1, api_slots: api_slots, .. }
+// Multipart upload part: chunk slot, disk read, and its part buffer.
+ResourceRequest::upload_part(buffer_bytes)
+// = { chunk_slots: 1, disk_read_slots: 1, buffer_bytes, .. }
 
 // Segmented range download:
-ResourceRequest::range_chunk()
-// = { chunk_slots: 1, http_slots: 1, disk_write_slots: 1, .. }
+ResourceRequest::range_chunk()    // { chunk_slots: 1, http_slots: 1, disk_write_slots: 1, .. }
 
-// Server-side copy:
-ResourceRequest { api_slots: 1, .. }
+// Server-side copy: API only, no disk, no buffer.
+ResourceRequest::server_copy(api_slots)
 ```
 
 The executor only dispatches a node when:
@@ -345,19 +288,31 @@ The executor only dispatches a node when:
 3. The AIMD controller's per-class dispatch target permits one
    more node of this kind.
 
+<DagDispatch />
+
+### Many files: the streaming frontier and the shared governor
+
+Batches and sync do not build one graph for the whole job. Work items stream from the source (the entry list, or the sync plan once the scan has finished) into a bounded backlog, 10,000 items by default (`--max-backlog`), which pauses the source when full. At most a window of file slots plus a little headroom is admitted at a time; each admitted file gets its own `shaped_file` subgraph, which is dropped when the file is done. Resident graph memory therefore follows the active window, not the size of the job. A failed file is recorded without stopping the others, and sync deletions start only after the last transfer.
+
+Above every job sits one process-wide governor. An endpoint lease keyed by protocol, host and account caps concurrent jobs per endpoint (256 by default, foreground jobs first, a waiting background job served after eight bypasses); it counts jobs, not network connections. A shared bandwidth bucket applies one `--limit-rate` to all jobs together, one memory pool holds every multipart part buffer, and each local disk device has its own read and write slots (8 per direction by default). The governor lives in one process: the desktop app and a separate CLI process do not share it.
+
+<DagFrontier />
+
 ## AIMD backpressure
 
-Every shape runs under the same `AimdController`. The controller
-classifies failures into three buckets:
+Where a path exposes real concurrency, an `AimdController` governs four classes (file, chunk, http, api). It classifies failures into three buckets:
 
-- **Congestion signal** (429, 503, network timeout, connection
-  reset, SFTP channel disconnect): the per-class dispatch target
-  shrinks (multiplicative decrease, default ÷2 with a guard band).
+- **Congestion signal** (429, 503, request timeout, connection
+  reset, an FTP `421` too-many-connections refusal): the per-class
+  dispatch target halves. A server `Retry-After` holds regrowth for
+  its cooldown.
 - **Non-congestion failure** (`InvalidPath`, `PermissionDenied`,
   `AuthenticationFailed`, …): the target is left untouched. The
   failure is not a load signal.
-- **Success**: the target grows linearly (additive increase, default
-  +1 per completed transfer) up to the budget ceiling.
+- **Quiet stretches**: after each quiet window without congestion
+  the target grows by one, up to the ceiling. After a congestion
+  event regrowth stops one below the level that failed until the
+  recovery window has passed.
 
 The controller starts every class at its ceiling, so a transfer with
 no congestion dispatches every node immediately, identical to the
@@ -365,8 +320,9 @@ pre-AIMD path. It only ever shrinks the in-flight set under a real
 congestion signal, where a smaller dispatch target is the safer,
 faster choice.
 
-Persistence across runs is out of scope for v4.0.0: the controller
-dies with the process. Cross-run persistence is a parking-lot item.
+Within one process, the target an endpoint was pushed down to seeds the next job to that endpoint for ten minutes (DAG-P2-06). Only congestion and the recovery after it write that memory: a loop that also learned from job throughput spiralled down and was removed. Nothing persists across processes. AIMD is a congestion controller, not a search for the fastest width: a slowdown that produces no classified signal does not move it.
+
+<DagAimd />
 
 ## Provider trait surface
 
@@ -402,6 +358,18 @@ async fn upload_part(
     part_number: u32,
     data: Vec<u8>,
 ) -> Result<UploadedPart, ProviderError>;
+
+// What the runner calls. The default materializes the slice and
+// delegates to upload_part; streaming providers override it and
+// return true from multipart_streams_part_body().
+async fn upload_part_body(
+    &mut self,
+    handle: &MultipartHandle,
+    part_number: u32,
+    body: PartBody,
+) -> Result<UploadedPart, ProviderError>;
+
+fn multipart_streams_part_body(&self) -> bool;
 
 async fn complete_multipart_upload(
     &mut self,
@@ -460,6 +428,11 @@ the capability never reaches them.
 | `src-tauri/src/transfer_dag_batch.rs`             | Batch runner.                         |
 | `src-tauri/src/transfer_dag_sync.rs`              | Sync runner.                          |
 | `src-tauri/src/providers/multi_thread.rs`         | Segmented download runner.            |
+| `src-tauri/src/transfer_dag/work_source.rs`       | Streaming frontier for batch and sync. |
+| `src-tauri/src/transfer_dag/governor.rs`          | Process-wide governor: endpoint leases, bandwidth, buffer pool, disk slots. |
+| `src-tauri/src/transfer_dag/checkpoint.rs`        | Durable multipart checkpoint.         |
+| `src-tauri/src/transfer_multipart.rs`             | Shared multipart layout and `PartBody`. |
+| `src-tauri/src/transfer_router/hints.rs`          | Single-file engine routing table.     |
 
 The code lives in the [`aeroftp` repo](https://github.com/axpdev-lab/aeroftp).
 The summary that tracks the code lives at
