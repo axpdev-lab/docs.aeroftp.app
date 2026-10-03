@@ -841,3 +841,96 @@
   color: var(--vp-c-text-2);
   font-weight: 500;
 }
+
+/* ===========================================================
+ * Shaped Graph Transfer figures (DagShapes, DagDispatch, DagAimd,
+ * DagFrontier, DagCompletion). Inline SVG themed with tokens so the
+ * figures follow the light/dark toggle. Three meaning hues only:
+ * blue = moves bytes, amber = pushback or failure, green = durable success.
+ * =========================================================== */
+.dag-fig {
+  --dag-ink: var(--vp-c-text-1);
+  --dag-ink-2: var(--vp-c-text-2);
+  --dag-ink-3: #64748b;
+  --dag-line: #94a3b8;
+  --dag-card: var(--vp-c-bg-soft);
+  --dag-card-line: rgba(100, 116, 139, 0.28);
+  --dag-node: var(--vp-c-bg);
+  --dag-node-line: #94a3b8;
+  --dag-io: #2563eb;
+  --dag-io-fill: rgba(37, 99, 235, 0.10);
+  --dag-io-solid: #3b82f6;
+  --dag-warn: #b45309;
+  --dag-warn-fill: rgba(217, 119, 6, 0.12);
+  --dag-ok: #15803d;
+  --dag-ok-fill: rgba(22, 163, 74, 0.12);
+  margin: 28px 0;
+}
+.dark .dag-fig {
+  --dag-ink-3: #8b9bb0;
+  --dag-line: #64748b;
+  --dag-card-line: rgba(148, 163, 184, 0.18);
+  --dag-node: #0f1419;
+  --dag-node-line: #64748b;
+  --dag-io: #60a5fa;
+  --dag-io-fill: rgba(96, 165, 250, 0.14);
+  --dag-io-solid: #60a5fa;
+  --dag-warn: #fbbf24;
+  --dag-warn-fill: rgba(251, 191, 36, 0.12);
+  --dag-ok: #4ade80;
+  --dag-ok-fill: rgba(74, 222, 128, 0.12);
+}
+.dag-fig__frame {
+  overflow-x: auto;
+  border: 1px solid var(--dag-card-line);
+  border-radius: 12px;
+  background: var(--dag-card);
+  padding: 8px 4px;
+}
+.dag-fig svg {
+  display: block;
+  width: 100%;
+  min-width: 600px;
+  height: auto;
+  font-family: var(--vp-font-family-base);
+}
+.dag-fig figcaption {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--vp-c-text-2);
+}
+.dag-fig figcaption strong { color: var(--vp-c-text-1); }
+
+.dag-fig .t { fill: var(--dag-ink); font-size: 14px; }
+.dag-fig .t-b { fill: var(--dag-ink); font-size: 14px; font-weight: 600; }
+.dag-fig .t-s { fill: var(--dag-ink-2); font-size: 12.5px; }
+.dag-fig .t-xs { fill: var(--dag-ink-3); font-size: 11.5px; }
+.dag-fig .t-cap { fill: var(--dag-ink-3); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; }
+.dag-fig .t-mono { fill: var(--dag-ink-2); font-size: 12px; font-family: var(--vp-font-family-mono); }
+.dag-fig .t-io { fill: var(--dag-io); }
+.dag-fig .t-warn { fill: var(--dag-warn); }
+.dag-fig .t-ok { fill: var(--dag-ok); }
+
+.dag-fig .card { fill: var(--dag-node); stroke: var(--dag-card-line); stroke-width: 1; }
+.dag-fig .node { fill: var(--dag-node); stroke: var(--dag-node-line); stroke-width: 1.25; }
+.dag-fig .node-io { fill: var(--dag-io-fill); stroke: var(--dag-io); stroke-width: 1.5; }
+.dag-fig .node-warn { fill: var(--dag-warn-fill); stroke: var(--dag-warn); stroke-width: 1.5; }
+.dag-fig .node-ok { fill: var(--dag-ok-fill); stroke: var(--dag-ok); stroke-width: 1.5; }
+.dag-fig .slot { fill: none; stroke: var(--dag-io); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.dag-fig .ghost { fill: none; stroke: var(--dag-node-line); stroke-width: 1.25; stroke-dasharray: 4 4; }
+.dag-fig .dot { fill: var(--dag-node); stroke: var(--dag-node-line); stroke-width: 1.5; }
+.dag-fig .fill-io { fill: var(--dag-io-solid); }
+.dag-fig .fill-warn { fill: var(--dag-warn); }
+.dag-fig .fill-mute { fill: var(--dag-line); }
+
+.dag-fig .edge { fill: none; stroke: var(--dag-line); stroke-width: 1.5; }
+.dag-fig .edge-io { fill: none; stroke: var(--dag-io); stroke-width: 1.5; }
+.dag-fig .edge-warn { fill: none; stroke: var(--dag-warn); stroke-width: 1.5; }
+.dag-fig .edge-ok { fill: none; stroke: var(--dag-ok); stroke-width: 1.5; }
+.dag-fig .dashed { stroke-dasharray: 5 4; }
+.dag-fig .head { fill: var(--dag-line); }
+.dag-fig .head-io { fill: var(--dag-io); }
+.dag-fig .head-warn { fill: var(--dag-warn); }
+.dag-fig .head-ok { fill: var(--dag-ok); }
+.dag-fig .mask { fill: var(--dag-card); }
