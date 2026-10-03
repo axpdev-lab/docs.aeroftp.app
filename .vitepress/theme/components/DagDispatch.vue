@@ -1,7 +1,7 @@
 <template>
   <figure class="dag-fig">
     <div class="dag-fig__frame">
-      <svg viewBox="0 0 760 330" role="img" aria-label="Dispatch: a ready node starts only when the operation's resource budget and the AIMD target for its class both allow it. The channels behind them are fixed by the provider's session ceiling. Congestion signals from the endpoint halve the width; quiet windows add one back, never above the ceiling.">
+      <svg viewBox="0 0 760 330" role="img" aria-label="Dispatch: a ready node starts only when the operation's resource budget and the AIMD target for its class both allow it. The channels behind them are fixed by the provider's session ceiling. With AIMD enabled (the default), congestion signals from the endpoint halve the width and each quiet window adds the regrowth step back (one by default), never above the ceiling.">
         <defs>
           <marker id="ddp-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" class="head" /></marker>
           <marker id="ddp-ah-io" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" class="head-io" /></marker>
@@ -99,7 +99,7 @@
       </svg>
     </div>
     <figcaption>
-      <slot><strong>Dispatch.</strong> A ready node starts only when the operation's resource budget and the AIMD target for its class both have room. The channels behind them are fixed by the provider's session ceiling. When the endpoint signals congestion the width halves; quiet stretches add one back, and nothing raises it past the ceiling.</slot>
+      <slot><strong>Dispatch.</strong> A ready node starts only when the operation's resource budget and the AIMD target for its class both have room. The channels behind them are fixed by the provider's session ceiling. With AIMD enabled (the default), a congestion signal halves the width and each quiet stretch adds the regrowth step back (one by default); nothing raises it past the ceiling.</slot>
     </figcaption>
   </figure>
 </template>
