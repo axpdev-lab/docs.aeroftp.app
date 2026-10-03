@@ -1,3 +1,7 @@
+---
+description: "Rename many files at once from one dialog, or edit a single name inline."
+---
+
 # Batch Rename
 
 AeroFTP provides a batch rename dialog for renaming multiple files at once, plus inline rename for quick single-file edits.

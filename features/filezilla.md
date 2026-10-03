@@ -1,3 +1,7 @@
+---
+description: "Import and export server profiles with FileZilla through the shared sitemanager.xml format."
+---
+
 # FileZilla Bridge
 
 > [FileZilla](https://filezilla-project.org) is the most downloaded FTP client in the world. If you have accumulated sites over the years, AeroFTP can import them directly from your `sitemanager.xml` and export back when needed.

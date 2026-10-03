@@ -2,6 +2,7 @@ import DefaultTheme from 'vitepress/theme'
 import ProviderPlanCard from './components/ProviderPlanCard.vue'
 import ProviderPlanTable from './components/ProviderPlanTable.vue'
 import ArchiveFormatCard from './components/ArchiveFormatCard.vue'
+import FeatureGrid from './components/FeatureGrid.vue'
 import DagShapes from './components/DagShapes.vue'
 import DagDispatch from './components/DagDispatch.vue'
 import DagAimd from './components/DagAimd.vue'
@@ -16,6 +17,7 @@ export default {
     app.component('ProviderPlanCard', ProviderPlanCard)
     app.component('ProviderPlanTable', ProviderPlanTable)
     app.component('ArchiveFormatCard', ArchiveFormatCard)
+    app.component('FeatureGrid', FeatureGrid)
     app.component('DagShapes', DagShapes)
     app.component('DagDispatch', DagDispatch)
     app.component('DagAimd', DagAimd)

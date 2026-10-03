@@ -1,3 +1,7 @@
+---
+description: "Monaco, the editor behind VS Code, built in: syntax highlighting, themes and AeroAgent integration."
+---
+
 # Code Editor
 
 AeroFTP includes an integrated code editor powered by Monaco Editor (the same engine behind VS Code). It supports syntax highlighting for all major languages, multiple themes, and direct integration with AeroAgent.

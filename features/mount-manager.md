@@ -1,3 +1,7 @@
+---
+description: "Save server profiles as mounts, mount them with one click, open them in your file manager, attach them at login."
+---
+
 # AeroMount
 
 AeroMount is AeroFTP's persistent mount registry (also called the Mount Manager). Save any saved server profile as a reusable mount configuration, mount and unmount with a single click, open the mount in your OS file manager, and optionally have AeroFTP attach the mount automatically on system login.

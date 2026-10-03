@@ -1,3 +1,7 @@
+---
+description: "A full terminal with a real PTY inside the app, powered by xterm.js."
+---
+
 # Terminal
 
 AeroFTP includes an integrated terminal emulator powered by xterm.js, providing a full PTY (pseudo-terminal) directly within the application.

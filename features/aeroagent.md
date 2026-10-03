@@ -1,3 +1,7 @@
+---
+description: "An AI assistant for file management, code editing and server operations, across local files and every remote backend."
+---
+
 # AeroAgent
 
 AeroAgent is AeroFTP's AI-powered assistant for natural language file management, code editing, and server operations. It integrates with **24 AI providers**, exposes **43 built-in tools**, and operates across local files plus the AeroFTP remote provider backends (7 transport protocols + 20+ native providers) through a single unified `ai_core` backend - the same one that powers the GUI, the CLI (`aeroftp-cli agent`), and the native MCP server.

@@ -1,3 +1,7 @@
+---
+description: "A full local file manager with tabs, a Places sidebar, three view modes, tags and Quick Look, no server needed."
+---
+
 # AeroFile
 
 AeroFile is AeroFTP's professional local file manager. Toggle between remote server mode and local-only mode to get a full-featured file browser without needing a server connection. AeroFile includes tabbed browsing, a Places sidebar with drive detection, three view modes, rubber-band selection, file tags, Quick Look previews, an in-app image editor (AeroImage), batch rename, and comprehensive keyboard shortcuts.

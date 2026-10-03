@@ -68,7 +68,7 @@ export default defineConfig({
       { text: 'Guide', link: '/getting-started/installation' },
       { text: 'Reference', link: '/protocols/overview' },
       { text: 'Setup Guides', link: '/providers/' },
-      { text: 'Features', link: '/features/aerocloud' },
+      { text: 'Features', link: '/features/', activeMatch: '^/features/' },
       { text: 'CLI', link: '/cli/installation' },
       { text: 'MCP', link: '/mcp/overview' },
       { text: 'Test Reports', link: '/test-reports/' },
@@ -228,6 +228,7 @@ export default defineConfig({
           text: 'Features',
           collapsed: false,
           items: [
+            { text: 'Overview', link: '/features/' },
             {
               text: 'Aero Family',
               collapsed: false,
