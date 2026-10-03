@@ -1,7 +1,7 @@
 <template>
   <figure class="dag-fig">
     <div class="dag-fig__frame">
-      <svg viewBox="0 0 760 286" role="img" aria-label="AIMD over time, schematic: the width starts at the effective ceiling, halves on a congestion signal, grows by one per quiet window, stays one below the level that failed until the recovery window has passed, and does not regrow during a Retry-After cooldown.">
+      <svg viewBox="0 0 760 286" role="img" aria-label="AIMD over time, schematic, with AIMD enabled: the width starts at the effective ceiling (or lower with a cached profile), halves on a congestion signal, grows by the regrowth step (one by default) per quiet window, stays one below the level that failed until the recovery window has passed, and does not regrow during a Retry-After cooldown.">
         <defs>
           <marker id="dam-ah" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" class="head" /></marker>
         </defs>
@@ -52,7 +52,7 @@
       </svg>
     </div>
     <figcaption>
-      <slot><strong>Adapting, schematic.</strong> The controller starts at the effective ceiling and only moves below it. A congestion signal halves the width and each quiet window adds one back. Regrowth stops one below the level that failed until the recovery window has passed, and a server's Retry-After holds regrowth for its cooldown.</slot>
+      <slot><strong>Adapting, schematic.</strong> With AIMD enabled (the default), the controller starts at the effective ceiling, or below it when a recent profile for the endpoint is cached, and never moves above it. A congestion signal halves the width and each quiet window adds the regrowth step back, one by default. Regrowth stops one below the level that failed until the recovery window has passed, and a server's Retry-After holds regrowth for its cooldown.</slot>
     </figcaption>
   </figure>
 </template>
