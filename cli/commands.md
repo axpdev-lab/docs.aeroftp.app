@@ -31,6 +31,29 @@ These transports + direct-auth providers support URL connections:
 | OpenDrive | `opendrive://` | Password |
 | Yandex Disk | `yandexdisk://` | OAuth2 (via `--profile`) |
 | GitHub | `github://` | PAT / Device Flow |
+| Local folder | `/abs/path`, `./rel/path`, `file:///abs/path` | None (a folder of this machine) |
+
+### A Local Folder as the Remote
+
+Every command that takes a URL also takes a folder of this machine: an absolute path, a path that starts at the current directory (`.`, `..`, `./x`, `../x`) or a `file:///abs/path` URL. A bare word such as `share` stays a URL error, because it is more often a profile name typed without `--profile`.
+
+```bash
+aeroftp-cli serve webdav /srv/share                 # share a folder over WebDAV
+aeroftp-cli ls file:///srv/share /docs -l
+aeroftp-cli put ./backup /home/me/report.pdf /reports/
+aeroftp-cli sync /mnt/archive ./photos /2026 --direction upload
+aeroftp-cli hashsum -a sha256 /srv/share /iso/image.iso   # computed in place, no download
+```
+
+- The folder is the root of a path jail: `..` stops at it and a symbolic link that resolves outside it is refused, for reads and for writes. A served client cannot reach a file outside the folder.
+- Deleting or renaming a link acts on the link, never on the file it names. Names are taken as written: `report ` and `report` are two files.
+- A listing shows a link only when it points to a file inside the folder; the others are left out and named in a warning.
+- An upload keeps the modification time of its source, and an upload onto its own source is refused.
+- `hashsum`, `check --checksum` and `sync --checksum` get md5, sha1, sha256, sha512 or blake3 by reading the file in place. `df` reports the filesystem that holds the folder, `cp` copies inside it, and an interrupted transfer resumes from the bytes already held.
+- `get`, `put` and `sync` move whole files, one at a time; `serve sftp` and a resumed `serve ftp` read a served file by range.
+- `sync /a /b` with two local folders and no REMOTE keeps the local-to-local copier. Give a REMOTE other than `/` to sync against the first folder as a remote with the full sync engine.
+
+Available from v4.2.3.
 
 Saved profiles are the preferred path for browser-authorized and profile-backed API providers such as Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, and Drime. 4shared (OAuth 1.0) tokens are automatically loaded from the vault after GUI authorization.
 
@@ -176,11 +199,11 @@ aeroftp-cli touch --profile "server" /remote/existing.txt
 
 ### hashsum
 
-Algorithms: `md5`, `sha1`, `sha256`, `sha512`, `blake3`.
+Algorithms: `md5`, `sha1`, `sha256`, `sha512`, `blake3`, chosen with `-a` / `--algorithm` (default `sha256`).
 
 ```bash
-aeroftp-cli hashsum --profile "server" sha256 /data/file.bin
-aeroftp-cli hashsum sftp://user@host blake3 /path/file.dat --json
+aeroftp-cli hashsum --profile "server" -a sha256 /data/file.bin
+aeroftp-cli hashsum sftp://user@host -a blake3 /path/file.dat --json
 ```
 
 Output matches standard `sha256sum` format: `<hash>  <path>`.
@@ -516,7 +539,7 @@ TUI controls: Up/Down navigate, Enter opens directory, Backspace goes back, q qu
 
 ### serve
 
-Expose any remote as a local server of the chosen protocol. Anonymous access, Ctrl+C to stop.
+Expose any remote, or a folder of this machine, as a local server of the chosen protocol. Ctrl+C to stop.
 
 ```bash
 # HTTP (read-only, range requests, directory listing)
@@ -526,11 +549,16 @@ aeroftp-cli --profile "server" serve http _ / --addr 127.0.0.1:8080
 aeroftp-cli --profile "server" serve webdav _ / --addr 127.0.0.1:8080
 
 # FTP (read-write, passive mode)
-aeroftp-cli --profile "server" serve ftp _ / --addr 0.0.0.0:2121 --passive-ports 49152-49200
+aeroftp-cli --profile "server" serve ftp _ / --addr 0.0.0.0:2121 --allow-remote-bind --passive-ports 49152-49200
 
 # SFTP (read-write, ED25519 host key)
-aeroftp-cli --profile "server" serve sftp _ / --addr 0.0.0.0:2222
+aeroftp-cli --profile "server" serve sftp _ / --addr 0.0.0.0:2222 --allow-remote-bind
+
+# A folder of this machine instead of a remote
+aeroftp-cli serve webdav /srv/share
 ```
+
+Every mode binds to loopback unless `--allow-remote-bind` is given. On a loopback address no login is asked; on any other address a login is required, and one is generated and printed at start when `--auth-token` (HTTP, WebDAV) or `--auth-user` / `--auth-password` (FTP, SFTP) are not given. With a local folder, the folder is the jail root and nothing outside it can be reached.
 
 Any FTP/SFTP/WebDAV/HTTP client can now access AeroFTP's 7 transport protocols and 20+ native provider integrations (plus the GitHub repository backend) as if they were standard local servers.
 

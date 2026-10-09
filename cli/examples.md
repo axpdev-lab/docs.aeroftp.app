@@ -360,7 +360,7 @@ aeroftp-cli tail --profile "server" /var/log/app.log -n 500 | grep ERROR
 
 ```bash
 # Compute remote file hash
-aeroftp-cli hashsum --profile "server" sha256 /backups/db.sql.gz
+aeroftp-cli hashsum --profile "server" -a sha256 /backups/db.sql.gz
 
 # Download and verify locally
 aeroftp-cli get --profile "server" /backups/db.sql.gz ./db.sql.gz
@@ -368,7 +368,7 @@ sha256sum ./db.sql.gz  # Compare with remote hash
 
 # Automated verification: compare local and remote
 LOCAL_HASH=$(sha256sum ./db.sql.gz | cut -d' ' -f1)
-REMOTE_HASH=$(aeroftp-cli hashsum --profile "server" sha256 /backups/db.sql.gz 2>/dev/null | cut -d' ' -f1)
+REMOTE_HASH=$(aeroftp-cli hashsum --profile "server" -a sha256 /backups/db.sql.gz 2>/dev/null | cut -d' ' -f1)
 [ "$LOCAL_HASH" = "$REMOTE_HASH" ] && echo "Integrity OK" || echo "MISMATCH"
 ```
 
