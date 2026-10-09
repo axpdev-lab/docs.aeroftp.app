@@ -558,7 +558,7 @@ aeroftp-cli --profile "server" serve sftp _ / --addr 0.0.0.0:2222 --allow-remote
 aeroftp-cli serve webdav /srv/share
 ```
 
-Every mode binds to loopback unless `--allow-remote-bind` is given. On a loopback address no login is asked; on any other address a login is required, and one is generated and printed at start when `--auth-token` (HTTP, WebDAV) or `--auth-user` / `--auth-password` (FTP, SFTP) are not given. With a local folder, the folder is the jail root and nothing outside it can be reached.
+Every mode listens on loopback by default; a non-loopback `--addr` is refused unless `--allow-remote-bind` is given. On a loopback address no login is asked unless you set one. On any other address a login is always required: HTTP and WebDAV take `--auth-token`, generated and printed at start when it is not given; FTP and SFTP take `--auth-user` and `--auth-password`, where a missing user is `aeroftp` and a missing password is generated and printed at start. With a local folder, the folder is the jail root and nothing outside it can be reached.
 
 Any FTP/SFTP/WebDAV/HTTP client can now access AeroFTP's 7 transport protocols and 20+ native provider integrations (plus the GitHub repository backend) as if they were standard local servers.
 
