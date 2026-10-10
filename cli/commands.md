@@ -143,6 +143,8 @@ aeroftp-cli pget --profile "AWS S3" /backup/big.tar.gz --json
 
 `pget` is now a real subcommand (alias of `get` with the `--segments 4` preset). Splits a single file into N byte ranges and downloads them concurrently, then stitches them back. Useful when latency or per-connection throughput is the bottleneck (large `.tar.gz` archives, S3 buckets in far regions). Falls back to a single sequential stream when the provider does not advertise range-request support.
 
+**One download per destination file at a time.** A segmented download writes into `<name>.aerosegtmp` beside the destination and renames it into place once every segment is in. On Linux, on a local filesystem, that temporary is locked for the whole run, so a second segmented download of the same file into the same path is refused while the first one runs. Everywhere else the lock is not taken, because there it could block other programs or the download itself: on macOS, on Linux network and FUSE mounts (NFS, SMB, sshfs) and on other Unix systems, a second download discards the first one's temporary, and the first can then finish with an incomplete file. On Windows the second download fails instead, because the first still has the temporary open. Locks are per machine on every system: two machines writing the same path on a shared mount never see each other. The same holds for segmented downloads started from the app.
+
 ### mkdir / rm / mv
 
 ```bash
