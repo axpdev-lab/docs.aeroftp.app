@@ -132,6 +132,8 @@ Search across any connected provider using the `search()` method from the Storag
 
 The status bar displays remaining storage for the connected provider. Quota information is fetched via `get_storage_quota()` and shows used / total space with a usage percentage.
 
+On a backend with no used-space API (FTP, S3, WebDAV), **Calculate used storage** in the status bar measures it by walking the files under the profile's initial path, or under the current folder when the profile has none, and a profile can run it on connect. While the scan runs, the storage chip shows the running figure and keeps the total it already knew. Clicking the chip runs the scan again on any backend, including one whose API reports the account total, and the figure is then the bytes found under that path over the whole account: when the initial path is a subfolder, the chip reads as less used space than the account holds. Point the profile's initial path at the account root for a scanned figure that matches the account.
+
 ### File Versions
 
 Providers that support versioning (Google Drive, Dropbox, OneDrive, Box, Zoho WorkDrive) expose version history through the StorageProvider trait:
