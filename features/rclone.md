@@ -41,7 +41,13 @@ The `protondrive` backend maps to AeroFTP's [native Proton Drive client](/provid
 
 Export carries the same cached session from an unlocked vault. Native profiles without a recoverable session and profiles using the official Proton CLI are skipped with an explanation. Builds without the native client import a CLI-mode profile instead and require `proton-drive auth login`.
 
-The session is then shared between the tools. Proton rotates refresh tokens, so when one tool refreshes, the other may need to sign in again. Use separate sign-ins for independent sessions. An exported config contains credentials for the account: protect it with `rclone config encryption set`.
+The session is then shared between the tools. Proton rotates refresh tokens, so when one tool refreshes, the other may lose access. If AeroFTP needs a new session, sign in from its API tab or with `aeroftp-cli proton sign-in`. If rclone rejects a password-free cached session, export a fresh session from AeroFTP and replace the stale remote; that export has no account password for rclone to fall back to. Configure rclone with its own sign-in if you need independent sessions.
+
+An exported config contains credentials for the account. Keep it private before and during encryption, and select that exported file explicitly:
+
+```bash
+rclone --config /path/to/exported.conf config encryption set
+```
 
 ::: warning Re-import profiles imported before v4.2.1
 Before v4.2.1, keys rclone writes in plain text (S3, Azure Blob, Swift and B2 keys, and the Drime, Cloudinary and ImageKit secrets) went through the reveal codec on import, and a small share was stored corrupted. Since v4.2.1 they are imported exactly as written. **A profile imported from rclone that fails to sign in should be imported again.**

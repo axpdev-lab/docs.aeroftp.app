@@ -89,7 +89,7 @@ For a machine without a browser, `aeroftp-cli proton sign-in "Proton" --no-brows
 
 An encrypted `.aeroftp` backup can include a native session when saved credentials are explicitly included. The [rclone bridge](/features/rclone#proton-drive-sessions) can import and export a recoverable native session as a `protondrive` remote without carrying the account password. Protect the exported configuration: it contains credentials that authorize access to the account. A native profile without a saved session and an official CLI profile are skipped on bridge export with a reason.
 
-An imported or exported session is shared with rclone. Proton rotates its refresh token: when one tool refreshes, the other may need to sign in again. Use separate sign-ins if you need both tools to keep independent sessions.
+An imported or exported session is shared with rclone. Proton rotates its refresh token: when one tool refreshes, the other may lose access. Sign in again in AeroFTP if needed; if a password-free rclone remote loses its session, export a fresh one from AeroFTP and replace the stale remote. Use separate sign-ins for independent sessions. See the [bridge guide](/features/rclone#proton-drive-sessions) for recovery and encryption of the exported config.
 
 ## Troubleshooting
 
