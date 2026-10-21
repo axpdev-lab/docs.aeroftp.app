@@ -1,107 +1,98 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/axpnet/docs.aeroftp.app/main/public/logo.svg" alt="AeroFTP" width="96" />
+  <a href="https://docs.aeroftp.app"><img src="https://raw.githubusercontent.com/axpdev-lab/docs.aeroftp.app/main/public/logo.svg" alt="AeroFTP" width="96" /></a>
 </p>
 
 <h1 align="center">AeroFTP Documentation</h1>
 
 <p align="center">
-  <strong>Official documentation for <a href="https://www.aeroftp.app">AeroFTP</a> - the open-source, multi-protocol file manager.</strong>
+  Setup guides, feature documentation, technical references and measured test reports for <a href="https://github.com/axpdev-lab/aeroftp">AeroFTP</a>, the open-source desktop file manager with a CLI and MCP server.
 </p>
 
-<!-- Row 1: Status & Links -->
 <p align="center">
-  <a href="https://docs.aeroftp.app"><img src="https://img.shields.io/badge/live-docs.aeroftp.app-3b82f6?logo=readthedocs&logoColor=white" alt="Documentation" /></a>
-  <a href="https://github.com/axpnet/aeroftp"><img src="https://img.shields.io/badge/app-AeroFTP-8b5cf6?logo=github&logoColor=white" alt="AeroFTP" /></a>
-  <a href="https://github.com/axpnet/docs.aeroftp.app/actions"><img src="https://img.shields.io/github/actions/workflow/status/axpnet/docs.aeroftp.app/deploy.yml?label=deploy" alt="Deploy Status" /></a>
-  <img src="https://img.shields.io/github/license/axpnet/docs.aeroftp.app" alt="License" />
+  <a href="https://docs.aeroftp.app"><img src="https://img.shields.io/badge/read-docs.aeroftp.app-3b82f6" alt="Read the documentation" /></a>
+  <a href="https://github.com/axpdev-lab/docs.aeroftp.app/actions/workflows/deploy.yml"><img src="https://github.com/axpdev-lab/docs.aeroftp.app/actions/workflows/deploy.yml/badge.svg" alt="Documentation deployment" /></a>
+  <a href="https://github.com/axpdev-lab/docs.aeroftp.app/blob/main/LICENSE"><img src="https://img.shields.io/github/license/axpdev-lab/docs.aeroftp.app" alt="License" /></a>
 </p>
 
-<!-- Row 2: Tech Stack -->
-<p align="center">
-  <img src="https://img.shields.io/badge/VitePress-1.x-646cff?logo=vite&logoColor=white" alt="VitePress" />
-  <img src="https://img.shields.io/badge/Vue.js-3-4fc08d?logo=vuedotjs&logoColor=white" alt="Vue.js" />
-  <img src="https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Markdown-docs-000000?logo=markdown&logoColor=white" alt="Markdown" />
-  <img src="https://img.shields.io/badge/GitHub%20Pages-deployed-222?logo=githubpages&logoColor=white" alt="GitHub Pages" />
-  <img src="https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088ff?logo=githubactions&logoColor=white" alt="GitHub Actions" />
-</p>
+## Read the Documentation
 
----
+The published site is **[docs.aeroftp.app](https://docs.aeroftp.app)**. This repository contains its Markdown pages, Vue components, theme and static assets. AeroFTP's application source and releases live in [axpdev-lab/aeroftp](https://github.com/axpdev-lab/aeroftp).
 
-## Live
+| Section | What you will find |
+| ------- | ------------------ |
+| [Getting started](./getting-started/installation.md) | Installation on Linux, Windows and macOS; first connection and interface guide |
+| [Protocols](./protocols/overview.md) | FTP/FTPS, SFTP, WebDAV, S3-compatible storage, Azure Blob, Backblaze B2 and checksum behavior |
+| [Provider setup guides](./providers/index.md) | Cloud sign-in, endpoints, native clients, local gateways, plan snapshots and provider-specific limits |
+| [Proton Drive](./providers/proton-drive.md) | Native API sign-in and encrypted sessions, optional official CLI mode, bulk transfers and headless use |
+| [Features](./features/index.md) | AeroCloud, AeroSync, AeroRsync, delta transfers, mounts, AeroFile, AeroPlayer, archives and file tools |
+| [Encryption](./security/encryption.md) | AeroVault, AeroCrypt, credential storage, wrapper stacks and error correction |
+| [AeroAgent](./features/aeroagent.md) | Built-in AI file operations, approval behavior and agent orchestration |
+| [CLI](./cli/installation.md) | Installation, saved profiles, commands, scripting, machine output and exit codes |
+| [MCP](./mcp/overview.md) | Connecting AI tools to AeroFTP through the bundled MCP server |
+| [Profile bridges](./features/rclone.md) | rclone import/export and native Proton sessions; also [WinSCP](./features/winscp.md), [FileZilla](./features/filezilla.md) and [rclone crypt](./features/rclone-crypt.md) |
+| [Architecture](./architecture/dag-transfer-engine.md) | Transfer DAG, scheduling, resource limits and the fixed-pipe model |
+| [Security](./security/overview.md) | Privacy, audits, supply chain, AI boundaries, TOTP and vulnerability reporting |
+| [Test reports](./test-reports/index.md) | Provider matrices, Docker integration tests, comparative benchmarks and community results |
+| [Advanced reference](./advanced/provider-reference.md) | Provider details, AI providers, plugins, hosting integration and the AeroVault Rust crate |
 
-**[docs.aeroftp.app](https://docs.aeroftp.app)**
+Provider counts, command inventories and benchmark results evolve with the application. Consult the relevant reference or dated report for its version, scope and limitations.
 
-## What's Inside
+## Develop Locally
 
-Comprehensive documentation for AeroFTP covering:
-
-- **Getting Started** - Installation on Linux (.deb, .rpm, .AppImage, .snap, AUR), macOS (.dmg), and Windows (.msi)
-- **22 Protocols** - FTP, FTPS, SFTP, WebDAV, S3-compatible (10+ presets), Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Azure Blob, 4shared, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, GitHub
-- **AeroSync** - Bidirectional sync with profiles, conflict resolution, bandwidth control, scheduler
-- **AeroVault** - Military-grade AES-256-GCM-SIV encrypted containers with Argon2id KDF
-- **AeroAgent** - AI-powered file management with 39 tools, multi-step autonomous execution, 24 AI providers
-- **AeroPlayer** - Integrated media player with 10-band EQ, 14 visualizer modes, 6 WebGL shaders
-- **AeroTools** - Security toolkit (Hash Forge, CryptoLab, Password Forge) in Cyber theme
-- **AeroFile** - Local file manager with tabs, tags, and Finder-style color labels
-- **CLI** - 94 commands, batch scripting (.aeroftp), glob patterns, JSON output, exit codes
-- **Security** - Universal Vault (AES-256-GCM + Argon2id), TOTP 2FA, SFTP TOFU, credential isolation for AI agents
-- **GitHub Integration** - File browsing, commits, branches, PRs, releases with CHANGELOG import, GitHub Pages monitoring, App co-authoring with dual avatars
-- **Advanced** - Provider reference, AI provider marketplace, plugin development
-
-## Stack
-
-Built with [VitePress](https://vitepress.dev) and deployed via GitHub Pages.
-
-| Component | Technology |
-|-----------|-----------|
-| Framework | VitePress 1.x |
-| Theme | Custom dark/light with AeroFTP branding |
-| Deployment | GitHub Actions + GitHub Pages |
-| Domain | Custom domain via CNAME (docs.aeroftp.app) |
-| Search | VitePress built-in local search |
-
-## Local Development
+Use Node.js **24**, matching the deployment workflow, and npm. From this repository:
 
 ```bash
-npm install
+npm ci
 npm run docs:dev
 ```
 
-The dev server starts at `http://localhost:5173`.
+VitePress prints the local development address, normally `http://localhost:5173`.
 
-## Build
+Build the static site and preview the result:
 
 ```bash
 npm run docs:build
 npm run docs:preview
 ```
 
-## Structure
+The output is written to `.vitepress/dist/`. Dependencies, build output, the VitePress cache and `_dev/` scratch files are ignored by Git.
 
-```
+## Repository Layout
+
+```text
 docs.aeroftp.app/
-├── getting-started/    # Installation & quick start guides
-├── features/           # AeroSync, AeroVault, AeroAgent, AeroPlayer, etc.
-├── cli/                # CLI installation, commands, batch scripting, examples
-├── advanced/           # Provider reference, AI providers, plugins
-├── contributing/       # Build instructions & architecture
-├── security/           # Encryption, credentials, TOTP (redirects to main repo)
-├── public/             # Static assets (logos, icons, screenshots)
-├── .vitepress/         # VitePress config, sidebar, custom theme
-└── .github/workflows/  # GitHub Actions deploy pipeline
+├── getting-started/      Installation, quick start and interface
+├── protocols/           Transport and storage references
+├── providers/           Provider setup guides
+├── features/            Built-in apps, sync, agents and bridges
+├── cli/                 CLI reference, examples and scripting
+├── mcp/                 MCP setup and tool reference
+├── architecture/        Transfer-engine architecture
+├── security/            Security, privacy and audit documentation
+├── advanced/            Provider, plugin and integration references
+├── test-reports/        Dated tests, matrices and comparisons
+├── contributing/        Application build and architecture guides
+├── tools/               Test harnesses and supporting scripts
+├── public/              Images, icons and downloadable evidence
+├── .vitepress/          Site config, sidebar, Vue components and theme data
+└── .github/workflows/    Build and GitHub Pages deployment
 ```
 
-## Contributing
+Navigation is defined in [`.vitepress/config.ts`](https://github.com/axpdev-lab/docs.aeroftp.app/blob/main/.vitepress/config.ts). Provider plan cards share data from [`providerPlans.ts`](https://github.com/axpdev-lab/docs.aeroftp.app/blob/main/.vitepress/theme/data/providerPlans.ts). The feature overview reads its groups from the sidebar and its descriptions from page frontmatter.
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes (VitePress markdown)
-4. Run `npm run docs:dev` to preview locally
-5. Submit a Pull Request
+## Contribute
 
-Documentation changes are automatically deployed to [docs.aeroftp.app](https://docs.aeroftp.app) when merged to `main`.
+1. Create a branch, or fork the repository for an external contribution.
+2. Edit the relevant page and update shared data or navigation when needed.
+3. Run `npm run docs:build`, preview the affected pages and check their links.
+4. Open a pull request describing the change and how it was verified.
+
+For benchmark contributions, include the tested versions, commands, payload, all counted runs and integrity checks. See the [test methodology](./test-reports/methodology.md). Report application bugs and feature requests in the [AeroFTP repository](https://github.com/axpdev-lab/aeroftp/issues); documentation corrections belong [here](https://github.com/axpdev-lab/docs.aeroftp.app/issues).
+
+## Deployment
+
+The [Deploy Documentation workflow](https://github.com/axpdev-lab/docs.aeroftp.app/blob/main/.github/workflows/deploy.yml) installs dependencies with `npm ci`, builds with VitePress and deploys `.vitepress/dist/` to GitHub Pages at **docs.aeroftp.app**. It runs on pushes to `main` and can also be started manually through GitHub Actions. Merging a documentation PR into `main` triggers publication.
 
 ## License
 
-GPL-3.0 - see the main [AeroFTP repository](https://github.com/axpnet/aeroftp) for details.
+[GNU General Public License v3.0](https://github.com/axpdev-lab/docs.aeroftp.app/blob/main/LICENSE).

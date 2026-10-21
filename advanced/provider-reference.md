@@ -163,6 +163,7 @@ Cloud storage services using API keys, bearer tokens, or session-based authentic
 
 | Provider | Auth | Free Tier | API Base URL |
 |----------|------|-----------|-------------|
+| Proton Drive | Browser sign-in, encrypted native session; optional official CLI | 5 GB | `https://drive-api.proton.me` |
 | MEGA | Email/Password (AES-ECB) | 20 GB | `https://g.api.mega.co.nz` |
 | 4shared | OAuth 1.0 (HMAC-SHA1) | 15 GB | `https://api.4shared.com/v1_2` |
 | Filen | Email/Password | 10 GB | `https://gateway.filen.io` |
