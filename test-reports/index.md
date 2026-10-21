@@ -40,6 +40,7 @@ How fast it works. Two kinds of record: comparative batteries, where AeroFTP and
 | Document | Scope |
 |----------|-------|
 | [Comparative battery 2026-10-03](./comparison/2026-10-03) | AeroFTP 4.2.1 against rclone and Cyberduck CLI on SFTP, FTP with TLS, WebDAV and S3, two passes |
+| [Proton Drive CLI bulk, 2026-10-20](./comparison/proton-drive-2026-10) | AeroFTP's CLI compatibility mode against the official Proton CLI, three alternating pairs and a previous per-file baseline; verified downloads |
 | [DAG engine review, September 2026](./dag-review/2026-09) | Before and after measurements of the transfer fixes that shipped in 4.2.0, rclone as the control on every row |
 | [Community Benchmark](./community-benchmark/) | Performance rounds contributed by the community through the benchmark issue template |
 | [2026-05-07 baseline](./community-benchmark/2026-05-07) | Historical: maintainer reference run on v3.7.3 / v3.7.4, 35 sanitized reports, fixes shipped in 5 commits. Later releases changed several of these numbers |

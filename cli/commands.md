@@ -680,6 +680,34 @@ Example Claude Desktop / Claude Code / Cursor configuration:
 
 A dedicated set of subcommands designed for AI coding agents. They return structured JSON describing AeroFTP's capabilities, your saved profile inventory, and per-profile authentication state - all *without* attempting any live connection - so an agent can plan its workflow in one round-trip instead of probing N profiles.
 
+### profile-add: Proton Drive
+
+Since v4.2.4, a Proton profile can choose AeroFTP's native client or Proton's official CLI:
+
+```bash
+aeroftp-cli profile-add --name "Proton" --protocol proton --proton-mode native
+aeroftp-cli proton sign-in "Proton"
+aeroftp-cli --profile "Proton" ls /
+
+# Alternative: a profile that uses the separately installed official CLI
+aeroftp-cli profile-add --name "Proton CLI" --protocol proton --proton-mode cli
+```
+
+Without `--proton-mode`, a new profile uses the native client when the build includes it. Existing profiles without an explicit mode retain CLI behavior. CLI-mode profiles require `proton-drive auth login`; they are not authorized by `aeroftp-cli proton sign-in`. See the [Proton Drive setup guide](/providers/proton-drive) for the two modes' features and limitations.
+
+### proton: Native Sign-in {#proton-native-sign-in}
+
+```bash
+aeroftp-cli proton sign-in "Proton"
+aeroftp-cli proton sign-in "Proton" --no-browser
+aeroftp-cli proton status "Proton" --json
+aeroftp-cli proton sign-out "Proton"
+```
+
+`sign-in` opens Proton's page in the system browser and waits up to ten minutes for completion; Ctrl-C cancels it. `--no-browser` prints the address to an interactive terminal so you can open it on another device. The address contains a one-time key and is never written to JSON, stdout or redirected stderr. If no browser opens and no interactive terminal can show it, the command exits with code 5.
+
+`status` checks for a saved session in the vault without contacting Proton. `sign-out` revokes the session and removes it from the vault while retaining the profile; a session still used by a duplicate profile remains active. Sign-in exits with 0 on success, 6 on authentication failure, 8 on expiry and 130 on cancellation.
+
 ### profiles
 
 ```bash
@@ -765,7 +793,7 @@ The `protocol_features` map collapses what used to require N `agent-connect` cal
 
 ### import rclone
 
-Import server profiles from rclone configuration files. Supports 23 rclone backend types with automatic password de-obfuscation.
+Import server profiles from rclone configuration files, with automatic password de-obfuscation where applicable.
 
 ```bash
 # Auto-detect rclone.conf location
@@ -778,7 +806,9 @@ aeroftp-cli import rclone /path/to/rclone.conf
 aeroftp-cli import rclone --json
 ```
 
-Supported rclone types: `ftp`, `sftp`, `s3` (all providers), `webdav` (Nextcloud, ownCloud), `drive`, `dropbox`, `onedrive`, `mega`, `internxt`, `filen`, `box`, `pcloud`, `azureblob`, `swift`, `yandexdisk`, `zohoworkdrive`, `koofr`, `jottacloud`, `b2`, `opendrive`, `drime`, `cloudinary`, `imagekit`. Passwords are revealed from rclone's reversible AES-256-CTR obfuscation. Use the GUI import flow (Settings > Export/Import > Import from rclone) to store credentials in the encrypted vault.
+Supported rclone types: `ftp`, `sftp`, `s3` (all providers), `webdav` (Nextcloud, ownCloud), `drive`, `dropbox`, `onedrive`, `mega`, `protondrive`, `internxt`, `filen`, `box`, `pcloud`, `azureblob`, `swift`, `yandexdisk`, `zohoworkdrive`, `koofr`, `jottacloud`, `b2`, `opendrive`, `drime`, `cloudinary`, `imagekit`. Passwords are revealed from rclone's reversible AES-256-CTR obfuscation. Use the GUI import flow (Settings > Export/Import > Import from rclone) to store credentials in the encrypted vault.
+
+Since v4.2.4, `protondrive` imports a native Proton profile and its complete cached session, without importing the account password. If the session is incomplete, [sign in](#proton-native-sign-in) after importing. See [Proton Drive sessions](/features/rclone#proton-drive-sessions) for export and shared-session limits.
 
 ::: warning Re-import profiles imported before v4.2.1
 Before v4.2.1, keys rclone writes in plain text (S3, Azure Blob, Swift and B2 keys, and the Drime, Cloudinary and ImageKit secrets) went through the reveal codec on import, and a small share was stored corrupted (0.4% of B2 application keys, 2.2% of Cloudinary secrets). Since v4.2.1 they are imported exactly as written. **A profile imported from rclone that fails to sign in should be imported again.**
