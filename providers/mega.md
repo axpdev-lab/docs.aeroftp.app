@@ -21,7 +21,7 @@ Since v3.2.0, AeroFTP connects directly to MEGA's servers using the native JSON-
 ### How It Works
 
 - **Key derivation**: PBKDF2-SHA512 (v2 accounts) or 65536-round AES-ECB (v1 legacy accounts)
-- **Session authentication**: RSA-encrypted session IDs with automatic resume via OS keyring
+- **Session authentication**: RSA-encrypted session IDs with automatic resume via the encrypted credential vault
 - **File encryption**: AES-128-CTR with per-file random keys and nonces - all performed locally
 - **Metadata encryption**: AES-128-CBC encrypted filenames and attributes
 - **Integrity verification**: Per-chunk MAC computation and meta-MAC validation
@@ -33,7 +33,7 @@ Since v3.2.0, AeroFTP connects directly to MEGA's servers using the native JSON-
 | Email | Your MEGA account email | |
 | Password | Your MEGA password | Used locally to derive the AES master key - never sent in plaintext |
 | Connection Backend | Native API / MEGAcmd | Select in the connection form |
-| Remember session (24h) | Checkbox (default: on) | Encrypted session keys stored in OS keyring |
+| Remember session (24h) | Checkbox (default: on) | Encrypted session keys stored in the encrypted credential vault |
 
 ### Features
 
@@ -45,7 +45,7 @@ Since v3.2.0, AeroFTP connects directly to MEGA's servers using the native JSON-
 | Trash Management (list, restore, permanent delete) | Yes | Yes |
 | Storage Quota | Yes | Yes |
 | Search / Find | Yes | Yes |
-| Session Resume (OS keyring) | Yes | No |
+| Session Resume (credential vault) | Yes | No |
 | External dependency | None | Requires MEGAcmd installed |
 
 ## MEGAcmd (Legacy)
@@ -102,7 +102,7 @@ Unlike standard S3, MEGA S4 allows cross-region object access: objects uploaded 
 | Share links | Encrypted link with key fragment | S3 presigned URLs (max 7 days) |
 | Best for | Personal files, privacy | S3 tooling, automation, CI/CD |
 
-For full S4 setup details and S3 compatibility notes, see the [S3-Compatible Storage page](s3.md#mega-s4-object-storage).
+For full S4 setup details and S3 compatibility notes, see the [S3-Compatible Storage page](/protocols/s3#mega-s4-object-storage).
 
 ## Share Links
 

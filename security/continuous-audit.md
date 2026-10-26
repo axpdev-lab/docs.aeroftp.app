@@ -68,7 +68,7 @@ These reports remain useful as historical evidence but are not produced on a rec
 
 ## Why Self-Hosted
 
-Vendor SaaS audits (Aikido, Snyk, Socket, GitHub Dependabot) remain enabled and complement the pipeline above with continuous PR-time scanning, typosquatting detection and AI-driven code review. They are listed in [Continuous Monitoring](./overview.md#continuous-monitoring).
+Vendor SaaS audits (Aikido, Snyk, Socket, GitHub Dependabot) complement the repository pipeline with their configured scans and reviews. See the [security overview](./overview.md) for their scope and the dated results; a historical result does not establish a current subscription or service status.
 
 The self-hosted pipeline exists alongside them because:
 

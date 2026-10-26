@@ -14,7 +14,7 @@ Connect to Quotaless in AeroFTP using either **S3** or **WebDAV**. Use the S3 pr
 AeroFTP gives you a desktop GUI for Quotaless instead of a browser-only workflow.
 
 - Browse files in a dual-pane desktop interface
-- Save Quotaless profiles securely in the OS keyring
+- Save Quotaless profiles securely in the Universal Credential Vault
 - Upload, download, rename, and organize files from one app
 - Reuse the same client for Quotaless, SFTP servers, cloud drives, and other storage providers
 

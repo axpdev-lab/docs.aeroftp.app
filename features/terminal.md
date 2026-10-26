@@ -24,6 +24,10 @@ The terminal theme automatically matches the active application theme:
 | Dark | GitHub Dark |
 | Tokyo Night | Tokyo Night |
 | Cyber | Cyber (neon green on deep black) |
+| True Dark | True Dark |
+| Green | Green |
+| Ice | Ice |
+| Red Horse | Red Horse |
 
 If you manually set a terminal theme, AeroFTP remembers your override and stops auto-syncing until the override is cleared.
 

@@ -88,36 +88,17 @@ SFTP transfers are fully streaming -- files are read and written in chunks witho
 
 ## CLI Usage
 
-The AeroFTP CLI supports SFTP connections with password or key-based authentication:
+Use a saved SFTP profile so its password or SSH-key configuration is resolved by the backend. The remote host-key verification policy still applies.
 
 ```bash
-# Connect with password (prompted interactively)
-aeroftp ls sftp://user@myserver.com/
-
-# Connect with a specific port
-aeroftp ls sftp://user@myserver.com:2222/home/user/
-
-# List files with details
-aeroftp ls sftp://user@myserver.com/ -l
-
-# Download a file
-aeroftp get sftp://user@myserver.com/var/log/syslog ./
-
-# Upload a file
-aeroftp put sftp://user@myserver.com/home/user/docs/ ./report.pdf
-
-# Key-based authentication
-aeroftp ls sftp://user@myserver.com/ --key /home/user/.ssh/id_ed25519
-
-# Key with passphrase
-aeroftp ls sftp://user@myserver.com/ --key /home/user/.ssh/id_rsa --key-passphrase "my passphrase"
-
-# Recursive directory tree
-aeroftp tree sftp://user@myserver.com/var/www/ -d 3
-
-# Sync local to remote
-aeroftp sync sftp://user@myserver.com/var/www/html/ ./website/ --direction push
+aeroftp-cli ls --profile "My SFTP" /home/user/ --json
+aeroftp-cli get --profile "My SFTP" /var/log/syslog ./syslog
+aeroftp-cli put --profile "My SFTP" ./report.pdf /home/user/docs/report.pdf
+aeroftp-cli tree --profile "My SFTP" /var/www/ -d 3
+aeroftp-cli sync --profile "My SFTP" ./website/ /var/www/html/ --direction upload --dry-run --json
 ```
+
+Review the plan before executing. See [CLI commands](/cli/commands) for connection flags and [Delta Sync](/features/delta-sync) for rsync eligibility.
 
 ## Common Issues
 

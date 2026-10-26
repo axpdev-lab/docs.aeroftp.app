@@ -100,32 +100,17 @@ You do not need to configure this manually. AeroFTP handles the detection and sw
 
 ## CLI Usage
 
-The AeroFTP CLI supports WebDAV connections using URL syntax:
+Save a WebDAV profile with its full root path and HTTPS settings, then select it by name. This keeps passwords out of command arguments and shell history:
 
 ```bash
-# Nextcloud -- list files
-aeroftp ls webdav://user@cloud.example.com/remote.php/dav/files/user/
-
-# Nextcloud -- download a file
-aeroftp get webdav://user@cloud.example.com/remote.php/dav/files/user/Documents/report.pdf ./
-
-# Nextcloud -- upload a file
-aeroftp put webdav://user@cloud.example.com/remote.php/dav/files/user/Documents/ ./notes.txt
-
-# CloudMe -- list root
-aeroftp ls webdav://user@webdav.cloudme.com/
-
-# Custom WebDAV server on HTTP (non-TLS)
-aeroftp ls webdav://user@nas.local:5005/webdav/share/ --insecure
-
-# Directory tree
-aeroftp tree webdav://user@cloud.example.com/remote.php/dav/files/user/ -d 3
-
-# JSON output
-aeroftp ls webdav://user@cloud.example.com/remote.php/dav/files/user/ -l --json
+aeroftp-cli ls --profile "My Nextcloud" / --json
+aeroftp-cli get --profile "My Nextcloud" /Documents/report.pdf ./report.pdf
+aeroftp-cli put --profile "My Nextcloud" ./notes.txt /Documents/notes.txt
+aeroftp-cli tree --profile "My Nextcloud" / -d 3
+aeroftp-cli sync --profile "My Nextcloud" ./Documents/ /Documents/ --direction upload --dry-run --json
 ```
 
-Passwords are prompted interactively. For saved connections, use `--profile "My Nextcloud"` instead of URL mode.
+Paths are relative to the saved WebDAV root. A root already ending in `/remote.php/dav/files/USERNAME/` should not be repeated in each path argument.
 
 ## Common Issues
 

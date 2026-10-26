@@ -1,115 +1,59 @@
 # AI Agent Credential Isolation
 
-As of March 2026, AeroFTP provides a credential-isolated workflow for AI coding agents so they can interact with remote servers and cloud providers without ever receiving the raw credentials.
+AeroFTP 4.2.5 lets agents operate on saved profiles without receiving the profile's password or tokens in tool responses. The agent supplies a profile name or ID and a path; Rust resolves authentication and performs the operation.
 
-## The Problem
+## The Boundary
 
-AI coding agents - Claude Code, Cursor, Codex, Devin - need to read and write files on remote servers. Every current approach leaks credentials:
-
-| Method | Exposure |
-|--------|----------|
-| `scp user:pass@host:file` | Password in command-line args, shell history, `/proc` |
-| `SFTP_PASSWORD=secret sftp host` | Environment variable visible to all same-user processes |
-| `.netrc` / `.ssh/config` | Plaintext on disk |
-| Credential proxy (e.g., Hashicorp Vault) | Only supports HTTP APIs, not FTP/SFTP/WebDAV/S3 |
-| OS keyring | Accessible to any process running as the same user |
-
-An AI agent that runs `scp` or sets environment variables places your credentials in its own context window, shell history, process list, and potentially in training data.
-
-## How AeroFTP Solves This
-
-AeroFTP introduces a credential isolation boundary between the AI agent and the authentication layer:
-
-1. All credentials are stored in an encrypted vault (AES-256-GCM + Argon2id with 128 MiB memory cost)
-2. The agent calls `aeroftp-cli ls --profile "My Server" /path/` - no password anywhere in the command
-3. The Rust backend opens the vault, authenticates to the remote server, and executes the operation
-4. The agent receives only the result (directory listing, file content, transfer confirmation)
-5. Credentials never appear in: command-line arguments, environment variables, shell history, IPC messages, AI model context, or application logs
-
-The master password unlocks the vault once per session. After that, every operation uses the stored credentials internally.
-
-## CLI: Profile-Based Access
-
-The `aeroftp-cli` binary resolves credentials from the vault at runtime. The agent never sees them:
+The universal credential vault encrypts stored secrets with AES-256-GCM. Automatic unlock uses the OS keyring; optional master-password mode protects its passphrase with Argon2id and AES-GCM. The CLI can unlock with `AEROFTP_MASTER_PASSWORD` or the configured interactive flow. An unattended runner needs its own configured vault and unlock method.
 
 ```bash
-# List saved profiles (names and protocols only, never passwords)
-aeroftp-cli profiles
-
-# Standard file operations - credential-free
-aeroftp-cli ls --profile "Production" /var/www/
+aeroftp-cli profiles --json
+aeroftp-cli ls --profile "Production" /var/www/ --json
 aeroftp-cli put --profile "Staging" ./dist/app.js /var/www/app.js
-aeroftp-cli cat --profile "Production" /etc/nginx/nginx.conf
-aeroftp-cli sync --profile "NAS Backup" ./data/ /backups/ --dry-run
-
-# OAuth providers work identically - authorize once in the GUI, reuse from CLI
-aeroftp-cli ls --profile "Google Drive" /
-aeroftp-cli get --profile "Dropbox" /Documents/report.pdf
-aeroftp-cli put --profile "OneDrive" ./report.xlsx /Work/
+aeroftp-cli sync --profile "NAS Backup" ./data/ /backups/ --direction upload --dry-run
 ```
 
-For CI/CD pipelines, a single secret (`AEROFTP_MASTER_PASSWORD`) unlocks the vault and grants access to all configured servers. No per-server secrets to manage.
+These commands do not contain the saved server secret. Discovery still returns nonsecret identifiers such as host, username, protocol and paths. Reading a remote file sends that file's contents to the calling client, and an AI tool may then send it to its model provider. Credential isolation does not make remote file contents private from the agent you authorize to read them.
 
-## AeroAgent: Built-In AI Tools
+Do not supply inline URL passwords or paste credentials into a chat. When creating a profile, use write-only stdin or a protected credential file rather than a command-line secret. The protection of existing saved-profile secrets does not remove a secret that a client explicitly supplies from that client's own context, environment or logs.
 
-AeroFTP's integrated AI assistant (AeroAgent) includes two tools specifically designed for credential-isolated server access:
+## Profile Setup
 
-**`server_list_saved`** (safe) - Returns server names, protocols, and hostnames. Never returns passwords, tokens, or API keys.
+Create profiles in the GUI or with `profile-add`, using `--options-json` for nonsecret provider options and `--password-stdin` or `--credential-json-file` for supported credentials. Browser-authorized providers can use supported headless `profile-auth` actions; native Proton Drive uses `aeroftp-cli proton sign-in`. See [profile creation and authorization](/cli/commands#profile-add-and-headless-authorization).
 
-**`server_exec`** (high danger, requires approval) - Executes 10 operations on any saved server:
+An exact name or ID is preferred. The CLI also accepts a 1-based index and unique substring matching, with ambiguity reported instead of guessing. Check `auth_state` and the provider's actual capabilities before operations.
 
-| Operation | Description |
-|-----------|-------------|
-| `ls` | List directory contents |
-| `cat` | Read file content |
-| `get` | Download file to local filesystem |
-| `put` | Upload file to remote server |
-| `mkdir` | Create directory |
-| `rm` | Delete file or directory |
-| `mv` | Move or rename |
-| `stat` | File metadata (size, permissions, modified time) |
-| `find` | Search by filename pattern |
-| `df` | Storage quota and usage |
+`profiles --json` includes `cryptOverlay` (`aerocrypt`, `rclone-crypt` or `null`) and `protocolClass`. A bound overlay encrypts names and content transparently on upload. Read those fields before writing: the transport name alone does not tell you whether a remote is encrypted.
 
-Server matching is fuzzy: exact name, then case-insensitive, then substring. If the match is unique, it proceeds automatically. If ambiguous, it returns the list of candidates and asks for clarification.
+## AeroAgent Server Tools
 
-Passwords are resolved from the vault **in Rust** - they cross no IPC boundary, no JavaScript context, and no AI model input.
+`server_list_saved` returns saved profile identities without passwords, tokens or API keys. `server_exec` accepts only these operations:
 
-## Protocol Coverage
+| Operation | Result |
+| --- | --- |
+| `ls` | Directory entries |
+| `cat` | Bounded remote text content |
+| `stat` | Metadata |
+| `find` | Filename matches |
+| `df` | Quota where available |
 
-Credential isolation spans AeroFTP's direct-auth, token-based, and browser-authorized providers:
+`server_exec` refuses `get`, `put`, `mkdir`, `rm` and `mv`. Use dedicated download, upload, mkdir, delete and rename tools with their own approval rules. Its high danger classification reflects credential-backed remote access and possible content disclosure. In the CLI agent, `--auto-approve high` allows remote reads but still leaves delete, trash, sync control and shell to approval; `all` and `-y` include those too.
 
-**Direct authentication** (username/password or API key stored in vault):
-FTP, FTPS, SFTP, WebDAV, S3-compatible storage, GitHub, Azure Blob, MEGA, Filen, Internxt, kDrive, Jottacloud, FileLu, Koofr, OpenDrive, Yandex Disk
+The GUI, CLI agent and native MCP server expose different tool catalogs and approval mechanisms. A CLI agent approval flag does not configure MCP client permission. See [agent orchestration](/features/agent-orchestration) and [MCP setup](/mcp/overview).
 
-**OAuth and profile-backed API providers** (authorize or configure once in the GUI, then reuse from CLI and AeroAgent):
-Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, 4shared, Drime
+## Batch Workflows
 
-## Practical Workflows
-
-**Web deployment** - An AI agent edits source code locally, then deploys:
-```bash
-aeroftp-cli put --profile "Production" ./dist/ /var/www/html/ --recursive
-```
-
-**Multi-server management** - Batch scripts reference profiles by name:
-```
-SET profile = NAS Backup
-CONNECT $profile
-PUT ./database-dump.sql /backups/db/
+```text
+# deploy.aeroftp-script
+ON_ERROR FAIL
+CONNECT --profile "Staging"
+PUT ./dist/app.js /var/www/app.js
+STAT /var/www/app.js
 DISCONNECT
 ```
 
-**Code review with server context** - Ask AeroAgent to compare local code with what is deployed:
-> "Compare my local `app.js` with the version on Production server at `/var/www/app.js`"
+The entire script is validated before it starts. File-operation lines use the active connection, and directory sync requires an explicit direction. See [Batch Scripting](/cli/batch-scripting).
 
-AeroAgent calls `server_exec` to read the remote file, diffs it locally, and reports the changes. The production server's SFTP password never enters the conversation.
+## Scope and Limits
 
-## Why Existing Solutions Fall Short
-
-- **Traditional CLIs** (scp, rsync, rclone) require credentials in arguments, config files, or environment variables - all accessible to the AI agent
-- **OS keystores** protect against other users, not other processes running as the same user
-- **Credential proxy services** (Vault, AWS Secrets Manager) only handle HTTP-based APIs - they cannot authenticate an FTP or SFTP session
-- **SSH agent forwarding** covers only SSH/SFTP, not the other 20+ protocols
-
-AeroFTP handles its provider backends behind a single encrypted vault with a single unlock mechanism. The AI agent operates through a narrow, well-defined interface: profile name and file path. Nothing else.
+Credential isolation is an application boundary, not protection against arbitrary code running as the same OS user. Local agent paths are checked against sensitive locations, and shell execution has an additional denylist, but an authorized client or administrator still controls its own environment. Keep the vault and unlock mechanism protected, authorize only the required operation, and review outputs that may contain confidential remote content.

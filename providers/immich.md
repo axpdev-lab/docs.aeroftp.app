@@ -31,12 +31,12 @@ For PixelUnion, use `https://yourname.pixelunion.eu` as the server URL.
 
 - **Albums as folders**: Each Immich album appears as a directory. Create new albums with "New Folder" from root.
 - **Virtual folders**: `[All Assets]` shows all photos/videos, `[Favorites]` shows starred items.
-- **Upload**: Drag and drop files into albums or `[All Assets]`. Automatic deduplication via SHA-256.
+- **Upload**: Drag and drop files into albums or `[All Assets]`. Immich handles duplicate asset responses; AeroFTP also supplies a device asset identifier derived from the filename and size. This is not a SHA-256 content-integrity check.
 - **Download**: Download originals with streaming progress.
 - **Delete**: Sends items to Immich's soft trash (recoverable from Immich web UI).
 - **Share links**: Generate shareable URLs for albums and individual files.
 - **Search**: Find files by name from root or within specific albums.
-- **Checksum**: SHA-256 integrity verification.
+- **Checksum**: SHA-1 from the asset metadata when Immich provides it.
 - **CLI**: Full support via `aeroftp-cli --profile "MyImmich"` for scripting and automation.
 
 ## Limitations

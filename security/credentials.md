@@ -1,168 +1,80 @@
 # Credential Management
 
-AeroFTP stores all sensitive data - server passwords, OAuth tokens, API keys, AI provider keys, and application configuration - in an encrypted vault backed by SQLite. This page describes the vault architecture, key derivation, storage scope, import/export, and platform-specific behavior.
+AeroFTP stores saved server passwords, OAuth tokens and AI provider keys in its Universal Credential Vault. This credential store is separate from the encrypted `.aerovault` file containers.
 
-## Unified Keystore (vault.db)
+## Storage and key modes
 
-The primary credential store is `vault.db`, located in the application data directory:
+The credential store consists of `vault.db` and `vault.key` in the application configuration directory. Despite its filename, **`vault.db` is a JSON envelope, not a SQLite database**. Secret entries are encrypted individually with AES-256-GCM and a fresh random 96-bit nonce. Writes use a temporary file and replacement; Windows has fallback write paths when replacement is unavailable.
 
-| Platform | Path |
-| -------- | ---- |
-| Linux | `~/.config/aeroftp/vault.db` |
-| macOS | `~/Library/Application Support/aeroftp/vault.db` |
-| Windows | `%APPDATA%\aeroftp\vault.db` |
+| Installation | Credential directory |
+| --- | --- |
+| Linux release | `~/.config/aeroftp/` |
+| macOS release | `~/Library/Application Support/aeroftp/` |
+| Windows release | `%APPDATA%\aeroftp\` |
+| Windows portable | `data\aeroftp\` beside the executable |
+| Development build | Separate `aeroftp-dev` directory |
 
-### Database Architecture
+Packaged installations can use their own platform-specific configuration root. The [privacy guide](/security/privacy) covers removal and the keyring reference.
 
-| Component | Detail |
-| --------- | ------ |
-| Database engine | SQLite 3, WAL (Write-Ahead Logging) mode |
-| Encryption | AES-256-GCM, per-entry encryption |
-| Nonce generation | Random 96-bit nonce per entry (never reused) |
-| Key derivation | HKDF-SHA256 for per-purpose subkeys |
-| Master key source | Argon2id from master password, or 512-bit CSPRNG auto-generated passphrase |
+A random 64-byte passphrase supplies the vault key material. HKDF-SHA256 with the context `aeroftp-vault-v2` derives the 256-bit entry-encryption key.
 
-Each entry in the vault is individually encrypted with AES-256-GCM using a unique random nonce. This means that even if two entries have identical plaintext values, their ciphertexts differ. The per-entry nonce is stored alongside the ciphertext in the same database row.
+| Mode | How the passphrase is protected |
+| --- | --- |
+| Automatic, with available OS keyring | The passphrase is in the OS credential store; `vault.key` records the mode and keyring reference |
+| Master password | Argon2id derives a wrapping key from the password and a random salt; AES-256-GCM encrypts the passphrase in `vault.key` |
+| Automatic, without a working OS keyring | A file-permission-protected `vault.key` holds the passphrase on disk |
 
-### Key Derivation Chain
+The last mode preserves credentials on portable or restricted systems. It does **not** provide the same protection against someone who can read the whole configuration directory. Set a master password when that threat matters. A missing or unreadable keyring reference is reported rather than replaced by a different vault's passphrase.
 
-```text
-Master Password (user-provided)
-  │
-  ├─ Argon2id (128 MiB, t=4, p=4, 32-byte salt)
-  │    │
-  │    └─ Master Key (256-bit)
-  │         │
-  │         ├─ HKDF-SHA256 (info="vault-encryption")
-  │         │    └─ Vault Encryption Key (for AES-256-GCM)
-  │         │
-  │         ├─ HKDF-SHA256 (info="vault-auth")
-  │         │    └─ Authentication Key (for vault unlock verification)
-  │         │
-  │         └─ HKDF-SHA256 (info="export-key")
-  │              └─ Export Key (for .aeroftp-keystore files)
-```
+Master-password wrapping uses Argon2id with **128 MiB memory, four iterations, parallelism four and a 32-byte salt** in release builds. The raw password is not stored. Unlocking makes the vault key available in process memory for the session. The OS keyring does not hold the user's master password.
 
-If no master password is set, a 512-bit passphrase is generated using the operating system CSPRNG (`OsRng`) and stored in the OS keyring. This provides strong encryption without requiring user interaction on every launch.
+## OS credential store
 
-## What Gets Stored
-
-The vault stores the following categories of sensitive data:
-
-| Category | Examples | Encryption |
-| -------- | -------- | ---------- |
-| Server passwords | FTP, SFTP, WebDAV credentials | AES-256-GCM per entry |
-| OAuth tokens | Google Drive, Dropbox, OneDrive, Box, Zoho, kDrive, Koofr, Internxt access + refresh tokens | AES-256-GCM per entry |
-| OAuth1 tokens | 4shared access + request tokens | AES-256-GCM per entry |
-| API keys | S3 access/secret keys, Azure keys, Filen keys, FileLu keys, OpenDrive session, MEGA passwords | AES-256-GCM per entry |
-| AI provider keys | OpenAI, Anthropic, Gemini, xAI, Groq, Mistral, Perplexity, Cohere, Together, etc. | AES-256-GCM per entry |
-| Server profiles | Host, port, username, protocol type, connection parameters | AES-256-GCM per entry |
-| Application config | AI settings, sync preferences, theme choice | AES-256-GCM per entry |
-| TOTP secrets | 2FA secret bytes for vault unlock | AES-256-GCM, zeroized on drop |
-
-## Master Password
-
-The master password is optional but strongly recommended. It protects the vault against unauthorized access on shared machines.
-
-### With Master Password
-
-- The password is processed through Argon2id (128 MiB, t=4, p=4) to derive the master key
-- The master password itself is never stored anywhere - only the derived key is held in memory or the OS keyring
-- On each application launch, the user is prompted for the master password
-- If TOTP 2FA is enabled, a second factor is required after the password (see [TOTP 2FA](totp.md))
-
-### Without Master Password
-
-- A 512-bit passphrase is auto-generated via `OsRng` (CSPRNG) at first launch
-- The passphrase is stored in the OS keyring (`keyring` crate with `linux-native` feature)
-- The vault unlocks automatically on launch without user interaction
-- Security relies on OS-level access control (user login, screen lock)
-
-## OS Keyring Integration
-
-AeroFTP uses the `keyring` crate to interact with the operating system's credential store:
-
-| Platform | Backend |
-| -------- | ------- |
-| Linux | Secret Service API (GNOME Keyring, KDE Wallet) via `linux-native` feature |
+| Platform | Credential backend |
+| --- | --- |
+| Linux | Secret Service, such as GNOME Keyring or KDE Wallet |
 | macOS | Keychain |
 | Windows | Credential Manager |
 
-At startup, AeroFTP probes the OS keyring. If available, the vault decryption key is stored there for seamless unlock on subsequent launches. If the keyring is unavailable (headless systems, CI environments, minimal desktop sessions), AeroFTP falls back to in-memory key storage with a password prompt on each launch.
+The system keyring protects the automatic-mode passphrase. Individual provider tokens are persisted in the encrypted vault, rather than as a separate direct keyring entry per token. Portable, Flatpak and Snap scopes have separate keyring identities; multiple vaults must not overwrite one another's key.
 
-## OAuth Token Storage
+## Saved data and locking
 
-OAuth tokens follow a two-tier storage strategy:
+Vault entries can include saved profiles, server secrets, OAuth and OAuth1 tokens, API keys, native Proton sessions, AI keys and protected configuration. Other application state, such as interface layout and history databases, has its own storage. Do not assume every application file is encrypted merely because credentials are.
 
-1. **Primary**: Stored in vault.db, encrypted at rest with AES-256-GCM
-2. **Fallback**: If the vault is locked or unavailable at the moment of token receipt, tokens are held in an in-memory `Mutex` for the session duration
+Security settings offer a master password, optional [TOTP second factor](/security/totp), manual locking and an inactivity auto-lock timeout. A timeout of zero disables the timer. The lock state and any outstanding security prompt must be respected before accessing saved secrets.
 
-Tokens are never written to disk unencrypted. All token values across every provider implementation are wrapped in `secrecy::SecretString` to prevent accidental logging or debug output. Tokens are unwrapped (`.expose_secret()`) only at the exact point where they are inserted into HTTP Authorization headers.
+Existing versions have compatibility and migration paths for legacy frontend credential state. Those paths are not a reason to preserve an extra credential copy manually. Use the supported backup tools before moving or removing an installation.
 
-## Import and Export
+## App settings in 4.2.5
 
-AeroFTP supports credential backup and restore via encrypted `.aeroftp-keystore` files.
+Confirmed application-settings writes keep the settings blob in the encrypted vault and remove the legacy `aeroftp_settings` WebView-storage copy. Migration writes only when the vault has no settings; an unavailable or corrupt vault is not treated as an empty one. Failed writes preserve the migration source so a later attempt can recover it.
 
-### Export
+Until vault initialization or unlock completes, the interface can show default preferences. The vault-ready refresh then applies the saved preferences without requiring a restart. Other application files and nonsecret caches keep their own storage contracts; this change does not encrypt every file in the configuration directory.
 
-1. Open **Settings > Servers > Export**
-2. A checklist dialog appears showing all saved server profiles
-3. Select individual servers or use **Select All / Deselect All**
-4. Choose a destination file path
-5. Enter an export password (used to encrypt the file)
+## Two backup formats
 
-The export file is encrypted with:
+| Format | Scope | Use |
+| --- | --- | --- |
+| `.aeroftp` | Selected server profiles; saved credentials are optional | Move or back up connection profiles |
+| `.aeroftp-keystore` | Vault entries, or a full application backup including supported databases, files and settings | Recover the keystore or a broader application snapshot |
 
-| Component | Algorithm |
-| --------- | --------- |
-| Encryption | AES-256-GCM |
-| Key derivation | Argon2id (same parameters as vault) |
-| Integrity | HMAC-SHA256 over encrypted payload |
+Both formats use password-based encryption with Argon2id and AES-256-GCM. AES-GCM authenticates the encrypted content; there is no separate HMAC-SHA256 layer to verify first. Full keystore v2 backups compress their payload with zstd before encryption; legacy backups remain readable.
 
-### Import
+Use the application's import/export dialogs for the intended scope. CLI profile backups are also available:
 
-1. Open **Settings > Servers > Import**
-2. Select a `.aeroftp-keystore` file
-3. Enter the export password
-4. HMAC is verified before decryption proceeds
-5. Credentials are merged into the current vault
+```bash
+aeroftp-cli profile-export --output servers.aeroftp
+aeroftp-cli profile-import --input servers.aeroftp
+```
 
-> **Warning:** The export file contains all credentials for the selected servers, including passwords and OAuth tokens. Store it securely and delete it after a successful import.
+Saved credentials are opt-in with `profile-export --include-credentials`. Profile import skips existing profiles instead of overwriting them. Full keystore import presents a recovery plan and can change more application state than a profile import. Review that plan before applying it.
 
-### Error Handling
+An encrypted backup containing tokens or native provider sessions authorizes access to those accounts after decryption. Keep its password separate and protect the backup accordingly. For native Proton sessions shared with rclone, see the [bridge limitations](/features/rclone#proton-drive-sessions).
 
-Import and export operations include proper error handling for:
-- Vault not initialized (first launch before setup)
-- Incorrect export password (HMAC verification failure)
-- Corrupted export file
-- Missing or inaccessible file paths
+## Related documentation
 
-All errors are logged with context rather than silently discarded.
-
-## Migration Wizard
-
-When upgrading from older AeroFTP versions that stored credentials in localStorage or the OS keyring directly, a 4-step migration wizard runs automatically on first launch:
-
-| Step | Action | Details |
-| ---- | ------ | ------- |
-| 1. Detect | Scan for legacy sources | Checks localStorage, OS keyring entries, old config files |
-| 2. Preview | Show migration plan | Lists all credentials that will be migrated, grouped by source |
-| 3. Migrate | Move into vault.db | Encrypts each credential with AES-256-GCM and inserts into vault |
-| 4. Cleanup | Remove legacy stores | Deletes old localStorage entries and keyring items after successful migration |
-
-The wizard is auto-triggered on first launch after an upgrade. It can also be manually invoked from **Settings > Security > Re-run Migration**.
-
-## Windows Credential Persistence
-
-On Windows, `vault.db` is the authoritative credential store, but localStorage is maintained as a **write-through backup**. This dual-write strategy prevents permanent credential loss if the Windows Credential Manager encounters issues (corruption, access denied, service restart).
-
-The `secureStoreAndClean` function is `await`-ed at all 6 call sites in the frontend to prevent race conditions where the vault returns stale data before the write has completed. This was a critical fix - earlier versions used fire-and-forget writes that could silently lose credentials.
-
-## Security Considerations
-
-- **Master password never stored**: Only a derived key is held in memory or the OS keyring. The raw password cannot be recovered.
-- **WAL mode**: SQLite WAL provides concurrent read access without database corruption, even during power loss.
-- **Failed auth opacity**: Failed authentication attempts do not reveal whether a particular credential exists in the vault.
-- **Auto-lock**: The vault locks automatically when the application closes. There is no configurable timeout - the vault remains unlocked for the entire session.
-- **No telemetry**: Credential operations are never logged to external services. All operations are local-only.
-- **Poison recovery**: Mutex-protected vault state includes poison recovery, preventing application hangs if a thread panics during a vault operation.
+- [Privacy and removal](/security/privacy)
+- [Encryption](/security/encryption)
+- [TOTP](/security/totp)
+- [CLI backup commands](/cli/commands)

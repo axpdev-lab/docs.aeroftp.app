@@ -30,6 +30,10 @@ The engine ships as three layers:
 
 The CLI (`aeroftp-cli`), the desktop app and the MCP server (`aeroftp-mcp`) share these runners where their call paths reach them. Wire behavior still depends on the provider, the operation and each surface's adapter, so it is not identical across surfaces by construction.
 
+### Native Proton workers in v4.2.5
+
+Native Proton Drive exposes reusable workers on a shared connection for file transfers and listings, with a ceiling of five. Parent discovery is shared across those workers. Whether a call runs several files at once depends on the runner and requested concurrency. Official Proton CLI mode instead groups suitable files into bounded subprocess bulk calls; it is a different transport path. See [Proton Drive](/providers/proton-drive).
+
 ## Why a DAG engine
 
 ::: info What the engine is for

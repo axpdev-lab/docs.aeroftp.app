@@ -6,8 +6,8 @@ AeroFTP is a Tauri 2 application with a Rust backend and React frontend. Both mu
 
 | Tool | Version | Purpose |
 |------|---------|---------|
-| Rust | 1.75+ (stable) | Backend compilation |
-| Node.js | 18+ | Frontend tooling |
+| Rust | 1.97.1 (repository toolchain) | Backend compilation, Clippy and rustfmt; manifest MSRV 1.93 |
+| Node.js | 24 (CI baseline) | Frontend tooling |
 | npm | 9+ | Package management |
 
 ### Linux Dependencies
@@ -15,7 +15,7 @@ AeroFTP is a Tauri 2 application with a Rust backend and React frontend. Both mu
 Ubuntu/Debian:
 
 ```bash
-sudo apt install libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
+sudo apt install build-essential pkg-config libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev libssl-dev libfuse3-dev libacl1-dev patchelf
 ```
 
 Fedora:
@@ -32,7 +32,7 @@ sudo pacman -S webkit2gtk-4.1 gtk3 libayatana-appindicator librsvg
 
 ### Windows
 
-No additional system dependencies are required. Rust and Node.js are sufficient.
+Install Microsoft C++ Build Tools with the Windows SDK and the MSVC toolchain, plus Microsoft Edge WebView2 Runtime. Rust and Node.js alone do not supply the native Windows build dependencies.
 
 ### macOS
 
@@ -45,9 +45,9 @@ xcode-select --install
 ## Clone and Install
 
 ```bash
-git clone https://github.com/axpnet/aeroftp.git
+git clone https://github.com/axpdev-lab/aeroftp.git
 cd aeroftp
-npm install
+npm ci
 ```
 
 ## Development
@@ -97,7 +97,7 @@ The binary will be at `src-tauri/target/release/aeroftp-cli`.
 
 ## Linting
 
-Always run Clippy before pushing changes. This is the same check CI runs:
+Run focused checks for the code you change. Required GitHub Actions CI is the authoritative full gate for a feature/fix PR. Clippy can be run locally when relevant:
 
 ```bash
 cd src-tauri && cargo clippy --all-targets -- -D warnings
@@ -106,7 +106,7 @@ cd src-tauri && cargo clippy --all-targets -- -D warnings
 Frontend type checking:
 
 ```bash
-npm run build
+npm run typecheck
 ```
 
 ## i18n Validation
@@ -123,4 +123,4 @@ To propagate new keys from `en.json` to all other locales:
 npm run i18n:sync
 ```
 
-> **Important:** Always run `cargo clippy` before pushing. The CI pipeline enforces `-D warnings` (warnings as errors) and will reject non-compliant code.
+> CI enforces warnings as errors. Direct pushes without checked PR CI, release work and documented CI gaps require the project's full applicable gate; see the repository's CONTRIBUTING.md.

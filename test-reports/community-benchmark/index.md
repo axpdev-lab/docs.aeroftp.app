@@ -34,6 +34,14 @@ aeroftp-cli --profile "Your Profile" benchmark standard \
 
 Then open a new issue with the template and paste the block printed between `--- BEGIN BENCHMARK REPORT (paste into the GitHub Issue) ---` and `--- END BENCHMARK REPORT ---`.
 
+## Current benchmark behavior in v4.2.5
+
+The latency row measures metadata round trips, not upload time divided by payload size. It performs one untimed warm-up `stat`, followed by five timed `stat` calls. Compare the same operation, connection mode and payload when interpreting throughput.
+
+The runner uses a scratch tree, and cleanup continues after cancellation with bounded cleanup steps. A cancelled write can finish late on some services, so the runner checks the scratch root again and reports cleanup it could not confirm. Trash entries are purged only when the run can identify its own items; providers that cannot safely purge them can leave recoverable trash. Inspect the report before removing anything manually.
+
+Provider throttling and file limits still apply. Koofr native API and Koofr WebDAV are different benchmark cells, and Nextcloud concurrency is bounded by the server/session path. These implementation notes do not revalidate historical measurements below.
+
 ## Rounds
 
 | Round | CLI version | Profiles covered | Status |

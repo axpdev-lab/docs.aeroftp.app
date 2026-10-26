@@ -28,15 +28,21 @@ For users who prefer not to use the MSI format, AeroFTP also ships an NSIS-based
 
 ## .zip Portable (no install)
 
-The portable ZIP is the true run-from-anywhere build: no installer, no admin rights, no registry footprint.
+The portable ZIP is the true run-from-anywhere build: no installer or administrator rights are needed to extract and run it. Portable mode keeps its own application state and does not enable the installed application's startup registration.
 
-1. Download `AeroFTP-<version>-portable-windows-x64.zip` from [GitHub Releases](https://github.com/axpnet/aeroftp/releases)
+1. Download `AeroFTP-<version>-portable-windows-x64.zip` from [GitHub Releases](https://github.com/axpdev-lab/aeroftp/releases)
 2. Extract it to any folder you can write to (Desktop, USB drive, network share)
 3. Double-click `AeroFTP.exe` to launch
 
 All your data (saved servers, AeroAgent chats, AeroVault, cache, logs) stays inside the extracted folder under `data\`, so you can move the whole folder to another machine and pick up where you left off. To uninstall, delete the folder.
 
 > **Command-line tools (since v4.0.8):** the portable ZIP also ships `aeroftp-cli.exe` and `aeroftp-dispatch.exe` next to `AeroFTP.exe`. They are not added to `PATH`: run `.\aeroftp-cli.exe --help` from the extracted folder, or add the folder to your `PATH`. The CLI shares the same portable `data\` folder, so the servers and vault you set up in the GUI are visible from the command line. See the [CLI installation guide](../cli/installation.md) for the full reference.
+
+## Updates and portable data
+
+The in-app updater identifies MSI, NSIS and portable installations and downloads the matching format. After verification, **Install & Restart** upgrades an installed copy or replaces the portable application in place. The portable helper also updates the adjacent CLI tools when they are not in use; an in-use CLI is retained and a warning is logged.
+
+Keep the extracted folder writable and preserve `portable.marker` and `data\`. Portable WebView state lives under `data\webview\` and application logs under `data\logs\`. If an older shared WebView directory is detected, the migration banner distinguishes an active installed copy's data from leftover data. Do not delete a directory still used by an installed MSI or NSIS copy.
 
 ## Windows SmartScreen
 
@@ -45,11 +51,11 @@ Since AeroFTP is not signed with a paid Windows code signing certificate, you ma
 1. Click **"More info"**
 2. Click **"Run anyway"**
 
-This warning only appears once. The application is built in a clean GitHub Actions CI environment and all release checksums are published on the Releases page.
+Windows can show this warning again for another downloaded build. The application is built in a clean GitHub Actions CI environment and all release checksums are published on the Releases page.
 
 ## Launch on Startup
 
-AeroFTP can start automatically with Windows. Enable this in **Settings > General > Launch on Startup**. This adds a Registry entry under `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.
+Installed MSI and NSIS copies can start automatically with Windows. Enable **Settings > General > Launch on Startup**. This adds an entry under `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`. The setting is hidden in portable mode, and saving unrelated settings does not change startup registration.
 
 ## Uninstalling
 

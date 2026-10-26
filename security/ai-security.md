@@ -1,85 +1,45 @@
 # AI Tool Security
 
-AeroFTP's AI assistant (AeroAgent) provides 39 tools for file management, server operations, and automation. Because AI models can be influenced by prompt injection or produce unexpected outputs, all mutative tool execution is subject to backend-enforced security controls that cannot be bypassed by the web frontend.
+AeroAgent uses backend-classified tools for local files, remote providers, coding and automation. Its GUI tool catalog, CLI agent catalog and native MCP wire names are separate inventories. Consult [AeroAgent](/features/aeroagent), [Agent orchestration](/features/agent-orchestration) and [MCP](/mcp/overview) for the appropriate surface.
 
-## Backend Approval Model
+## Backend approval flow
 
-Tool execution follows a three-phase protocol:
+The desktop approval protocol prepares a request, grants it through the permitted approval flow, then checks the grant when the tool executes:
 
 ```text
-1. prepare_ai_tool_approval  →  Backend classifies tool risk, checks for existing grants
-2. grant_ai_tool_approval    →  Native OS dialog shown to user, grant issued if approved
-3. execute_ai_tool           →  Backend verifies grant matches tool + args before executing
+prepare_ai_tool_approval → grant_ai_tool_approval → execute_ai_tool
 ```
 
-The web frontend determines the UI flow (auto-approval modes, approval panels), but the backend is the final authority. Even if the frontend is compromised via XSS or prompt injection, the backend rejects any mutative tool call without a valid grant.
+The backend recognizes the tool and arguments, decides whether approval is required, and binds the request to its execution context. Unknown tool names are refused. A read-only label does not imply that file content cannot leave the machine: remote reads or model context can contain sensitive data.
 
-## Tool Classification
+### Dedicated approval window
 
-Tools are classified by the backend into two categories:
+When required, approval appears in a dedicated AeroFTP window, separate from the chat WebView. Only the backend-created approval window for that pending request may answer it. Closing it counts as refusal. This is an AeroFTP window, not a GTK, Cocoa or Win32 system message box.
 
-| Category | Approval | Examples |
-| -------- | -------- | -------- |
-| **Read-only** | No grant needed | `remote_list`, `local_read`, `remote_search`, `app_info`, `vault_peek` |
-| **Mutative** | Grant required | `local_write`, `remote_upload`, `shell_execute`, `server_exec`, `local_delete` |
+Safe and Normal mode use this approval window for the relevant grants. Expert mode can avoid a duplicate window after its frontend approval panel, except for tools whose policy requires the separate window on every call. Deletion, trash, shell and extraction retain stricter handling. A mode choice is not blanket permission to bypass the backend's required-window policy.
 
-Some tools have **dynamic classification**:
-- `server_exec`: read operations (`ls`, `cat`, `stat`, `find`, `df`) still require a grant because the tool accesses saved credentials, but mutative operations (`put`, `rm`, `mv`, `mkdir`) cannot be approved for the session
-- `sync_control`: `status` is read-only; `start` and `stop` require approval
+### Grant scope
 
-## Grant Properties
+| Property | Contract |
+| --- | --- |
+| Pending request | Expires after five minutes |
+| One-shot grant | Expires after two minutes; consumed when used |
+| Chat/session grant | Up to eight hours, only for tools that permit it |
+| Context binding | Tool and execution scope, including local/remote context as applicable |
+| Capacity | Bounded pending requests and active grants |
 
-| Property | Detail |
-| -------- | ------ |
-| **Single-use** | One-shot grants are consumed on execution and cannot be replayed |
-| **Session grants** | Approved once per tool/session, valid for 8 hours. Not available for destructive tools |
-| **Scope** | Bound to specific tool + session. Session grants apply to the tool regardless of arguments |
-| **TTL** | One-shot: 2 minutes. Session: 8 hours. Requests: 5 minutes |
-| **Capacity** | Max 256 pending requests, 512 active grants. Oldest evicted when full |
-| **Native confirmation** | Every grant requires confirmation via an operating system dialog rendered outside the web frontend |
+A chat-wide approval can cover later arguments within its allowed tool and context. Review the scope before choosing it. A one-shot approval cannot be replayed as a new operation. Destructive tools do not gain a chat-wide grant merely because another write tool has one.
 
-## Native OS Dialogs
+## Credentials and content
 
-The confirmation dialog is rendered by the operating system (GTK on Linux, Cocoa on macOS, Win32 on Windows), not by the web frontend. This provides a critical security property: the dialog cannot be auto-dismissed, hidden, or suppressed by JavaScript, prompt injection, or XSS attacks.
+Saved server operations resolve their secrets inside the Rust backend from the encrypted [credential vault](/security/credentials). The model receives the requested operation's result, rather than the server password or provider token. The result may itself contain private filenames or file content; review which tools and endpoints you enable.
 
-The dialog displays:
-- The tool name and operation details
-- Key arguments (paths, server names, commands)
-- Grant scope (one-shot or session)
-- A clear Allow/Deny choice
+The CLI's automatic approval tiers and MCP's safe/medium/destructive policy are separate from the desktop Safe/Normal/Expert/Extreme modes. Use the documentation for the actual entry point instead of treating their names as interchangeable.
 
-## Credential Isolation
+## Additional controls and boundaries
 
-When the AI calls `server_exec` to operate on a saved server, the backend:
-1. Resolves the server profile from the encrypted [vault](/security/credentials)
-2. Creates a temporary connection using the stored credentials
-3. Executes the operation
-4. Closes the connection
+The implementation includes tool allowlists, path checks, content and output bounds, shell restrictions, duplicate-call protection, cancellation and error limits. Those controls apply to the paths that implement them; they do not turn a shell command or third-party plugin into a general operating-system sandbox.
 
-At no point does the AI model receive passwords, tokens, or connection secrets. The model sees only the operation result. This isolation applies to every supported protocol.
+Plugins can execute local scripts. Review their manifest, source and requested operations before installation and approval. External MCP servers are separate processes with their own capabilities and lifecycle. Configure the minimum access you need and keep a visible approval boundary for destructive work.
 
-## Additional Controls
-
-| Control | Detail |
-| ------- | ------ |
-| **Tool whitelist** | Only 43 named tools are accepted. Unknown tool names are rejected |
-| **Path validation** | Null bytes, `..` traversal, and system paths (`/etc/shadow`, `~/.ssh`) are blocked |
-| **Shell denylist** | 35 regex patterns block dangerous commands (`sudo`, `systemctl`, `mount`, `iptables`, etc.) |
-| **Content limits** | Remote reads: 5 KB. Directory listings: 100 entries. Agent memory: 50 KB |
-| **Rate limiting** | 20 requests/minute per AI provider |
-| **Extreme mode circuit breaker** | 3 consecutive tool errors halt autonomous execution |
-| **Plugin tools** | Plugin tools go through the same backend approval flow as built-in tools |
-| **Duplicate prevention** | Tool call signatures tracked per conversation to prevent replay loops |
-
-## Agent Modes
-
-Users choose an agent mode that determines the frontend auto-approval behavior:
-
-| Mode | Behavior |
-| ---- | -------- |
-| **Safe** | Only read-only tools auto-execute. All mutative tools show approval UI |
-| **Normal** | Read-only + previously session-approved tools auto-execute |
-| **Expert** | Read-only + all `medium` risk tools auto-execute. High-risk tools require per-session approval |
-| **Extreme** | Most tools auto-execute except `shell_execute`, `local_delete`, `local_trash`, `archive_decompress`, `server_exec` |
-
-Regardless of mode, the backend always requires a valid grant for mutative tools. The mode only affects whether the frontend shows the approval panel or calls the grant flow automatically.
+For published security reviews and their scope, see [Security audits](/security/audits). A historical audit is evidence about the reviewed version, not a certification of every later change.

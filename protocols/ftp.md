@@ -100,28 +100,17 @@ AeroFTP is tested with the following FTP servers:
 
 ## CLI Usage
 
-The AeroFTP CLI supports FTP connections using URL syntax:
+The CLI uses saved FTP/FTPS profiles, including their TLS policy. Save the connection in AeroFTP first, then use its exact profile name:
 
 ```bash
-# List files on an FTP server with Explicit TLS
-aeroftp ls ftp://user@ftp.example.com/ --tls explicit
-
-# Download a file
-aeroftp get ftp://user@ftp.example.com/public_html/index.html ./
-
-# Upload a file
-aeroftp put ftp://user@ftp.example.com/public_html/ ./style.css
-
-# Recursive directory listing
-aeroftp tree ftp://user@ftp.example.com/public_html/ -d 3
-
-# Sync local directory to remote
-aeroftp sync ftp://user@ftp.example.com/public_html/ ./website/ --direction push
+aeroftp-cli ls --profile "My FTPS" /public_html/ --json
+aeroftp-cli get --profile "My FTPS" /public_html/index.html ./index.html
+aeroftp-cli put --profile "My FTPS" ./style.css /public_html/style.css
+aeroftp-cli tree --profile "My FTPS" /public_html/ -d 3
+aeroftp-cli sync --profile "My FTPS" ./website/ /public_html/ --direction upload --dry-run --json
 ```
 
-The `--tls` flag accepts `none`, `explicit`, or `implicit`. If omitted, AeroFTP defaults to `explicit`.
-
-For servers with self-signed certificates, add `--insecure` to skip certificate validation.
+Review the dry-run before executing a sync. Keep certificate verification enabled and configure trust for your server rather than routinely using an insecure flag.
 
 ## Common Issues
 

@@ -13,7 +13,7 @@ Authentication is handled via OAuth2:
 3. Sign in and approve access.
 4. Authorization completes automatically.
 
-OAuth tokens are stored encrypted in the OS keyring. To use your own OAuth credentials, enter a **Client ID** and **Client Secret** in Settings > Cloud Providers.
+OAuth tokens are stored encrypted in the Universal Credential Vault. To use your own OAuth credentials, enter a **Client ID** and **Client Secret** in Settings > Cloud Providers.
 
 ## Features
 

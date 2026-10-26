@@ -1,264 +1,104 @@
 # Batch Scripting
 
-AeroFTP CLI includes a built-in batch scripting engine for automating multi-step file operations. Batch scripts use the `.aeroftp-script` file extension and provide variables, error policies, quoting, and all core CLI operations in a simple line-oriented format.
-
-## Running a Batch Script
+AeroFTP 4.2.5 runs checked, line-oriented `.aeroftp-script` files. The whole script is parsed before any operation starts: unknown commands, unsupported flags, undefined variables and malformed quoting fail with exit 5 before line 1 runs. `.aeroftp` is reserved for encrypted profile backups and is refused by `batch`.
 
 ```bash
 aeroftp-cli batch deploy.aeroftp-script
-aeroftp-cli batch backup.aeroftp-script --verbose
-aeroftp-cli batch script.aeroftp-script --json
+aeroftp-cli batch backup.aeroftp-script --json
+cat deploy.aeroftp-script | aeroftp-cli batch -
 ```
 
-When `--json` is specified, all command output within the script is emitted as structured JSON to stdout, with errors going to stderr.
+Operation results go to stdout; diagnostics go to stderr. `--json` selects structured operation output. A batch is never interactive, including when launched from a terminal.
 
-## Script Format
+## Command Reference
 
-Each line contains exactly one command. Blank lines and lines starting with `#` are ignored as comments.
+Commands operate on the target selected by `CONNECT`. Do not put a connection URL on every file-operation line. Batch commands accept only the flags listed below; they do not inherit every option of the similarly named CLI subcommand.
 
-```bash
-# This is a comment
-SET host=sftp://admin@myserver.com
+| Command | Syntax | Behavior |
+| --- | --- | --- |
+| `SET` | `SET name=value` | Define or replace a variable |
+| `ECHO` | `ECHO text` | Print text |
+| `ON_ERROR` | `ON_ERROR FAIL` or `ON_ERROR CONTINUE` | Choose failure handling; default `FAIL` |
+| `CONNECT` | `CONNECT --profile "Name"` or `CONNECT protocol://user@host` | Select and test a saved profile or URL target |
+| `DISCONNECT` | `DISCONNECT` | Clear the current target |
+| `LS` | `LS [-l] [path]` | List a directory |
+| `GET` | `GET remote [local]` | Download one file |
+| `PUT` | `PUT local [remote]` | Upload one file |
+| `MKDIR` | `MKDIR remote` | Create a directory |
+| `RM` | `RM [-r or -rf] remote` | Remove a file, or recursively remove a directory |
+| `MV` | `MV from to` | Rename or move a remote entry |
+| `CAT` | `CAT remote` | Read remote content |
+| `STAT` | `STAT remote` | Read metadata |
+| `FIND` | `FIND path pattern` | Search by filename |
+| `DF` | `DF` | Query quota |
+| `TREE` | `TREE [path]` | List a tree with depth 3 |
+| `SYNC` | `SYNC local remote --direction upload\|download\|both [sync options]` | Run the CLI sync engine against the connected target |
+| `CONNECT_SOURCE_PROFILE` | `CONNECT_SOURCE_PROFILE "Name"` | Select the cross-profile source |
+| `CONNECT_DEST_PROFILE` | `CONNECT_DEST_PROFILE "Name"` | Select the cross-profile destination |
+| `TRANSFER` | `TRANSFER source_path dest_path [-r] [--skip-existing] [--dry-run]` | Copy between those two saved profiles |
 
-# Blank lines are fine for readability
+`GET` and `PUT` do not accept `-o` or `-r` in batch scripts. Use `SYNC` with an explicit direction for directory transfers. `SYNC` requires both paths and `--direction`, accepts sync-specific options through the CLI parser, and refuses global options on its line. Put global options on `aeroftp-cli batch ...` instead. An applying `SYNC --delete` also requires `--max-delete N` or `N%`.
 
-CONNECT $host
-LS $host/var/www/
+## Variables and Quoting
+
+```text
+SET source=./dist
+SET destination=/var/www/html
+SET profile=Production
+CONNECT --profile "${profile}"
+SYNC "${source}" "${destination}" --direction upload --dry-run
+DISCONNECT
 ```
 
-## All 17 Commands
+Variables use `$name` or `${name}` and expand once. Names follow `[A-Za-z_][A-Za-z0-9_]*`; at most 256 variables and 64 KiB per value are allowed. Undefined variables are errors. Use `$$` for a literal dollar sign. Quote paths and profile names with spaces. Variable expansion happens before tokenization, including inside quotes; single quotes do not disable it. A trailing backslash joins the next physical line; a blank/comment line cannot be its continuation.
 
-| Command | Syntax | Description |
-|---------|--------|-------------|
-| `SET` | `SET name=value` | Define a variable |
-| `ECHO` | `ECHO message text` | Print a message to stdout |
-| `ON_ERROR` | `ON_ERROR CONTINUE` or `ON_ERROR FAIL` | Set error handling policy |
-| `CONNECT` | `CONNECT url` | Test server connectivity |
-| `DISCONNECT` | `DISCONNECT` | Close the current connection |
-| `LS` | `LS url [options]` | List remote directory contents |
-| `GET` | `GET url [-o local] [-r]` | Download file(s) from server |
-| `PUT` | `PUT url local [-r]` | Upload file(s) to server |
-| `RM` | `RM url` | Remove a remote file or directory |
-| `MV` | `MV source destination` | Move or rename a remote file |
-| `CAT` | `CAT url` | Display remote file contents |
-| `STAT` | `STAT url` | Show file metadata (size, mtime, permissions) |
-| `FIND` | `FIND url "pattern"` | Search for files matching a glob pattern |
-| `DF` | `DF url` | Show storage quota and disk usage |
-| `MKDIR` | `MKDIR url` | Create a remote directory |
-| `TREE` | `TREE url [-d depth]` | Display recursive directory tree |
-| `SYNC` | `SYNC remote local [options]` | Synchronize directories |
+## Deployment
 
-## Variable Expansion
-
-### Defining Variables
-
-Use `SET` to define variables. Variable names support alphanumeric characters and underscores:
-
-```bash
-SET host=sftp://deploy@prod.example.com
-SET remote_path=/var/www/html
-SET local_path=./dist
-SET version=2.5.0
-```
-
-### Referencing Variables
-
-Reference variables with `$name` or `${name}`:
-
-```bash
-ECHO Deploying version $version to $host
-PUT $host$remote_path/ $local_path/ -r
-GET $host/backups/db-$version.sql.gz -o ./backup.sql.gz
-```
-
-### Expansion Rules
-
-- **Single-pass expansion**: Variables are expanded exactly once. There is no recursive expansion, which prevents injection attacks where a variable value contains `$` references.
-- **Undefined variables**: If a variable is not defined, the `$name` literal is left as-is in the command string.
-- **Literal dollar sign**: Use `$$` to produce a literal `$` character.
-
-```bash
-SET price=100
-ECHO The cost is $$${price}   # Output: The cost is $100
-ECHO Undefined: $missing       # Output: Undefined: $missing
-```
-
-### Maximum Variables
-
-A single script may define up to **256 variables**. Exceeding this limit causes the script to abort with an error.
-
-## Quoting
-
-The batch engine uses shell-like quoting rules:
-
-| Quote Type | Behavior | Example |
-|------------|----------|---------|
-| **Double quotes** `"..."` | Preserves spaces, expands variables | `PUT $host/dir/ "my file.txt"` |
-| **Single quotes** `'...'` | Preserves spaces, no variable expansion | `ECHO 'Literal $var'` |
-| **No quotes** | Split on whitespace, expands variables | `PUT $host/dir/ file.txt` |
-
-Double quotes are essential when paths or filenames contain spaces:
-
-```bash
-SET server=sftp://user@host
-PUT $server/uploads/ "Q1 Report (Final).pdf"
-GET $server"/path with spaces/data.csv" -o ./data.csv
-```
-
-## Error Handling
-
-### ON_ERROR Policies
-
-Control how the script reacts when a command fails:
-
-```bash
-ON_ERROR FAIL       # Abort the entire script on any error
-ON_ERROR CONTINUE   # Log the error and proceed to the next line
-```
-
-The default policy is `CONTINUE` (changed from `FAIL` as of v2.9.2). You can switch policies at any point in the script, which allows critical sections to abort while optional operations continue:
-
-```bash
-# Critical: must succeed
+```text
+# deploy.aeroftp-script
 ON_ERROR FAIL
-CONNECT $server
-SYNC $server/www/ ./dist/
+CONNECT --profile "Production"
+PUT ./dist/app.js /var/www/html/app.js
+PUT ./dist/index.html /var/www/html/index.html
+STAT /var/www/html/index.html
+DISCONNECT
+```
 
-# Optional: failure is acceptable
+For a complete directory, preview a sync first, then remove `--dry-run` after reviewing the plan:
+
+```text
+CONNECT --profile "Production"
+SYNC ./dist /var/www/html --direction upload --dry-run
+DISCONNECT
+```
+
+## Backup
+
+```text
+# backup.aeroftp-script
+ON_ERROR FAIL
+CONNECT --profile "Production"
+SYNC ./backups/www /var/www/html --direction download
+GET /var/backups/db-latest.sql.gz ./backups/db-latest.sql.gz
 ON_ERROR CONTINUE
-GET $server/var/log/access.log -o ./logs/access.log
-GET $server/var/log/error.log -o ./logs/error.log
-
-# Critical again
-ON_ERROR FAIL
-ECHO Deploy verification...
-LS $server/www/index.html
+GET /var/log/nginx/access.log ./backups/access.log
+DF
+DISCONNECT
 ```
 
-### Exit Codes
+## Cross-Profile Copy
 
-When a script aborts due to `ON_ERROR FAIL`, the CLI exits with the exit code of the failed command (see [Installation](installation.md) for the full exit code table).
-
-## Script Limits
-
-| Constraint | Value | Rationale |
-|------------|-------|-----------|
-| Maximum script file size | 1 MB | Prevents accidental loading of large files |
-| Maximum variables | 256 | Memory safety bound |
-| Variable expansion | Single-pass | Injection prevention |
-| Line length | Unlimited | No artificial cap |
-| Command nesting | Not supported | Flat execution model |
-
-## Real-World Example: Nightly Backup
-
-```bash
-# backup.aeroftp-script - Nightly backup of production server
-# Run: aeroftp-cli batch backup.aeroftp-script
-# Cron: 0 2 * * * /usr/bin/aeroftp-cli batch /opt/scripts/backup.aeroftp-script >> /var/log/aeroftp-backup.log 2>&1
-
-SET server=sftp://backupuser@prod.example.com
-SET remote=/var/www/html
-SET backup_dir=./backups/nightly
-
-# Critical: database and website must succeed
-ON_ERROR FAIL
-ECHO [1/4] Connecting to production server...
-CONNECT $server
-
-ECHO [2/4] Syncing website files...
-SYNC $server$remote/ $backup_dir/www/
-
-ECHO [3/4] Downloading database dump...
-GET $server/var/backups/db-latest.sql.gz -o $backup_dir/db-latest.sql.gz
-
-# Optional: logs are nice to have but not critical
-ON_ERROR CONTINUE
-ECHO [4/4] Downloading server logs...
-GET $server/var/log/nginx/access.log -o $backup_dir/access.log
-GET $server/var/log/nginx/error.log -o $backup_dir/error.log
-
-ECHO Checking remote disk usage...
-DF $server/
-
-ECHO Backup complete.
+```text
+CONNECT_SOURCE_PROFILE "Source Cloud"
+CONNECT_DEST_PROFILE "Backup NAS"
+TRANSFER /documents /backups/documents -r --dry-run
+DISCONNECT
 ```
 
-Schedule it via cron:
+## Failures and Limits
 
-```bash
-# crontab -e
-0 2 * * * /usr/bin/aeroftp-cli batch /opt/scripts/backup.aeroftp-script >> /var/log/aeroftp-backup.log 2>&1
-```
+`ON_ERROR FAIL` stops at the first failed operation with its exit code. `ON_ERROR CONTINUE` records the failure and continues; a run with failures finishes with a nonzero result. Ctrl-C always ends the batch with exit 130, regardless of policy. A failed `CONNECT` clears the preceding target, so later commands cannot accidentally reuse it.
 
-## Real-World Example: Multi-Server Deployment
+The script file is limited to 1 MiB. Commands are flat, without loops or nesting. Only whole lines beginning with `#` are comments; keep comments on separate lines.
 
-```bash
-# deploy.aeroftp-script - Deploy build artifacts to 3 servers
-# Run: aeroftp-cli batch deploy.aeroftp-script
-
-SET build_dir=./dist
-SET app_path=/var/www/app
-
-SET staging=sftp://deploy@staging.example.com
-SET prod_eu=sftp://deploy@eu.prod.example.com
-SET prod_us=sftp://deploy@us.prod.example.com
-
-ON_ERROR FAIL
-
-ECHO === Deploying to staging ===
-CONNECT $staging
-SYNC $staging$app_path/ $build_dir/ -r
-
-ECHO === Deploying to EU production ===
-CONNECT $prod_eu
-SYNC $prod_eu$app_path/ $build_dir/ -r
-
-ECHO === Deploying to US production ===
-CONNECT $prod_us
-SYNC $prod_us$app_path/ $build_dir/ -r
-
-ECHO All 3 servers deployed successfully.
-```
-
-## CI/CD Example: GitHub Actions
-
-```yaml
-name: Deploy via AeroFTP Batch
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install AeroFTP CLI
-        run: |
-          wget -q https://github.com/axpnet/aeroftp/releases/latest/download/aeroftp_amd64.deb
-          sudo dpkg -i aeroftp_amd64.deb
-
-      - name: Build project
-        run: npm ci && npm run build
-
-      - name: Create batch script
-        run: |
-          cat > deploy.aeroftp-script << 'SCRIPT'
-          SET server=sftp://${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}
-          SET remote=/var/www/html
-
-          ON_ERROR FAIL
-          CONNECT $server
-          SYNC $server$remote/ ./dist/
-          ECHO Deploy complete.
-          SCRIPT
-
-      - name: Deploy
-        run: aeroftp-cli batch deploy.aeroftp-script --json
-        env:
-          NO_COLOR: 1
-```
-
-> **Tip:** Always use `ON_ERROR FAIL` for critical operations and switch to `ON_ERROR CONTINUE` for optional steps. This gives fine-grained control over script abort behavior without needing conditional logic.
+AeroSync's GUI can export and import `.aeroftp-script` files. The exported comments identify preset settings the CLI cannot apply, while metadata preserves them for re-import. Review those comments before scheduling an export with cron or Task Scheduler.

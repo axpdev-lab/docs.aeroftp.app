@@ -13,7 +13,7 @@ Authentication is handled via OAuth2 PKCE:
 3. Sign in and approve access.
 4. Authorization completes automatically.
 
-OAuth tokens are stored encrypted in the OS keyring.
+OAuth tokens are stored encrypted in the Universal Credential Vault.
 
 ## Features
 
@@ -21,6 +21,10 @@ OAuth tokens are stored encrypted in the OS keyring.
 - **Share Links**: Create shareable download links for files and folders.
 - **Storage Quota**: Used and total storage displayed in the status bar.
 - **Multi-Provider Hub**: Koofr can aggregate storage from Google Drive, Dropbox, OneDrive, and Amazon S3 into a single view (configured on Koofr's web interface).
+
+## Benchmark and cleanup notes
+
+The native Koofr API and Koofr WebDAV are separate connection methods. Compare benchmark rows with the same method. The community benchmark uses `.dat` payloads and checks its scratch root after cancellation because an in-flight upload can complete late. Read reported cleanup notes before assuming every temporary or trash item was removed. See [Community Benchmark](/test-reports/community-benchmark/).
 
 ## Tips
 

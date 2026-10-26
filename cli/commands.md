@@ -1,6 +1,6 @@
 # CLI Commands
 
-Complete reference for the `aeroftp-cli` binary. It shares the same Rust backend as the desktop app, with direct URL support for core protocols, saved-profile access for GUI-authorized providers, structured JSON output, and Unix pipeline compatibility.
+Command reference for AeroFTP 4.2.5, checked against the source on 26 October 2026. It shares the same Rust backend as the desktop app, with direct URL support for core protocols, saved-profile access for GUI-authorized providers, structured JSON output, and Unix pipeline compatibility.
 
 > **Coverage**: 7 transport protocols (FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift) + 20+ native provider integrations + 40+ pre-configured presets. See [Protocol Overview](/protocols/overview) for the full integration matrix.
 
@@ -8,8 +8,10 @@ Complete reference for the `aeroftp-cli` binary. It shares the same Rust backend
 
 ### URL Format
 
+Prefer saved profiles or an interactive password prompt to inline passwords.
+
 ```
-protocol://user:password@host:port/path
+protocol://user@host:port/path
 ```
 
 These transports + direct-auth providers support URL connections:
@@ -49,7 +51,7 @@ aeroftp-cli hashsum -a sha256 /srv/share /iso/image.iso   # computed in place, n
 - Deleting or renaming a link acts on the link, never on the file it names. Names are taken as written: `report ` and `report` are two files.
 - A listing shows a link only when it points to a file inside the folder; the others are left out and named in a warning.
 - An upload keeps the modification time of its source, and an upload onto its own source is refused.
-- `hashsum`, `check --checksum` and `sync --checksum` get md5, sha1, sha256, sha512 or blake3 by reading the file in place. `df` reports the filesystem that holds the folder, `cp` copies inside it, and an interrupted transfer resumes from the bytes already held.
+- `hashsum` supports md5, sha1, sha256, sha512 and blake3 by reading the file in place; sync checksum comparison uses the algorithms supported by its selected path. `df` reports the filesystem that holds the folder, `cp` copies inside it, and an interrupted transfer resumes from the bytes already held.
 - `get`, `put` and `sync` move whole files, one at a time; `serve sftp` and a resumed `serve ftp` read a served file by range.
 - `sync /a /b` with two local folders and no REMOTE keeps the local-to-local copier. Give a REMOTE other than `/` to sync against the first folder as a remote with the full sync engine.
 
@@ -65,7 +67,7 @@ Connect to any saved server from the encrypted vault with zero credentials expos
 # List all saved profiles
 aeroftp-cli profiles
 
-# Connect by name (fuzzy substring matching)
+# Connect by exact name (preferred for automation)
 aeroftp-cli ls --profile "My Server" /path/
 
 # Connect by index number
@@ -215,10 +217,10 @@ Output matches standard `sha256sum` format: `<hash>  <path>`.
 Verify that a local directory matches a remote directory. The `rclone check`-equivalent for AeroFTP: scans both sides in parallel, classifies every file, and reports differences without modifying anything.
 
 ```bash
-# Compare by size + mtime (default, fast)
+# Compare by size (default, fast)
 aeroftp-cli check --profile "server" /local/dir /remote/dir
 
-# Compare by SHA-256 checksum (downloads the remote bytes for hashing)
+# Request content comparison where both sides provide SHA-256
 aeroftp-cli check --profile "server" /local/ /remote/ --checksum
 
 # One-way: only check files present locally, ignore extra files on the remote
@@ -228,14 +230,16 @@ aeroftp-cli check --profile "server" /local/ /remote/ --one-way
 aeroftp-cli check --profile "server" /local/ /remote/ --json
 ```
 
+The default comparison uses size. With `--checksum`, plain (non-crypt) paths request local SHA-256 and the provider's remote checksum. A pair is compared by content only when the remote checksum is also SHA-256; otherwise it falls back to size, including unsupported checksums and crypt overlays. In JSON, inspect each pair's `compare_method` (`checksum` or `size`). Exit `0` alone does not establish content integrity for pairs compared by size. For an explicit content check on a provider without a comparable server digest, compare `hashsum` results with local hashes per file.
+
 #### Output classes
 
 Each entry is classified into exactly one of:
 
 | Status | Meaning |
 |---|---|
-| `match` | File present on both sides with same size (and same checksum if `--checksum`) |
-| `differ` | File present on both sides but differs (size or checksum mismatch) |
+| `match` | File present on both sides with matching SHA-256 digests when available, otherwise matching size |
+| `differ` | File present on both sides with a checksum or size mismatch, according to `compare_method` |
 | `missing_local` | File exists only on the remote (suppressed by `--one-way`) |
 | `missing_remote` | File exists only locally |
 
@@ -272,8 +276,8 @@ The `suggested_next_command` field is the natural follow-up: a `sync --dry-run` 
 The `4` on diff makes `check` directly usable as a CI gate:
 
 ```bash
-# Block deploy if remote drifted from the source tree
-aeroftp-cli check --profile "prod-cdn" ./public /assets --checksum && ./deploy.sh
+# Block deploy on a size difference or incomplete scan
+aeroftp-cli check --profile "prod-cdn" ./public /assets && ./deploy.sh
 ```
 
 ### about
@@ -298,7 +302,7 @@ Find and remove duplicate files by content hash (SHA-256).
 # Scan for duplicates (report only)
 aeroftp-cli dedupe --profile "server" /data --dry-run
 
-# Delete duplicates (keep first occurrence)
+# Report duplicates without modifying them
 aeroftp-cli dedupe --profile "server" /data --mode skip
 
 # JSON output with group details
@@ -323,7 +327,7 @@ Dry-run by default. JSON output includes `orphans`, `bytes`, and `bytes_freed`.
 
 ### alias-toggle
 
-Enable or disable the optional `aero` short alias. The same command toggles it on and off, and is idempotent (exit code 0 in both directions).
+Enable or disable the optional `aero` short alias. The same command toggles it on and off, and exits 0 after either successful transition. Repeating it reverses the state.
 
 ```bash
 # Toggle the 'aero' alias on/off
@@ -336,7 +340,7 @@ aeroftp-cli alias-toggle aero --bin-dir ~/bin
 aeroftp-cli --json alias-toggle aero
 ```
 
-The `aftp` short name is built in and always present, so it needs no toggle. See [Shorter Command Names](/cli/installation#shorter-command-names-aftp-and-the-aero-alias) for the full explanation. Added at the community's request ([discussion #273](https://github.com/axpdev-lab/aeroftp/discussions/273)).
+Packaged Linux installations include the `aftp` short name; other installations may require an alias. See [Shorter Command Names](/cli/installation#shorter-command-names-aftp-and-the-aero-alias) for the full explanation. Added at the community's request ([discussion #273](https://github.com/axpdev-lab/aeroftp/discussions/273)).
 
 ### sync
 
@@ -348,17 +352,17 @@ aeroftp-cli sync --profile "server" ./local/ /remote/ --dry-run
 aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload
 
 # Mirror mode (delete orphans)
-aeroftp-cli sync sftp://user@host ./local/ /remote/ --delete
+aeroftp-cli sync sftp://user@host ./local/ /remote/ --direction upload --delete
 
 # Exclude patterns
 aeroftp-cli sync --profile "server" ./local/ /remote/ --exclude "*.tmp" --exclude ".git"
 
 # Safety: abort if too many deletes
-aeroftp-cli sync --profile "server" ./local/ /remote/ --delete --max-delete 50
-aeroftp-cli sync --profile "server" ./local/ /remote/ --delete --max-delete 25%
+aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload --delete --max-delete 50
+aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload --delete --max-delete 25%
 
 # Detect renamed files to avoid re-upload
-aeroftp-cli sync --profile "server" ./local/ /remote/ --delete --track-renames --dry-run
+aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload --delete --track-renames --dry-run
 # Without --track-renames: 1 upload + 1 delete
 # With --track-renames: 1 server-side rename (no data transfer)
 
@@ -382,7 +386,7 @@ aeroftp-cli sync --profile "server" ./local/ /remote/ --immutable
 aeroftp-cli sync --profile "server" ./local/ /remote/ --files-from list.txt
 
 # Skip remote listing (assume empty destination)
-aeroftp-cli sync --profile "server" ./local/ /remote/ --no-check-dest
+aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload --no-check-dest
 
 # S3 optimization: recursive listing in a single API call
 aeroftp-cli sync --profile "S3" ./local/ /remote/ --fast-list
@@ -391,7 +395,7 @@ aeroftp-cli sync --profile "S3" ./local/ /remote/ --fast-list
 aeroftp-cli sync --profile "server" ./local/ /remote/ --resync
 
 # Backup before overwrite/delete
-aeroftp-cli sync --profile "server" ./local/ /remote/ --delete --backup-dir /tmp/bak
+aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload --delete --backup-dir /tmp/bak
 
 # One-way update (v4.2.1): leave a destination copy that is newer than the source
 aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload --update
@@ -610,14 +614,14 @@ The cloud provider never sees file names or content. Password via env: `AEROFTP_
 
 ### batch
 
-Execute `.aeroftp` script files with 17 commands, shell-like variable substitution, and error policies.
+Execute `.aeroftp-script` files with 20 commands, checked variable substitution, and error policies. The complete script is validated before it starts; `.aeroftp` is reserved for encrypted profile backups and is refused here.
 
 ```bash
-aeroftp-cli batch deploy.aeroftp
+aeroftp-cli batch deploy.aeroftp-script
 ```
 
 ```bash
-# deploy.aeroftp
+# deploy.aeroftp-script
 SET SERVER=sftp://deploy@prod.example.com:2222
 ON_ERROR FAIL
 
@@ -629,7 +633,7 @@ ECHO Deployment complete
 DISCONNECT
 ```
 
-Batch commands: SET, ECHO, ON_ERROR, CONNECT, DISCONNECT, LS, GET, PUT, MKDIR, RM, MV, CAT, STAT, FIND, DF, TREE, SYNC. Variables use `${VAR}` syntax with single-pass expansion (injection-safe). Error policies: `ON_ERROR FAIL` (default), `ON_ERROR CONTINUE`.
+Batch commands: SET, ECHO, ON_ERROR, CONNECT, DISCONNECT, LS, GET, PUT, MKDIR, RM, MV, CAT, STAT, FIND, DF, TREE, SYNC, CONNECT_SOURCE_PROFILE, CONNECT_DEST_PROFILE, TRANSFER. Variables use `$VAR` or `${VAR}` and expand once; undefined variables are errors. `SYNC` requires `LOCAL REMOTE --direction upload|download|both`. Error policies: `ON_ERROR FAIL` (default), `ON_ERROR CONTINUE`. See [Batch Scripting](/cli/batch-scripting) for the exact per-command grammar.
 
 ### agent
 
@@ -652,7 +656,7 @@ Current agent integrations:
 - `aeroftp-cli agent -m ...`: one-shot orchestration through AeroAgent with approval controls
 - `aeroftp-cli agent --mcp` / `aeroftp-cli mcp`: native Model Context Protocol server for Claude Desktop, Cursor, VS Code, and other MCP clients
 
-The MCP server exposes 39 curated remote tools (see [MCP Overview](/mcp/overview)), resource discovery for saved profiles/capabilities/connections, reusable prompts, connection pooling with auto-reset, per-profile request serialization, request cancellation, rate limiting, schema validation, and audit logging.
+The MCP server exposes 78 wire tool names, including compatibility aliases (see [MCP Overview](/mcp/overview)), resource discovery for saved profiles/capabilities/connections, reusable prompts, connection pooling with auto-reset, per-profile request serialization, request cancellation, rate limiting, schema validation, and audit logging.
 
 ### mcp (top-level shortcut)
 
@@ -678,7 +682,34 @@ Example Claude Desktop / Claude Code / Cursor configuration:
 
 ## Agent Discovery & Inventory (v3.6.6)
 
-A dedicated set of subcommands designed for AI coding agents. They return structured JSON describing AeroFTP's capabilities, your saved profile inventory, and per-profile authentication state - all *without* attempting any live connection - so an agent can plan its workflow in one round-trip instead of probing N profiles.
+Discovery commands such as `agent-info`, `agent-bootstrap`, `profiles` and `pwd` describe capabilities and saved profiles without attempting a live connection. `agent-connect` explicitly probes supported targets. Profile creation and authorization commands below write to the vault or contact the provider as described.
+
+### profile-add and Headless Authorization
+
+Create a profile without opening the desktop app. Connection options and credentials are separate: use `--options-json` or `--options-json-file` for nonsecret provider settings and `--password-stdin` for a password. A profile can also be created without credentials and authorized later.
+
+```bash
+aeroftp-cli profile-add --name "Build SFTP" --protocol sftp \
+  --host sftp.example.com --username deploy --initial-path /var/www
+
+# Enter the password through stdin; do not put it in a URL or argument.
+aeroftp-cli --password-stdin profile-add --name "Backup SFTP" --protocol sftp \
+  --host backup.example.com --username backup
+
+aeroftp-cli profile-add --name "Archive S3" --protocol s3 \
+  --options-json '{"bucket":"archive","region":"eu-west-1"}'
+```
+
+Structured credentials can be seeded with `--credential-json-file`; an inline `--credential-json` value is also accepted but is visible in process arguments. Both conflict with `--password-stdin`. These creation commands write profiles to the active vault.
+
+For supported browser-authorized providers, `profile-auth SELECTOR --request-json-file FILE` accepts a JSON request with `action` set to `configure`, `begin`, `finish`, `status` or `cancel`. Begin returns the public authorization address or device code; the user authorizes on the provider's page, and finish consumes its callback/code. Provider-specific client settings and tokens stay in the vault. Protect request files that contain secrets. Native Proton uses the separate `proton sign-in` flow below.
+
+```bash
+# auth-status.json contains: {"action":"status"}
+aeroftp-cli profile-auth "Google Drive" --request-json-file ./auth-status.json --json
+```
+
+Profile maintenance also includes `profile-set-password`, `profile-duplicate`, `profile-convert-mode`, `profile-duplicate-mode`, `profile-export` and `profile-import`. Use their `--help` for the current flags. Import skips existing profiles instead of overwriting them.
 
 ### profile-add: Proton Drive
 
@@ -1062,7 +1093,7 @@ For OAuth providers in CI, use `--profile` with the vault pre-configured on the 
 
 ```bash
 AEROFTP_MASTER_PASSWORD=${{ secrets.VAULT_PW }} \
-  aeroftp-cli sync --profile "Production S3" ./build/ / --delete
+  aeroftp-cli sync --profile "Production S3" ./build/ / --direction upload --delete
 ```
 
 ## Recent Highlights
@@ -1072,12 +1103,14 @@ AEROFTP_MASTER_PASSWORD=${{ secrets.VAULT_PW }} \
 - **v3.6.4 - Windows keystore export fix, autostart UX, update opt-out**: `os error 5` on Windows export resolved (write handle kept through `flush + sync_all`); "Start minimized to tray" + "Don't check for updates" toggles; NSIS post-install hooks now actually run (CUSTOM_PRE_INSTALL macro names corrected) so HKCU PATH registration finally activates on every install (issue #125); silent uninstall preserves user data on WinGet upgrades.
 - **v3.6.1 - Windows first-class delta sync**: AeroFTP ships **`aerorsync`**, a native rsync protocol 31 implementation in pure Rust. No `rsync.exe` bundle, no WSL requirement, byte-identical to stock rsync 3.4.1 in CI. See [AeroRsync](/features/aerorsync) for the architecture and [Delta Sync](/features/delta-sync) for the user-facing UI.
 - **v3.5.4 - MCP hardening**: top-level `aeroftp-cli mcp`, vault auto-init in MCP, per-profile serialization, schema validation, S3 bucket fix from vault profiles, FTP/SFTP/WebDAV/Filen/FileLu/Drime/Immich error message hardening.
-- **v3.5.3 - `sync --watch`**: continuous bidirectional sync with native filesystem watcher (inotify / FSEvents / ReadDirectoryChangesW), anti-loop cooldown, NDJSON output. **First CLI on the market with this feature natively** (rclone doesn't ship it).
+- **v3.5.3 - `sync --watch`**: continuous bidirectional sync with native filesystem watcher (inotify / FSEvents / ReadDirectoryChangesW), anti-loop cooldown, NDJSON output. Historical implementation notes are not a comparison of current competing products.
 - **v3.5.3 - Agent-friendly flags**: `--files-from`, `--immutable`, `--no-check-dest`, `--max-depth`, `--inplace`, `--fast-list` (S3), `--compare-dest` / `--copy-dest`, `cleanup` for orphan `.aerotmp`.
 - **v3.5.2 - Determinism**: 12 structured exit codes mapping all `ProviderError` variants, `mkdir --parents`, `rm --force`, `put --no-clobber`, `--chunk-size` / `--buffer-size` overrides.
 - **v3.3.4 - Local server bridges**: `serve http`, `serve webdav`, `serve ftp`, `serve sftp`.
 
-## Test Results (v3.5.3)
+## Historical Test Results (v3.5.3)
+
+These are archived results for v3.5.3, not validation of the current release or its current command inventory. Consult the [Test Reports](/test-reports/) for dated evidence.
 
 **376 unit tests**, all passing. Run with `cargo test` in `src-tauri/`.
 

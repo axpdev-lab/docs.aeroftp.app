@@ -106,7 +106,7 @@ After connecting successfully, save your server profile so you can reconnect ins
 2. Optionally give the connection a memorable name
 3. Click **Save**
 
-Credentials are stored in AeroFTP's **encrypted vault** (AES-256-GCM + Argon2id). They never touch your filesystem as plaintext.
+Saved credentials are stored in AeroFTP's **encrypted vault**. The automatic-mode passphrase normally lives in the OS keyring; without a working keyring, it can live in a file protected by OS permissions. Enable a master password for cryptographic protection independent of the keyring. See [credential storage](/security/credentials) for the key modes.
 
 ![Save server dialog with connection name and save button](/images/quick-start-save-server.png)
 <!-- SCREENSHOT: The save server dialog/prompt showing the connection name field, protocol badge (SFTP), host info, and the Save button. Dark theme. -->
@@ -138,8 +138,8 @@ Now that you are connected, there is much more to discover:
 
 - **[Interface Overview](interface.md)** -- Detailed tour of every UI element
 - **[AeroSync](../features/aerosync.md)** -- Intelligent directory synchronization with conflict resolution
-- **[AeroVault](../features/aerovault.md)** -- Military-grade encrypted file containers
-- **[AeroAgent](../features/aeroagent.md)** -- AI assistant with 39 tools for file management and code analysis
+- **[AeroVault](../features/aerovault.md)** -- Authenticated encrypted file containers
+- **[AeroAgent](../features/aeroagent.md)** -- AI assistant with built-in tools for file management and code analysis
 - **[AeroTools](../features/aerotools.md)** -- Integrated code editor (Monaco), terminal, and development tools
 - **[Protocols Overview](../protocols/overview.md)** -- Guide to the supported protocols
 

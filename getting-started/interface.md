@@ -20,7 +20,7 @@ To the right of the menus you will find:
 
 - **AeroFile toggle**: Switches to local-only file manager mode (no remote panel)
 - **Settings gear**: Opens the Settings dialog
-- **Theme toggle**: Cycles through Light, Dark, Tokyo Night, and Cyber themes
+- **Theme toggle**: Cycles through the application themes
 - **Window controls**: Minimize, maximize, and close buttons
 
 ## Dual-Pane File Manager
@@ -124,20 +124,26 @@ Toggle AeroTools from the **View** menu, the titlebar button, or `Ctrl+Shift+E`.
 | --- | --- |
 | **Code Editor** | Monaco-based editor with syntax highlighting for 50+ languages, Cyber theme support, and "Ask AeroAgent" integration (`Ctrl+Shift+A`) |
 | **Terminal** | Integrated PTY terminal (xterm.js) with theme-synced colors. Supports full interactive shell sessions. |
-| **AeroAgent** | AI chat assistant with 39 tools for file management, code analysis, shell execution, archive operations, and server management across every protocol AeroFTP supports |
+| **AeroAgent** | AI chat assistant with backend-approved tools for file management, code analysis, shell execution, archive operations, and server management across every protocol AeroFTP supports |
+
+### Open with the default application
+
+The local file context menu offers **Open with default app**. Ordinary files and folders use the operating system's registered application. AeroFTP formats route to their own import or vault flow: `.aerovault`, `.aerozip`, `.aeroftp` and `.aeroftp-keystore`.
+
+Scripts use the integrated terminal instead of opening as text: `.ps1` runs with `pwsh -File`, `.sh` with `bash`, and `.py` with `python3`. The corresponding interpreter must be installed. Only run scripts you intend to execute.
 
 ## Command Palette
 
-Press `Ctrl+Shift+P` to open the **Command Palette** -- a VS Code-style quick-access overlay with approximately 25 commands organized into five categories. Type to filter, use arrow keys to navigate, and press Enter to execute.
+Press `Ctrl+Shift+P` to open the **Command Palette** -- a VS Code-style quick-access overlay with commands grouped by function. Type to filter, use arrow keys to navigate, and press Enter to execute.
 
 ![Command Palette open with search field and categorized command list](/images/interface-command-palette.png)
 <!-- SCREENSHOT: The Command Palette overlay centered in the window. Show the search input at the top with a few characters typed (e.g., "aero"). Below, show the filtered list of matching commands with their keyboard shortcuts displayed on the right side. Dark theme. -->
 
 ## Themes
 
-AeroFTP ships with four carefully designed themes. Cycle through them with the theme toggle button in the titlebar, or select a specific theme from **View > Theme**.
+AeroFTP ships eight themes: Light, Dark, True Dark, Tokyo Night, Cyber, Green, Ice and Red Horse. Appearance settings can also follow the system light/dark preference. Cycle through them with the theme toggle button in the titlebar, or select a specific theme from **View > Theme**.
 
-![Comparison grid showing all four themes: Light, Dark, Tokyo Night, and Cyber](/images/interface-themes.png)
+![Theme examples: Light, Dark, Tokyo Night, and Cyber](/images/interface-themes.png)
 <!-- SCREENSHOT: A 2x2 grid composite image showing the same AeroFTP window in all four themes. Top-left: Light (white background, blue accents). Top-right: Dark (dark gray, blue accents). Bottom-left: Tokyo Night (deep blue-purple background, purple accents). Bottom-right: Cyber (black background, neon green accents). Each quadrant should show enough of the UI to distinguish the color scheme. -->
 
 | Theme | Description |
@@ -145,7 +151,11 @@ AeroFTP ships with four carefully designed themes. Cycle through them with the t
 | **Light** | Clean white background with blue accents. Ideal for bright environments. |
 | **Dark** | Dark gray background with blue accents. Default theme. |
 | **Tokyo Night** | Deep blue-purple palette inspired by the popular editor theme. |
-| **Cyber** | Black background with neon green accents. Unlocks the Security Toolkit (Hash Forge, CryptoLab, Password Forge). |
+| **Cyber** | Black background with neon green accents and a floating Security Tools shortcut. |
+| **True Dark** | Deep black palette. |
+| **Green** | Green accent palette. |
+| **Ice** | Cool blue palette. |
+| **Red Horse** | Red accent palette. |
 
 ## Keyboard Shortcuts Reference
 

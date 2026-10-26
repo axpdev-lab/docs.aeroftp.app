@@ -126,9 +126,7 @@ At the engineering level, the current contract distinguishes three outcomes:
 
 That distinction is what allows AeroFTP to show `delta` and `classic` honestly without conflating non-eligibility with security failures.
 
-For the deeper internal roadmap and validation notes, see the engineering appendix:
-
-- [Appendix Y - AeroSync Advanced](https://github.com/axpdev-lab/aeroftp/blob/main/docs/dev/roadmap/APPENDIX-C-Y-D/APPENDIX-Y_AeroSync-Advanced.md)
+For the public implementation scope, protocol compatibility and dated validation evidence, see [AeroRsync](/features/aerorsync) and the [DAG transfer engine](/architecture/dag-transfer-engine).
 
 ## Related Pages
 

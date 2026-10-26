@@ -2,7 +2,7 @@
 
 Which digests each backend can hand back **without downloading the file**, and which it cannot.
 
-AeroFTP never downloads a remote file in order to hash it. A digest either comes from metadata the backend already holds -- an S3 ETag, a Google Drive `file.hashes` field, an ownCloud `oc:checksums` property -- or from work the *server* does on its own disk, as with `sha256sum` run over an SSH exec channel. Where a backend has nothing to offer, the Properties -> Checksum tab says so on the row itself instead of showing a Calculate button that cannot succeed.
+The server-side checksum query does not download a remote file to hash it. Explicit content verification, such as `crypt verify`, is a separate operation that can stream remote content. A digest either comes from metadata the backend already holds -- an S3 ETag, a Google Drive `file.hashes` field, an ownCloud `oc:checksums` property -- or from work the *server* does on its own disk, as with `sha256sum` run over an SSH exec channel. Where a backend has nothing to offer, the Properties -> Checksum tab says so on the row itself instead of showing a Calculate button that cannot succeed.
 
 **Local files are different.** AeroFTP reads them itself, so MD5, SHA-1, SHA-256, SHA-512 and BLAKE3 are all available for anything on your own disk, on every platform.
 
@@ -14,7 +14,7 @@ AeroFTP never downloads a remote file in order to hash it. A digest either comes
 | FTPS | MD5, SHA-1, SHA-256, SHA-512, CRC32 (negotiated) | Depends on what the server advertises in FEAT: `HASH` (algorithm selected per request with `OPTS HASH`, from the list the server gives), or the older `XMD5` / `XSHA1` / `XCRC`. A server advertising none offers no digest. |
 | SFTP | SHA-256 | Computed by the remote host with `sha256sum` over an SSH exec channel: the bytes are read on the server, never sent to us. Omitted if the host has no `sha256sum`. |
 | WebDAV | SHA-1, MD5, Adler-32 (negotiated) | Only ownCloud and Nextcloud publish the `oc:checksums` property, and only for files uploaded by a client that sent one. Every other WebDAV server omits it. |
-| S3 | MD5 | The ETag is the object MD5 only for single-part, non-SSE-KMS objects. For a multipart or KMS-encrypted object the digest is omitted rather than guessed. |
+| S3 | MD5 | The ETag is the object MD5 only for single-part objects that are not SSE-KMS or SSE-C encrypted. A multipart ETag carries a `-N` suffix and is omitted rather than guessed. An SSE-KMS or SSE-C ETag can still be 32 hex characters and then passes the same shape check as a real digest, so a reported ETag is advisory for such an object. |
 | Azure Blob | - |  |
 | Swift | - |  |
 | Google Drive | MD5, SHA-1, SHA-256 | Native Google Workspace documents have no byte stream and therefore no digest. |
@@ -28,13 +28,15 @@ AeroFTP never downloads a remote file in order to hash it. A digest either comes
 | GitHub | Git blob SHA-1 | The git blob SHA-1, computed over `blob <len>\0` + content, so it does not match a plain SHA-1 of the same file. |
 | GitLab | - |  |
 | Immich | SHA-1 | The asset checksum Immich records at upload time. |
+| Twake Drive | MD5 |  |
 | MEGA | - |  |
+| Proton Drive | - |  |
 | Filen | - |  |
 | Internxt Drive | - |  |
 | Zoho WorkDrive | - |  |
 | kDrive | - |  |
 | Jottacloud | - |  |
-| Drime Cloud | - |  |
+| Drime | - |  |
 | FileLu | - |  |
 | 4shared | - |  |
 | OpenDrive | - |  |
@@ -43,6 +45,7 @@ AeroFTP never downloads a remote file in order to hash it. A digest either comes
 | Uploadcare | - |  |
 | Cloudinary | - |  |
 | MTP | - |  |
+| Local directory | MD5, SHA-1, SHA-256, SHA-512, BLAKE3 |  |
 
 A backend's own scheme keeps its own name. Dropbox's `content_hash` is a SHA-256 over the SHA-256 of each 4 MiB block, and GitHub's is a git blob SHA-1 computed over a git header plus the content. Neither equals a plain digest of the same bytes, so AeroFTP reports them as "Dropbox" and "Git SHA-1" rather than aliasing them onto SHA-256 and SHA-1, where they would silently fail every comparison you made with them.
 
@@ -50,7 +53,7 @@ A backend's own scheme keeps its own name. Dropbox's `content_hash` is a SHA-256
 
 **"(negotiated)"** means the list is what the *protocol* can carry, not a promise from your particular server. FTP announces its hash commands in the `FEAT` reply, and a server offering only `XCRC` can produce CRC32 and nothing else; AeroFTP narrows the Checksum tab to what your server actually advertised as soon as you connect. WebDAV is the same story: only ownCloud and Nextcloud publish `oc:checksums`, and only for files whose uploading client sent one.
 
-**FTP `HASH`** lets the client pick the algorithm: AeroFTP selects the one you ask for with `OPTS HASH`, in the spelling the server listed, before sending `HASH`, and reads the digest from the reply whether it comes in one line or several. This, and SHA-512 over `HASH`, ships in the release after AeroFTP v4.2.0. On v4.2.0 a checksum from a server that implements `HASH` fails, and a reply to the older `XMD5` / `XSHA1` / `XCRC` commands can show the server's status code as part of the value.
+**FTP `HASH`** lets the client pick the algorithm: AeroFTP selects the one you ask for with `OPTS HASH`, in the spelling the server listed, before sending `HASH`, and reads the digest from the reply whether it comes in one line or several. This, and SHA-512 over `HASH`, is supported in v4.2.5. On v4.2.0 a checksum from a server that implements `HASH` fails, and a reply to the older `XMD5` / `XSHA1` / `XCRC` commands can show the server's status code as part of the value.
 
 **A dash** means no server-side digest at all. That is not always "not implemented yet": Azure publishes `Content-MD5` only for blobs whose uploader chose to send one, MEGA, Filen and Internxt hash client-side under their own end-to-end encryption scheme, and the media CDNs address assets by id rather than by content.
 
@@ -76,4 +79,8 @@ The sync engine asks a different question -- "can this digest be compared with a
 
 ## Where this table comes from
 
-It is generated from `src-tauri/src/providers/checksum_matrix.rs`, the same declaration the app itself reads to decide what the Checksum tab offers. A test in the AeroFTP repository fails if the published table and the code disagree, so what you read here is what the build does.
+This table mirrors `src-tauri/src/providers/checksum_matrix.rs`. The generated table checked by repository tests lives in [`docs/PROTOCOL-FEATURES.md`](https://github.com/axpdev-lab/aeroftp/blob/main/docs/PROTOCOL-FEATURES.md); this site is maintained alongside it. Connection-specific capabilities can refine that static table: **Proton native mode exposes SHA-1 when present in the signed file attributes**, while official Proton CLI mode exposes no provider checksum.
+
+## Comparison and fallback
+
+A checksum query and a sync comparison have different contracts. The best-effort sync comparison falls back to size and timestamp when a comparable digest is missing; strict checksum comparison leaves the pair unresolved instead. A proprietary hash such as Dropbox content hash, Koofr hash or Git blob SHA-1 cannot be compared directly with a plain local SHA-256. A checksum request is not a guarantee of full content verification on every provider.

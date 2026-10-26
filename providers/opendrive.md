@@ -13,7 +13,7 @@ The live free-plan limits are managed by OpenDrive. At the latest check, the pub
 | Field | Value | Notes |
 |-------|-------|-------|
 | Username | Your OpenDrive email | |
-| Password | Your OpenDrive password | Stored encrypted in the OS keyring |
+| Password | Your OpenDrive password | Stored encrypted in the Universal Credential Vault |
 
 Authentication creates a session token that is maintained for the duration of the connection.
 

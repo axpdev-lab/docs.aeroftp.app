@@ -17,7 +17,7 @@ AeroFTP applies encryption across several distinct layers:
 | Credential storage | vault.db secrets | AES-256-GCM + Argon2id |
 | Transport security | Wire encryption | TLS 1.2/1.3, SSH |
 
-Each layer operates independently, meaning a vulnerability in one layer does not compromise the others.
+The layers serve different purposes. Their keys, algorithms and threat models must be assessed separately; sharing a process or an unlocked endpoint still creates common risks.
 
 ## AeroVault v2 (stable default)
 
@@ -228,15 +228,15 @@ Archive passwords are zeroized in memory immediately after use via the `secrecy`
 
 ## Credential Storage
 
-All credentials are stored in `vault.db`, an encrypted SQLite database:
+Saved credential entries are encrypted in the JSON envelope named `vault.db`, rather than a SQLite database:
 
 | Component | Algorithm | Detail |
 | --------- | --------- | ------ |
 | Encryption | AES-256-GCM | Per-entry encryption with random 96-bit nonce |
-| Key derivation | HKDF-SHA256 | Derives per-purpose keys from master key |
-| Master password KDF | Argon2id | 128 MiB, t=4, p=4 (same as AeroVault) |
-| Database mode | SQLite WAL | Concurrent reads without corruption |
-| Passphrase entropy | 512-bit CSPRNG | Auto-generated if no master password set |
+| Key derivation | HKDF-SHA256 | Derives the vault key from a random 64-byte passphrase |
+| Master password KDF | Argon2id | 128 MiB, t=4, p=4; wraps the random passphrase with AES-256-GCM |
+| Persistence | JSON envelope | Per-entry ciphertext, temporary-file replacement and platform fallback paths |
+| Passphrase entropy | 512-bit CSPRNG | Random passphrase; protected by keyring, master password, or file permissions in no-keyring fallback mode |
 
 See [Credential Management](credentials.md) for the full credential lifecycle, import/export, and migration details.
 
@@ -270,26 +270,10 @@ When connecting via FTP with `ExplicitIfAvailable` TLS mode, AeroFTP attempts a 
 
 ## OAuth Token Protection
 
-OAuth access tokens and refresh tokens for all cloud providers are protected with multiple layers:
+Saved provider tokens are encrypted in the Universal Credential Vault. Runtime implementations use secret wrappers, bounded error reporting and sanitization where those values cross logging or model boundaries. Their handling is not a guarantee that every intermediate buffer, HTTP library or operating-system memory copy is erased.
 
-1. **SecretString wrapping**: All token values are wrapped in Rust's `secrecy::SecretString` across every provider implementation. This prevents tokens from appearing in debug output, logs, or error messages.
-
-2. **Vault storage**: Tokens are stored encrypted in `vault.db` (AES-256-GCM) at rest.
-
-3. **In-memory fallback**: If the vault is locked or unavailable, tokens are held in an in-memory `Mutex` for the session duration. They are never written to disk unencrypted.
-
-4. **Unwrap-at-use**: Tokens are only exposed (via `.expose_secret()`) at the exact point where they are inserted into HTTP request headers.
-
-5. **Error sanitization**: The `sanitize_error_message()` function uses 5 compiled regex patterns to strip API keys (Anthropic `sk-ant-*`, OpenAI `sk-*`), Bearer tokens, and `x-api-key` values from any error message before it reaches logs or the UI.
+See [Credential Management](/security/credentials) for the persisted key modes. The automatic no-keyring fallback keeps the random passphrase in a file protected by operating-system permissions; enable a master password to protect against someone reading the whole configuration directory.
 
 ## Memory Zeroization
 
-AeroFTP uses the `secrecy` crate for zero-on-drop semantics on all sensitive values:
-
-- **Passwords**: Master password, archive passwords, server passwords
-- **OAuth tokens**: Access tokens, refresh tokens
-- **API keys**: AI provider keys (OpenAI, Anthropic, etc.)
-- **Cryptographic keys**: AES keys, HMAC keys, derived keys
-- **TOTP secrets**: 2FA secret bytes (see [TOTP 2FA](totp.md))
-
-When a `SecretString` or `Secret<Vec<u8>>` is dropped, the underlying memory is overwritten with zeros before deallocation. This prevents sensitive data from lingering in freed memory where it could be recovered by memory forensics tools.
+Secret wrappers and explicit zeroization clear many password, token and key buffers on drop. These measures reduce residual copies; they do not prove that secrets cannot occur in a process dump or swap. The unlocked credential-vault key is retained in process memory for use during the session. Operating-system access control and encrypted swap remain relevant.

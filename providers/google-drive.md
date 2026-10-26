@@ -18,7 +18,7 @@ Authentication is handled entirely through OAuth2 -- there are no manual tokens 
 3. Sign in with your Google account (or select an already signed-in account).
 4. Review the permissions and click **Allow**. AeroFTP requests access to your Google Drive files.
 5. The browser redirects back to AeroFTP with an authorization code. This is captured automatically -- you do not need to copy or paste anything.
-6. AeroFTP exchanges the authorization code for access and refresh tokens, which are stored encrypted in the OS keyring.
+6. AeroFTP exchanges the authorization code for access and refresh tokens, which are stored encrypted in the Universal Credential Vault.
 
 Token refresh is automatic. When the access token expires (typically after 1 hour), AeroFTP uses the refresh token to obtain a new one without any user interaction.
 

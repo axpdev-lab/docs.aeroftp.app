@@ -143,27 +143,17 @@ B2 listings are paginated via `nextFileName`. The native backend follows the cur
 
 ## CLI Usage
 
-AeroFTP CLI reaches the native backend through the same connection profile selector used by the GUI:
+The native backend uses the saved connection profile's bucket and application key:
 
 ```bash
-# List the bucket root through a saved profile
-aeroftp ls --profile "My B2 Native" /
-
-# Upload, then verify the round trip
-aeroftp put --profile "My B2 Native" ./backup.tar.gz /backups/2026/
-aeroftp ls --profile "My B2 Native" /backups/2026/
-
-# Stream a large download to a local tree
-aeroftp get --profile "My B2 Native" /archive/2024/ ./local-archive/ --partial
-
-# Rename inside the bucket (server-side copy + source delete, no byte transfer)
-aeroftp mv --profile "My B2 Native" /reports/draft.pdf /reports/final.pdf
-
-# Bidirectional sync
-aeroftp sync --profile "My B2 Native" ./local /remote --watch
+aeroftp-cli ls --profile "My B2 Native" / --json
+aeroftp-cli put --profile "My B2 Native" ./backup.tar.gz /backups/2026/backup.tar.gz
+aeroftp-cli get --profile "My B2 Native" /backups/2026/backup.tar.gz ./backup-copy.tar.gz
+aeroftp-cli mv --profile "My B2 Native" /reports/draft.pdf /reports/final.pdf
+aeroftp-cli sync --profile "My B2 Native" ./local/ /remote/ --direction upload --dry-run --json
 ```
 
-For CI/CD, point the CLI at credentials via environment variables and use a dedicated bucket. The integration test harness does this: see [`src-tauri/tests/integration_b2.rs`](https://github.com/axpnet/aeroftp/blob/main/src-tauri/tests/integration_b2.rs) for the end-to-end pattern (connect, upload small + large, download, checksum match, rename, recursive cleanup).
+Listing the result confirms its presence, not full byte integrity. Verify a downloaded copy against the source when validating a backup. Review the dry-run before executing sync. The isolated integration harness is documented in [`integration_b2.rs`](https://github.com/axpdev-lab/aeroftp/blob/main/src-tauri/tests/integration_b2.rs).
 
 ## Common Issues
 

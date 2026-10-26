@@ -4,7 +4,7 @@ description: "An AI assistant for file management, code editing and server opera
 
 # AeroAgent
 
-AeroAgent is AeroFTP's AI-powered assistant for natural language file management, code editing, and server operations. It integrates with **24 AI providers**, exposes **43 built-in tools**, and operates across local files plus the AeroFTP remote provider backends (7 transport protocols + 20+ native providers) through a single unified `ai_core` backend - the same one that powers the GUI, the CLI (`aeroftp-cli agent`), and the native MCP server.
+AeroAgent is AeroFTP's assistant for natural-language file management, code editing and server operations. In AeroFTP 4.2.5 it supports built-in provider presets, local models and custom endpoints. GUI AeroAgent, the CLI agent and the native MCP server share backend components but expose different tool catalogs and runtime capabilities. Query `aeroftp-cli inventory --json` for CLI/MCP inventory and use the GUI's tool settings for desktop tools.
 
 ## Welcome Screen
 
@@ -96,38 +96,11 @@ The settings panel includes seven tabs:
 6. **Plugins** - browse, install, and manage plugins from the GitHub-based registry
 7. **History** - configure retention policies, search chat history, view usage stats
 
-## Supported AI Providers (24)
+## AI Providers
 
-| Provider | Streaming | Vision | Tool Calling | Thinking |
-| -------- | --------- | ------ | ------------ | -------- |
-| OpenAI | SSE | GPT-4o | Native | o3 reasoning |
-| Anthropic | SSE | Claude 3.5+ | Native | Extended thinking |
-| Google Gemini | SSE | Gemini 2.0 | Native | -- |
-| xAI (Grok) | SSE | Grok Vision | Native | -- |
-| OpenRouter | SSE | Varies | Native | Varies |
-| Ollama (local) | NDJSON | llava | Native | -- |
-| Mistral | SSE | Pixtral | Native | -- |
-| Groq | SSE | -- | Native | -- |
-| Perplexity | SSE | -- | Text | -- |
-| Cohere | SSE | Command A | Native | Command A Reasoning |
-| Together AI | SSE | -- | Native | -- |
-| AI21 Labs | SSE | -- | Native | -- |
-| Cerebras | SSE | -- | Native | -- |
-| SambaNova | SSE | -- | Native | -- |
-| Fireworks AI | SSE | -- | Native | -- |
-| Kimi | SSE | -- | Native | -- |
-| Qwen | SSE | -- | Native | -- |
-| DeepSeek | SSE | -- | Native | DeepSeek-R1 |
-| **NVIDIA NIM** (v3.6.2) | SSE | -- | Native | -- |
-| **Z.AI (Zhipu GLM)** (v3.6.2) | SSE | GLM-4V-Plus | Native | -- |
-| **Yi (01.AI)** (v3.6.2) | SSE | Yi-Vision | Native | -- |
-| **Hyperbolic** (v3.6.2) | SSE | Varies | Native | -- |
-| **Novita AI** (v3.6.2) | SSE | Varies | Native | -- |
-| Custom (OpenAI-compatible) | SSE | Configurable | Native / Text | Configurable |
+Configure providers in **Settings > AI > Providers**, or use the Provider Marketplace. Presets include OpenAI, Amazon Bedrock, Anthropic, Gemini, xAI, OpenRouter, Ollama, Mistral, Groq, Perplexity, Cohere, Together AI, AI21, Cerebras, SambaNova, Fireworks, Kimi, Alibaba Model Studio, DeepSeek, NVIDIA NIM, Z.AI, Yi, Hyperbolic, Novita, Kilo Gateway and custom compatible endpoints.
 
-The five v3.6.2 additions (NVIDIA, Z.AI, Yi, Hyperbolic, Novita) are all OpenAI-compatible at `/chat/completions` and ride the existing `openai_compat::call` dispatch arm - no new adapter code, branded SVG icons in the marketplace.
-
-Configure providers in **Settings > AI > Providers**, or browse the **Provider Marketplace** to discover and add new ones. The marketplace presents providers in a searchable grid organized by category with feature badges and pricing tiers.
+Streaming, tool calling, images and reasoning depend on the selected model and API, not just the provider name. Model lists and pricing can change independently of an AeroFTP release; use discovery and the model settings instead of assuming an older model example represents the provider's current features. Reasoning continuations preserve provider-native state where supported, with provider/model/endpoint scope checks.
 
 ### Ollama Integration
 
@@ -138,105 +111,48 @@ For local AI models, AeroAgent includes Ollama-specific features:
 - **GPU monitoring** via `ollama_list_running` showing VRAM usage
 - **8 model family profiles** with `detectOllamaModelFamily()` for optimized prompting
 
-## Tool Reference (52 Tools)
+## Tool Reference
 
-> Since v3.6.3, all 39 tools flow through a single **unified tool dispatcher** (`ai_core::tools::dispatch_tool`) shared by GUI, CLI (`aeroftp-cli agent`) and the MCP server. Per-area handler modules (`local_tools`, `system_tools`, `remote_tools`, `agent_tools`) host the canonical implementations and per-surface `ToolCtx` impls bridge to the runtime. Result: identical behavior across surfaces, no drift between three parallel match statements.
+The GUI tool registry includes local and remote file tools, coding workflows and semantic GUI control. Additional plugin, macro and connected MCP tools appear only when configured and available. Progressive tool loading starts with a small core and loads relevant definitions through search; discovering a tool does not approve it.
 
-### Remote Operations (9 tools)
+| Area | Desktop tools and behavior |
+| --- | --- |
+| Remote files | `remote_list`, `remote_read`, `remote_info`, `remote_search`, upload/download, mkdir, rename, edit and delete |
+| Local files | List/read/write/search, mkdir, rename, edit, batch rename, move/copy, trash/delete, metadata, disk usage and duplicates |
+| Inspection | Grep, head, tail, batch stat, diff, tree, edit preview, file hash and AeroVault header inspection |
+| Transfer planning | `generate_transfer_plan`, `sync_preview`, `upload_files`, `download_files`, `cross_profile_transfer` |
+| Remote maintenance | Hashsum, head/tail/tree, quota, preflight/reconcile, speed, touch, cleanup, dedupe, versions and trash |
+| Coding | Workspace checkpoints and restore, structured patches, git status/diff/stage/commit/log/show, curated checks, verification, diagnostics and search |
+| Archives | Compress and extract supported archive formats |
+| Context and memory | RAG index/search and persistent agent notes |
+| App and clipboard | App info, theme, sync control, clipboard read/write |
+| Visible GUI | `gui_state`, `gui_wait`, `gui_run` |
+| Saved servers | `server_list_saved`, `server_exec` |
+| Measurements and recovery | Benchmark, DAG transfer telemetry and error-correction sidecar generation/verification/repair |
+| Shell | `shell_execute`, with timeout, bounded output and backend command checks |
 
-| Tool | Safety | Description |
-| ---- | ------ | ----------- |
-| `remote_list` | safe | List files in remote directory |
-| `remote_read` | safe | Read remote text file (max 5 KB) |
-| `remote_info` | safe | Get file/directory metadata |
-| `remote_search` | safe | Search files by glob pattern |
-| `remote_download` | medium | Download single file |
-| `remote_upload` | medium | Upload single file |
-| `remote_mkdir` | medium | Create remote directory |
-| `remote_rename` | medium | Rename/move remote file |
-| `remote_delete` | high | Delete remote file or directory |
+Remote tools may use the current connection or an explicit saved server where their schema allows it. Backend capability and surface checks still apply. For exact fields and danger levels, inspect the tool settings/schema rather than assuming the CLI agent or MCP accepts the same arguments.
 
-### Local File Operations (16 tools)
+`server_exec` accepts only `ls`, `cat`, `stat`, `find` and `df`. It refuses mutative operations; use dedicated upload, download, mkdir, rename and delete tools with their own approval rules. Credentials resolve inside Rust and are not returned to the model.
 
-| Tool | Safety | Description |
-| ---- | ------ | ----------- |
-| `local_list` | medium | List local files |
-| `local_read` | medium | Read local text file (max 5 KB) |
-| `local_write` | medium | Write text to local file |
-| `local_mkdir` | medium | Create local directory |
-| `local_rename` | medium | Rename/move local file |
-| `local_edit` | medium | Find and replace in local file |
-| `local_move_files` | medium | Batch move files to destination |
-| `local_batch_rename` | medium | Batch rename (regex/prefix/suffix/sequential) |
-| `local_copy_files` | medium | Batch copy files |
-| `local_trash` | medium | Move files to system recycle bin |
-| `local_file_info` | safe | Get detailed file properties |
-| `local_disk_usage` | safe | Calculate directory size recursively |
-| `local_find_duplicates` | safe | Find duplicate files via hash |
-| `local_search` | medium | Search local files by pattern |
-| `local_delete` | high | Delete local file or directory |
-| `remote_edit` | medium | Find and replace in remote file (download, edit, upload) |
+### Visible GUI Control
 
-### Content Inspection (7 tools)
+Use GUI tools when the user asks to watch actions in the app. They call the ordinary navigation, selection, refresh, connection, disconnect, Stop and bounded Settings handlers. Connections require an exact saved `profile_id`. The snapshot is redacted; arbitrary clicks, scripts, unlocking, credential editing and file-writing GUI intents are excluded.
 
-| Tool | Safety | Description |
-| ---- | ------ | ----------- |
-| `local_grep` | medium | Regex search across directory files |
-| `local_head` | medium | Read first N lines (max 500) |
-| `local_tail` | medium | Read last N lines (max 500) |
-| `local_stat_batch` | medium | Metadata for up to 100 paths |
-| `local_diff` | safe | Unified diff between two files |
-| `local_tree` | medium | Recursive directory tree (max depth 10) |
-| `preview_edit` | safe | Preview find/replace without applying |
-
-### Batch Transfer, Archives, Context and Crypto
-
-| Tool | Safety | Description |
-| ---- | ------ | ----------- |
-| `upload_files` | medium | Upload multiple local files to remote |
-| `download_files` | medium | Download multiple remote files to local |
-| `archive_compress` | medium | Create ZIP/7z/TAR archives (optional AES-256 password) |
-| `archive_decompress` | medium | Extract archives with password support |
-| `rag_index` | medium | Index directory files with previews (max 200 files) |
-| `rag_search` | medium | Full-text search across indexed files |
-| `hash_file` | safe | Compute hash (MD5, SHA-1, SHA-256, SHA-512, BLAKE3) |
-| `vault_peek` | safe | Inspect AeroVault header without password |
-
-### Application Control, Clipboard and Memory
-
-| Tool | Safety | Description |
-| ---- | ------ | ----------- |
-| `set_theme` | safe | Change app theme (light/dark/tokyo/cyber) |
-| `app_info` | safe | Get app state, connection info, version |
-| `sync_control` | medium | Start/stop/status AeroSync service |
-| `clipboard_read` | medium | Read text from system clipboard |
-| `clipboard_write` | medium | Write text to system clipboard |
-| `agent_memory_write` | medium | Save persistent note across sessions |
-
-### Server Management (2 tools)
-
-| Tool | Safety | Description |
-| ---- | ------ | ----------- |
-| `server_list_saved` | safe | List saved server profiles (credentials never exposed) |
-| `server_exec` | high | Execute operation on any saved server |
-
-`server_exec` is a uniquely powerful tool. AeroAgent can autonomously connect to any saved server and perform 10 operations (ls, cat, get, put, mkdir, rm, mv, stat, find, df) without credentials ever being exposed to the AI model. Passwords are resolved from the encrypted vault entirely in Rust. The AI sees only server names and results.
-
-### Shell Execution (1 tool)
-
-| Tool | Safety | Description |
-| ---- | ------ | ----------- |
-| `shell_execute` | high | Execute shell command (30s timeout, 1 MB output limit, pattern denylist) |
+The human can interrupt through Stop, Pause or ordinary input. Refused paused actions need a fresh request after Resume. Settings access is restricted to the owned allowlisted surface; a sensitive or human-owned dialog blocks it. External CLI and MCP clients do not yet expose this GUI bridge, and there is no `aeroftp-cli gui` command. See the public [agent integration guide](https://github.com/axpdev-lab/aeroftp/blob/main/AGENTS.md) for the closed action catalog.
 
 ## Safety System
 
-### Three Danger Levels
+GUI tools carry safe, medium or high labels. The selected agent mode controls frontend automation; sensitive backend actions still require their dedicated approval. Session approvals cannot authorize high-danger or unknown tools, delete, trash, shell, extraction, mutating server commands or sync starts.
 
-| Level | Behavior | Count |
-| ----- | -------- | ----- |
-| **safe** | Auto-execute without user confirmation | 14 tools |
-| **medium** | Show approval modal, user must confirm | 27 tools |
-| **high** | Explicit confirmation with danger warning | 6 tools |
+| GUI mode | Frontend behavior | Step limit |
+| --- | --- | --- |
+| Safe | Automatically runs safe tools | 5 |
+| Normal | Safe tools plus eligible session approvals | 10 |
+| Expert | Also automatically runs medium tools; protected operations still require approval | 25 |
+| Extreme | Automatically accepts frontend tool requests; backend approval remains for protected operations | 50 |
+
+The CLI agent's `--auto-approve safe/medium/high/all` is a separate policy, and MCP clients control their own permissions. See [Agent Orchestration](/features/agent-orchestration#auto-approval-levels).
 
 ### Path Validation
 
@@ -254,7 +170,7 @@ When the AI requests multiple tool calls, AeroAgent builds a Directed Acyclic Gr
 
 ### Multi-Step Autonomous Execution
 
-AeroAgent supports multi-step workflows: up to 10 steps by default, 50 in Extreme Mode. After each step, the AI decides whether to respond or call more tools. A circuit breaker halts execution on consecutive errors.
+AeroAgent supports multi-step workflows with mode-specific step limits: 10 by default and 50 in Extreme Mode. After each step, the AI decides whether to respond or call more tools. A circuit breaker halts execution on consecutive errors.
 
 ### Duplicate Call Prevention
 
@@ -271,10 +187,10 @@ AeroAgent auto-detects project type from 10 marker files (Cargo.toml, package.js
 1. **Base personality** - AeroAgent identity, tone, protocol expertise
 2. **Provider profile** - per-provider optimization (e.g., Anthropic cache hints, OpenAI structured outputs)
 3. **Connection context** - AeroCloud vs Server vs AeroFile mode, current host/port/user
-4. **Tool definitions** - all 39 tools with schemas
+4. **Tool definitions** - the tools exposed for the current turn, with schemas
 5. **Project context** - detected language, framework, file dependency graph
 6. **RAG results** - indexed file previews and search hits
-7. **Agent memory** - persistent notes from previous sessions (`.aeroagent` file)
+7. **Agent memory** - persistent notes from previous sessions (SQLite storage)
 
 A sliding-window token budget (70% of provider max) with automatic summarization manages context size. The `TokenBudgetIndicator` component shows real-time token usage with three budget modes.
 
@@ -311,9 +227,9 @@ Chain multiple tools into reusable workflows with `{{variable}}` templates, sing
 
 ## Extreme Mode
 
-Available only in Cyber theme. Auto-approves all tool calls for fully autonomous execution with a 50-step limit (vs 10 default). A circuit breaker on consecutive errors provides a safety net.
+Available in Cyber and True Dark themes. It accepts frontend tool requests automatically and raises the step limit to 50. Protected mutations retain backend approval, and a circuit breaker stops a sequence of consecutive errors.
 
-> **Warning:** Extreme Mode auto-approves all tool calls including destructive operations like `remote_delete`, `local_delete`, `shell_execute`, and `server_exec`. Use only when you fully trust the AI model.
+Review the requested operations and the backend approval prompt before granting access. Extreme Mode does not remove backend permission checks.
 
 ## Architecture
 
@@ -325,7 +241,7 @@ AeroAgent operates in three modes through a shared trait abstraction layer (`ai_
 | `CredentialProvider` | Vault-based credential access without exposing passwords |
 | `RemoteBackend` | Protocol-agnostic remote operations over the AeroFTP provider backends |
 
-This enables GUI mode (Tauri events), CLI mode (stdout/stderr), and Orchestration mode (JSON-RPC 2.0 over stdin/stdout). MCP compatibility maps naturally: tools become MCP Tools, RAG/vault become Resources, macros/templates become Prompts, and multi-step execution becomes Sampling.
+This enables GUI mode (Tauri events), CLI mode (stdout/stderr), and Orchestration mode (JSON-RPC 2.0 over stdin/stdout). The native MCP server has its own remote-focused tool/resource/prompt registry; it does not expose every GUI tool, RAG index or macro, and it does not perform the GUI agent loop through MCP Sampling.
 
 ## Running AeroAgent from the CLI
 

@@ -73,7 +73,7 @@ const newestChecked = computed(() =>
         <tbody>
           <tr v-for="row in rows" :key="row.id">
             <td>
-              <a :href="`/providers/${row.id}`">{{ row.name }}</a>
+              <a :href="`/providers/${row.id === 'proton' ? 'proton-drive' : row.id}`">{{ row.name }}</a>
             </td>
             <td class="plan-table__cat">{{ row.category }}</td>
             <td>

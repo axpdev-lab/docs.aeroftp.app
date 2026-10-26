@@ -41,7 +41,7 @@ Picture a spectrum. At one end, perfect order: a file of all zeros. At the other
 
 A note on *why* the ciphertext looks random, stated precisely:
 
-> Cryptographic hashes (Argon2, scrypt, SHA-2/3, BLAKE2/3, RIPEMD) and block ciphers in feedback modes (AES-CBC, AES-CFB) exhibit a full avalanche effect: a single-bit change in the input produces a fully-changed output. AEAD modes built on top of stream-cipher constructions (AES-GCM, AES-GCM-SIV, ChaCha20-Poly1305) do not have this property in their ciphertext body: a single-bit plaintext change produces a single-bit ciphertext change. The avalanche surface in those modes lives in the authentication tag, which detects any tampering or corruption at decrypt time. AeroVault uses AES-256-GCM-SIV, so this is the distinction that applies to its at-rest format.
+For AES-GCM and ChaCha20-Poly1305 with the same key and nonce, changing a plaintext bit changes the corresponding ciphertext bit and the authentication tag. **AES-GCM-SIV is different:** it derives a synthetic IV from the plaintext, so changing the plaintext also changes the keystream and can change the ciphertext throughout that encrypted message. AeroVault uses AES-256-GCM-SIV; the simple one-bit ciphertext relation must not be applied to it.
 
 The "compress before encrypt" rule still holds, because the keystream itself is statistically indistinguishable from random and the ciphertext inherits that property regardless of mode.
 
@@ -106,7 +106,7 @@ A counter-intuitive point: the same word "chunk" hides two opposite RAM curves. 
 
 ### Transfer chunk-size flags vs an at-rest chunking wrapper
 
-When an at-rest chunking wrapper produces the objects, a transfer-level chunk-size flag is redundant: the unit on the wire is already the wrapper's chunk. When both are set AeroFTP keeps the wrapper boundary authoritative and logs that the transfer flag is inert. The transfer flag stays useful only for the no-wrapper case (a plain large-file upload to a provider with a part-size sweet spot).
+AeroVault content-defined chunks are internal units inside a container. Provider multipart parts are transport units for the resulting file. A transport chunk-size option does not change AeroVault's stored chunk boundaries; the two layers must not be treated as interchangeable.
 
 ## Error correction (AeroVault format v4)
 
