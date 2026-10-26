@@ -10,7 +10,7 @@ Error correction is the fourth wrapper in the design contributed by **Ehud Kirsh
 
 `.aerocorrect` is a detached Reed-Solomon parity sidecar for **any** byte stream. It protects the bytes of the target without embedding anything into it, so the same format repairs `.aerovault` containers, synced files, or ordinary files. The sidecar is **content-addressed**: it binds to the **SHA-256 of the protected content**, not to a path, vault salt, account, or provider identity. Move the file, rename it, copy it to another disk, and the same sidecar still verifies and repairs it.
 
-The magic bytes are `AEROCORR`. The format is shared byte-for-byte between the AeroFTP application (v4) and the standalone [`aerovault` crate](/advanced/aerovault-crate.html) (0.5.0), pinned by a cross-implementation fixture: a sidecar produced by one verifies and repairs with the other for the same file and overhead level.
+The magic bytes are `AEROCORR`. The format is shared byte-for-byte between the AeroFTP application (v4) and the standalone [`aerovault` crate](/advanced/aerovault-crate.html) (0.6.7), pinned by a cross-implementation fixture: a sidecar produced by one verifies and repairs with the other for the same file and overhead level.
 
 ## Where it sits in the wrapper stack
 
@@ -129,17 +129,27 @@ aeroftp-cli vault strip-parity secret.aerovault
 
 ### Sync: `sync --error-correction`
 
-AeroSync shares the same `.aerocorrect` sidecar and overhead levels. Enable it on a sync job so each transferred file gets a sidecar:
+AeroSync shares the same `.aerocorrect` sidecar and overhead levels. In v4.2.5, CLI `sync --error-correction` generates sidecars after successful uploads, subject to the source-size and overhead limits:
 
 ```bash
 # Generate sidecars alongside the synced files
-aeroftp-cli sync ./local remote:backup --error-correction
+aeroftp-cli sync --profile "Backup" ./local /backup --direction upload --error-correction
 
 # Cap the parity overhead a small file is allowed to add (skips parity below the benefit threshold)
-aeroftp-cli sync ./local remote:backup --error-correction --ec-max-overhead 25
+aeroftp-cli sync --profile "Backup" ./local /backup --direction upload --error-correction --ec-max-overhead 25
 ```
 
-A bit-rotted remote backup is then repaired on the next pull from its sidecar, without needing the original.
+CLI sync downloads do not automatically verify or repair files from sidecars. The separate desktop sync repair path requires an expected SHA-256 from the scanned item and skips repair if that hash is missing; an S3 MD5 does not satisfy this requirement.
+
+For explicit recovery, download both objects and supply a known-good SHA-256 obtained independently from a trusted source:
+
+```bash
+aeroftp-cli get --profile "Backup" /backup/report.bin ./report.bin
+aeroftp-cli get --profile "Backup" /backup/report.bin.aerocorrect ./report.bin.aerocorrect
+aeroftp-cli correct repair ./report.bin --parity ./report.bin.aerocorrect --expect-sha256 <trusted-64-hex-sha256>
+```
+
+Replace the hash placeholder before running the command. A bare `correct repair` checks integrity against the sidecar's recorded hash; it does not establish authenticity if an attacker can replace both objects.
 
 ## Security and repair model
 
@@ -148,7 +158,7 @@ Repair is **fail-closed and all-or-nothing**.
 ![Recovery: file only versus file and sidecar both damaged](/images/error-correction/03-recovery.png)
 
 - **Re-verify before replace.** The rebuilt stream is re-verified against the bound content hash before the original is replaced. For a vault, every reconstructed region is additionally re-verified against the container's authenticated values (the header MAC and the manifest `cipher_hash`) before being persisted.
-- **A foreign or corrupt sidecar can only make a repair fail, never overwrite good data.** Because the gate is the authenticated re-verify, a stale or attacker-supplied sidecar cannot push bad bytes into a healthy file.
+- **Use an independent authenticity anchor.** Standalone repair without `--expect-sha256` trusts the sidecar's declared content hash. Supply a known-good SHA-256 to reject a substituted sidecar before writing. Vault repair additionally checks the container's authenticated values; sidecar checksums alone are not an authenticity proof.
 - **Atomic writes.** Repair writes to a temporary file and renames it into place, so a crash mid-repair never leaves a half-written original.
 - **All-or-nothing for vaults.** A vault is re-sealed only if *every* repaired block re-verifies; otherwise the file is left byte-for-byte untouched.
 
