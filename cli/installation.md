@@ -49,7 +49,7 @@ Typing `aeroftp-cli` in full gets tedious for interactive use. Two shorter names
 
 ### `aftp` (built-in on Linux)
 
-`aftp` is a four-character name for the CLI. On the Linux packages (`.deb`, `.rpm`, `.snap`) it is installed automatically alongside `aeroftp`, with no setup required. On Windows and macOS, use the installed entry point or configure an alias when the command is not on `PATH`. Anything that works under `aeroftp-cli` works under `aftp`:
+`aftp` is a four-character name for the CLI. On `.deb` and `.rpm` packages it is installed automatically alongside `aeroftp`. On Snap, use the exposed `aeroftp` command or configure a Snap alias for `aftp`. On Windows and macOS, use the installed entry point or configure an alias when the command is not on `PATH`. Anything that works under `aeroftp-cli` works under `aftp`:
 
 ```bash
 aftp ls sftp://user@host/

@@ -30,7 +30,7 @@ The server-side checksum query does not download a remote file to hash it. Expli
 | Immich | SHA-1 | The asset checksum Immich records at upload time. |
 | Twake Drive | MD5 |  |
 | MEGA | - |  |
-| Proton Drive | - |  |
+| Proton Drive | - (static default) | Native mode can return SHA-1 from signed file attributes; official CLI mode follows the static default. |
 | Filen | - |  |
 | Internxt Drive | - |  |
 | Zoho WorkDrive | - |  |

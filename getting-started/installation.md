@@ -1,6 +1,6 @@
 # Installation
 
-AeroFTP is available for **Linux**, **Windows**, and **macOS**. All packages are built in a clean GitHub Actions CI environment and distributed through [GitHub Releases](https://github.com/axpnet/aeroftp/releases). AeroFTP is free and open-source with no license keys, subscriptions, or telemetry.
+AeroFTP is available for **Linux**, **Windows**, and **macOS**. All packages are built in a clean GitHub Actions CI environment and distributed through [GitHub Releases](https://github.com/axpdev-lab/aeroftp/releases). AeroFTP is free and open-source with no license keys, subscriptions, or telemetry.
 
 ## Supported Platforms
 
@@ -31,7 +31,7 @@ AeroFTP is available for **Linux**, **Windows**, and **macOS**. All packages are
 
 ## Downloading
 
-All releases are published on the [GitHub Releases page](https://github.com/axpnet/aeroftp/releases). Each release includes:
+All releases are published on the [GitHub Releases page](https://github.com/axpdev-lab/aeroftp/releases). Each release includes:
 
 - Platform-specific installers and packages
 - A changelog describing all changes in the release

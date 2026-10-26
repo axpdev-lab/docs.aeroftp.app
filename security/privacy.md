@@ -4,14 +4,14 @@ AeroFTP collects no usage telemetry or analytics. Network activity serves connec
 
 ## Data Collection
 
-**AeroFTP collects nothing.**
+**AeroFTP has no product telemetry, analytics or automatic crash reporting.** Configured services can receive the data needed for requested or enabled features.
 
 | Category | Status |
 | -------- | ------ |
 | Usage analytics | None |
 | Crash reporting | None |
 | Telemetry | None |
-| Phone-home requests | None |
+| Product telemetry requests | None |
 | User tracking | None |
 
 Connections include file transfers, provider authentication, AI requests, update checks and enabled background sync or scheduled work. Automatic update checks and configured background jobs can contact their services without a new click for each request. Enabled AeroShare can use peer discovery and relays; external MCP servers may contact their own endpoints. See the full [repository privacy policy](https://github.com/axpdev-lab/aeroftp/blob/main/PRIVACY.md) for those boundaries.

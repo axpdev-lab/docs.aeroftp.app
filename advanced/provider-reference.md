@@ -130,14 +130,6 @@ Cloud storage services using OAuth2 for authentication.
 | Versions | List, download, restore/promote |
 | Special | Team ID auto-detection |
 
-### kDrive
-
-| Feature | Details |
-|---------|---------|
-| Upload | Multipart |
-| Pagination | Cursor-based |
-| Special | Drive ID required, Infomaniak account |
-
 ### Koofr
 
 | Feature | Details |
@@ -171,6 +163,14 @@ Cloud storage services using API keys, bearer tokens, or session-based authentic
 | OpenDrive | Session (login) | 5 GB | `https://dev.opendrive.com/api/v1` |
 | kDrive | Personal API token | See provider page | `https://api.infomaniak.com/3/drive/{drive_id}` |
 | Jottacloud | Personal Login Token, then OIDC refresh token | See provider page | `https://jfs.jottacloud.com` |
+
+### kDrive
+
+| Feature | Details |
+|---------|---------|
+| Upload | Multipart |
+| Pagination | Cursor-based |
+| Special | Drive ID required, Infomaniak account |
 
 ### MEGA
 

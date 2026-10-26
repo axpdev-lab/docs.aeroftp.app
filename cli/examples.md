@@ -109,7 +109,7 @@ aeroftp-cli get --profile "Production" /backups/db.sql.gz ./db.sql.gz
 sha256sum ./db.sql.gz
 ```
 
-For content-aware directory comparison, use `reconcile --checksum --json` and inspect each `compare_method`; unavailable server-side SHA-256 falls back to size. The audited `check --checksum` path does not collect remote checksums. Compare per-file hashes when content equality is required.
+For content-aware directory comparison in 4.2.5, use `check --checksum --json` or `reconcile --checksum --json` and inspect each pair's `compare_method`. Plain paths compare matching local and remote SHA-256 digests when available; unsupported digests and crypt overlays fall back to size. Compare explicit per-file hashes when content equality is required for a pair reported as `size`.
 
 ## Cross-Profile Migration
 

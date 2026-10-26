@@ -8,7 +8,7 @@ AeroFTP organizes integrations on three tiers, so what you see in the catalog is
 2. **26 native provider integrations** - dedicated OAuth2 / API key / SDK code paths per provider (Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, Google Photos, GitHub, GitLab, Immich, ImageKit, Uploadcare). Available sharing, server-side copy, chunking and sync capabilities depend on the backend and selected connection mode.
 3. **47 pre-configured presets** - server URL, port, base path, password-generation deep-link auto-filled for compatible services on top of the protocols above. Visible in the Discover catalog (S3-compatible endpoints, WebDAV-compatible servers, SourceForge, etc.).
 
-All credentials are encrypted in the AeroFTP Universal Vault (AES-256-GCM + Argon2id). The GUI, CLI, AeroAgent and MCP reuse the `StorageProvider` abstraction. A shared trait does not make every provider feature available on every surface.
+AeroFTP-managed credentials are encrypted in the Universal Vault; its passphrase protection depends on the selected [key mode](/security/credentials). Externally managed sessions, including official Proton CLI sessions, remain in the external client's own credential storage. The GUI, CLI, AeroAgent and MCP reuse the `StorageProvider` abstraction. A shared trait does not make every provider feature available on every surface.
 
 ## Protocol Comparison
 
@@ -24,9 +24,9 @@ All credentials are encrypted in the AeroFTP Universal Vault (AES-256-GCM + Argo
 | 6 | [Azure Blob](azure.md) | HMAC / SAS Token | HTTPS + SSE | Pay-as-you-go |
 | 7 | OpenStack Swift | Username + Password (Keystone v3) | HTTPS | Varies by provider |
 
-### Native Provider Integrations (OAuth2 PKCE)
+### Native Provider Integrations (Browser Authorization)
 
-Authenticated through the provider's OAuth2 PKCE flow. AeroFTP opens a browser window for authorization and stores tokens securely in the encrypted vault.
+These integrations use provider authorization or an existing authorized token, as identified in each row. For browser-based flows, AeroFTP opens the provider's authorization page and stores the resulting credentials in the encrypted vault.
 
 | Provider | Auth Method | Encryption | Free Storage |
 |----------|-------------|------------|-------------|
@@ -40,15 +40,15 @@ Authenticated through the provider's OAuth2 PKCE flow. AeroFTP opens a browser w
 | [Yandex Disk](/providers/yandex) | OAuth2 Token | HTTPS | 5 GB |
 | [Internxt](/providers/internxt) | OAuth2 PKCE + zero-knowledge | Client-side AES-256-CTR | 1 GB |
 | [4shared](/providers/4shared) | OAuth 1.0 (HMAC-SHA1) | HTTPS | 15 GB |
+| [Twake Drive](/providers/twake) | OAuth2 PKCE on your own instance | HTTPS | Self-hosted |
 
 ### Native Provider Integrations (API Key / Token / Session)
 
-Direct authentication via API keys, session tokens, or personal access tokens. No browser-based OAuth flow required.
+Authentication via API keys, session tokens or personal access tokens, with provider-specific sign-in. Proton native mode uses browser sign-in; official CLI mode uses the session managed by that external client.
 
 | Provider | Auth Method | Encryption | Free Storage |
 |----------|-------------|------------|-------------|
 | [Proton Drive](/providers/proton-drive) | Browser sign-in (native), or official CLI session | Client-side encryption | See provider page |
-| [Twake Drive](/providers/twake) | OAuth2 PKCE on your own instance | HTTPS | Self-hosted |
 | [MEGA](/providers/mega) | Password (Native API or MEGAcmd) | Client-side AES | 20 GB |
 | [Filen](/providers/filen) | Password (PBKDF2) + optional 2FA | Client-side AES-256-GCM | 10 GB |
 | [kDrive](/providers/kdrive) | API Token (Bearer) | HTTPS | 15 GB |
@@ -83,7 +83,7 @@ These connect to servers or buckets you control. You provide the hostname, port,
 
 Each native provider has a dedicated implementation. Consult its page and runtime capabilities for sharing, server-side copy, chunking, trash, versioning and labels. Delta via rsync is an SFTP capability, not a universal native-provider feature.
 
-**OAuth2 PKCE flow:** Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Koofr, Yandex Disk, Internxt.
+**OAuth2 PKCE flow:** Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Koofr, Yandex Disk, Internxt, Twake Drive.
 **OAuth 1.0 (HMAC-SHA1):** 4shared (RFC 5849).
 **Direct auth (API key / token / session):** MEGA, Filen, kDrive, Jottacloud, Drime Cloud, FileLu, OpenDrive.
 **Developer platforms:** GitHub, GitLab, Immich, SourceForge.
