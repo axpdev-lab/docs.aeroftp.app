@@ -24,7 +24,9 @@ There is **no default cipher**: you actively choose AeroCrypt (native) or [Rclon
 
 - **Zero-knowledge on any backend.** AeroCrypt wraps the storage so the remote bucket only ever holds ciphertext and obfuscated names, on any of the supported backends, even the ones that offer no encryption of their own. On a provider that already encrypts at rest (Filen, MEGA, Internxt) it is a second independent layer keyed only by you, genuine double encryption where the key that matters never leaves your device.
 - **Browses like a normal server.** You unlock once, and from then on the decrypted folder reads, navigates, gets and puts exactly like a connected server in the dual panel, with clear names on your side and ciphertext on the provider's.
-- **AeroCrypt Profile (per-profile binding).** An overlay can be bound to a saved server profile so it auto-unlocks on connect, with a toggle in the connection form, per-session binding that survives a profile switch or reconnect, and edit-mode guards that lock the binding so it cannot be silently changed.
+- **AeroCrypt Profile (per-profile binding).** An overlay can be bound to a saved server profile so it auto-unlocks when the connection lands inside its scope, with a toggle in the connection form, per-session binding that survives a profile switch or reconnect, and edit-mode guards that lock the binding so it cannot be silently changed.
+
+The **Remote Path** determines where a connection opens. With a separate **Overlays Path**, an opening at the root or another folder outside that scope stays in plaintext; unlocking starts when you enter the encrypted folder. An empty Overlays Path uses the profile's Remote Path as its encrypted scope. Quick Connect classifies the path it actually opens, while retaining the linked profile's overlay scope.
 
 ## The AECR format (v3)
 

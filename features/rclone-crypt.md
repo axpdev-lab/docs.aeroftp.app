@@ -21,6 +21,10 @@ Limitations:
 - No migration wizard yet that converts `rclone crypt` storage into AeroVault (the two formats coexist by design: pick the one whose ecosystem matches your tooling)
 - Compatibility target is the standard rclone crypt format (XSalsa20-Poly1305 content + EME filename encryption) as used in real-world remotes today
 
+## Connection landing
+
+The **Remote Path** determines where the connection opens. If it is outside a separate **Overlays Path**, the initial listing stays in plaintext and entering the encrypted folder starts unlocking. An empty Overlays Path uses the saved profile's Remote Path as the scope. Quick Connect uses its actual landing path to decide whether it is inside that scope.
+
 ## Security model
 
 All cryptographic work happens locally in the Rust backend.
