@@ -18,8 +18,8 @@ Layers use separate keys, algorithms and threat models, but shared processes and
 
 The Rust backend is the security authority. The web frontend can request operations but cannot bypass backend enforcement:
 
-- **Credentials**: The frontend never handles raw passwords or tokens. The backend resolves them from the vault internally.
-- **AI tools**: Mutative operations require a grant issued and validated by the backend. Confirmation uses a backend-created AeroFTP approval window or the in-app panel according to the selected mode; Extreme mode can auto-approve. See [AI tool security](/security/ai-security) for those boundaries.
+- **Credentials**: Saved-server tools resolve credentials inside the Rust backend and omit them from model results. Setup forms still handle values entered by the user; this boundary is credential isolation from tools and models, not a claim that the renderer never sees input.
+- **AI tools**: Mutative operations require a grant issued and validated by the backend. Confirmation uses a backend-created AeroFTP approval window or the in-app panel according to the selected mode; Extreme mode accepts frontend tool requests automatically, but protected mutations retain backend approval. See [AI tool security](/security/ai-security) for those boundaries.
 - **Updates**: The backend verifies Sigstore bundles before allowing any installation. On Linux, the privileged helper re-verifies SHA-256 before executing package managers.
 - **Compatibility crypto**: `rclone crypt` decryption happens locally in the backend so encrypted remotes can be inspected without handing passwords to external services.
 
