@@ -1,10 +1,10 @@
 ---
-description: "A code editor, an SSH terminal and the AI assistant in one tabbed panel at the bottom of the window."
+description: "Four independent launchers for Security Tools, the code editor, terminal and AI assistant in AeroFTP."
 ---
 
 # AeroTools
 
-AeroTools is AeroFTP's integrated development panel, combining a code editor, SSH terminal, and AI assistant in a tabbed interface at the bottom of the application window.
+AeroTools provides four independent launchers for Security Tools, the code editor, terminal and AI assistant. Each opens or closes its own panel or column in the application window.
 
 ## Panel Layout
 

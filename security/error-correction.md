@@ -18,7 +18,7 @@ Error correction is the **last wrapper** in the AeroVault pipeline. It runs afte
 
 ![Where error correction sits in the wrapper stack](/images/error-correction/01-where-ec-sits.png)
 
-Because parity sits over the cipher blocks, redundancy is strictly for **recovery, not for trust**. Repair fixes damage *before* decryption; AES-256-GCM-SIV remains the sole authority on tampering. A repaired stream that an attacker forged still fails the authenticated decrypt.
+For encrypted AeroVault containers, parity covers the ciphertext and repair runs before authenticated decryption. AES-256-GCM-SIV detects forged encrypted content; parity alone does not authenticate it. Ordinary standalone or synced files may have no authenticated encryption, so their repair requires an independent trusted SHA-256 anchor to establish authenticity, as described below. Redundancy provides **recovery, not trust**.
 
 The definitive stage sequence of the full wrapper stack is:
 

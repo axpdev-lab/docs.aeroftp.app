@@ -7,7 +7,7 @@ AeroFTP is designed with security as a foundational requirement. Every layer of 
 | Layer | Purpose | Details |
 | ----- | ------- | ------- |
 | [Credential storage](/security/credentials) | Protect secrets at rest | AES-256-GCM vault, OS keyring, Argon2id KDF, optional TOTP 2FA |
-| [Encryption](/security/encryption) | Protect user files and data in transit | AeroVault v2 (AES-256-GCM-SIV), `rclone crypt` interoperability, TLS/SSH, archive encryption |
+| [Encryption](/security/encryption) | Protect user files and data in transit | AeroVault containers, AeroCrypt and `rclone crypt` overlays, TLS/SSH, archive encryption |
 | [AI tool security](/security/ai-security) | Control AI agent capabilities | Backend grant system, backend-created AeroFTP approval window, tool classification |
 | [Supply chain](/security/supply-chain) | Verify software authenticity | Sigstore signing, client-side verification, update helper hardening |
 | [Privacy](/security/privacy) | Minimize data footprint | No product telemetry; local storage, configured external services and key-mode boundaries |

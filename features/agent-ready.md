@@ -49,7 +49,7 @@ aeroftp-cli cat --profile "Server" /config.ini | grep DB_HOST
 ```bash
 SET source=/var/www/html
 ON_ERROR CONTINUE
-CONNECT sftp://admin@server.com
+CONNECT --profile "Server"
 GET ${source}/database.sql ./backup/database.sql
 SYNC ./backup/uploads/ ${source}/uploads/ --direction download
 DISCONNECT

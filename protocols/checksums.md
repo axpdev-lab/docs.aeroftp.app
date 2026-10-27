@@ -83,4 +83,4 @@ This table mirrors `src-tauri/src/providers/checksum_matrix.rs`. The generated t
 
 ## Comparison and fallback
 
-A checksum query and a sync comparison have different contracts. The best-effort sync comparison falls back to size and timestamp when a comparable digest is missing; strict checksum comparison leaves the pair unresolved instead. A proprietary hash such as Dropbox content hash, Koofr hash or Git blob SHA-1 cannot be compared directly with a plain local SHA-256. A checksum request is not a guarantee of full content verification on every provider.
+A checksum query and a sync comparison have different contracts. The best-effort sync comparison falls back to size and timestamp when a comparable digest is missing. CLI `check --checksum` falls back to size when the remote checksum is unsupported or a crypt overlay is active; a size match on that path is not proof of equal content. A proprietary hash such as Dropbox content hash, Koofr hash or Git blob SHA-1 cannot be compared directly with a plain local SHA-256. A checksum request is not a guarantee of full content verification on every provider.

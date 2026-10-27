@@ -44,7 +44,7 @@ These integrations use provider authorization or an existing authorized token, a
 
 ### Native Provider Integrations (API Key / Token / Session)
 
-Authentication via API keys, session tokens or personal access tokens, with provider-specific sign-in. Proton native mode uses browser sign-in; official CLI mode uses the session managed by that external client.
+Authentication via passwords, API keys, session tokens or personal access tokens, with provider-specific sign-in. Proton native mode uses browser sign-in; official CLI mode uses the session managed by that external client.
 
 | Provider | Auth Method | Encryption | Free Storage |
 |----------|-------------|------------|-------------|
