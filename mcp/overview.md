@@ -25,7 +25,16 @@ Start with `aeroftp_list_servers`, then call a file tool with the exact saved pr
 
 Create profiles in the GUI or with `profile-add`. `connect --save` is not supported. Browser-authorized profiles can use supported [headless authorization](/cli/commands#profile-add-and-headless-authorization); native Proton has its separate sign-in flow. The MCP `aeroftp_profile_auth` tool operates on an already saved profile with a nested `request` whose action is `configure`, `begin`, `finish`, `status` or `cancel`.
 
-With checksum comparison enabled, `aeroftp_reconcile` reads eligible equal-size remote files through a capped download and compares BLAKE3; oversized pairs retain a flagged size verdict and failed checksums are unverified/partial. `aeroftp_check_tree` instead uses comparable SHA-256 when available and falls back to size. These tools can therefore differ on equal-size content changes; their checksum behavior is not interchangeable.
+The MCP wire tools below and the similarly named CLI commands have distinct implementations and output schemas. Do not transfer the CLI comparison contract to MCP. With checksum comparison enabled, `aeroftp_reconcile` reads eligible equal-size remote files through a capped download and compares BLAKE3; oversized pairs retain a flagged size verdict and failed checksums are unverified/partial. `aeroftp_check_tree` instead uses comparable SHA-256 when available and falls back to size. These tools can therefore differ on equal-size content changes; their checksum behavior is not interchangeable.
+
+| Surface and operation | Comparison | Per-entry output metadata |
+| --- | --- | --- |
+| MCP `aeroftp_reconcile` | BLAKE3 over capped downloads for eligible equal-size pairs; flagged size fallback for oversized pairs | `compare_method`: `blake3` or `size`; failed hashes are unverified |
+| MCP `aeroftp_check_tree` | Comparable SHA-256 when available, otherwise size | Entry arrays include `compare_method` (nullable for entries without a comparison) |
+| CLI `reconcile --checksum` | Comparable SHA-256 on eligible paths, otherwise size | `compare_method`: `checksum` or `size` |
+| CLI `check --checksum` | Comparable SHA-256 when available, otherwise size | No per-entry `compare_method` field |
+
+MCP `summary_only` suppresses entry arrays. The output `compare_method` described here is not an input parameter. Source references: [MCP check-tree serialization](https://github.com/axpdev-lab/aeroftp/blob/58020c71c3843ccb705c80f8c7b7b33494b04139/src-tauri/src/mcp/tools.rs) and [shared agent/MCP reconcile implementation](https://github.com/axpdev-lab/aeroftp/blob/58020c71c3843ccb705c80f8c7b7b33494b04139/src-tauri/src/ai_core/remote_tools.rs).
 
 ## Tool Catalog
 
@@ -50,7 +59,7 @@ Provider support remains operation-specific. A profile exposes its `protocol`, `
 
 ## Schemas and Bounded Results
 
-- `aeroftp_check_tree` accepts `checksum`, `one_way`, `files`, `exclude`, `max_depth`, per-group caps and `omit_match`. It does not accept a `compare_method` field. Checksum mode requests a server-side digest and can fall back to size comparison when unavailable.
+- `aeroftp_check_tree` accepts `checksum`, `one_way`, `files`, `exclude`, `max_depth`, per-group caps and `omit_match`. It does not accept `compare_method` as input; its per-entry output does contain that field. Checksum mode requests a server-side digest and can fall back to size comparison when unavailable.
 - Tree comparisons report `local_scan_incomplete` and `remote_scan_incomplete`, plus errors, truncation counters and bounded skipped/unseen-path lists. Missing on an incompletely scanned side does not prove a file was deleted. `summary_only` suppresses entry arrays.
 - `aeroftp_sync_tree` takes `local_dir`, `remote_dir`, `direction` (`upload`, `download`, `both`), `dry_run`, `delete_orphans`, conflict and delta policies. `delete_orphans` is one-way only. Its policy choices are not identical to all CLI sync flags.
 - A sync dry run returns `plan`, `plan_by_op`, totals, scan statistics and errors. An apply returns `summary` and errors. These are different result shapes. Delta details appear only when files actually used delta transfer.

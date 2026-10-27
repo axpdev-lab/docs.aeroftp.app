@@ -35,7 +35,7 @@ Commands operate on the target selected by `CONNECT`. Do not put a connection UR
 | `SYNC` | `SYNC local remote --direction upload\|download\|both [sync options]` | Run the CLI sync engine against the connected target |
 | `CONNECT_SOURCE_PROFILE` | `CONNECT_SOURCE_PROFILE "Name"` | Select the cross-profile source |
 | `CONNECT_DEST_PROFILE` | `CONNECT_DEST_PROFILE "Name"` | Select the cross-profile destination |
-| `TRANSFER` | `TRANSFER source_path dest_path [-r] [--skip-existing] [--dry-run]` | Copy between those two saved profiles |
+| `TRANSFER` | `TRANSFER source_path dest_path [-r or --recursive] [--skip-existing] [--dry-run]` | Copy between those two saved profiles |
 
 `GET` and `PUT` do not accept `-o` or `-r` in batch scripts. Use `SYNC` with an explicit direction for directory transfers. `SYNC` requires both paths and `--direction`, accepts sync-specific options through the CLI parser, and refuses global options on its line. Put global options on `aeroftp-cli batch ...` instead. An applying `SYNC --delete` also requires `--max-delete N` or `N%`.
 

@@ -361,7 +361,7 @@ aeroftp-cli sync --profile "server" ./local/ /remote/ --dry-run
 aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload
 
 # Mirror mode (delete orphans)
-aeroftp-cli sync sftp://user@host ./local/ /remote/ --direction upload --delete
+aeroftp-cli sync sftp://user@host ./local/ /remote/ --direction upload --delete --max-delete 50
 
 # Exclude patterns
 aeroftp-cli sync --profile "server" ./local/ /remote/ --exclude "*.tmp" --exclude ".git"
@@ -404,7 +404,7 @@ aeroftp-cli sync --profile "S3" ./local/ /remote/ --fast-list
 aeroftp-cli sync --profile "server" ./local/ /remote/ --resync
 
 # Keep copies of local files removed by a download mirror
-aeroftp-cli sync --profile "server" ./local/ /remote/ --direction download --delete --backup-dir /tmp/bak
+aeroftp-cli sync --profile "server" ./local/ /remote/ --direction download --delete --max-delete 50 --backup-dir /tmp/bak
 
 # One-way update (v4.2.1): leave a destination copy that is newer than the source
 aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload --update
@@ -418,6 +418,8 @@ aeroftp-cli sync --profile "server" ./local/ /remote/ --checksum --dry-run
 # Modification window (v4.2.1): seconds within which two times are the same instant
 aeroftp-cli sync --profile "server" ./local/ /remote/ --direction download --modify-window 60
 ```
+
+For an applying top-level `sync --delete` in a non-interactive run, provide an explicit `--max-delete N` or `N%`; otherwise the CLI refuses the run. Choose a cap appropriate to your reviewed plan. Dry-run previews do not apply deletions.
 
 `--backup-dir` copies local files before sync deletes them. It does not back up overwritten files or remote deletions. Before an upload mirror with `--delete`, make a separate remote backup; this option does not protect the remote destination.
 
@@ -1123,7 +1125,7 @@ For OAuth providers in CI, use `--profile` with the vault pre-configured on the 
 
 ```bash
 AEROFTP_MASTER_PASSWORD=${{ secrets.VAULT_PW }} \
-  aeroftp-cli sync --profile "Production S3" ./build/ / --direction upload --delete
+  aeroftp-cli sync --profile "Production S3" ./build/ / --direction upload --delete --max-delete 50
 ```
 
 ## Recent Highlights

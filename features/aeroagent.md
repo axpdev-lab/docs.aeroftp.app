@@ -135,6 +135,8 @@ Remote tools may use the current connection or an explicit saved server where th
 
 `server_exec` accepts only `ls`, `cat`, `stat`, `find` and `df`. It refuses every other operation, including `put`, `get`, `rm`, `mv` and `mkdir`; use the dedicated upload, download, mkdir, rename and delete tools. GUI AeroAgent calls pass through its backend approval gate; CLI and inbound MCP calls use their respective caller or host authorization policies. Credentials resolve inside Rust and are not returned to the model.
 
+`coding_diagnostics` is a medium-tier, approval-gated coding action. Compiler and linter passes can execute workspace build scripts, macros and configuration code, so diagnostics do not imply read-only execution. The backend approval grant remains required.
+
 ### Visible GUI Control
 
 Use GUI tools when the user asks to watch actions in the app. They call the ordinary navigation, selection, refresh, connection, disconnect, Stop and bounded Settings handlers. Connections require an exact saved `profile_id`. The snapshot is redacted; arbitrary clicks, scripts, unlocking, credential editing and file-writing GUI intents are excluded.
