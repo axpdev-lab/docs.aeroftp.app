@@ -65,6 +65,8 @@ Authentication via passwords, API keys, session tokens or personal access tokens
 | [GitLab](/providers/gitlab) | PAT | HTTPS | Repository as filesystem |
 | [Immich](/providers/immich) | API Key (`x-api-key`) | HTTPS | Self-hosted photo library; media-only writes |
 
+The three native-provider comparison tables above are selected examples, not the complete provider catalog. They omit integrations such as Backblaze B2, Cloudinary and Uploadcare; the exact inventory at the top of this page and each provider guide define the full supported set.
+
 ## Protocol Categories
 
 ### Transport Protocols (Self-Hosted)
@@ -73,7 +75,7 @@ These connect to servers or buckets you control. You provide the hostname, port,
 
 - **FTP** - Traditional unencrypted file transfer. Suitable for legacy servers and shared hosting on trusted networks.
 - **FTPS** - FTP secured with TLS/SSL. Supports both Explicit (STARTTLS on port 21) and Implicit (port 990) modes. AeroFTP detects TLS downgrade attempts and warns the user.
-- **SFTP** - Secure file transfer over SSH. The recommended choice for self-hosted servers. Supports password and SSH key authentication with TOFU host key verification. Eligible for **delta sync** via [AeroRsync](/features/aerorsync) when key authentication or a saved password and remote `rsync` are available.
+- **SFTP** - Secure file transfer over SSH. The recommended choice for self-hosted servers. Supports password and SSH key authentication with TOFU host key verification. Eligible for **delta sync** via [AeroRsync](/features/aerorsync) when key authentication or a saved password, remote `rsync`, and a pinned SSH host-key fingerprint are available. See the [complete delta prerequisites](/features/aerorsync).
 - **WebDAV** - HTTP-based file access over HTTPS. Used by Nextcloud, Seafile, and many NAS devices. Supports Basic and Digest authentication.
 - **S3** - Object storage using the S3 API. Works with AWS, Wasabi, Backblaze B2, and any S3-compatible endpoint.
 - **Azure Blob** - Enterprise object storage with HMAC signing or SAS tokens.
@@ -212,18 +214,18 @@ Not all providers expose a trash/recycle bin API. The following table shows whic
 
 ### AeroSync
 
-AeroSync supports bidirectional synchronization across all 7 transport protocols and the 20+ native provider integrations. AeroCloud background sync classifies providers by reliability through maturity badges visible in the setup wizard.
+AeroSync reuses provider operations for synchronization; available modes and behavior depend on the provider and the selected GUI or CLI path. AeroCloud background sync classifies providers by reliability through maturity badges visible in the setup wizard.
 
-AeroSync features available across the entire surface:
+The following features have provider and command-path limits:
 
 - Bidirectional and unidirectional sync (Mirror, Two-Way, Backup, Pull, Remote Backup)
 - Conflict resolution (keep local, keep remote, keep newer, skip, rename)
 - Transfer journal with checkpoint/resume
-- Post-transfer verification (size, mtime, SHA-256)
+- Post-transfer verification uses the metadata and comparable checksums the provider exposes; SHA-256 is not universally available. See [checksum capabilities](/protocols/checksums).
 - Configurable retry with exponential backoff
 - Bandwidth throttling
 - Dry-run mode with JSON / CSV export
-- **Delta sync via [AeroRsync](/features/aerorsync)** - eligible SFTP sessions transfer only the bytes that differ; cross-OS first-class on Linux/macOS/Windows since v3.6.1
+- **Delta sync via [AeroRsync](/features/aerorsync)** - eligible SFTP sessions only, with authentication, remote `rsync` and a pinned host key; other providers use their supported full-file paths.
 
 ### CLI support
 

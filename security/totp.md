@@ -11,6 +11,10 @@ AeroFTP can require a code from an authenticator app before unlocking the creden
 | Secret | 20 random bytes from the operating system |
 | Clock allowance | Current step and its immediately previous and next steps |
 
+## AeroVault containers are separate
+
+This page describes the Universal Credential Vault used for saved credentials. In v4.2.5, encrypted `.aerovault` containers open with their own file password; the container create/open flows do not offer a separate TOTP factor. Enabling desktop credential-vault TOTP does not add a second factor to a copied container. See [AeroVault](/features/aerovault#creating-a-vault) for that workflow.
+
 ## Setup
 
 1. Open **Settings > Security** with the vault unlocked.

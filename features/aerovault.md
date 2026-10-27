@@ -29,12 +29,13 @@ Recent vaults are sorted by last access time, making it easy to return to freque
 Click **Create New Vault** to begin the vault creation workflow.
 
 ![Create vault dialog](/images/aerovault-create.png)
-<!-- SCREENSHOT: Create vault dialog showing the vault name field, password input with strength indicator, optional cascade mode toggle, and optional TOTP 2FA checkbox -->
+<!-- SCREENSHOT: Create vault dialog showing the vault name field, password input with strength indicator, and optional cascade mode controls (historical illustration; current controls depend on the selected format) -->
 
 1. **Choose a save location** - select where the `.aerovault` file will be stored using the native file dialog.
-2. **Set a master password** - this password is the sole key to your vault. AeroVault derives the encryption key using Argon2id with parameters that exceed OWASP 2024 recommendations (128 MiB memory, 4 iterations, 4 parallel lanes).
-3. **Enable cascade mode** (optional) - adds a second encryption layer using ChaCha20-Poly1305 on top of AES-256-GCM-SIV. This provides defense-in-depth: even if one algorithm is compromised, the other still protects your data.
-4. **Enable TOTP 2FA** (optional) - require a 6-digit time-based one-time password in addition to the master password every time the vault is opened. See [TOTP 2FA](../security/totp.md) for setup instructions.
+2. **Set a container password** - this file password is separate from the application's credential-vault master password. AeroVault derives the encryption key using Argon2id with parameters that exceed OWASP 2024 recommendations (128 MiB memory, 4 iterations, 4 parallel lanes).
+3. **Choose a security level** - the Paranoid v2 tier adds ChaCha20-Poly1305 over AES-256-GCM-SIV; available controls depend on the selected format.
+
+The v4.2.5 container workflow does not offer a TOTP checkbox or a second-factor code on open. [Desktop TOTP](/security/totp#aerovault-containers-are-separate) protects the separate credential vault; it does not change an AeroVault file's password-based protection.
 
 After creation, the vault opens immediately and you can begin adding files.
 
@@ -43,7 +44,7 @@ After creation, the vault opens immediately and you can begin adding files.
 Click **Open Vault** or select a recent vault to enter the password prompt.
 
 ![Vault open dialog with security badges](/images/aerovault-open.png)
-<!-- SCREENSHOT: Vault password entry screen showing the password field, TOTP field (if enabled), and security badges for AES-256-GCM-SIV, Argon2id, AES-KW, and HMAC-SHA512 -->
+<!-- SCREENSHOT: Historical vault illustration showing the password field and security badges for AES-256-GCM-SIV, Argon2id, AES-KW, and HMAC-SHA512 -->
 
 The open screen displays security badges confirming the cryptographic algorithms protecting the vault:
 
@@ -52,7 +53,7 @@ The open screen displays security badges confirming the cryptographic algorithms
 - **AES-256-KW** - key wrapping (RFC 3394)
 - **HMAC-SHA512** - header integrity verification
 
-If TOTP 2FA is enabled, a second field appears for the 6-digit code. Rate limiting with exponential backoff protects against brute-force attempts (5 attempts before lockout, escalating from 30 seconds to 15 minutes).
+Enter the container's file password to open it. Credential-vault TOTP, its replay protection and its throttling do not apply to this portable container password.
 
 ## Browsing a Vault
 
@@ -114,7 +115,7 @@ Cryptomator vaults use a different cryptographic stack:
 - **AES-256-SIV** for filename encryption
 - **AES-256-GCM** for content encryption
 
-> **Recommendation:** AeroVault v2 is recommended for new vaults. It provides stronger key derivation (Argon2id vs. scrypt), nonce-misuse resistance (GCM-SIV vs. GCM), optional cascade encryption, and TOTP 2FA support.
+> **Recommendation:** AeroVault v2 is recommended for new vaults. It provides stronger key derivation (Argon2id vs. scrypt), nonce-misuse resistance (GCM-SIV vs. GCM), and optional cascade encryption. The separate credential-vault TOTP feature is not part of the container format.
 
 ## Encryption Architecture
 
@@ -141,7 +142,7 @@ The Argon2id configuration uses 128 MiB of memory, 4 time iterations, and 4 para
 | Key derivation | Argon2id (128 MiB) | scrypt |
 | Content encryption | AES-256-GCM-SIV (nonce-misuse resistant) | AES-256-GCM |
 | Cascade encryption | ChaCha20-Poly1305 (optional) | Not available |
-| TOTP 2FA | Yes | Not available |
+| Container TOTP factor in AeroFTP v4.2.5 | Not available | Not available |
 | Header integrity | HMAC-SHA512 | Not available |
 | Chunk size | 64 KB | 32 KB |
 | Container format | Single `.aerovault` file | Directory tree |

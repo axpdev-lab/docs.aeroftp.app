@@ -24,7 +24,7 @@ Both options remain available. The native backend is recommended for new connect
 | Throughput limits | Up to ~1 GB/s per file with chunked uploads | Same; multipart limits apply |
 | Cost surface | Dashboard storage + download bytes | Same |
 
-The native backend gives you a properly typed view of B2: when you list `/photos/` you get back the entries that actually live under that prefix, not whatever S3-emulation layer the gateway happens to materialize. Renames map onto a single `b2_copy_file` API call rather than a download-upload-delete round trip.
+The native backend gives you a properly typed view of B2: when you list `/photos/` you get back the entries that actually live under that prefix, not whatever S3-emulation layer the gateway happens to materialize. Renames copy the object server-side, then delete the source version. These are separate, non-atomic phases: if source deletion fails, AeroFTP reports an error and both names can remain. No file payload needs to pass through the client for this server-side copy.
 
 The S3-compatible preset is unchanged, it continues to dispatch through AeroFTP's S3 stack and benefits from the same multi-tab, multipart, and retry hardening as AWS S3.
 

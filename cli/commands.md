@@ -403,8 +403,8 @@ aeroftp-cli sync --profile "S3" ./local/ /remote/ --fast-list
 # Force full resync (discard snapshot)
 aeroftp-cli sync --profile "server" ./local/ /remote/ --resync
 
-# Backup before overwrite/delete
-aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload --delete --backup-dir /tmp/bak
+# Keep copies of local files removed by a download mirror
+aeroftp-cli sync --profile "server" ./local/ /remote/ --direction download --delete --backup-dir /tmp/bak
 
 # One-way update (v4.2.1): leave a destination copy that is newer than the source
 aeroftp-cli sync --profile "server" ./local/ /remote/ --direction upload --update
@@ -418,6 +418,8 @@ aeroftp-cli sync --profile "server" ./local/ /remote/ --checksum --dry-run
 # Modification window (v4.2.1): seconds within which two times are the same instant
 aeroftp-cli sync --profile "server" ./local/ /remote/ --direction download --modify-window 60
 ```
+
+`--backup-dir` copies local files before sync deletes them. It does not back up overwritten files or remote deletions. Before an upload mirror with `--delete`, make a separate remote backup; this option does not protect the remote destination.
 
 Bisync (`--direction both`, the default) saves a `.aeroftp-bisync.json` snapshot after each successful sync, enabling delta detection and bidirectional delete propagation. Conflict modes: `newer` (default), `older`, `larger`, `smaller`, `skip`, `rename`.
 
@@ -703,13 +705,18 @@ Create a profile without opening the desktop app. Connection options and credent
 aeroftp-cli profile-add --name "Build SFTP" --protocol sftp \
   --host sftp.example.com --username deploy --initial-path /var/www
 
-# Enter the password through stdin; do not put it in a URL or argument.
-aeroftp-cli --password-stdin profile-add --name "Backup SFTP" --protocol sftp \
-  --host backup.example.com --username backup
+# Bash: read without terminal echo, then pass the password through stdin.
+read -r -s -p "Password: " profile_password
+printf '\n'
+printf '%s\n' "$profile_password" | aeroftp-cli --password-stdin profile-add \
+  --name "Backup SFTP" --protocol sftp --host backup.example.com --username backup
+unset profile_password
 
 aeroftp-cli profile-add --name "Archive S3" --protocol s3 \
   --options-json '{"bucket":"archive","region":"eu-west-1"}'
 ```
+
+`--password-stdin` reads a pipe; it does not hide interactive terminal input by itself. The Bash example disables echo during `read` and keeps the password out of command arguments. A secret manager can also supply the pipe.
 
 Structured credentials can be seeded with `--credential-json-file`; an inline `--credential-json` value is also accepted but is visible in process arguments. Both conflict with `--password-stdin`. These creation commands write profiles to the active vault.
 

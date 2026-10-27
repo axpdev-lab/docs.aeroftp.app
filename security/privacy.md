@@ -25,6 +25,7 @@ Configuration and credentials normally use the following directories. WebView st
 | Linux | `~/.config/aeroftp/` |
 | macOS | `~/Library/Application Support/aeroftp/` |
 | Windows | `%APPDATA%\aeroftp\` |
+| Windows portable | `data\aeroftp\` relative to the executable |
 
 | Data | Storage | Encryption |
 | ---- | ------- | ---------- |
@@ -67,6 +68,7 @@ To remove all AeroFTP data from a system:
    - Linux: `~/.config/aeroftp/`, `~/.local/share/app.aeroftp.AeroFTP/` and `~/.local/share/com.aeroftp.AeroFTP/`
    - macOS: `~/Library/Application Support/aeroftp/`, and any `app.aeroftp.AeroFTP` or `com.aeroftp.AeroFTP` folder under `~/Library/Application Support/`, `~/Library/Caches/` and `~/Library/WebKit/`
    - Windows: `%APPDATA%\aeroftp\`, and any `app.aeroftp.AeroFTP` or `com.aeroftp.AeroFTP` folder under `%APPDATA%` and `%LOCALAPPDATA%`
+   - Windows portable: remove the executable-relative `data\aeroftp\` directory for credentials and configuration. Remove the installation's entire `data\` directory to include its WebView state, logs and other portable state. Keep any files you want to retain first.
 3. If the vault is protected by the system keyring rather than by a master password, delete the keyring entry too. It is stored under the service name `com.aeroftp.AeroFTP` (account `vault-passphrase`, or `vault-passphrase-portable`, `vault-passphrase-flatpak` or `vault-passphrase-snap` for those installations), and deleting the directories above does not remove it. The per-platform commands are in [PRIVACY.md](https://github.com/axpdev-lab/aeroftp/blob/main/PRIVACY.md).
 
 AeroFTP does not create cloud accounts for you. Transfers and AI requests send the content you select, or enable through tools and background jobs, to the configured servers and providers.

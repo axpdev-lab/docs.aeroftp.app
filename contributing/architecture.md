@@ -57,7 +57,7 @@ The `providers/` modules implement `StorageProvider` for transports, native APIs
 - **API key / session:** MEGA, Azure Blob, 4shared (OAuth 1.0), Filen, FileLu, Yandex Disk, OpenDrive, native Proton Drive and its optional official CLI mode
 - **Additional integrations:** Swift, native Backblaze B2, GitHub, GitLab, Immich, Drime, Twake and media providers
 
-The trait has required core methods and optional operations, including: `connect`, `disconnect`, `list`, `upload`, `download`, `delete`, `rename`, `mkdir`, `stat`, `search`, `move_file`, `list_trash`, `restore_from_trash`, `permanent_delete`, `create_share_link`, `get_storage_quota`, `list_versions`, `download_version`.
+The trait has required core methods and optional operations, including: `connect`, `disconnect`, `list`, `upload`, `download`, `delete`, `rename`, `mkdir`, `stat`, `list_object_versions`, `restore_version`, `delete_version`, `empty_object_versions`, `create_share_link`, `storage_info`, `list_versions`, `download_version`.
 
 ## Frontend (`src/`)
 
