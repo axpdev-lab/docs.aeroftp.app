@@ -4,7 +4,7 @@ description: "Compare trees, review a sync plan, and run Backup, Update, Mirror 
 
 # AeroSync
 
-AeroSync compares two folders and turns the differences into a reviewable sync plan. In v4.2.5 the connected local/remote workflow has two tabs, **Compare** and **Plan**. When both sides are local, a third tab, **Local mirror**, runs the local AeroRsync engine. Remote sync runs from **Plan**.
+AeroSync compares two folders and turns the differences into a reviewable sync plan. In v4.2.5 the connected local/remote workflow has two tabs, **Compare** and **Plan**. When both sides are local, a third tab, **Local mirror**, runs local-only sync through `local_sync_run`: eligible files use AeroRsync's in-process `LocalDeltaTransport`, while smaller files or runs with delta disabled use plain copying. Remote sync runs from **Plan**.
 
 Open AeroSync from the menu with the folders you want to compare already selected. A remote session must be connected for remote operations and the Templates, Multi-Path, Rollback snapshots, Sync journals and Scheduler launchers.
 

@@ -139,6 +139,8 @@ aeroftp-cli sync --profile "Backup" ./local /backup --direction upload --error-c
 aeroftp-cli sync --profile "Backup" ./local /backup --direction upload --error-correction --ec-max-overhead 25
 ```
 
+The CLI text EC summary omits low-benefit skips. They are reported per file on stderr unless quiet mode suppresses the messages, and in the `ec_skipped_low_benefit` JSON counter. Inspect these outputs before treating a backup as protected.
+
 CLI sync downloads do not automatically verify or repair files from sidecars. The separate desktop sync repair path requires an expected SHA-256 from the scanned item and skips repair if that hash is missing; an S3 MD5 does not satisfy this requirement.
 
 For explicit recovery, download both objects and supply a known-good SHA-256 obtained independently from a trusted source:

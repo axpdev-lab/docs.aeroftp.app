@@ -697,6 +697,18 @@ Example Claude Desktop / Claude Code / Cursor configuration:
 
 Discovery commands such as `agent-info`, `agent-bootstrap`, `profiles` and `pwd` describe capabilities and saved profiles without attempting a live connection. `agent-connect` explicitly probes supported targets. Profile creation and authorization commands below write to the vault or contact the provider as described.
 
+### inventory - Generated Command Catalog
+
+`inventory` reads the binary's command and tool registries locally, without connecting to a server or opening the credential vault. JSON is the default; `--json` is also accepted as a global output option.
+
+```bash
+aeroftp-cli inventory --json
+aeroftp-cli inventory --markdown
+aeroftp-cli inventory --check docs/COMMAND-INVENTORY.json
+```
+
+The JSON object contains `schema_version`, `app_version`, aggregate `counts`, `cli.subcommands` (name and description), `mcp.tools`, `agent.tools`, `tauri.commands` and `parity`. Counts describe that binary's registries; the parity section is a structural name comparison, not a semantic guarantee of GUI/CLI equivalence. `--markdown` prints a human-readable table. `--check FILE` validates the snapshot's internal consistency and compares its counts with the live registries, returning nonzero on drift or invalid input. It is not a full semantic diff of tool behavior.
+
 ### profile-add and Headless Authorization
 
 Create a profile without opening the desktop app. Connection options and credentials are separate: use `--options-json` or `--options-json-file` for nonsecret provider settings and `--password-stdin` for a password. A profile can also be created without credentials and authorized later.
@@ -1006,7 +1018,7 @@ aeroftp-cli cat github://token:PAT@owner/repo /README.md
 | `--max-size <size>` | Max file size filter |
 | `--min-age <duration>` | Skip files newer than (`7d`, `24h`) |
 | `--max-age <duration>` | Skip files older than |
-| `--max-transfer <size>` | Stop after N bytes transferred (`10G`, `500M`). Exit code 8, "stopped at a limit and nothing failed"; on `sync` a timeout that fails a transfer reports 4 instead. With `--json` the budget is named by an `over_budget` count of the files it left behind |
+| `--max-transfer <size>` | Stop after N bytes transferred (`10G`, `500M`). Exit code 8, "stopped at a limit and nothing failed"; on `sync` a timeout that fails a transfer reports 4 instead. With `--json`, `over_budget` counts files left behind by the budget; an exact-budget stop can return 8 without that field. Its absence does not imply a timeout |
 | `--retries <n>` | Retry failed transfers N times (default: 3) |
 | `--retries-sleep <dur>` | Delay between retries (`5s`, `1m`, `500ms`). Default: 1s |
 | `--max-backlog <n>` | Max queued parallel tasks (default: 10000) |
@@ -1088,7 +1100,7 @@ Respects `NO_COLOR`, `CLICOLOR`, and `CLICOLOR_FORCE` environment variables.
 | 5 | Configuration / usage error |
 | 6 | Authentication failed |
 | 7 | Not supported by protocol |
-| 8 | Stopped at a limit and nothing failed: a timeout on most commands, the `--max-transfer` budget on `sync` (with `--json`, a reached budget reports `over_budget`) |
+| 8 | Stopped at a limit and nothing failed: a timeout on most commands, the `--max-transfer` budget on `sync` (JSON `over_budget` counts skipped files; an exact-budget stop can return 8 with no such field, so inspect the configured limits) |
 | 9 | Already exists / directory not empty (`--immutable`, `--no-clobber`) |
 | 10 | Server error / parse error |
 | 11 | I/O error |

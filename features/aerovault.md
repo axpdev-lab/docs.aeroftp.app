@@ -84,6 +84,8 @@ The operation extracts the full plaintext tree into a `.aerovault-repack-*` temp
 
 Replacement uses two renames rather than an atomic swap. If the process stops after moving the original to `.<vault-name>.repack-bak-<pid>` but before installing the rebuilt container, restore the original from that backup. A reported failure of the second rename attempts restoration automatically.
 
+Recovery protection must be selected again for the rebuilt file. Converting v3 to v2 drops embedded parity. Every successful repack attempts to remove the old default `<vault>.aerocorrect` sidecar because its bytes no longer match; deletion is best effort, and any leftover old sidecar is stale. CLI `vault change-mode` defaults `--error-correction` to false. For a v3 target, enable Error Correction in the GUI or pass `--security-level archive --error-correction` in the CLI to build new embedded parity. For a v2 target, generate a fresh standalone sidecar with `aeroftp-cli correct gen` after conversion. Keep a separate verified backup before converting and verify the new recovery data afterward.
+
 ## Remote Vault Support
 
 AeroVault can open `.aerovault` files stored on remote servers across any of AeroFTP's 7 transport protocols and 20+ native provider integrations.

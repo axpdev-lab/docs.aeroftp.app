@@ -202,7 +202,7 @@ AeroAgent chains tool calls autonomously (up to 10 steps in normal mode, 50 in E
 
 Core remote commands accept `--json` and saved profiles; inventory and batch commands have their own inputs:
 
-`connect` `ls` `get` `put` `mkdir` `rm` `mv` `cat` `head` `tail` `touch` `hashsum` `check` `reconcile` `stat` `find` `df` `about` `dedupe` `tree` `sync` `batch` `profiles` `agent-info`
+`connect` `ls` `get` `put` `mkdir` `rm` `mv` `cat` `head` `tail` `touch` `hashsum` `check` `reconcile` `stat` `find` `df` `about` `dedupe` `tree` `sync` `batch` `profiles` `agent-info` `agent-connect` `inventory`
 
 The command interface is shared, while capabilities and authentication differ by provider. Query discovery and handle unsupported operations explicitly. GUI control is exposed through `gui_state`, `gui_wait` and `gui_run` inside AeroAgent; external CLI and MCP clients do not yet have that GUI bridge, and there is no `aeroftp-cli gui` command.
 

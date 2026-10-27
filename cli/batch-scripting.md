@@ -19,7 +19,7 @@ Commands operate on the target selected by `CONNECT`. Do not put a connection UR
 | `SET` | `SET name=value` | Define or replace a variable |
 | `ECHO` | `ECHO text` | Print text |
 | `ON_ERROR` | `ON_ERROR FAIL` or `ON_ERROR CONTINUE` | Choose failure handling; default `FAIL` |
-| `CONNECT` | `CONNECT --profile "Name"` or `CONNECT protocol://user@host` | Select and test a saved profile or URL target |
+| `CONNECT` | `CONNECT --profile "Name"` or `CONNECT protocol://user@host` | Select and test a saved profile or URL target; URL authentication must already be available non-interactively |
 | `DISCONNECT` | `DISCONNECT` | Clear the current target |
 | `LS` | `LS [-l] [path]` | List a directory |
 | `GET` | `GET remote [local]` | Download one file |
@@ -38,6 +38,8 @@ Commands operate on the target selected by `CONNECT`. Do not put a connection UR
 | `TRANSFER` | `TRANSFER source_path dest_path [-r] [--skip-existing] [--dry-run]` | Copy between those two saved profiles |
 
 `GET` and `PUT` do not accept `-o` or `-r` in batch scripts. Use `SYNC` with an explicit direction for directory transfers. `SYNC` requires both paths and `--direction`, accepts sync-specific options through the CLI parser, and refuses global options on its line. Put global options on `aeroftp-cli batch ...` instead. An applying `SYNC --delete` also requires `--max-delete N` or `N%`.
+
+URL targets need preconfigured non-interactive credentials, such as an appropriate SSH key or credentials supplied through supported outer CLI options. Batch `CONNECT` cannot pause for a missing password. Prefer `CONNECT --profile "Name"` for vault-backed password or OAuth authentication, with the credential vault available to the process. Do not embed passwords in script URLs.
 
 ## Variables and Quoting
 
