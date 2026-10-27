@@ -48,13 +48,13 @@ sudo dnf remove aeroftp
 AppImage runs on virtually any Linux distribution without installation. No root access required.
 
 ```bash
-chmod +x AeroFTP_3.7.0_amd64.AppImage
-./AeroFTP_3.7.0_amd64.AppImage
+chmod +x AeroFTP_4.2.5_amd64.AppImage
+./AeroFTP_4.2.5_amd64.AppImage
 ```
 
 The AppImage is fully self-contained and includes all required libraries.
 
-> **Auto-update:** AeroFTP's AppImage has built-in auto-update support. When a new version is available, the app downloads the update, backs up your current AppImage, replaces it in place, and restarts. No manual intervention needed.
+> **Auto-update:** AeroFTP's AppImage supports in-app updates. After you approve an available update, AeroFTP downloads and verifies the new AppImage, atomically replaces the current AppImage, and restarts it.
 
 ## Snap Store
 

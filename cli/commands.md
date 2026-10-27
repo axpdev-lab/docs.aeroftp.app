@@ -431,6 +431,8 @@ Other v4.2.1 corrections:
 
 Categorized local-vs-remote diff. Returns 4 buckets (matches / differs / missing-remote / missing-local) for AI agents and CI pipelines that need to *plan* a sync before executing it.
 
+Exit codes: `0` for an `ok` result, `4` for differences, a partial scan or a refused comparison, and `5` for invalid local input or exclusions. Connection, profile and authentication failures propagate their reported error code before comparison. Inspect the JSON `status` and scan-boundary information before feeding a result to sync; a nonzero result is not an empty tree.
+
 ```bash
 # Detailed diff with all 4 categories
 aeroftp-cli reconcile --profile "server" ./local /remote --json > diff.json
