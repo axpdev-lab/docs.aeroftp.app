@@ -42,24 +42,7 @@ aeroftp-cli stat --profile "Server" /var/www/index.html --json
 aeroftp-cli cat --profile "Server" /config.ini | grep DB_HOST
 ```
 
-**Semantic exit codes**: agents know exactly what failed without parsing text.
-
-| Code | Meaning |
-| ---- | ------- |
-| 0 | Success |
-| 1 | Connection error |
-| 2 | Not found |
-| 3 | Permission denied |
-| 4 | Transfer failure, partial scan or differences (`check`) |
-| 5 | Configuration error |
-| 6 | Authentication error |
-| 7 | Not supported |
-| 8 | Limit reached without failures (timeout or sync transfer budget) |
-| 9 | Already exists or directory not empty |
-| 10 | Server / parse error |
-| 11 | I/O error |
-| 99 | Unknown error |
-| 130 | Cancelled; do not retry automatically |
+**Semantic exit codes**: use the contract for the command being run in the [CLI reference](/cli/commands). Codes are command-specific: `check` uses `6` for connection or authentication failures, while `agent-connect` uses `1` for a failed connection attempt. Inspect the JSON outcome as well as the exit code before retrying.
 
 **Batch scripting**: agents can generate `.aeroftp-script` scripts for multi-step operations with error handling.
 

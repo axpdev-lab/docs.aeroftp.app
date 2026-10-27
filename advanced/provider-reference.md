@@ -2,7 +2,7 @@
 
 Technical reference for the storage protocols and providers documented on this page, grouped by connection type. This page is a selection, not the catalogue: Blomp, GitLab, native Backblaze B2, Immich and Drime are supported too and have their own pages.
 
-AeroFTP v4.2.5 supports **7 transport protocols**, **26 native provider integrations** and **47 pre-configured presets**, reaching **56 providers** over **70 connection methods**. Those figures are generated from the code into [`docs/PROVIDER-INVENTORY.json`](https://github.com/axpdev-lab/aeroftp/blob/main/docs/PROVIDER-INVENTORY.json) (the release inventory) and CI fails when they drift, so quote them from there rather than counting the tables on this page.
+AeroFTP v4.2.5 supports **7 transport protocols**, **26 native provider integrations** and **47 pre-configured presets**, reaching **56 providers** over **70 connection methods**. Those figures are generated from the code into [`docs/PROVIDER-INVENTORY.json`](https://github.com/axpdev-lab/aeroftp/blob/3a62301e589fffeb8b69fcdff7b5e95ff2b67288/docs/PROVIDER-INVENTORY.json) (the release inventory) and CI fails when they drift, so quote them from there rather than counting the tables on this page.
 
 ## Server Protocols
 

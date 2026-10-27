@@ -12,7 +12,7 @@ FTP (File Transfer Protocol) is the original file transfer protocol, dating back
 | Host | Server hostname or IP | e.g. `ftp.example.com` or `192.168.1.100` |
 | Port | `21` (FTP/Explicit TLS) or `990` (Implicit TLS) | Auto-set when you change the encryption mode |
 | Username | Your FTP username | Often your hosting account name (cPanel, Plesk) |
-| Password | Your FTP password | Stored encrypted in the OS keyring via `keyring` crate |
+| Password | Your FTP password | Stored encrypted in the Universal Credential Vault |
 | Encryption | None / Explicit TLS / Implicit TLS | See detailed explanation below |
 
 When you select a saved FTP server, all fields are populated from the encrypted credential store. The password is never written to disk in plaintext.
@@ -118,7 +118,7 @@ Review the dry-run before executing a sync. Keep certificate verification enable
 | ------- | ----- | -------- |
 | Directory listing works but transfers fail | Passive port range blocked by firewall | Open the server's passive port range in your firewall |
 | `530 Login authentication failed` | Wrong credentials or IP-restricted access | Verify credentials; check if the server restricts login by IP |
-| `SSL/TLS handshake failed` | Server does not support the requested TLS mode | Try a different encryption mode, or use `--insecure` for self-signed certs |
+| `SSL/TLS handshake failed` | Server does not support the requested TLS mode | Check the server's supported TLS mode and configure trust for its certificate while keeping verification enabled |
 | Garbled filenames | Server using Latin-1 encoding | AeroFTP sends `OPTS UTF8 ON` automatically; if the server ignores it, filenames may display incorrectly |
 | Connection timeout | Server behind a strict NAT or offline | Verify the server is reachable with `ping` or `telnet host 21` |
 | TLS downgrade warning | Server rejected AUTH TLS | The server does not support TLS. Use a different server or accept the risk |

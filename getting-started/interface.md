@@ -115,14 +115,17 @@ The bottom bar displays real-time connection and application state:
 
 ## AeroTools Panel
 
-Toggle AeroTools from the **View** menu, the titlebar button, or `Ctrl+Shift+E`. A resizable bottom panel slides up with three tabs:
+Toggle AeroTools from the **View** menu, the titlebar button, or `Ctrl+Shift+E`. A resizable bottom workspace slides up with four panel launchers: Editor, Terminal, AeroAgent and Security Tools. Each toggles its own column.
 
-![AeroTools panel showing the code editor, terminal, and AeroAgent tabs](/images/interface-aerotools.png)
-<!-- SCREENSHOT: The AeroTools panel open at the bottom of the window, taking about 40% of the height. Show the three tab buttons (Code Editor, Terminal, AeroAgent). The Code Editor tab should be active, showing Monaco editor with some code and syntax highlighting. The file panels should be visible above, compressed. Dark theme. -->
+The following screenshot predates the Security Tools launcher; the table below describes the current layout.
 
-| Tab | Description |
+![Earlier AeroTools layout with the code editor, terminal and AeroAgent](/images/interface-aerotools.png)
+<!-- SCREENSHOT UPDATE: Capture all four current panel launchers, including Security Tools. The existing image is labeled as an earlier layout above. -->
+
+| Launcher | Description |
 | --- | --- |
-| **Code Editor** | Monaco-based editor with syntax highlighting for 50+ languages, Cyber theme support, and "Ask AeroAgent" integration (`Ctrl+Shift+A`) |
+| **Editor** | Monaco-based editor with syntax highlighting for 50+ languages, Cyber theme support, and "Ask AeroAgent" integration (`Ctrl+Shift+A`) |
+| **Security Tools** | Local Hash Forge, CryptoLab and Password Forge in their own column, available in every theme |
 | **Terminal** | Integrated PTY terminal (xterm.js) with theme-synced colors. Supports full interactive shell sessions. |
 | **AeroAgent** | AI chat assistant with backend-approved tools for file management, code analysis, shell execution, archive operations, and server management across every protocol AeroFTP supports |
 

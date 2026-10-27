@@ -340,7 +340,7 @@ aeroftp-cli alias-toggle aero --bin-dir ~/bin
 aeroftp-cli --json alias-toggle aero
 ```
 
-Packaged Linux installations include the `aftp` short name; other installations may require an alias. See [Shorter Command Names](/cli/installation#shorter-command-names-aftp-and-the-aero-alias) for the full explanation. Added at the community's request ([discussion #273](https://github.com/axpdev-lab/aeroftp/discussions/273)).
+Linux `.deb` and `.rpm` installations include the `aftp` short name. Snap requires a configured alias, and other installation formats may need an explicit symlink or alias. See [Shorter Command Names](/cli/installation#shorter-command-names-aftp-and-the-aero-alias) for the full explanation. Added at the community's request ([discussion #273](https://github.com/axpdev-lab/aeroftp/discussions/273)).
 
 ### sync
 

@@ -20,7 +20,7 @@ aeroftp-cli profiles --json
 # One-shot agent command
 aeroftp-cli agent --provider xai --model grok-3-mini \
   -m "List files on the Production server" \
-  --auto-approve medium --json
+  --auto-approve high --json
 
 # Agent with vault-backed provider (no env vars needed)
 aeroftp-cli agent -m "Check disk usage on all servers"

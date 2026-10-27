@@ -37,7 +37,7 @@ The published site is **[docs.aeroftp.app](https://docs.aeroftp.app)**. This rep
 
 Provider counts, command inventories and benchmark results evolve with the application. Consult the relevant reference or dated report for its version, scope and limitations.
 
-The current documentation targets **AeroFTP 4.2.5, 26 October 2026**. The [release overview](./releases/4.2.5.md) links the updated guides; historical reports retain their original tested versions and dates.
+The current documentation targets **AeroFTP 4.2.5**. The [release overview](./releases/4.2.5.md) links the updated guides; historical reports retain their original tested versions and dates.
 
 ## Develop Locally
 

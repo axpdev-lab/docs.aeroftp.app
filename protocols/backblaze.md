@@ -32,8 +32,8 @@ The S3-compatible preset is unchanged, it continues to dispatch through AeroFTP'
 
 | Field | Value | Notes |
 | ----- | ----- | ----- |
-| Application Key ID | The `keyID` shown next to your application key in the B2 dashboard | Stored encrypted in the OS keyring |
-| Application Key | The `applicationKey` value (only shown once at creation) | Stored encrypted in the OS keyring |
+| Application Key ID | The `keyID` shown next to your application key in the B2 dashboard | Stored encrypted in the Universal Credential Vault |
+| Application Key | The `applicationKey` value (only shown once at creation) | Stored encrypted in the Universal Credential Vault |
 | Bucket | The bucket name (not the bucket ID) | AeroFTP resolves the bucket ID on connect |
 
 There is **no endpoint field**. The native backend calls `b2_authorize_account`, which returns the regional `apiUrl` and `downloadUrl` for your account; AeroFTP routes every subsequent call through those URLs automatically.
@@ -171,7 +171,7 @@ Listing the result confirms its presence, not full byte integrity. Verify a down
 
 - Use a dedicated bucket per workflow (backups, builds, dataset shipments). B2 charges by stored bytes regardless of bucket count, and per-bucket Application Keys give you tight scoping.
 - B2's free tier covers 10 GB stored and 1 GB of downloads per day. The integration test suite uses ~250 MB in transient storage, well within the free quota.
-- For sync workloads, keep `compare_checksum=true` enabled. The native backend records B2's `contentLength` and `uploadTimestamp` in `RemoteEntry` so size-and-mtime comparisons are reliable, and when you opt into checksum compare AeroFTP scans the local side with streaming SHA-256 to match B2's per-object SHA-1 (no full re-download required).
+- The native backend records B2's `contentLength` and `uploadTimestamp` in `RemoteEntry` for size-and-mtime comparisons. B2 exposes SHA-1, not a digest comparable to the local SHA-256, so checksum comparison falls back to size and modification time. For full content validation, explicitly compute the same algorithm on both objects with `hashsum`; a remote hash can require a full download.
 - If you previously connected via the S3-compatible preset and want to migrate, save a new profile against the native backend; existing servers in the registry are renamed "Backblaze B2 (S3-compat)" with a legacy disclaimer but continue to work indefinitely.
 
 ## Related Documentation

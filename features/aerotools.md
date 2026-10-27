@@ -8,16 +8,16 @@ AeroTools is AeroFTP's integrated development panel, combining a code editor, SS
 
 ## Panel Layout
 
-The AeroTools panel contains four tabs:
+The AeroTools panel has four launchers. Each toggles its own panel or column:
 
-| Tab | Component | Description |
+| Launcher | Component | Description |
 |-----|-----------|-------------|
-| **AeroTools** | Security Toolkit | Hashing, encryption, and password generation in every theme |
+| **Security Tools** | Security Toolkit | Hashing, encryption, and password generation in every theme |
 | **Editor** | Monaco Editor | VS Code engine with syntax highlighting for 50+ languages |
 | **Terminal** | SSH Terminal | Local PTY and SSH sessions with multiple themes and tabs |
 | **AI Agent** | AeroAgent | AI assistant with built-in tools across local files and the 7 transport protocols + 20+ native provider integrations |
 
-The panel is resizable by dragging the separator between the file browser and the tools area. Each tab maintains its own state independently.
+The panel is resizable by dragging the separator between the file browser and the tools area. Each panel maintains its own state independently.
 
 ## Code Editor
 

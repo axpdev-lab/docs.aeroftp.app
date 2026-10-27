@@ -25,7 +25,7 @@ The CLI binary ships inside every AeroFTP desktop package, and since v4.0.8 insi
 
 > **Windows portable ZIP (since v4.0.8):** the `AeroFTP-<version>-portable-windows-x64.zip` build bundles `aeroftp-cli.exe` (and the `aeroftp-dispatch.exe` shim that powers the `aftp` / `aero` names) next to `AeroFTP.exe`. It is not added to `PATH`: run it as `.\aeroftp-cli.exe` from the extracted folder, or add that folder to your `PATH`. The portable CLI shares the portable `data\` folder with the GUI, so the servers and vault you set up in the app are visible to the CLI and vice versa.
 
-The CLI command is `aeroftp-cli`. Linux packages install a dispatcher at `/usr/bin/aeroftp`, with `aeroftp-cli` and `aftp` entry points; the actual CLI payload lives in `/usr/lib/aeroftp/aeroftp-cli`. The dispatcher starts the desktop app without a CLI subcommand and routes recognized commands to the CLI.
+The CLI command is `aeroftp-cli`. Linux `.deb` and `.rpm` packages install a dispatcher at `/usr/bin/aeroftp`, with `aeroftp-cli` and `aftp` entry points; the actual CLI payload lives in `/usr/lib/aeroftp/aeroftp-cli`. The dispatcher starts the desktop app without a CLI subcommand and routes recognized commands to the CLI.
 
 ```bash
 aeroftp --version

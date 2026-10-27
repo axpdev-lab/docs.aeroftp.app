@@ -7,7 +7,7 @@ description: AeroFTP 4.2.5, its architecture, distribution channels and document
 
 ## AeroFTP 4.2.5
 
-AeroFTP is a free, open-source desktop file manager built with Rust, Tauri 2, React and TypeScript. This documentation targets **v4.2.5, 26 October 2026**, and is updated with that release.
+AeroFTP is a free, open-source desktop file manager built with Rust, Tauri 2, React and TypeScript. This documentation targets **v4.2.5** and is published with that release. Its publication date is recorded on [GitHub Releases](https://github.com/axpdev-lab/aeroftp/releases).
 
 The desktop app, `aeroftp-cli` and the bundled MCP server share backend components. Available operations still depend on the provider, connection mode and command path: a shared backend does not make every operation or concurrency setting available on every surface.
 

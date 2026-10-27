@@ -50,7 +50,7 @@ The Rust backend handles all protocol communication, encryption, and system oper
 
 ### Protocol Providers
 
-The `providers/` modules implement `StorageProvider` for transports, native APIs and local/synthetic backends. The [provider inventory](https://github.com/axpdev-lab/aeroftp/blob/main/docs/PROVIDER-INVENTORY.json) records supported connection forms:
+The `providers/` modules implement `StorageProvider` for transports, native APIs and local/synthetic backends. The [provider inventory](https://github.com/axpdev-lab/aeroftp/blob/3a62301e589fffeb8b69fcdff7b5e95ff2b67288/docs/PROVIDER-INVENTORY.json) records supported connection forms:
 
 - **Server protocols:** FTP/FTPS (`ftp.rs`), SFTP (`sftp.rs`), WebDAV (`webdav.rs`), S3 (`s3.rs`)
 - **OAuth2 cloud:** Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud
