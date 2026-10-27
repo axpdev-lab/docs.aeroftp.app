@@ -75,6 +75,14 @@ Once unlocked, the vault browser presents the contents in a familiar file-list i
 
 The `vault_peek` command (also available as an AeroAgent tool) inspects a vault header without requiring the password, revealing the vault version, encryption parameters, and file count.
 
+## Changing Mode
+
+**Change Mode** rebuilds an existing vault under a different supported format or security level while keeping its password. It is available beside Change Password in an open vault and through `aeroftp-cli vault change-mode`.
+
+The operation extracts the full plaintext tree into a `.aerovault-repack-*` temporary directory beside the vault, then builds the replacement container. Allow free space for both the plaintext tree and the rebuilt container alongside the original. Normal cleanup removes the temporary directory, but an abrupt interruption can leave plaintext behind. Use a suitable filesystem and check for leftovers after an interrupted operation.
+
+Replacement uses two renames rather than an atomic swap. If the process stops after moving the original to `.<vault-name>.repack-bak-<pid>` but before installing the rebuilt container, restore the original from that backup. A reported failure of the second rename attempts restoration automatically.
+
 ## Remote Vault Support
 
 AeroVault can open `.aerovault` files stored on remote servers across any of AeroFTP's 7 transport protocols and 20+ native provider integrations.
