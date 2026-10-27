@@ -10,7 +10,7 @@ AeroFTP applies encryption across several distinct layers:
 | ----- | ------- | ----------------- |
 | AeroVault format v2 | Stable encrypted file containers (default) | AES-256-GCM-SIV (RFC 8452) |
 | AeroVault format v3 (Archive tier) | Wrapper-stack container with content-defined chunking, dedup and per-chunk zstd | AES-256-GCM-SIV (RFC 8452) over zstd chunks |
-| AeroVault format v4 (v3 + Error Correction) | v3 container plus a detached `.aerocorrect` recovery sidecar over the ciphertext (repair, not confidentiality) | Reed-Solomon parity, SHA-256 content binding |
+| AeroVault format v4 (v3 + Error Correction) | v3 container plus recovery parity over the ciphertext: embedded by default, detached `.aerocorrect` sidecar, or both (repair, not confidentiality) | Reed-Solomon parity, SHA-256 content binding |
 | AeroCrypt overlay (native) | Per-file encryption on top of any provider profile (`AECR` format) | AES-256-GCM-SIV content, AES-256-KW DEK wrap, AES-256-SIV filenames |
 | Archive encryption | Password-protected ZIP/7z | AES-256 |
 | rclone crypt interoperability | Full read/write interoperability with existing rclone crypt remotes | XSalsa20-Poly1305 content + EME filename encryption |
@@ -171,7 +171,7 @@ These do not replace a hardened deserializer, but they make the easy "give the r
 v4 is intentionally shaped as "v3 plus error correction". The cipher chain (chunk → compress → encrypt) and the chunk hash trail (keyed BLAKE3-128 for dedup, BLAKE3-256 for pre-decryption integrity) do not change for v4. The error-correction wrapper ships as:
 
 1. **Reed-Solomon parity**, carried as a non-critical extension. No refactor of v3 primitives, so a v3-only reader skips it and still opens the container.
-2. **A detached, content-addressed `.aerocorrect` sidecar** as the default placement (`embedded` and `both` are also available), shared byte-for-byte with the standalone `aerovault` crate and with AeroSync. The sidecar binds to the SHA-256 of the protected content and its v2 framing is self-healing.
+2. **`embedded` placement** as the default for GUI and CLI vault creation (`detached` and `both` are also available). Detached placement uses a content-addressed `.aerocorrect` sidecar, shared byte-for-byte with the standalone `aerovault` crate and with AeroSync. The sidecar binds to the SHA-256 of the protected content and its v2 framing is self-healing.
 3. **The scrub path**: on open, walk the manifest, recompute the per-block cipher hash, identify damaged blocks, pull recovery data from the parity source, repair, and re-verify. The cipher hash is stored per block precisely so damaged ciphertext can be detected before decryption.
 4. **Fail-closed, all-or-nothing repair**: every reconstructed region is re-verified against the container's authenticated values (header MAC and manifest `cipher_hash`) before the vault is re-sealed, so a foreign or corrupt sidecar can only make a repair fail, never overwrite good data. A dedicated repair dialog surfaces damaged-block, recovered, and lost counts rather than silently fixing.
 
