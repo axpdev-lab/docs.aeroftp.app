@@ -20,7 +20,7 @@ The form fills the JFS host and HTTPS port automatically. Do not enter your ordi
 - Download resume is available; upload resume is not the same capability.
 - The dedicated trash manager supports browsing, restoration and permanent deletion. Folder restore reports the children it restored and any failures.
 - Share-link creation and file-version browsing are not exposed by this provider.
-- Use size and modification time for comparison when no comparable provider digest is available; the provider does not expose a server-side checksum.
+- AeroSync uses size and modification time when no comparable provider digest is available. The CLI `check --checksum` path falls back to size when it cannot obtain a comparable remote SHA-256 digest; it does not compare modification times. This provider does not expose a server-side checksum.
 
 A folder can be removed without recursion only when empty. Permanent deletion is separate from moving a live item to trash. Review the selected trash paths before purging.
 

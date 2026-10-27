@@ -80,7 +80,7 @@ The MCP server uses token buckets shared by category, replenished continuously:
 
 Aliases inherit the registry classification. Some diagnostic tools run probes that write temporary data even when their rate category is read-only; `aeroftp_benchmark` and `aeroftp_speed` exercise real uploads/downloads and cleanup. A rate category is not a human permission grant. Configure the MCP client's tool approval policy for the operations you intend to allow. The CLI agent's `--auto-approve` levels describe the AI-agent loop, not an MCP approval dialog.
 
-Rate-limit errors include a `retry_after` duration. Wait for that interval rather than retrying in a tight loop.
+The human-readable rate-limit error message includes the retry interval in seconds (`Rate limit exceeded. Retry after ... seconds.`); there is no structured `retry_after` field. Wait for that interval rather than retrying in a tight loop.
 
 ## Security and Audit Events
 

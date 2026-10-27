@@ -23,7 +23,7 @@ To uninstall:
 sudo apt remove aeroftp
 ```
 
-## .rpm (Fedora / RHEL / openSUSE)
+## .rpm (Fedora / RHEL)
 
 Download the `.rpm` package and install with DNF:
 

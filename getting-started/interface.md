@@ -133,7 +133,9 @@ The following screenshot predates the Security Tools launcher; the table below d
 
 The local file context menu offers **Open with default app**. Ordinary files and folders use the operating system's registered application. AeroFTP formats route to their own import or vault flow: `.aerovault`, `.aerozip`, `.aeroftp` and `.aeroftp-keystore`.
 
-Scripts use the integrated terminal instead of opening as text: `.ps1` runs with `pwsh -File`, `.sh` with `bash`, and `.py` with `python3`. The corresponding interpreter must be installed. Only run scripts you intend to execute.
+The registered `.aeroftp-script` association opens the file in AeroFile, with its containing folder and the file selected; it does not execute the batch. Run a reviewed batch explicitly with `aeroftp-cli batch path/to/script.aeroftp-script`. The context-menu action follows the OS association for this extension.
+
+Shell and Python scripts use the integrated terminal instead of opening as text: `.ps1` runs with `pwsh -File`, `.sh` with `bash`, and `.py` with `python3`. The corresponding interpreter must be installed. Only run scripts you intend to execute.
 
 ## Command Palette
 

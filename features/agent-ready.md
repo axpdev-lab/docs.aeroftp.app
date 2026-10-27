@@ -136,7 +136,7 @@ Quota fields depend on provider support; some backends cannot supply a total or 
 
 ### "Copy documents from Dropbox to an encrypted S3 overlay"
 
-Use an S3 profile already bound to AeroCrypt or rclone crypt. Verify its `cryptOverlay` field before uploading; a plain S3 profile does not encrypt content automatically.
+Use an S3 profile already bound to AeroCrypt or rclone crypt. Verify its `cryptOverlay` field and confirm that `/encrypted-archive/` is inside the profile's configured **Overlays Path** before uploading; the overlay must unlock successfully. An absolute destination outside that scope passes through as plaintext. A plain S3 profile does not encrypt content automatically.
 
 ```bash
 aeroftp-cli get --profile "Dropbox" "/contracts/*.pdf" ./contracts/

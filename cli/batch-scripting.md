@@ -8,7 +8,7 @@ aeroftp-cli batch backup.aeroftp-script --json
 cat deploy.aeroftp-script | aeroftp-cli batch -
 ```
 
-Operation results go to stdout; diagnostics go to stderr. `--json` selects structured operation output. A batch is never interactive, including when launched from a terminal.
+Operation results go to stdout; diagnostics go to stderr. `ECHO` writes its message to stderr in both normal and `--json` batches and emits no structured stdout result. `--json` selects structured operation output, including cross-profile `TRANSFER` results. A batch is never interactive, including when launched from a terminal.
 
 ## Command Reference
 
@@ -17,7 +17,7 @@ Commands operate on the target selected by `CONNECT`. Do not put a connection UR
 | Command | Syntax | Behavior |
 | --- | --- | --- |
 | `SET` | `SET name=value` | Define or replace a variable |
-| `ECHO` | `ECHO text` | Print text |
+| `ECHO` | `ECHO text` | Write text to stderr; no structured stdout result |
 | `ON_ERROR` | `ON_ERROR FAIL` or `ON_ERROR CONTINUE` | Choose failure handling; default `FAIL` |
 | `CONNECT` | `CONNECT --profile "Name"` or `CONNECT protocol://user@host` | Select and test a saved profile or URL target; URL authentication must already be available non-interactively |
 | `DISCONNECT` | `DISCONNECT` | Clear the current target |
