@@ -233,7 +233,7 @@ Saved credential entries are encrypted in the JSON envelope named `vault.db`, ra
 | Component | Algorithm | Detail |
 | --------- | --------- | ------ |
 | Encryption | AES-256-GCM | Per-entry encryption with random 96-bit nonce |
-| Key derivation | HKDF-SHA256 | Derives the vault key from a random 64-byte passphrase |
+| Key derivation | HKDF-SHA256 | Derives the 256-bit entry-encryption key from the random 64-byte passphrase |
 | Master password KDF | Argon2id | 128 MiB, t=4, p=4; wraps the random passphrase with AES-256-GCM |
 | Persistence | JSON envelope | Per-entry ciphertext, temporary-file replacement and platform fallback paths |
 | Passphrase entropy | 512-bit CSPRNG | Random passphrase; protected by keyring, master password, or file permissions in no-keyring fallback mode |

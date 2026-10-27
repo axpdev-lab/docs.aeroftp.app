@@ -32,7 +32,7 @@ sudo pacman -S webkit2gtk-4.1 gtk3 libayatana-appindicator librsvg
 
 ### Windows
 
-Install Microsoft C++ Build Tools with the Windows SDK and the MSVC toolchain, plus Microsoft Edge WebView2 Runtime. Rust and Node.js alone do not supply the native Windows build dependencies.
+Install Microsoft C++ Build Tools with the Windows SDK and the MSVC toolchain, plus Microsoft Edge WebView2 Runtime. Rust and Node.js alone do not supply the native Windows build dependencies. Install [Strawberry Perl](https://strawberryperl.com/) and put `perl` on `PATH` for vendored OpenSSL. Install [LLVM](https://github.com/llvm/llvm-project/releases) for the `whisper-rs-sys` bindgen step; if libclang is not found, set `LIBCLANG_PATH` to its `bin` directory, such as `C:\Program Files\LLVM\bin`.
 
 ### macOS
 

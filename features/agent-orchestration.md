@@ -83,7 +83,7 @@ Executes the following read operations on a saved server supported by the active
 
 Credentials are resolved inside Rust and are not included in the operation result. Connection reuse and provider support depend on the surface and backend.
 
-`server_exec` explicitly refuses `put`, `get`, `rm`, `mv` and `mkdir`. Use dedicated tools such as `remote_upload`, `remote_download`, `remote_mkdir`, `remote_rename` and `remote_delete` where the surface exposes them; their own approval rules apply.
+`server_exec` explicitly refuses `put`, `get`, `rm`, `mv` and `mkdir`. Use dedicated tools such as `remote_upload`, `remote_download`, `remote_mkdir`, `remote_rename` and `remote_delete` where the surface exposes them; their own approval rules apply. GUI AeroAgent dispatch uses backend approval grants; the shared tool dispatcher does not enforce that GUI grant for inbound MCP or CLI callers. MCP authorization belongs to the client/host, while the CLI AI-agent loop applies its own approval policy.
 
 ## Native MCP Server
 

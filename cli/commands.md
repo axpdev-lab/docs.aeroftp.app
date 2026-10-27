@@ -230,7 +230,7 @@ aeroftp-cli check --profile "server" /local/ /remote/ --one-way
 aeroftp-cli check --profile "server" /local/ /remote/ --json
 ```
 
-The default comparison uses size. With `--checksum`, plain (non-crypt) paths request local SHA-256 and the provider's remote checksum. A pair is compared by content only when the remote checksum is also SHA-256; otherwise it falls back to size, including unsupported checksums and crypt overlays. In JSON, inspect each pair's `compare_method` (`checksum` or `size`). Exit `0` alone does not establish content integrity for pairs compared by size. For an explicit content check on a provider without a comparable server digest, compare `hashsum` results with local hashes per file.
+The default comparison uses size. With `--checksum`, plain (non-crypt) paths request local SHA-256 and the provider's remote checksum. A pair is compared by content only when the remote checksum is also SHA-256; otherwise it falls back to size, including unsupported checksums and crypt overlays. The `check` JSON `details` array omits matching entries and has no per-entry `compare_method`. Use `reconcile --checksum --json` for `compare_method` (`checksum` or `size`) on matching and differing pairs. Exit `0` alone does not establish content integrity for pairs compared by size. For an explicit content check on a provider without a comparable server digest, compare `hashsum` results with local hashes per file.
 
 #### Output classes
 
@@ -239,7 +239,7 @@ Each entry is classified into exactly one of:
 | Status | Meaning |
 |---|---|
 | `match` | File present on both sides with matching SHA-256 digests when available, otherwise matching size |
-| `differ` | File present on both sides with a checksum or size mismatch, according to `compare_method` |
+| `differ` | File present on both sides with a checksum or size mismatch |
 | `missing_local` | File exists only on the remote (suppressed by `--one-way`) |
 | `missing_remote` | File exists only locally |
 
@@ -247,11 +247,11 @@ Each entry is classified into exactly one of:
 
 ```json
 {
-  "status": "ok" | "differences_found" | "partial",
+  "status": "differences_found",
   "match_count": 1234,
-  "differ_count": 0,
-  "missing_local": 5,
-  "missing_remote": 2,
+  "differ_count": 1,
+  "missing_local": 0,
+  "missing_remote": 1,
   "elapsed_secs": 4.21,
   "details": [
     {"path": "docs/api.md", "status": "differ", "local_size": 4096, "remote_size": 4123},
@@ -262,6 +262,15 @@ Each entry is classified into exactly one of:
 ```
 
 The `suggested_next_command` field is the natural follow-up: a `sync --dry-run` you can review before applying changes.
+
+The example above is `check` output. For comparison methods, `reconcile --checksum --json` instead returns categorized `groups`. For example, its `groups.differ` array can contain:
+
+```json
+[
+  {"path": "docs/api.md", "local_size": 4096, "remote_size": 4123, "compare_method": "size"}
+]
+```
+
 
 #### Exit codes
 
@@ -446,7 +455,7 @@ aeroftp-cli sync --profile "server" ./local /remote --from-reconcile diff.json -
 
 ### sync-doctor
 
-Pre-sync preflight checks. Emits a JSON report with planned upload/download/delete counts, bandwidth estimate, top-level diff buckets, and a `next_command` field with the exact `aeroftp-cli sync ...` invocation that matches the preflight.
+Pre-sync preflight checks. Emits a JSON report with planned upload/download/delete counts, bandwidth estimate, top-level diff buckets, and a `suggested_next_command` field containing an `aeroftp-cli sync ... --dry-run --json` follow-up. It omits `--ec-max-overhead`; append the same value used in preflight when that estimate limit matters.
 
 ```bash
 aeroftp-cli sync-doctor --profile "server" ./local /remote --json

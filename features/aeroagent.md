@@ -133,7 +133,7 @@ The GUI tool registry includes local and remote file tools, coding workflows and
 
 Remote tools may use the current connection or an explicit saved server where their schema allows it. Backend capability and surface checks still apply. For exact fields and danger levels, inspect the tool settings/schema rather than assuming the CLI agent or MCP accepts the same arguments.
 
-`server_exec` accepts only `ls`, `cat`, `stat`, `find` and `df`. It refuses mutative operations; use dedicated upload, download, mkdir, rename and delete tools with their own approval rules. Credentials resolve inside Rust and are not returned to the model.
+`server_exec` accepts only `ls`, `cat`, `stat`, `find` and `df`. It refuses those unsupported operations; use dedicated upload, download, mkdir, rename and delete tools. GUI AeroAgent calls pass through its backend approval gate; CLI and inbound MCP calls use their respective caller or host authorization policies. Credentials resolve inside Rust and are not returned to the model.
 
 ### Visible GUI Control
 

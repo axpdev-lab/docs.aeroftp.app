@@ -153,7 +153,7 @@ aeroftp-cli mv --profile "My B2 Native" /reports/draft.pdf /reports/final.pdf
 aeroftp-cli sync --profile "My B2 Native" ./local/ /remote/ --direction upload --dry-run --json
 ```
 
-Listing the result confirms its presence, not full byte integrity. Verify a downloaded copy against the source when validating a backup. Review the dry-run before executing sync. The isolated integration harness is documented in [`integration_b2.rs`](https://github.com/axpdev-lab/aeroftp/blob/main/src-tauri/tests/integration_b2.rs).
+Listing the result confirms its presence, not full byte integrity. Verify a downloaded copy against the source when validating a backup. Review the dry-run before executing sync. The isolated integration harness is documented in [`integration_b2.rs`](https://github.com/axpdev-lab/aeroftp/blob/a6d3a126e83b5359f9dbeb1f85f021f5e0386368/src-tauri/tests/integration_b2.rs).
 
 ## Common Issues
 

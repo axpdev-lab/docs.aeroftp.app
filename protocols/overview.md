@@ -37,7 +37,7 @@ These integrations use provider authorization or an existing authorized token, a
 | [pCloud Drive](/providers/pcloud) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
 | [Zoho WorkDrive](/providers/zoho) | OAuth2 PKCE (8 regional endpoints) | HTTPS + at-rest | Team plan |
 | [Koofr](/providers/koofr) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
-| [Yandex Disk](/providers/yandex) | OAuth2 Token | HTTPS | 5 GB |
+| [Yandex Disk](/providers/yandex) | OAuth2 token; optional browser PKCE with your own client | HTTPS | 5 GB |
 | [Internxt](/providers/internxt) | OAuth2 PKCE + zero-knowledge | Client-side AES-256-CTR | 1 GB |
 | [4shared](/providers/4shared) | OAuth 1.0 (HMAC-SHA1) | HTTPS | 15 GB |
 | [Twake Drive](/providers/twake) | OAuth2 PKCE on your own instance | HTTPS | Self-hosted |
@@ -84,6 +84,7 @@ These connect to servers or buckets you control. You provide the hostname, port,
 Each native provider has a dedicated implementation. Consult its page and runtime capabilities for sharing, server-side copy, chunking, trash, versioning and labels. Delta via rsync is an SFTP capability, not a universal native-provider feature.
 
 **OAuth2 PKCE flow:** Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Koofr, Yandex Disk, Internxt, Twake Drive.
+**Yandex Disk:** accepts an OAuth access token; the optional browser flow uses the shared PKCE implementation with your configured client ID and secret.
 **OAuth 1.0 (HMAC-SHA1):** 4shared (RFC 5849).
 **Direct auth (API key / token / session):** MEGA, Filen, kDrive, Jottacloud, Drime Cloud, FileLu, OpenDrive.
 **Developer platforms:** GitHub, GitLab, Immich.

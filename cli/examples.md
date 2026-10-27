@@ -11,7 +11,7 @@ aeroftp-cli pwd "Production" --json
 aeroftp-cli connect --profile "Production" --json
 ```
 
-Direct URLs are also supported for compatible backends: `aeroftp-cli ls sftp://user@host /var/www/`. Prefer saved profiles for browser-authorized providers. A common command interface does not guarantee that every provider supports checksums, quota, resume, native copy or every other operation. Unsupported operations return exit 7.
+Direct URLs are also supported for compatible backends: `aeroftp-cli ls sftp://user@host /var/www/`. Prefer saved profiles for browser-authorized providers. A common command interface does not guarantee that every provider supports checksums, quota, resume, native copy or every other operation. Exit codes are command-specific: many unsupported operations return exit 7, while `agent-connect` can return `connect.status: "unsupported"` with exit 0 and a usable discovery payload. Inspect the command's JSON status as well as its exit code.
 
 ## Download and Upload
 
@@ -109,7 +109,7 @@ aeroftp-cli get --profile "Production" /backups/db.sql.gz ./db.sql.gz
 sha256sum ./db.sql.gz
 ```
 
-For content-aware directory comparison in 4.2.5, use `check --checksum --json` or `reconcile --checksum --json` and inspect each pair's `compare_method`. Plain paths compare matching local and remote SHA-256 digests when available; unsupported digests and crypt overlays fall back to size. Compare explicit per-file hashes when content equality is required for a pair reported as `size`.
+For content-aware directory comparison in 4.2.5, use `check --checksum --json` for counts and nonmatching details, or `reconcile --checksum --json` for each pair's `compare_method` (including matching pairs). Plain paths compare matching local and remote SHA-256 digests when available; unsupported digests and crypt overlays fall back to size. Compare explicit per-file hashes when content equality is required for a pair reported as `size`.
 
 ## Cross-Profile Migration
 
