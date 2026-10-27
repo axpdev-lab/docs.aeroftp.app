@@ -20,12 +20,12 @@ At the top of the screen you will find the **protocol selector** -- a categorize
 
 ## 3. Choose a Protocol
 
-Click the **protocol selector** to expand the full protocol grid. Protocols are organized into distinct categories:
+Click the **protocol selector** to expand the full protocol grid. Choose a connection family, then follow the authentication fields for the selected provider:
 
 | Category | Protocols | Authentication |
 | --- | --- | --- |
 | **Servers** | FTP, FTPS, SFTP | Host + username/password or SSH key |
-| **Cloud (OAuth)** | Google Drive, Dropbox, OneDrive, Box, pCloud, MEGA, Filen, Zoho, Internxt, kDrive, Koofr, Jottacloud, Yandex Disk, OpenDrive, FileLu, 4shared | Browser-based OAuth2 authorization |
+| **Cloud providers** | Google Drive, Dropbox, OneDrive, Box, pCloud, MEGA, Filen, Zoho, Internxt, kDrive, Koofr, Jottacloud, Yandex Disk, OpenDrive, FileLu, 4shared | Provider-specific: browser authorization, account credentials, API key or login token. See the selected [provider guide](/protocols/overview). |
 | **S3-Compatible** | AWS S3, Backblaze B2, Wasabi, Cloudflare R2, DigitalOcean Spaces, Storj, and more | Access Key + Secret Key |
 | **WebDAV** | Nextcloud, Seafile, CloudMe, or custom WebDAV servers | Host + username/password |
 

@@ -50,7 +50,7 @@ Authentication via passwords, API keys, session tokens or personal access tokens
 |----------|-------------|------------|-------------|
 | [Proton Drive](/providers/proton-drive) | Browser sign-in (native), or official CLI session | Client-side encryption | See provider page |
 | [MEGA](/providers/mega) | Password (Native API or MEGAcmd) | Client-side AES | 20 GB |
-| [Filen](/providers/filen) | Password (PBKDF2) + optional 2FA | Client-side AES-256-GCM | 10 GB |
+| [Filen](/providers/filen) | Account password + optional 2FA (auth v1/v2/v3) | Client-side AES-256-GCM | 10 GB |
 | [kDrive](/providers/kdrive) | API Token (Bearer) | HTTPS | 15 GB |
 | [Jottacloud](/providers/jottacloud) | Personal Login Token (auto-refresh 60s pre-expiry) | HTTPS | 5 GB |
 | [Drime Cloud](/providers/drime) | API Token (Bearer) | HTTPS | 20 GB |
