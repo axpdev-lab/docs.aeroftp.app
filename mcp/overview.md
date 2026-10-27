@@ -2,7 +2,7 @@
 
 AeroFTP 4.2.5 provides a native Model Context Protocol server over stdio. It uses the Rust backend directly, with saved profiles, connection pooling, per-profile serialization, cancellation, schema validation, rate limits and audit events. It does not invoke an AI model itself.
 
-The checked catalog contains **78 wire tool names**: 39 `aeroftp_*`, 36 `remote_*`, two `server_*` and `agent_connect`. The command inventory labels these 40 primary and 38 alias names using a namespace heuristic; this is not a count of independent capabilities. Use `tools/list` for the live schemas and [COMMAND-INVENTORY.json](https://github.com/axpdev-lab/aeroftp/blob/main/docs/COMMAND-INVENTORY.json) for the checked snapshot. CLI agent tools and GUI AeroAgent tools are different catalogs.
+The checked catalog contains **78 wire tool names**: 39 `aeroftp_*`, 36 `remote_*`, two `server_*` and `agent_connect`. The command inventory labels these 40 primary and 38 alias names using a namespace heuristic; this is not a count of independent capabilities. Use `tools/list` for the live schemas and [COMMAND-INVENTORY.json](https://github.com/axpdev-lab/aeroftp/blob/3a62301e589fffeb8b69fcdff7b5e95ff2b67288/docs/COMMAND-INVENTORY.json) for the checked snapshot. CLI agent tools and GUI AeroAgent tools are different catalogs.
 
 ## Setup
 

@@ -92,7 +92,7 @@ You do not need to configure this manually. AeroFTP handles the detection and sw
 ## Features
 
 - **PROPFIND**: Directory listings are retrieved using the WebDAV `PROPFIND` method with `Depth: 1`. AeroFTP parses the XML response to extract file names, sizes, modification times, and content types.
-- **TLS**: All HTTPS connections use the system's certificate store for validation. Self-signed certificates trigger a confirmation dialog before proceeding.
+- **TLS**: HTTPS connections verify the server certificate by default. For a private certificate authority, configure a certificate chain trusted by the system; keep certificate verification enabled.
 - **Streaming uploads**: Large files are uploaded using chunked transfer encoding, so they are streamed from disk without loading the entire file into memory.
 - **Create directories**: The `MKCOL` method is used to create new directories on the server.
 - **Delete**: The `DELETE` method removes files and directories (recursively for directories).
@@ -121,7 +121,7 @@ Paths are relative to the saved WebDAV root. A root already ending in `/remote.p
 | `405 Method Not Allowed` | Server does not support the requested WebDAV method | The server may have a limited WebDAV implementation; check server documentation |
 | Cannot navigate above initial path | Root boundary enforcement | This is by design -- AeroFTP restricts navigation to the configured path |
 | Slow directory listings (1000+ files) | WebDAV PROPFIND is verbose | WebDAV XML responses are larger than SFTP metadata; expect slower listing for very large directories |
-| Self-signed certificate error | Server uses a self-signed TLS certificate | Accept the certificate in the confirmation dialog, or use `--insecure` in the CLI |
+| Self-signed certificate error | Server uses a self-signed TLS certificate | Use a certificate issued by a trusted CA, or install the private CA certificate in the system trust store; keep verification enabled. `--insecure` disables certificate verification and is only a temporary diagnostic workaround |
 | 2FA login fails on Nextcloud | Using main password instead of app password | Generate an app password in Nextcloud Settings > Security > Devices & sessions |
 
 ## Tips

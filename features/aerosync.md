@@ -37,8 +37,8 @@ Choose a mode and, for a one-way mode, its source and destination. The labels de
 
 - **Skip** leaves both copies unchanged.
 - **Keep both** copies the source under a timestamped suffix.
-- **Keep newer / Keep older** chooses by modification time.
-- **Keep larger / Keep smaller** chooses by size.
+- **Keep newer / Keep older**: choose by modification time.
+- **Keep larger / Keep smaller**: choose by size.
 
 If the required metadata is absent or tied, the policy leaves the conflict unresolved. The plan lists copy, overwrite, delete, skip and conflict counts before execution. Destructive actions require confirmation.
 

@@ -26,7 +26,7 @@ AeroFTP is available for **Linux**, **Windows**, and **macOS**. All packages are
 ## Choose Your Platform
 
 - **[Linux](linux.md)** -- `.deb`, `.rpm`, `.AppImage`, Snap Store, or AUR (Arch)
-- **[Windows](windows.md)** -- `.msi` installer (recommended) `.exe` NSIS installer, or portable `.zip`
+- **[Windows](windows.md)** -- `.msi` installer (recommended), `.exe` NSIS installer, or portable `.zip`
 - **[macOS](macos.md)** -- `.dmg` disk image
 
 ## Downloading

@@ -16,7 +16,7 @@ The CLI binary ships inside every AeroFTP desktop package, and since v4.0.8 insi
 |----------------|-------------|---------|
 | Linux `.deb` | `/usr/bin/aeroftp-cli` | Yes |
 | Linux `.rpm` | `/usr/bin/aeroftp-cli` | Yes |
-| Linux `.snap` | `/snap/bin/aeroftp.aeroftp-cli` (alias availability depends on Snap setup) | Yes (via snap alias) |
+| Linux `.snap` | `/snap/bin/aeroftp` dispatcher, or `snap run aeroftp` | Yes, when `/snap/bin` is on PATH |
 | Linux `.AppImage` | Bundled inside the AppImage | No |
 | Windows `.msi` | `C:\Program Files\AeroFTP\aeroftp-cli.exe` | Depends on installer options |
 | Windows `.exe` (NSIS) | `C:\Program Files\AeroFTP\aeroftp-cli.exe` | Depends on installer options |
@@ -25,7 +25,7 @@ The CLI binary ships inside every AeroFTP desktop package, and since v4.0.8 insi
 
 > **Windows portable ZIP (since v4.0.8):** the `AeroFTP-<version>-portable-windows-x64.zip` build bundles `aeroftp-cli.exe` (and the `aeroftp-dispatch.exe` shim that powers the `aftp` / `aero` names) next to `AeroFTP.exe`. It is not added to `PATH`: run it as `.\aeroftp-cli.exe` from the extracted folder, or add that folder to your `PATH`. The portable CLI shares the portable `data\` folder with the GUI, so the servers and vault you set up in the app are visible to the CLI and vice versa.
 
-The CLI command is `aeroftp-cli`. Linux `.deb` and `.rpm` packages install a dispatcher at `/usr/bin/aeroftp`, with `aeroftp-cli` and `aftp` entry points; the actual CLI payload lives in `/usr/lib/aeroftp/aeroftp-cli`. The dispatcher starts the desktop app without a CLI subcommand and routes recognized commands to the CLI.
+The CLI command is `aeroftp-cli`. Linux `.deb` and `.rpm` packages install a dispatcher at `/usr/bin/aeroftp`, with `aeroftp-cli` and `aftp` entry points; the actual CLI payload lives in `/usr/lib/aeroftp/aeroftp-cli`. The dispatcher starts the desktop app without a CLI subcommand and routes recognized commands to the CLI. Snap exposes this dispatcher as `aeroftp`: use `aeroftp ls --profile "My Server" / --json`, or `snap run aeroftp ls --profile "My Server" / --json` if `/snap/bin` is not on PATH. The internal Snap `aeroftp-cli` symlink does not create a separate host command.
 
 ```bash
 aeroftp --version
