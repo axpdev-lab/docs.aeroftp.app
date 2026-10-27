@@ -10,7 +10,7 @@ Error correction is the fourth wrapper in the design contributed by **Ehud Kirsh
 
 `.aerocorrect` is a detached Reed-Solomon parity sidecar for **any** byte stream. It protects the bytes of the target without embedding anything into it, so the same format repairs `.aerovault` containers, synced files, or ordinary files. The sidecar is **content-addressed**: it binds to the **SHA-256 of the protected content**, not to a path, vault salt, account, or provider identity. Move the file, rename it, copy it to another disk, and the same sidecar still verifies and repairs it.
 
-The magic bytes are `AEROCORR`. The format is shared byte-for-byte between the AeroFTP application (v4) and the standalone [`aerovault` crate](/advanced/aerovault-crate.html) (0.6.7), pinned by a cross-implementation fixture: a sidecar produced by one verifies and repairs with the other for the same file and overhead level.
+The magic bytes are `AEROCORR`. The format is shared byte-for-byte between the AeroFTP application (v4) and the standalone [`aerovault` crate](/advanced/aerovault-crate.html) (0.6.8), pinned by a cross-implementation fixture: a sidecar produced by one verifies and repairs with the other for the same file and overhead level.
 
 ## Where it sits in the wrapper stack
 

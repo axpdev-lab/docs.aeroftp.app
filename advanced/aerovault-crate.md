@@ -15,7 +15,7 @@ AeroVault is a standalone Rust crate for creating and managing encrypted vault c
 
 ```toml
 [dependencies]
-aerovault = "0.6.7"
+aerovault = "0.6.8"
 ```
 
 Or via cargo:
