@@ -71,7 +71,7 @@ If you have a custom forward proxy that does add TLS in front of the bridge, ove
 ## Tips
 
 - These bridges are not part of the native Filen API integration. Use the [Filen native provider](/providers/filen) when you want metadata-encrypted listings, 2FA-aware authentication, or v3 Argon2id login.
-- The bridges are great for AeroSync (the WebDAV one) and for the multi-thread chunk parallel download path (the S3 one) but they cannot share files: share links and trash management still go through the native Filen provider.
+- The bridges are useful for AeroSync (WebDAV) and the multi-thread chunk download path (S3). They do not provide native Filen sharing or trash controls. AeroFTP 4.2.5 also disables share-link creation through the native Filen provider; see [native Filen sharing](/providers/filen#sharing).
 - If the bridge looks unreachable, confirm Filen Desktop is foregrounded - the listeners are tied to the app process, not to a system service.
 
 ## Related
