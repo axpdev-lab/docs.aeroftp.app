@@ -30,8 +30,10 @@ AeroFTP v4.2.5 defines 26 AI provider types, including custom endpoints. Most ad
 | 22 | Novita | `novita` | `https://api.novita.ai/v3/openai` | API Key |
 | 23 | Yi | `yi` | `https://api.lingyiwanwu.com/v1` | API Key |
 | 24 | Kilo Gateway | `kilo` | `https://api.kilo.ai/api/gateway` | API Key |
-| 25 | Amazon Bedrock | `bedrock` | Regional Bedrock Runtime OpenAI-compatible endpoint | Bedrock API key |
+| 25 | Amazon Bedrock | `bedrock` | `https://bedrock-runtime.<region>.amazonaws.com/openai/v1` | Bedrock API key |
 | 26 | Custom | `custom` | User-defined | User-defined |
+
+For Amazon Bedrock, replace `<region>` with your AWS Region and keep the `/openai/v1` suffix, for example `https://bedrock-runtime.eu-north-1.amazonaws.com/openai/v1` (the shipped preset). Use a Bedrock API key and a model/API supported in that Region. See the [official AWS endpoint guidance](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-responses-api.html); this is not an OpenAI API key or the plain regional host without its API path.
 
 ## Model capabilities
 

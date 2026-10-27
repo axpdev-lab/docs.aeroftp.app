@@ -1,6 +1,6 @@
 # Error Correction (`.aerocorrect`)
 
-AeroVault format v4 (format v3 plus error correction) adds a fourth wrapper to the stack: **error correction**. It writes a detached, par2-style Reed-Solomon recovery sidecar, the `.aerocorrect` file, that can repair bit rot in any byte stream: a sealed `.aerovault` container, a synced backup file, or an ordinary standalone file. On cloud backends durability is already redundant; on USB sticks, consumer NAS disks, optical media, and cold-storage archives, a single bad sector is the difference between an encrypted backup surviving and being gone. Error correction closes that gap.
+AeroVault's v4 wrapper-stack configuration (v3 plus error correction) adds **error correction** over the encrypted data. The container still uses `AEROVAULT3` magic and internal version 3; v4 here names the recovery configuration rather than a new container magic. Recovery can be embedded or stored in a detached, par2-style `.aerocorrect` sidecar that can repair bit rot in any byte stream: a sealed `.aerovault` container, a synced backup file, or an ordinary standalone file. On cloud backends durability is already redundant; on USB sticks, consumer NAS disks, optical media, and cold-storage archives, a single bad sector is the difference between an encrypted backup surviving and being gone. Error correction closes that gap.
 
 ::: tip Credit
 Error correction is the fourth wrapper in the design contributed by **Ehud Kirsh** in the AeroFTP [COMMUNITY ROADMAP thread (issue #162)](https://github.com/axpdev-lab/aeroftp/issues/162) and refined in the [Error Correction discussion (#276)](https://github.com/axpdev-lab/aeroftp/issues/276). The unified one-format-for-any-file `.aerocorrect` design, the placement model, and the overhead levels are his calls.
@@ -40,13 +40,13 @@ For a vault the parity can live in three places (`RecoveryPlacement`):
 
 | Placement | Where parity lives | Effect on the container |
 | --------- | ------------------ | ----------------------- |
-| `detached` (default) | Sibling `.aerocorrect` file next to the container | Container stays byte-identical to a plain v3 vault |
-| `embedded` | A non-critical extension inside the container, recomputed on every seal | One self-contained file, parity travels with it |
+| `detached` (opt-in for vault creation) | Sibling `.aerocorrect` file next to the container | Container stays byte-identical to a plain v3 vault |
+| `embedded` (vault-create default; Change Mode when EC is enabled) | A non-critical extension inside the container, recomputed on every seal | One self-contained file, parity travels with it |
 | `both` | Sidecar **and** in-container extension | Redundant recovery surfaces |
 
-![Parity placement: detached sidecar by default](/images/error-correction/02-placement.png)
+![Example of detached sidecar placement](/images/error-correction/02-placement.png)
 
-The default is the detached sidecar because it keeps the container byte-identical to a plain v3 vault and lets you add or refresh parity later without rewriting the encrypted data. For `secret.aerovault` the default sidecar path is `secret.aerovault.aerocorrect`.
+GUI creation and CLI `vault create --error-correction` default to embedded placement; CLI creation can select another placement with `--recovery-placement`. Change Mode explicitly creates embedded parity when Error Correction is enabled for an Archive/v3 target. Detached sidecars remain useful for adding or refreshing parity without rewriting the container, and standalone `correct gen` creates a detached sidecar. For `secret.aerovault`, the conventional detached path is `secret.aerovault.aerocorrect`.
 
 A vault writes **exactly three segments** (windows) over its container file, in a fixed order, so each region's parity is found by position: a header window, a manifest (locator) window, and a data window. The header and manifest travel outside the container on purpose: a damaged header or manifest cannot self-locate its own recovery (a chicken-and-egg problem), so the sidecar lets the reader rebuild them and prove correctness by the header MAC and the manifest cipher.
 

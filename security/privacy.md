@@ -39,7 +39,7 @@ Configuration and credentials normally use the following directories. WebView st
 | File tags | `file_tags.db` | SQLite WAL (local) |
 | UI state | Browser localStorage | Not encrypted (non-sensitive: window size, panel layout) |
 
-The passphrase for the encrypted credential database is protected by the OS keyring or a master password. Without a working keyring, the local fallback stores it in `vault.key` beside the database. Its protection then depends on filesystem permissions. Windows ACL hardening is best effort and, when successful, grants full control to the current user, SYSTEM and BUILTIN\Administrators. Failures are logged without aborting vault operations; inherited access may remain or be restored. Copying both fallback files is enough to open the database. Enable a master password when filesystem permissions cannot be trusted. See [Credential Management](/security/credentials) for the modes.
+The passphrase for the encrypted credential database is protected by the OS keyring or a master password. Without a working keyring, the local fallback stores it in `vault.key` beside the database. Its protection then depends on filesystem permissions. Windows ACL hardening is best effort and, when successful, grants full control to the current user, SYSTEM and BUILTIN\Administrators. Failures are logged without aborting vault operations; inherited access may remain or be restored. Copying both fallback files can recover the vault key for offline decryption. Opening the vault through AeroFTP still requires a valid TOTP code when that factor is enabled; this application unlock check does not add offline encryption to the copied database. Enable a master password when filesystem permissions cannot be trusted. See [Credential Management](/security/credentials) for the modes.
 
 ## AI Provider Connections
 
@@ -63,12 +63,12 @@ AeroFTP is privacy-enhanced, not anonymous. Network connections to remote server
 
 To remove all AeroFTP data from a system:
 
-1. Uninstall the application.
-2. Delete every AeroFTP data directory that exists. After an update more than one can exist, because a directory named after the previous application identifier is left in place:
+1. Before uninstalling or deleting vault directories, identify and remove the OS keyring entries for each installation and vault you intend to remove. `aeroftp-cli keystore status` reports the exact service/account used by the current automatic-keyring vault in its diagnostic detail; it does not print the passphrase. For multiple vaults, identify each account while its installation and metadata are still available. The service is `com.aeroftp.AeroFTP`. Default accounts are `vault-passphrase`, `vault-passphrase-portable`, `vault-passphrase-flatpak` or `vault-passphrase-snap` (development scopes add `-dev`). A second vault can use a named account with a suffix of a dash and 16 lowercase hexadecimal characters, for example `vault-passphrase-3f9c0a1b2d4e5f60`. Remove the exact relevant account and any such named accounts belonging to that installation using the OS credential manager. Do not delete by a broad prefix that also matches another installation. Per-platform commands and naming rules are in [PRIVACY.md](https://github.com/axpdev-lab/aeroftp/blob/main/PRIVACY.md). Deleting data directories does not remove these keyring entries.
+2. Uninstall the application.
+3. Delete every AeroFTP data directory that exists. After an update more than one can exist, because a directory named after the previous application identifier is left in place:
    - Linux: `~/.config/aeroftp/`, `~/.local/share/app.aeroftp.AeroFTP/` and `~/.local/share/com.aeroftp.AeroFTP/`
    - macOS: `~/Library/Application Support/aeroftp/`, and any `app.aeroftp.AeroFTP` or `com.aeroftp.AeroFTP` folder under `~/Library/Application Support/`, `~/Library/Caches/` and `~/Library/WebKit/`
    - Windows: `%APPDATA%\aeroftp\`, and any `app.aeroftp.AeroFTP` or `com.aeroftp.AeroFTP` folder under `%APPDATA%` and `%LOCALAPPDATA%`
    - Windows portable: remove the executable-relative `data\aeroftp\` directory for credentials and configuration. Remove the installation's entire `data\` directory to include its WebView state, logs and other portable state. Keep any files you want to retain first.
-3. If the vault is protected by the system keyring rather than by a master password, delete the keyring entry too. It is stored under the service name `com.aeroftp.AeroFTP` (account `vault-passphrase`, or `vault-passphrase-portable`, `vault-passphrase-flatpak` or `vault-passphrase-snap` for those installations), and deleting the directories above does not remove it. The per-platform commands are in [PRIVACY.md](https://github.com/axpdev-lab/aeroftp/blob/main/PRIVACY.md).
 
 AeroFTP does not create cloud accounts for you. Transfers and AI requests send the content you select, or enable through tools and background jobs, to the configured servers and providers.

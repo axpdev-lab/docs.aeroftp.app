@@ -209,7 +209,7 @@ The CLI uses semantic exit codes for scripting:
 | 5 | Configuration / usage error |
 | 6 | Authentication failure |
 | 7 | Operation not supported by protocol |
-| 8 | Stopped at a limit and nothing failed: a timeout on most commands, the `--max-transfer` budget on `sync` (JSON `over_budget` counts skipped files; an exact-budget stop can return 8 with no such field, so inspect the configured limits) |
+| 8 | Timeout or transfer-budget stop, with command-specific outcomes. A SITE reply timeout may follow an applied mutation: verify before retrying. Sync budget stops use `--max-transfer` (JSON `over_budget` counts skipped files; an exact-budget stop can return 8 with no such field, so inspect the configured limits) |
 | 9 | Already exists / directory not empty (`--immutable`, `--no-clobber`) |
 | 10 | Server error / parse error |
 | 11 | I/O error |

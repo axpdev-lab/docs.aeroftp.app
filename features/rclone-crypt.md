@@ -34,7 +34,7 @@ All cryptographic work happens locally in the Rust backend.
 - Keys are derived locally from the user password and optional secondary secret
 - Unlocked keys live in backend-managed state and can be explicitly locked again
 
-AeroFTP does not send encryption passwords to any external service. The cloud provider only sees the already encrypted object names and ciphertext that were produced by rclone.
+AeroFTP does not send encryption passwords to any external service. For objects inside the active overlay scope, the cloud provider sees encrypted names and ciphertext compatible with rclone crypt. Paths outside that scope remain plaintext, including their names and contents.
 
 ## CLI
 

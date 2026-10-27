@@ -33,7 +33,7 @@ Since v3.2.0, AeroFTP connects directly to MEGA's servers using the native JSON-
 | Email | Your MEGA account email | |
 | Password | Your MEGA password | Used locally to derive the AES master key - never sent in plaintext |
 | Connection Backend | Native API / MEGAcmd | Select in the connection form |
-| Remember session (24h) | Checkbox (default: on) | Encrypted session keys stored in the encrypted credential vault |
+| Remember session (24h), Native API only | Checkbox (default: on) | Native API session keys are stored in AeroFTP's encrypted credential vault; MEGAcmd manages its daemon session externally |
 
 ### Features
 
