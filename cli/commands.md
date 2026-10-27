@@ -238,7 +238,7 @@ Each entry is classified into exactly one of:
 
 | Status | Meaning |
 |---|---|
-| `match` | File present on both sides with matching SHA-256 digests when available, otherwise matching size |
+| `match` | File present on both sides with comparable matching SHA-256 digests when `--checksum` is enabled; otherwise matching size |
 | `differ` | File present on both sides with a checksum or size mismatch |
 | `missing_local` | File exists only on the remote (suppressed by `--one-way`) |
 | `missing_remote` | File exists only locally |

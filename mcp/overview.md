@@ -25,6 +25,8 @@ Start with `aeroftp_list_servers`, then call a file tool with the exact saved pr
 
 Create profiles in the GUI or with `profile-add`. `connect --save` is not supported. Browser-authorized profiles can use supported [headless authorization](/cli/commands#profile-add-and-headless-authorization); native Proton has its separate sign-in flow. The MCP `aeroftp_profile_auth` tool operates on an already saved profile with a nested `request` whose action is `configure`, `begin`, `finish`, `status` or `cancel`.
 
+With checksum comparison enabled, `aeroftp_reconcile` reads eligible equal-size remote files through a capped download and compares BLAKE3; oversized pairs retain a flagged size verdict and failed checksums are unverified/partial. `aeroftp_check_tree` instead uses comparable SHA-256 when available and falls back to size. These tools can therefore differ on equal-size content changes; their checksum behavior is not interchangeable.
+
 ## Tool Catalog
 
 Names below are exact wire names. Many also have compatibility aliases; retrieve `tools/list` instead of guessing an alias or adding an `aeroftp_` prefix to every tool.

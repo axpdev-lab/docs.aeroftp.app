@@ -15,7 +15,7 @@ Both options remain available. The native backend is recommended for new connect
 | ---------- | ------------ | ------------- |
 | Auth | `applicationKeyId` + `applicationKey` | Access Key + Secret Key (S3-style) |
 | Folders | Real prefix + delimiter listing, `.bzEmpty` placeholders | Emulated via `/` prefix |
-| Atomic rename | `b2_copy_file` ≤ 5 GB; chunked `b2_copy_part` workflow > 5 GB up to ~10 TB | Copy + delete, no native rename |
+| Rename (non-atomic) | Server-side copy, then source deletion; chunked copy for large files | Copy + delete, no native rename |
 | Large uploads | `start_large_file` workflow (5 MB-5 GB parts, 10 000 part cap) | S3 multipart |
 | File versioning | First-class (`b2_list_file_versions`, restore via server-side `b2_copy_file`) | First-class (S3 versioning) |
 | Share links | `b2_get_download_authorization` (1s-7d expiration, read-only) | S3 presigned URLs |
@@ -76,14 +76,14 @@ The in-memory variant (`download_to_bytes`, used by previews) issues a `Range: b
 
 ## Renames and Server-Side Copy
 
-`rename` is fully server-side regardless of file size, the client never streams bytes. The implementation picks the right B2 endpoint automatically:
+`rename` performs a server-side copy followed by source deletion; it is not atomic, and both names can exist between these phases. The client does not stream the payload. The implementation picks the right B2 endpoint automatically:
 
 - **≤ 5 GB**: single-shot `b2_copy_file` + `b2_delete_file_version` on the source. One round trip per phase.
 - **> 5 GB**: chunked `b2_copy_part` workflow: `b2_start_large_file` → loop of `b2_copy_part` with `Range: bytes=N-M` headers (one part per 100 MiB chunk by default) → `b2_finish_large_file` with the part SHA-1 array → `b2_delete_file_version` on the source. The 10 000-part cap and the 5 MB minimum-part rule from upload also apply here, giving an effective ceiling of ~1 TB at the default part size and ~10 TB if part size is bumped to 1 GiB. B2's hard ceiling on single files is 10 TB.
 
 If the chunked workflow fails mid-way, AeroFTP issues `b2_cancel_large_file` to release the parts already copied so they don't accrue storage charges.
 
-If the post-copy delete of the source fails, the new copy is left in place and AeroFTP emits a debug log noting the orphan source version. This matches the small-file path and keeps the rename operation idempotent at the destination.
+If source deletion fails after the copy, AeroFTP returns an error and both names can remain. Check both paths before retrying or removing either copy.
 
 The `contentSha1` field returned by `b2_copy_part` is the literal string `"none"` whenever the source was itself a chunked-uploaded large file (B2 has no whole-file hash to copy). `b2_finish_large_file` accepts `"none"` entries in `partSha1Array` and AeroFTP rounds them through unchanged.
 

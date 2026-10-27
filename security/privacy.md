@@ -42,7 +42,7 @@ The passphrase for the encrypted credential database is protected by the OS keyr
 
 ## AI Provider Connections
 
-When using AeroAgent, the application connects directly to the user's chosen AI provider using the user's own API key. Requests go to the configured provider endpoint. AeroFTP keeps local chat history and can assemble context from the files or tools you use. Supported providers: OpenAI, Anthropic, Gemini, xAI, OpenRouter, Ollama (local), Kimi, Qwen, DeepSeek, Mistral, Groq, Perplexity, Cohere, Together, and custom endpoints.
+When using AeroAgent, the application connects directly to the user's chosen AI provider using the user's own API key. Requests go to the configured provider endpoint. AeroFTP keeps local chat history and can assemble context from the files or tools you use. Examples include OpenAI, Anthropic, Gemini, xAI, OpenRouter, Ollama, Kimi, Qwen, DeepSeek, Mistral, Groq, Perplexity, Cohere, Together, and custom endpoints.
 
 A local Ollama endpoint can process inference on your machine. A remote Ollama endpoint or another tool invoked during the conversation can still use the network.
 

@@ -12,6 +12,8 @@ AeroFTP is a Tauri 2 application with a Rust backend and React frontend. Both mu
 
 ### Linux Dependencies
 
+All Linux builds also need a C/C++ compiler toolchain, Perl, pkg-config and LLVM with the shared libclang library. Vendored OpenSSL uses Perl, and the `whisper-rs-sys` bindgen step needs libclang. Install these through your distribution's development packages before building; the platform-library commands below do not replace that common toolchain. If bindgen cannot find an installed libclang, set `LIBCLANG_PATH` to the directory containing its shared library.
+
 Ubuntu/Debian:
 
 ```bash
