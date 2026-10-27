@@ -79,7 +79,7 @@ The sync engine asks a different question -- "can this digest be compared with a
 
 ## Where this table comes from
 
-This table mirrors `src-tauri/src/providers/checksum_matrix.rs`. The generated table checked by repository tests lives in [`docs/PROTOCOL-FEATURES.md`](https://github.com/axpdev-lab/aeroftp/blob/main/docs/PROTOCOL-FEATURES.md); this site is maintained alongside it. Connection-specific capabilities can refine that static table: **Proton native mode exposes SHA-1 when present in the signed file attributes**, while official Proton CLI mode exposes no provider checksum.
+This table mirrors `src-tauri/src/providers/checksum_matrix.rs`. The generated table checked by repository tests lives in [`docs/PROTOCOL-FEATURES.md`](https://github.com/axpdev-lab/aeroftp/blob/8b6abd555c818277ea820094ce258f27c88dd708/docs/PROTOCOL-FEATURES.md); this site is maintained alongside it. Connection-specific capabilities can refine that static table: **Proton native mode exposes SHA-1 when present in the signed file attributes**, while official Proton CLI mode exposes no provider checksum.
 
 ## Comparison and fallback
 

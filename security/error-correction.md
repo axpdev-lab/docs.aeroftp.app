@@ -146,7 +146,7 @@ For explicit recovery, download both objects and supply a known-good SHA-256 obt
 ```bash
 aeroftp-cli get --profile "Backup" /backup/report.bin ./report.bin
 aeroftp-cli get --profile "Backup" /backup/report.bin.aerocorrect ./report.bin.aerocorrect
-aeroftp-cli correct repair ./report.bin --parity ./report.bin.aerocorrect --expect-sha256 <trusted-64-hex-sha256>
+aeroftp-cli correct repair ./report.bin --parity ./report.bin.aerocorrect --expect-sha256 YOUR_64_HEX_SHA256
 ```
 
 Replace the hash placeholder before running the command. A bare `correct repair` checks integrity against the sidecar's recorded hash; it does not establish authenticity if an attacker can replace both objects.

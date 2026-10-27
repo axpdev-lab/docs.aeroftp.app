@@ -86,7 +86,9 @@ Each native provider has a dedicated implementation. Consult its page and runtim
 **OAuth2 PKCE flow:** Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Koofr, Yandex Disk, Internxt, Twake Drive.
 **OAuth 1.0 (HMAC-SHA1):** 4shared (RFC 5849).
 **Direct auth (API key / token / session):** MEGA, Filen, kDrive, Jottacloud, Drime Cloud, FileLu, OpenDrive.
-**Developer platforms:** GitHub, GitLab, Immich, SourceForge.
+**Developer platforms:** GitHub, GitLab, Immich.
+
+**SourceForge** uses an existing FTP/SFTP transport preset rather than a native provider integration.
 
 Highlights:
 

@@ -128,7 +128,7 @@ These shortcuts will accelerate your workflow from day one:
 | --- | --- |
 | `Ctrl+Shift+P` | Open the Command Palette (search ~25 commands) |
 | `Ctrl+Shift+N` | New connection |
-| `Ctrl+Shift+E` | Toggle AeroTools panel (editor, terminal, AI) |
+| `Ctrl+Shift+E` | Toggle AeroTools panel (Security Tools, editor, terminal, AI) |
 | `F2` | Rename selected file inline |
 | `F5` | Refresh file listing |
 
@@ -140,7 +140,7 @@ Now that you are connected, there is much more to discover:
 - **[AeroSync](../features/aerosync.md)** -- Intelligent directory synchronization with conflict resolution
 - **[AeroVault](../features/aerovault.md)** -- Authenticated encrypted file containers
 - **[AeroAgent](../features/aeroagent.md)** -- AI assistant with built-in tools for file management and code analysis
-- **[AeroTools](../features/aerotools.md)** -- Integrated code editor (Monaco), terminal, and development tools
+- **[AeroTools](../features/aerotools.md)** -- Independent Security Tools, code editor (Monaco), terminal and AI launchers
 - **[Protocols Overview](../protocols/overview.md)** -- Guide to the supported protocols
 
 > **Next step:** Read the [Interface Overview](interface.md) to understand every panel, menu, and shortcut available in AeroFTP.

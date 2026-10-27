@@ -622,10 +622,10 @@ aeroftp-cli batch deploy.aeroftp-script
 
 ```bash
 # deploy.aeroftp-script
-SET SERVER=sftp://deploy@prod.example.com:2222
+SET SERVER=Deploy
 ON_ERROR FAIL
 
-CONNECT ${SERVER}
+CONNECT --profile "${SERVER}"
 PUT ./dist/app.js /var/www/app.js
 PUT ./dist/index.html /var/www/index.html
 STAT /var/www/index.html
