@@ -44,7 +44,7 @@ AeroFTP 4.2.5 disables native Filen share-link creation for both files and folde
 ## Tips
 
 - Filen's 10 GB free tier includes E2E encryption -- most competitors charge for client-side encryption.
-- AeroFTP currently does not expose Filen trash or version-history controls. Deleted files cannot be recovered through AeroFTP.
+- AeroFTP currently does not expose Filen trash controls. File version history is available through the native provider; restoring an item from the trash is not available through AeroFTP.
 - Because all file metadata is encrypted, directory listings require decrypting each entry's metadata. This can be slower than non-encrypted providers for large directories.
 - For AeroSync with Filen, use the **size** compare mode since encrypted timestamps may differ from local file times.
 - If you also use [Filen Desktop](/providers/filen-desktop), keep the native provider as your primary - it is the only path that gets v3 auth and the metadata-encrypted listing fast path. The Network Drive bridges are great for tooling that already speaks WebDAV / S3, not as a replacement for the native API.
