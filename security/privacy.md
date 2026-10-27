@@ -38,6 +38,8 @@ Configuration and credentials normally use the following directories. WebView st
 | File tags | `file_tags.db` | SQLite WAL (local) |
 | UI state | Browser localStorage | Not encrypted (non-sensitive: window size, panel layout) |
 
+The passphrase for the encrypted credential database is protected by the OS keyring or a master password. Without a working keyring, the local fallback stores it in `vault.key` beside the database. Its protection then depends on filesystem permissions. Windows ACL hardening is best effort and, when successful, grants full control to the current user, SYSTEM and BUILTIN\Administrators. Failures are logged without aborting vault operations; inherited access may remain or be restored. Copying both fallback files is enough to open the database. Enable a master password when filesystem permissions cannot be trusted. See [Credential Management](/security/credentials) for the modes.
+
 ## AI Provider Connections
 
 When using AeroAgent, the application connects directly to the user's chosen AI provider using the user's own API key. Requests go to the configured provider endpoint. AeroFTP keeps local chat history and can assemble context from the files or tools you use. Supported providers: OpenAI, Anthropic, Gemini, xAI, OpenRouter, Ollama (local), Kimi, Qwen, DeepSeek, Mistral, Groq, Perplexity, Cohere, Together, and custom endpoints.

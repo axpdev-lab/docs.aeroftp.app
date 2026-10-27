@@ -26,6 +26,8 @@ A random 64-byte passphrase supplies the vault key material. HKDF-SHA256 with th
 
 The last mode preserves credentials on portable or restricted systems. It does **not** provide the same protection against someone who can read the whole configuration directory. Set a master password when that threat matters. A missing or unreadable keyring reference is reported rather than replaced by a different vault's passphrase.
 
+On Unix, credential files are set to `0600` and directories to `0700`. On Windows, native ACL hardening attempts to grant full control to the current user, SYSTEM and BUILTIN\Administrators. This is best effort: failures are logged without aborting vault operations, and inheritance may remain or be restored if the restriction makes an object inaccessible. Successful vault initialization does not guarantee restricted Windows access. In the on-disk fallback mode, anyone able to copy both `vault.key` and `vault.db` can open the database. Enable a master password when filesystem permissions cannot be trusted.
+
 Master-password wrapping uses Argon2id with **128 MiB memory, four iterations, parallelism four and a 32-byte salt** in release builds. The raw password is not stored. Unlocking makes the vault key available in process memory for the session. The OS keyring does not hold the user's master password.
 
 ## OS credential store
