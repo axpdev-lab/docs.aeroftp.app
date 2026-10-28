@@ -1,6 +1,6 @@
 ---
 title: About AeroFTP
-description: AeroFTP 4.2.5, its architecture, distribution channels and documentation sources.
+description: AeroFTP 4.2.5, the Axpdev Lab team, its architecture, distribution channels and documentation sources.
 ---
 
 # About & Credits
@@ -27,13 +27,24 @@ See [what changed in 4.2.5](/releases/4.2.5), the [protocol overview](/protocols
 | AeroVault Rust crate | [aerovault](https://crates.io/crates/aerovault) |
 | Documentation source | [axpdev-lab/docs.aeroftp.app](https://github.com/axpdev-lab/docs.aeroftp.app) |
 
-## Developer and License
+## Axpdev Lab Team
 
-**AXP Development**, [axpnet](https://github.com/axpnet). AeroFTP is released under the **GNU General Public License v3.0**.
+The people behind AeroFTP and their roles, as listed in the application's [TEAM.md](https://github.com/axpdev-lab/aeroftp/blob/main/TEAM.md):
+
+| Team member | Role |
+| --- | --- |
+| **A.P.** ([@axpnet](https://github.com/axpnet)) | Founder, developer, maintainer, co-designer |
+| **E.K., PhD** ([@EhudKirsh](https://github.com/EhudKirsh)) | Researcher, quality assurance engineer, co-designer |
+
+A.P. looks after the architecture, Rust backend, React frontend, CLI, TUI and releases. AeroFTP began as a personal tool in 2024 and is built and maintained by one person, with AI assistance documented openly in the [AI Transparency Statement](https://github.com/axpdev-lab/aeroftp/blob/main/AI-TRANSPARENCY.md).
+
+E.K. contributes research, quality assurance and design across the interface and command line, including Wrappers/Overlays, the `aero` command alias, the Add Service table view, the TUI, user guides and Quick Connect. He has contributed since April 2026, including dozens of bug reports. See [TEAM.md](https://github.com/axpdev-lab/aeroftp/blob/main/TEAM.md) for contribution links and contact guidance.
+
+## License
+
+AeroFTP is released under the **GNU General Public License v3.0**.
 
 The desktop application is free and open source, with no paid tier, license gating or telemetry. The mobile application is in development and has not been released; its distribution and pricing have not been announced.
-
-AI assistance and human review are described in the application's [AI Transparency Statement](https://github.com/axpdev-lab/aeroftp/blob/main/AI-TRANSPARENCY.md).
 
 ## Technology Stack
 
