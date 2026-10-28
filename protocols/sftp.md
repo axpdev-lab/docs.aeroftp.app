@@ -2,7 +2,7 @@
 
 SFTP (SSH File Transfer Protocol) provides encrypted file transfer over an SSH channel. Unlike FTP/FTPS, which layer encryption on top of a separate protocol, SFTP runs entirely within SSH -- there is a single encrypted connection for both commands and data. This makes SFTP the recommended protocol for connecting to Linux servers, Unix systems, NAS devices, and any host running an SSH daemon.
 
-AeroFTP's SFTP implementation is built on the `russh` library (v0.57), supporting modern key exchange algorithms, host key verification, and streaming transfers with no file size limit.
+AeroFTP's SFTP implementation is built on the `russh` library (v0.64.1), supporting modern key exchange algorithms, host key verification, and streaming transfers with no file size limit.
 
 ## Connection Settings
 
@@ -88,36 +88,17 @@ SFTP transfers are fully streaming -- files are read and written in chunks witho
 
 ## CLI Usage
 
-The AeroFTP CLI supports SFTP connections with password or key-based authentication:
+Use a saved SFTP profile so its password or SSH-key configuration is resolved by the backend. The remote host-key verification policy still applies.
 
 ```bash
-# Connect with password (prompted interactively)
-aeroftp ls sftp://user@myserver.com/
-
-# Connect with a specific port
-aeroftp ls sftp://user@myserver.com:2222/home/user/
-
-# List files with details
-aeroftp ls sftp://user@myserver.com/ -l
-
-# Download a file
-aeroftp get sftp://user@myserver.com/var/log/syslog ./
-
-# Upload a file
-aeroftp put sftp://user@myserver.com/home/user/docs/ ./report.pdf
-
-# Key-based authentication
-aeroftp ls sftp://user@myserver.com/ --key /home/user/.ssh/id_ed25519
-
-# Key with passphrase
-aeroftp ls sftp://user@myserver.com/ --key /home/user/.ssh/id_rsa --key-passphrase "my passphrase"
-
-# Recursive directory tree
-aeroftp tree sftp://user@myserver.com/var/www/ -d 3
-
-# Sync local to remote
-aeroftp sync sftp://user@myserver.com/var/www/html/ ./website/ --direction push
+aeroftp-cli ls --profile "My SFTP" /home/user/ --json
+aeroftp-cli get --profile "My SFTP" /var/log/syslog ./syslog
+aeroftp-cli put --profile "My SFTP" ./report.pdf /home/user/docs/report.pdf
+aeroftp-cli tree --profile "My SFTP" /var/www/ -d 3
+aeroftp-cli sync --profile "My SFTP" ./website/ /var/www/html/ --direction upload --dry-run --json
 ```
+
+Review the plan before executing. See [CLI commands](/cli/commands) for connection flags and [Delta Sync](/features/delta-sync) for rsync eligibility.
 
 ## Common Issues
 

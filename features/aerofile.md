@@ -197,7 +197,7 @@ Click **Copy** next to any hash to copy it to the clipboard.
 
 ### Multi-file Properties (v3.7.1)
 
-Selecting two or more entries and opening Properties shows a dedicated aggregate dialog instead of the per-file view. It mirrors the Windows multi-select Properties window and works on the local panel and on every one of the 22 remote provider integrations.
+Selecting two or more entries and opening Properties shows a dedicated aggregate dialog instead of the per-file view. It mirrors the Windows multi-select Properties window and works on the local panel and on supported remote provider integrations.
 
 Reported fields:
 

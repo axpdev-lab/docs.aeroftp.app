@@ -7,7 +7,7 @@ AeroVault is a standalone Rust crate for creating and managing encrypted vault c
 - **crates.io**: [aerovault](https://crates.io/crates/aerovault)
 - **docs.rs**: [aerovault](https://docs.rs/aerovault)
 - **Source**: [github.com/axpdev-lab/aerovault](https://github.com/axpdev-lab/aerovault)
-- **License**: GPL-3.0
+- **License**: MPL-2.0
 
 ## Installation
 
@@ -15,7 +15,7 @@ AeroVault is a standalone Rust crate for creating and managing encrypted vault c
 
 ```toml
 [dependencies]
-aerovault = "0.5.0"
+aerovault = "0.6.8"
 ```
 
 Or via cargo:

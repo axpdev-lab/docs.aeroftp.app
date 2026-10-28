@@ -4,16 +4,16 @@ AeroFTP supports all major Linux distributions. Choose the format that best matc
 
 ## .deb (Ubuntu / Debian / Linux Mint / Pop!_OS)
 
-Download the `.deb` package from [GitHub Releases](https://github.com/axpnet/aeroftp/releases) and install with `apt`:
+Download the `.deb` package from [GitHub Releases](https://github.com/axpdev-lab/aeroftp/releases) and install with `apt`:
 
 ```bash
-sudo apt install ./aeroftp_3.7.0_amd64.deb
+sudo apt install ./AeroFTP_4.2.5_amd64.deb
 ```
 
 This method automatically resolves and installs any missing dependencies (including WebKitGTK 4.1). Alternatively, use `dpkg` directly:
 
 ```bash
-sudo dpkg -i aeroftp_3.7.0_amd64.deb
+sudo dpkg -i AeroFTP_4.2.5_amd64.deb
 sudo apt-get install -f   # resolve any missing dependencies
 ```
 
@@ -23,18 +23,18 @@ To uninstall:
 sudo apt remove aeroftp
 ```
 
-## .rpm (Fedora / RHEL / openSUSE)
+## .rpm (Fedora / RHEL)
 
 Download the `.rpm` package and install with DNF:
 
 ```bash
-sudo dnf install ./AeroFTP-3.7.0-1.x86_64.rpm
+sudo dnf install ./AeroFTP-4.2.5-1.x86_64.rpm
 ```
 
 Or with RPM directly:
 
 ```bash
-sudo rpm -i AeroFTP-3.7.0-1.x86_64.rpm
+sudo rpm -i AeroFTP-4.2.5-1.x86_64.rpm
 ```
 
 To uninstall:
@@ -45,16 +45,16 @@ sudo dnf remove aeroftp
 
 ## .AppImage (Universal)
 
-AppImage runs on virtually any Linux distribution without installation. No root access required.
+AppImage runs without a system-package installation on compatible Linux desktops. No root access is required to launch it.
 
 ```bash
-chmod +x AeroFTP_3.7.0_amd64.AppImage
-./AeroFTP_3.7.0_amd64.AppImage
+chmod +x AeroFTP_4.2.5_amd64.AppImage
+./AeroFTP_4.2.5_amd64.AppImage
 ```
 
-The AppImage is fully self-contained and includes all required libraries.
+The AppImage bundles the application and many dependencies; compatible host graphics and system libraries are still required.
 
-> **Auto-update:** AeroFTP's AppImage has built-in auto-update support. When a new version is available, the app downloads the update, backs up your current AppImage, replaces it in place, and restarts. No manual intervention needed.
+> **Auto-update:** AeroFTP's AppImage supports in-app updates. After you approve an available update, AeroFTP downloads and verifies the new AppImage, atomically replaces the current AppImage, and restarts it.
 
 ## Snap Store
 
@@ -95,9 +95,8 @@ AeroFTP on Linux requires the **WebKitGTK 4.1** runtime library. Most desktop di
 | Ubuntu / Debian | `sudo apt install libwebkit2gtk-4.1-0` |
 | Fedora / RHEL | `sudo dnf install webkit2gtk4.1` |
 | Arch / Manjaro | `sudo pacman -S webkit2gtk-4.1` |
-| openSUSE | `sudo zypper install webkit2gtk3-soup2-devel` |
 
-No other runtime dependencies are required. The application bundles all other libraries internally.
+Runtime dependencies depend on the package format and desktop. For example, the Debian package also declares GTK3, AppIndicator, libacl and GStreamer with base, good and bad plugins. Let the package manager resolve the package dependencies; WebKitGTK 4.1 alone is not the complete runtime requirement.
 
 ## Launch on Startup
 

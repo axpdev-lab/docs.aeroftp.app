@@ -1,12 +1,12 @@
 # CLI Installation
 
-The `aeroftp-cli` command-line interface is a standalone Rust binary built from the same codebase as the AeroFTP desktop application. It provides full scriptable access to AeroFTP's three integration tiers without requiring a graphical environment:
+The `aeroftp-cli` command-line interface is a standalone Rust binary built from the same codebase as the AeroFTP desktop application. It provides full scriptable access to AeroFTP's three integration tiers without opening its graphical interface. Browser sign-in and OS-specific integrations have their own requirements:
 
 - **Core transport protocols**: FTP, FTPS, SFTP, WebDAV, S3, Azure Blob
 - **20+ native provider integrations**: Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, GitHub, GitLab, Immich, and more
 - **40+ pre-configured presets**: AWS S3, Backblaze B2, Cloudflare R2, Wasabi, Storj, MinIO, Hetzner Storage Box, Nextcloud, Seafile, InfiniCLOUD, Jianguoyun, CloudMe, SourceForge, etc.
 
-URL-based connections are available for the transport protocols and direct-auth native providers. OAuth-based providers (Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, Drime) are accessed via vault `--profile` after initial GUI authorization.
+URL-based connections are available for the transport protocols and direct-auth native providers. OAuth-based providers (Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, Drime) are accessed via vault `--profile` after GUI or supported headless authorization. See [profile setup](/cli/commands#profile-add-and-headless-authorization).
 
 ## Included with Every Desktop Package
 
@@ -16,7 +16,7 @@ The CLI binary ships inside every AeroFTP desktop package, and since v4.0.8 insi
 |----------------|-------------|---------|
 | Linux `.deb` | `/usr/bin/aeroftp-cli` | Yes |
 | Linux `.rpm` | `/usr/bin/aeroftp-cli` | Yes |
-| Linux `.snap` | `/snap/aeroftp/current/usr/bin/aeroftp-cli` | Yes (via snap alias) |
+| Linux `.snap` | `/snap/bin/aeroftp` dispatcher, or `snap run aeroftp` | Yes, when `/snap/bin` is on PATH |
 | Linux `.AppImage` | Bundled inside the AppImage | No |
 | Windows `.msi` | `C:\Program Files\AeroFTP\aeroftp-cli.exe` | Depends on installer options |
 | Windows `.exe` (NSIS) | `C:\Program Files\AeroFTP\aeroftp-cli.exe` | Depends on installer options |
@@ -25,10 +25,9 @@ The CLI binary ships inside every AeroFTP desktop package, and since v4.0.8 insi
 
 > **Windows portable ZIP (since v4.0.8):** the `AeroFTP-<version>-portable-windows-x64.zip` build bundles `aeroftp-cli.exe` (and the `aeroftp-dispatch.exe` shim that powers the `aftp` / `aero` names) next to `AeroFTP.exe`. It is not added to `PATH`: run it as `.\aeroftp-cli.exe` from the extracted folder, or add that folder to your `PATH`. The portable CLI shares the portable `data\` folder with the GUI, so the servers and vault you set up in the app are visible to the CLI and vice versa.
 
-The binary name is `aeroftp-cli`. On `.deb` and `.rpm` installs, a symlink `aeroftp` pointing to `aeroftp-cli` is created in `/usr/bin/`, so both names work interchangeably:
+The CLI command is `aeroftp-cli`. Linux `.deb` and `.rpm` packages install a dispatcher at `/usr/bin/aeroftp`, with `aeroftp-cli` and `aftp` entry points; the actual CLI payload lives in `/usr/lib/aeroftp/aeroftp-cli`. The dispatcher starts the desktop app without a CLI subcommand and routes recognized commands to the CLI. Snap exposes this dispatcher as `aeroftp`: use `aeroftp ls --profile "My Server" / --json`, or `snap run aeroftp ls --profile "My Server" / --json` if `/snap/bin` is not on PATH. The internal Snap `aeroftp-cli` symlink does not create a separate host command.
 
 ```bash
-# Both are equivalent on .deb/.rpm installs
 aeroftp --version
 aeroftp-cli --version
 ```
@@ -41,7 +40,7 @@ sudo ln -s /Applications/AeroFTP.app/Contents/MacOS/aeroftp-cli /usr/local/bin/a
 
 # AppImage - extract first, then symlink
 ./AeroFTP-x86_64.AppImage --appimage-extract
-sudo ln -s "$(pwd)/squashfs-root/usr/bin/aeroftp-cli" /usr/local/bin/aeroftp
+sudo ln -s "$(pwd)/squashfs-root/usr/lib/aeroftp/aeroftp-cli" /usr/local/bin/aeroftp
 ```
 
 ## Shorter Command Names: `aftp` and the `aero` Alias
@@ -50,18 +49,18 @@ Typing `aeroftp-cli` in full gets tedious for interactive use. Two shorter names
 
 ### `aftp` (built-in on Linux)
 
-`aftp` is a four-character name for the CLI. On the Linux packages (`.deb`, `.rpm`, `.snap`) it is installed automatically alongside `aeroftp`, with no setup required. On Windows and macOS, where the binary is not auto-added to `PATH`, set it up with the manual alias shown below for now (native `aftp` in the Windows installer is on the way). Anything that works under `aeroftp-cli` works under `aftp`:
+`aftp` is a four-character name for the CLI. On `.deb` and `.rpm` packages it is installed automatically alongside `aeroftp`. On Snap, use the exposed `aeroftp` command or configure a Snap alias for `aftp`. On Windows and macOS, use the installed entry point or configure an alias when the command is not on `PATH`. Anything that works under `aeroftp-cli` works under `aftp`:
 
 ```bash
 aftp ls sftp://user@host/
-aftp sync ./local sftp://user@host/backup
+aftp sync sftp://user@host ./local /backup --direction upload
 ```
 
 ### `aero` (opt-in alias)
 
 `aero` is provided as an opt-in alias you enable with a single command. It is deliberately not shipped as a global binary, because a package owning `/usr/bin/aero` would fail to install on any system where another package already owns that path (a file conflict at the package-manager level).
 
-> The `alias-toggle` command currently runs on Linux and macOS. On Windows it is not available yet (native support is on the way): use the manual PowerShell recipe in the table below in the meantime.
+`alias-toggle` works on Linux and macOS through a symlink, and on Windows through a managed `.cmd` shim.
 
 The same command both enables and disables the alias (toggle):
 
@@ -75,9 +74,9 @@ aeroftp-cli alias-toggle aero
 # The 'aero' alias is now Off
 ```
 
-The command is idempotent and exits with code 0 in both directions. The default target directory is `~/.local/bin`; pass `--bin-dir <path>` to override. If the target directory is not on your `PATH`, a one-line note on stderr explains how to add it.
+The command exits 0 after either successful transition; running it again reverses the state. Unix defaults to `~/.local/bin`; Windows uses its per-user command directory. Pass `--bin-dir <path>` to override. If the target directory is not on your `PATH`, a one-line note on stderr explains how to add it.
 
-The toggle refuses to overwrite an existing non-symlink file at the target path, and refuses to remove a symlink that does not point at the current AeroFTP binary. This protects user-owned files and foreign installations.
+The toggle refuses to replace files or aliases it does not recognize as its own. This protects user-owned files and foreign installations.
 
 For scripting, use `--json`:
 
@@ -127,7 +126,7 @@ aeroftp-cli batch --help
 
 ### Prerequisites
 
-- **Rust toolchain** 1.75 or later (install via [rustup.rs](https://rustup.rs))
+- **Rust toolchain** pinned by the repository (currently 1.97.1; the manifest minimum is 1.93) (install via [rustup.rs](https://rustup.rs))
 - **System libraries** (Linux only):
   - `libssl-dev` (or `openssl-devel` on Fedora/RHEL)
   - `pkg-config`
@@ -135,7 +134,7 @@ aeroftp-cli batch --help
 ### Build Commands
 
 ```bash
-git clone https://github.com/axpnet/aeroftp.git
+git clone https://github.com/axpdev-lab/aeroftp.git
 cd aeroftp/src-tauri
 cargo build --release --bin aeroftp-cli
 ```
@@ -143,12 +142,12 @@ cargo build --release --bin aeroftp-cli
 The compiled binary will be at `target/release/aeroftp-cli` (or `target\release\aeroftp-cli.exe` on Windows). Copy it to a directory in your PATH:
 
 ```bash
-sudo cp target/release/aeroftp-cli /usr/local/bin/aeroftp
+sudo cp target/release/aeroftp-cli /usr/local/bin/aeroftp-cli
 ```
 
 ### Build Only the CLI (Skip Desktop App)
 
-The CLI is defined as a separate `[[bin]]` target in `Cargo.toml`. The `cargo build --bin aeroftp-cli` command compiles only the CLI binary and its dependencies, without pulling in Tauri or any GUI-related crates.
+The CLI is a separate `[[bin]]` target, so this command does not build the desktop executable. It still builds the shared library and its dependency graph, including Tauri and platform libraries. Follow the repository's [contribution prerequisites](https://github.com/axpdev-lab/aeroftp/blob/main/CONTRIBUTING.md) for a source build.
 
 ## Color, TTY, and Pipe Behavior
 
@@ -210,7 +209,7 @@ The CLI uses semantic exit codes for scripting:
 | 5 | Configuration / usage error |
 | 6 | Authentication failure |
 | 7 | Operation not supported by protocol |
-| 8 | Stopped at a limit and nothing failed: a timeout on most commands, the `--max-transfer` budget on `sync` (with `--json`, a reached budget reports `over_budget`) |
+| 8 | Timeout or transfer-budget stop, with command-specific outcomes. A SITE reply timeout may follow an applied mutation: verify before retrying. Sync budget stops use `--max-transfer` (JSON `over_budget` counts skipped files; an exact-budget stop can return 8 with no such field, so inspect the configured limits) |
 | 9 | Already exists / directory not empty (`--immutable`, `--no-clobber`) |
 | 10 | Server error / parse error |
 | 11 | I/O error |

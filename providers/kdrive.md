@@ -32,7 +32,7 @@ You do not have to go looking for it. With the API token filled in, click **Fetc
 
 ## Features
 
-- **Drive Selection**: If your account has multiple kDrives, AeroFTP uses the primary drive by default.
+- **Drive Selection**: Choose the required numeric Drive ID, using Fetch to discover the drives the token can access. There is no implicit primary-drive fallback.
 - **Cursor-Based Pagination**: Large directories are loaded efficiently using cursor pagination.
 - **Trash Management**: Deleted files go to the kDrive trash and can be restored.
 - **File Versioning**: kDrive retains previous versions of files. View and restore versions through AeroFTP.

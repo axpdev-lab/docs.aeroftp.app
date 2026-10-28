@@ -2,7 +2,7 @@
 
 Technical reference for the storage protocols and providers documented on this page, grouped by connection type. This page is a selection, not the catalogue: Blomp, GitLab, native Backblaze B2, Immich and Drime are supported too and have their own pages.
 
-AeroFTP v4.2.1 supports **7 transport protocols**, **26 native provider integrations** and **47 pre-configured presets**, reaching **56 providers** over **70 connection methods**. Those figures are generated from the code into [`docs/PROVIDER-INVENTORY.json`](https://github.com/axpdev-lab/aeroftp/blob/v4.2.1/docs/PROVIDER-INVENTORY.json) (at the v4.2.1 tag) and CI fails when they drift, so quote them from there rather than counting the tables on this page.
+AeroFTP v4.2.5 supports **7 transport protocols**, **26 native provider integrations** and **47 pre-configured presets**, reaching **56 providers** over **70 connection methods**. Those figures are generated from the code into [`docs/PROVIDER-INVENTORY.json`](https://github.com/axpdev-lab/aeroftp/blob/3a62301e589fffeb8b69fcdff7b5e95ff2b67288/docs/PROVIDER-INVENTORY.json) (the release inventory) and CI fails when they drift, so quote them from there rather than counting the tables on this page.
 
 ## Server Protocols
 
@@ -10,9 +10,9 @@ Direct server connections using standard protocols.
 
 | Protocol | Rust Crate | Auth Method | Default Port | TLS |
 |----------|-----------|-------------|-------------|-----|
-| FTP | suppaftp 8 | Username/Password | 21 | Optional (FTPS) |
-| FTPS | suppaftp 8 | Username/Password | 21 / 990 | Explicit / Implicit |
-| SFTP | russh 0.57 | Password / Key / Agent | 22 | SSH (built-in) |
+| FTP | suppaftp 12.2.1 | Username/Password | 21 | Optional (FTPS) |
+| FTPS | suppaftp 12.2.1 | Username/Password | 21 / 990 | Explicit / Implicit |
+| SFTP | russh 0.64.1 | Password / Key / Agent | 22 | SSH (built-in) |
 | WebDAV | reqwest 0.13 | Username/Password | 443 | HTTPS |
 | S3-Compatible | reqwest 0.13 | Access Key + Secret (HMAC-SHA256) | 443 | HTTPS |
 
@@ -40,7 +40,7 @@ Direct server connections using standard protocols.
 | Feature | Details |
 |---------|---------|
 | API | RFC 4918 |
-| XML parser | quick-xml 0.39 (event-based) |
+| XML parser | quick-xml 0.42 (event-based) |
 | Upload | Streaming `PUT` |
 | Presets | Nextcloud, Seafile, CloudMe, Mail.ru Cloud (v4.2.1), custom |
 | Special | Root boundary enforcement (`initial_path`) |
@@ -51,7 +51,7 @@ Direct server connections using standard protocols.
 |---------|---------|
 | API | AWS S3 REST API |
 | Auth | AWS Signature v4 (HMAC-SHA256) |
-| Upload | Multipart (5 MB parts) |
+| Upload | Multipart; part sizing follows the transfer path and object size |
 | Pagination | `continuation-token` loop |
 | Presets | AWS, Wasabi, DigitalOcean Spaces, Backblaze B2, Cloudflare R2, Storj, Alibaba OSS, Tencent COS, Yandex Object Storage, MinIO, IBM Cloud Object Storage (v4.2.1), custom |
 | Special | R2 Account ID field with auto-computed endpoint |
@@ -68,7 +68,6 @@ Cloud storage services using OAuth2 for authentication.
 | Box | OAuth2 PKCE | 10 GB | `https://api.box.com/2.0` |
 | pCloud | OAuth2 PKCE | 10 GB | `https://api.pcloud.com` / `https://eapi.pcloud.com` |
 | Zoho WorkDrive | OAuth2 | 5 GB | `https://www.zohoapis.{region}/workdrive/api/v1` |
-| kDrive | OAuth2 | 15 GB | `https://api.infomaniak.com/3/drive/{drive_id}` |
 | Koofr | OAuth2 PKCE | 10 GB | `https://app.koofr.net/api/v2` |
 | Yandex Disk | OAuth2 | 5 GB | `https://cloud-api.yandex.net/v1/disk` |
 
@@ -131,14 +130,6 @@ Cloud storage services using OAuth2 for authentication.
 | Versions | List, download, restore/promote |
 | Special | Team ID auto-detection |
 
-### kDrive
-
-| Feature | Details |
-|---------|---------|
-| Upload | Multipart |
-| Pagination | Cursor-based |
-| Special | Drive ID required, Infomaniak account |
-
 ### Koofr
 
 | Feature | Details |
@@ -170,7 +161,16 @@ Cloud storage services using API keys, bearer tokens, or session-based authentic
 | Internxt | OAuth2 PKCE | 1 GB | `https://drive.internxt.com` |
 | FileLu | API Key | 1 GB at signup (+ bonus programs) | `https://filelu.com/api` |
 | OpenDrive | Session (login) | 5 GB | `https://dev.opendrive.com/api/v1` |
-| Jottacloud | Username/Password | 5 GB | `https://jottacloud.com/jfs` |
+| kDrive | Personal API token | See provider page | `https://api.infomaniak.com/3/drive/{drive_id}` |
+| Jottacloud | Personal Login Token, then OIDC refresh token | See provider page | `https://jfs.jottacloud.com` |
+
+### kDrive
+
+| Feature | Details |
+|---------|---------|
+| Upload | Multipart |
+| Pagination | Cursor-based |
+| Special | Drive ID required, Infomaniak account |
 
 ### MEGA
 
@@ -207,7 +207,7 @@ Cloud storage services using API keys, bearer tokens, or session-based authentic
 | Auth | OAuth2 PKCE |
 | Encryption | Zero-knowledge E2E |
 | Upload | Encrypted chunks |
-| Special | ~800 lines Rust implementation |
+| Special | Native encrypted provider integration |
 
 ### FileLu
 
@@ -226,18 +226,18 @@ Cloud storage services using API keys, bearer tokens, or session-based authentic
 | Auth | Session-based (login endpoint) |
 | Upload | Direct upload |
 | Trash | List, restore, permanent delete |
-| Checksums | MD5 |
+| Checksums | No server-side checksum exposed by this backend |
 | Compression | zlib |
 | Share links | Expiring public links |
-| Special | ~1562 lines Rust implementation |
+| Special | Native session-backed provider integration |
 
 ### Jottacloud
 
 | Feature | Details |
 |---------|---------|
-| Auth | Username/Password |
-| Upload | Multipart XML-based |
-| Special | Norwegian provider, XML API |
+| Auth | Personal Login Token, then OIDC refresh token |
+| Upload | JFS upload allocation and streamed content |
+| Special | Native JFS API, quota and dedicated trash management; no share links or versions |
 
 ## Special Protocols
 
@@ -251,7 +251,7 @@ Cloud storage services using API keys, bearer tokens, or session-based authentic
 | Feature | Details |
 |---------|---------|
 | Auth | Shared Access Signature (SAS) or Connection String |
-| XML parser | quick-xml 0.39 (event-based) |
+| XML parser | quick-xml 0.42 (event-based) |
 | Upload | Block blobs (PUT) |
 | Pagination | `NextMarker` loop |
 | Special | Container-level access |
@@ -267,7 +267,7 @@ Cloud storage services using API keys, bearer tokens, or session-based authentic
 
 ## StorageProvider Trait
 
-All protocols implement a unified `StorageProvider` trait with 18 methods:
+All protocols implement a unified `StorageProvider` trait. Its core operations include:
 
 | Method | Description |
 |--------|-------------|
@@ -294,14 +294,14 @@ All protocols implement a unified `StorageProvider` trait with 18 methods:
 
 | Crate | Version | Used By |
 |-------|---------|---------|
-| suppaftp | 12.1.0 (pinned, v4.2.1) | FTP, FTPS |
-| russh | 0.57 | SFTP |
+| suppaftp | 12.2.1 (pinned fork) | FTP, FTPS |
+| russh | 0.64.1 | SFTP |
 | ssh2 | 0.9 (vendored OpenSSL) | SFTP upload backend (some embedded servers) |
 | reqwest | 0.13 | All HTTP-based protocols |
 | quick-xml | 0.42 (v4.2.1) | WebDAV, Azure Blob, S3 |
 | tokio-util | 0.7 | Streaming I/O |
-| secrecy | 0.8 | All credential handling |
+| secrecy | 0.10 | All credential handling |
 
-::: warning suppaftp Pin
-Since v4.2.1 the FTP library is `suppaftp` **12.1.0** (from 10.0.2), pinned to a forked release commit, whose control replies are capped at 256 KiB. The move fixed implicit-FTPS transfers against vsftpd: AeroFTP now asks for protected data connections after login. Earlier versions pinned `=8.0.3` to keep the FTP layer stable across Linux, macOS, and Windows.
+::: info FTP dependency
+AeroFTP v4.2.5 uses suppaftp 12.2.1 pinned to a reviewed fork revision in `src-tauri/Cargo.toml`. The FTP control-reply bound and implicit-FTPS protected data connections are retained. For exact dependency revisions, use the release's `Cargo.lock` and manifest.
 :::

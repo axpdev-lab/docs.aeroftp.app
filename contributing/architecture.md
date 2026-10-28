@@ -18,12 +18,12 @@ AeroFTP is built on Tauri 2, combining a Rust backend with a React 18 + TypeScri
 │                                                   │
 │  ┌──────────┐ ┌──────────┐ ┌──────────────────┐ │
 │  │Protocols │ │ AI Core  │ │  AeroVault       │ │
-│  │(22 impls)│ │(streaming│ │  (AES-256-GCM-   │ │
+│  │(providers)│ │(streaming│ │  (AES-256-GCM-   │ │
 │  │          │ │ + tools) │ │   SIV + Argon2id)│ │
 │  └──────────┘ └──────────┘ └──────────────────┘ │
 │  ┌──────────┐ ┌──────────┐ ┌──────────────────┐ │
 │  │AeroSync  │ │ Plugins  │ │  Credential      │ │
-│  │(journal, │ │(manifest │ │  Vault (SQLite   │ │
+│  │(journal, │ │(manifest │ │  Vault (JSON   │ │
 │  │ verify)  │ │ + hooks) │ │  + AES-GCM)      │ │
 │  └──────────┘ └──────────┘ └──────────────────┘ │
 └─────────────────────────────────────────────────┘
@@ -37,8 +37,8 @@ The Rust backend handles all protocol communication, encryption, and system oper
 
 | Module | Purpose |
 |--------|---------|
-| `ai_stream.rs` | SSE/NDJSON streaming for 24 AI providers |
-| `ai_tools.rs` | 43 provider-agnostic AI tools (file ops, shell, vault) |
+| `ai_stream.rs` | SSE/NDJSON streaming for 26 AI provider types |
+| `ai_tools.rs` | GUI AI tool bridge; canonical definitions and dispatch live in `ai_core/` |
 | `ai_core/` | Abstraction layer: `EventSink`, `CredentialProvider`, `RemoteBackend` traits |
 | `sync.rs` | AeroSync engine: journal, checksum, retry, verification |
 | `vault_v2.rs` | AeroVault v2: AES-256-GCM-SIV chunked encryption |
@@ -50,27 +50,28 @@ The Rust backend handles all protocol communication, encryption, and system oper
 
 ### Protocol Providers
 
-22 `StorageProvider` trait implementations, each in its own file:
+The `providers/` modules implement `StorageProvider` for transports, native APIs and local/synthetic backends. The [provider inventory](https://github.com/axpdev-lab/aeroftp/blob/3a62301e589fffeb8b69fcdff7b5e95ff2b67288/docs/PROVIDER-INVENTORY.json) records supported connection forms:
 
 - **Server protocols:** FTP/FTPS (`ftp.rs`), SFTP (`sftp.rs`), WebDAV (`webdav.rs`), S3 (`s3.rs`)
 - **OAuth2 cloud:** Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud
-- **API key / session:** MEGA, Azure Blob, 4shared (OAuth 1.0), Filen, FileLu, Yandex Disk, OpenDrive
+- **API key / session:** MEGA, Azure Blob, 4shared (OAuth 1.0), Filen, FileLu, Yandex Disk, OpenDrive, native Proton Drive and its optional official CLI mode
+- **Additional integrations:** Swift, native Backblaze B2, GitHub, GitLab, Immich, Drime, Twake and media providers
 
-The `StorageProvider` trait defines 18 methods: `connect`, `disconnect`, `list`, `upload`, `download`, `delete`, `rename`, `mkdir`, `stat`, `search`, `move_file`, `list_trash`, `restore_from_trash`, `permanent_delete`, `create_share_link`, `get_storage_quota`, `list_versions`, `download_version`.
+The trait has required core methods and optional operations, including: `connect`, `disconnect`, `list`, `upload`, `download`, `delete`, `rename`, `mkdir`, `stat`, `list_object_versions`, `restore_version`, `delete_version`, `empty_object_versions`, `create_share_link`, `storage_info`, `list_versions`, `download_version`.
 
 ## Frontend (`src/`)
 
-React 18 with TypeScript strict mode, styled with Tailwind CSS. Four themes: Light, Dark, Tokyo Night, Cyber.
+React 18 with TypeScript strict mode, styled with Tailwind CSS. Eight themes: Light, Dark, True Dark, Tokyo Night, Cyber, Green, Ice and Red Horse.
 
 ### Key Components
 
 | Component | Purpose |
 |-----------|---------|
 | `App.tsx` | Main layout, dual-panel file manager, connection state |
-| `LocalFilePanel.tsx` | Local file browser (~730 lines, extracted from App.tsx) |
+| `LocalFilePanel.tsx` | Local file browser  |
 | `DevToolsV2.tsx` | Resizable panels: Code Editor + Terminal + AeroAgent |
-| `AIChat.tsx` | AeroAgent chat UI (~1900 lines) |
-| `SyncPanel.tsx` | AeroSync configuration and execution |
+| `AIChat.tsx` | AeroAgent chat UI  |
+| `AeroSync/AeroSyncDialog.tsx` | Compare, Plan and local-mirror workflow |
 | `VaultPanel.tsx` | AeroVault container management |
 | `CommandPalette.tsx` | VS Code-style Ctrl+Shift+P command launcher |
 
@@ -99,11 +100,11 @@ Plugins are JSON manifest files paired with shell scripts. They are installed in
 ~/.config/aeroftp/plugins/
   my-plugin/
     manifest.json    # Name, version, tools, hooks
-    script.sh        # Executed in sandboxed environment
+    script.sh        # Executed by the plugin runtime
 ```
 
 Plugins can define custom AI tools and register for event hooks (`file:created`, `transfer:complete`, `sync:complete`).
 
 ## CLI (`src-tauri/src/bin/aeroftp_cli.rs`)
 
-The CLI is a separate binary target (`[[bin]]` in `Cargo.toml`) that reuses backend protocol code without any Tauri or frontend dependencies. It includes a batch scripting engine for `.aeroftp` files with 17 commands and single-pass variable expansion.
+The CLI is a separate binary target (`[[bin]]` in `Cargo.toml`) that reuses the backend and provider modules. Building it does not require building the frontend bundle. Its batch engine executes `.aeroftp-script` files. See [Batch scripting](/cli/batch-scripting) for the command contract.

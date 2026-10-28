@@ -54,7 +54,9 @@ When **Auto-start** is enabled on a mount, AeroFTP installs the right OS-level h
 
 - **Linux** -> a `systemd --user` unit named after the mount, enabled with `systemctl --user enable --now aeroftp-mount-<id>.service`. The unit runs `aeroftp-cli mount --profile <name>` with the mount's stored options.
 - **Windows** -> a Task Scheduler entry with the **At log on** trigger, running `aeroftp-cli.exe mount` in the user session. The task is registered under the AeroFTP folder so it shows up in Task Scheduler grouped with the rest of the app's tasks.
-- **macOS** -> autostart is not yet wired to a `launchd` agent in 3.7.1; mounts can still be triggered from the GUI or from `aeroftp-cli` manually until LaunchAgent support lands in a future release.
+- **macOS** -> autostart is not wired to a `launchd` agent in v4.2.5; mounts can still be triggered from the GUI or from `aeroftp-cli` manually until LaunchAgent support lands in a future release.
+
+Unattended mount autostart is unavailable while the credential vault uses a master password, because the daemon cannot answer the password prompt. Unlock and mount manually in that configuration.
 
 Toggling Auto-start off removes the corresponding unit / task. The user-mode placement keeps the autostart entry isolated from system-level services and avoids any need for `sudo` / Administrator elevation during install.
 

@@ -13,7 +13,7 @@ Authentication is handled via OAuth2 PKCE (no client secret required on the devi
 3. Sign in and approve AeroFTP's access.
 4. The authorization is completed automatically.
 
-OAuth tokens are stored encrypted in the OS keyring. To use your own app credentials, enter a **Client ID** in Settings > Cloud Providers.
+OAuth tokens are stored encrypted in the Universal Credential Vault. To use your own app credentials, enter a **Client ID** in Settings > Cloud Providers.
 
 ## Features
 

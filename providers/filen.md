@@ -37,13 +37,17 @@ The v3 path matches the official Filen SDK byte-for-byte: hex-decoded salt, the 
 - **Streaming Encryption**: Files are encrypted and decrypted on the fly during transfers.
 - **Cipher-strength badge**: AeroFTP shows `E2E 256-bit` next to Filen profiles - AES-256 plus the auth version badge so you can confirm the credential generation at a glance.
 
+## Sharing
+
+AeroFTP 4.2.5 disables native Filen share-link creation for both files and folders. The backend refuses creation before making a provider request, and the GUI does not offer the native share-link action. Existing link revocation remains supported by the backend; normal file operations remain available.
+
 ## Tips
 
 - Filen's 10 GB free tier includes E2E encryption -- most competitors charge for client-side encryption.
-- Filen does not expose a trash or versioning API. Deleted files cannot be recovered through AeroFTP.
+- AeroFTP currently does not expose Filen trash controls. File version history is available through the native provider; restoring an item from the trash is not available through AeroFTP.
 - Because all file metadata is encrypted, directory listings require decrypting each entry's metadata. This can be slower than non-encrypted providers for large directories.
 - For AeroSync with Filen, use the **size** compare mode since encrypted timestamps may differ from local file times.
-- If you also use [Filen Desktop](/providers/filen-desktop), keep the native provider as your primary - it is the only path that gets v3 auth, share links, and the metadata-encrypted listing fast path. The Network Drive bridges are great for tooling that already speaks WebDAV / S3, not as a replacement for the native API.
+- If you also use [Filen Desktop](/providers/filen-desktop), keep the native provider as your primary - it is the only path that gets v3 auth and the metadata-encrypted listing fast path. The Network Drive bridges are great for tooling that already speaks WebDAV / S3, not as a replacement for the native API.
 
 ## Related
 

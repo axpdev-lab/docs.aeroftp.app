@@ -42,6 +42,12 @@ Replace `USERNAME` with your exact Nextcloud login name.
 - path: `/remote.php/dav/files/USERNAME/`
 - use an app password if your server has 2FA enabled
 
+## Transfer behavior in v4.2.5
+
+AeroFTP detects Nextcloud capabilities from the connection and server responses, including configurations entered as a bare origin. Suitable uploads use Nextcloud chunked upload v2; retryable chunk failures are retried in place. Parallel file and chunk work still obeys the live session and resource limits. The WebDAV transfer pool advertises a ceiling of up to eight parallel file transfers, not eight requests for every operation. Multipart chunk concurrency is a separate limit within the provider's resource budget.
+
+Replacing a file uses the provider's guarded replacement path rather than assuming that an overwriting WebDAV `MOVE` preserves the old destination until success. See [WebDAV](/protocols/webdav) for the transport behavior and [DAG engine](/architecture/dag-transfer-engine) for the selected runner.
+
 ## Troubleshooting
 
 | Problem | Cause | Solution |

@@ -10,7 +10,7 @@ AeroFTP connects to Drime Cloud using its native REST API with Bearer token auth
 |-------|-------|-------|
 | API Token | Your access token | From Drime Dashboard or via login endpoint |
 
-Generate an API token from your Drime Cloud account settings. AeroFTP stores it encrypted in the OS keyring.
+Generate an API token from your Drime Cloud account settings. AeroFTP stores it encrypted in the Universal Credential Vault.
 
 ## Features
 

@@ -92,7 +92,7 @@ You do not need to configure this manually. AeroFTP handles the detection and sw
 ## Features
 
 - **PROPFIND**: Directory listings are retrieved using the WebDAV `PROPFIND` method with `Depth: 1`. AeroFTP parses the XML response to extract file names, sizes, modification times, and content types.
-- **TLS**: All HTTPS connections use the system's certificate store for validation. Self-signed certificates trigger a confirmation dialog before proceeding.
+- **TLS**: HTTPS connections verify the server certificate by default. For a private certificate authority, configure a certificate chain trusted by the system; keep certificate verification enabled.
 - **Streaming uploads**: Large files are uploaded using chunked transfer encoding, so they are streamed from disk without loading the entire file into memory.
 - **Create directories**: The `MKCOL` method is used to create new directories on the server.
 - **Delete**: The `DELETE` method removes files and directories (recursively for directories).
@@ -100,32 +100,17 @@ You do not need to configure this manually. AeroFTP handles the detection and sw
 
 ## CLI Usage
 
-The AeroFTP CLI supports WebDAV connections using URL syntax:
+Save a WebDAV profile with its full root path and HTTPS settings, then select it by name. This keeps passwords out of command arguments and shell history:
 
 ```bash
-# Nextcloud -- list files
-aeroftp ls webdav://user@cloud.example.com/remote.php/dav/files/user/
-
-# Nextcloud -- download a file
-aeroftp get webdav://user@cloud.example.com/remote.php/dav/files/user/Documents/report.pdf ./
-
-# Nextcloud -- upload a file
-aeroftp put webdav://user@cloud.example.com/remote.php/dav/files/user/Documents/ ./notes.txt
-
-# CloudMe -- list root
-aeroftp ls webdav://user@webdav.cloudme.com/
-
-# Custom WebDAV server on HTTP (non-TLS)
-aeroftp ls webdav://user@nas.local:5005/webdav/share/ --insecure
-
-# Directory tree
-aeroftp tree webdav://user@cloud.example.com/remote.php/dav/files/user/ -d 3
-
-# JSON output
-aeroftp ls webdav://user@cloud.example.com/remote.php/dav/files/user/ -l --json
+aeroftp-cli ls --profile "My Nextcloud" / --json
+aeroftp-cli get --profile "My Nextcloud" /Documents/report.pdf ./report.pdf
+aeroftp-cli put --profile "My Nextcloud" ./notes.txt /Documents/notes.txt
+aeroftp-cli tree --profile "My Nextcloud" / -d 3
+aeroftp-cli sync --profile "My Nextcloud" ./Documents/ /Documents/ --direction upload --dry-run --json
 ```
 
-Passwords are prompted interactively. For saved connections, use `--profile "My Nextcloud"` instead of URL mode.
+Paths are relative to the saved WebDAV root. A root already ending in `/remote.php/dav/files/USERNAME/` should not be repeated in each path argument.
 
 ## Common Issues
 
@@ -136,7 +121,7 @@ Passwords are prompted interactively. For saved connections, use `--profile "My 
 | `405 Method Not Allowed` | Server does not support the requested WebDAV method | The server may have a limited WebDAV implementation; check server documentation |
 | Cannot navigate above initial path | Root boundary enforcement | This is by design -- AeroFTP restricts navigation to the configured path |
 | Slow directory listings (1000+ files) | WebDAV PROPFIND is verbose | WebDAV XML responses are larger than SFTP metadata; expect slower listing for very large directories |
-| Self-signed certificate error | Server uses a self-signed TLS certificate | Accept the certificate in the confirmation dialog, or use `--insecure` in the CLI |
+| Self-signed certificate error | Server uses a self-signed TLS certificate | Use a certificate issued by a trusted CA, or install the private CA certificate in the system trust store; keep verification enabled. `--insecure` disables certificate verification and is only a temporary diagnostic workaround |
 | 2FA login fails on Nextcloud | Using main password instead of app password | Generate an app password in Nextcloud Settings > Security > Devices & sessions |
 
 ## Tips

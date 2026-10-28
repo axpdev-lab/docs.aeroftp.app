@@ -10,14 +10,14 @@ AeroFTP applies encryption across several distinct layers:
 | ----- | ------- | ----------------- |
 | AeroVault format v2 | Stable encrypted file containers (default) | AES-256-GCM-SIV (RFC 8452) |
 | AeroVault format v3 (Archive tier) | Wrapper-stack container with content-defined chunking, dedup and per-chunk zstd | AES-256-GCM-SIV (RFC 8452) over zstd chunks |
-| AeroVault format v4 (v3 + Error Correction) | v3 container plus a detached `.aerocorrect` recovery sidecar over the ciphertext (repair, not confidentiality) | Reed-Solomon parity, SHA-256 content binding |
+| AeroVault format v4 (v3 + Error Correction) | v3 container plus recovery parity over the ciphertext: embedded by default, detached `.aerocorrect` sidecar, or both (repair, not confidentiality) | Reed-Solomon parity, SHA-256 content binding |
 | AeroCrypt overlay (native) | Per-file encryption on top of any provider profile (`AECR` format) | AES-256-GCM-SIV content, AES-256-KW DEK wrap, AES-256-SIV filenames |
 | Archive encryption | Password-protected ZIP/7z | AES-256 |
 | rclone crypt interoperability | Full read/write interoperability with existing rclone crypt remotes | XSalsa20-Poly1305 content + EME filename encryption |
 | Credential storage | vault.db secrets | AES-256-GCM + Argon2id |
 | Transport security | Wire encryption | TLS 1.2/1.3, SSH |
 
-Each layer operates independently, meaning a vulnerability in one layer does not compromise the others.
+The layers serve different purposes. Their keys, algorithms and threat models must be assessed separately; sharing a process or an unlocked endpoint still creates common risks.
 
 ## AeroVault v2 (stable default)
 
@@ -171,7 +171,7 @@ These do not replace a hardened deserializer, but they make the easy "give the r
 v4 is intentionally shaped as "v3 plus error correction". The cipher chain (chunk → compress → encrypt) and the chunk hash trail (keyed BLAKE3-128 for dedup, BLAKE3-256 for pre-decryption integrity) do not change for v4. The error-correction wrapper ships as:
 
 1. **Reed-Solomon parity**, carried as a non-critical extension. No refactor of v3 primitives, so a v3-only reader skips it and still opens the container.
-2. **A detached, content-addressed `.aerocorrect` sidecar** as the default placement (`embedded` and `both` are also available), shared byte-for-byte with the standalone `aerovault` crate and with AeroSync. The sidecar binds to the SHA-256 of the protected content and its v2 framing is self-healing.
+2. **`embedded` placement** as the default for GUI and CLI vault creation (`detached` and `both` are also available). Detached placement uses a content-addressed `.aerocorrect` sidecar, shared byte-for-byte with the standalone `aerovault` crate and with AeroSync. The sidecar binds to the SHA-256 of the protected content and its v2 framing is self-healing.
 3. **The scrub path**: on open, walk the manifest, recompute the per-block cipher hash, identify damaged blocks, pull recovery data from the parity source, repair, and re-verify. The cipher hash is stored per block precisely so damaged ciphertext can be detected before decryption.
 4. **Fail-closed, all-or-nothing repair**: every reconstructed region is re-verified against the container's authenticated values (header MAC and manifest `cipher_hash`) before the vault is re-sealed, so a foreign or corrupt sidecar can only make a repair fail, never overwrite good data. A dedicated repair dialog surfaces damaged-block, recovered, and lost counts rather than silently fixing.
 
@@ -228,15 +228,15 @@ Archive passwords are zeroized in memory immediately after use via the `secrecy`
 
 ## Credential Storage
 
-All credentials are stored in `vault.db`, an encrypted SQLite database:
+Saved credential entries are encrypted in the JSON envelope named `vault.db`, rather than a SQLite database:
 
 | Component | Algorithm | Detail |
 | --------- | --------- | ------ |
 | Encryption | AES-256-GCM | Per-entry encryption with random 96-bit nonce |
-| Key derivation | HKDF-SHA256 | Derives per-purpose keys from master key |
-| Master password KDF | Argon2id | 128 MiB, t=4, p=4 (same as AeroVault) |
-| Database mode | SQLite WAL | Concurrent reads without corruption |
-| Passphrase entropy | 512-bit CSPRNG | Auto-generated if no master password set |
+| Key derivation | HKDF-SHA256 | Derives the 256-bit entry-encryption key from the random 64-byte passphrase |
+| Master password KDF | Argon2id | 128 MiB, t=4, p=4; wraps the random passphrase with AES-256-GCM |
+| Persistence | JSON envelope | Per-entry ciphertext, temporary-file replacement and platform fallback paths |
+| Passphrase entropy | 512-bit CSPRNG | Random passphrase; protected by keyring, master password, or file permissions in no-keyring fallback mode |
 
 See [Credential Management](credentials.md) for the full credential lifecycle, import/export, and migration details.
 
@@ -270,26 +270,10 @@ When connecting via FTP with `ExplicitIfAvailable` TLS mode, AeroFTP attempts a 
 
 ## OAuth Token Protection
 
-OAuth access tokens and refresh tokens for all cloud providers are protected with multiple layers:
+Saved provider tokens are encrypted in the Universal Credential Vault. Runtime implementations use secret wrappers, bounded error reporting and sanitization where those values cross logging or model boundaries. Their handling is not a guarantee that every intermediate buffer, HTTP library or operating-system memory copy is erased.
 
-1. **SecretString wrapping**: All token values are wrapped in Rust's `secrecy::SecretString` across every provider implementation. This prevents tokens from appearing in debug output, logs, or error messages.
-
-2. **Vault storage**: Tokens are stored encrypted in `vault.db` (AES-256-GCM) at rest.
-
-3. **In-memory fallback**: If the vault is locked or unavailable, tokens are held in an in-memory `Mutex` for the session duration. They are never written to disk unencrypted.
-
-4. **Unwrap-at-use**: Tokens are only exposed (via `.expose_secret()`) at the exact point where they are inserted into HTTP request headers.
-
-5. **Error sanitization**: The `sanitize_error_message()` function uses 5 compiled regex patterns to strip API keys (Anthropic `sk-ant-*`, OpenAI `sk-*`), Bearer tokens, and `x-api-key` values from any error message before it reaches logs or the UI.
+See [Credential Management](/security/credentials) for the persisted key modes. The automatic no-keyring fallback keeps the random passphrase in a file protected by operating-system permissions; enable a master password to protect against someone reading the whole configuration directory.
 
 ## Memory Zeroization
 
-AeroFTP uses the `secrecy` crate for zero-on-drop semantics on all sensitive values:
-
-- **Passwords**: Master password, archive passwords, server passwords
-- **OAuth tokens**: Access tokens, refresh tokens
-- **API keys**: AI provider keys (OpenAI, Anthropic, etc.)
-- **Cryptographic keys**: AES keys, HMAC keys, derived keys
-- **TOTP secrets**: 2FA secret bytes (see [TOTP 2FA](totp.md))
-
-When a `SecretString` or `Secret<Vec<u8>>` is dropped, the underlying memory is overwritten with zeros before deallocation. This prevents sensitive data from lingering in freed memory where it could be recovered by memory forensics tools.
+Secret wrappers and explicit zeroization clear many password, token and key buffers on drop. These measures reduce residual copies; they do not prove that secrets cannot occur in a process dump or swap. The unlocked credential-vault key is retained in process memory for use during the session. Operating-system access control and encrypted swap remain relevant.

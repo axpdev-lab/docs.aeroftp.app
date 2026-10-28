@@ -20,12 +20,12 @@ At the top of the screen you will find the **protocol selector** -- a categorize
 
 ## 3. Choose a Protocol
 
-Click the **protocol selector** to expand the full protocol grid. Protocols are organized into distinct categories:
+Click the **protocol selector** to expand the full protocol grid. Choose a connection family, then follow the authentication fields for the selected provider:
 
 | Category | Protocols | Authentication |
 | --- | --- | --- |
 | **Servers** | FTP, FTPS, SFTP | Host + username/password or SSH key |
-| **Cloud (OAuth)** | Google Drive, Dropbox, OneDrive, Box, pCloud, MEGA, Filen, Zoho, Internxt, kDrive, Koofr, Jottacloud, Yandex Disk, OpenDrive, FileLu, 4shared | Browser-based OAuth2 authorization |
+| **Cloud providers** | Google Drive, Dropbox, OneDrive, Box, pCloud, MEGA, Filen, Zoho, Internxt, kDrive, Koofr, Jottacloud, Yandex Disk, OpenDrive, FileLu, 4shared | Provider-specific: browser authorization, account credentials, API key or login token. See the selected [provider guide](/protocols/overview). |
 | **S3-Compatible** | AWS S3, Backblaze B2, Wasabi, Cloudflare R2, DigitalOcean Spaces, Storj, and more | Access Key + Secret Key |
 | **WebDAV** | Nextcloud, Seafile, CloudMe, or custom WebDAV servers | Host + username/password |
 
@@ -106,7 +106,7 @@ After connecting successfully, save your server profile so you can reconnect ins
 2. Optionally give the connection a memorable name
 3. Click **Save**
 
-Credentials are stored in AeroFTP's **encrypted vault** (AES-256-GCM + Argon2id). They never touch your filesystem as plaintext.
+Saved credentials are stored in AeroFTP's **encrypted vault**. The automatic-mode passphrase normally lives in the OS keyring; without a working keyring, it can live in a file protected by OS permissions. Enable a master password for cryptographic protection independent of the keyring. See [credential storage](/security/credentials) for the key modes.
 
 ![Save server dialog with connection name and save button](/images/quick-start-save-server.png)
 <!-- SCREENSHOT: The save server dialog/prompt showing the connection name field, protocol badge (SFTP), host info, and the Save button. Dark theme. -->
@@ -128,7 +128,7 @@ These shortcuts will accelerate your workflow from day one:
 | --- | --- |
 | `Ctrl+Shift+P` | Open the Command Palette (search ~25 commands) |
 | `Ctrl+Shift+N` | New connection |
-| `Ctrl+Shift+E` | Toggle AeroTools panel (editor, terminal, AI) |
+| `Ctrl+Shift+E` | Toggle AeroTools panel (Security Tools, editor, terminal, AI) |
 | `F2` | Rename selected file inline |
 | `F5` | Refresh file listing |
 
@@ -138,9 +138,9 @@ Now that you are connected, there is much more to discover:
 
 - **[Interface Overview](interface.md)** -- Detailed tour of every UI element
 - **[AeroSync](../features/aerosync.md)** -- Intelligent directory synchronization with conflict resolution
-- **[AeroVault](../features/aerovault.md)** -- Military-grade encrypted file containers
-- **[AeroAgent](../features/aeroagent.md)** -- AI assistant with 39 tools for file management and code analysis
-- **[AeroTools](../features/aerotools.md)** -- Integrated code editor (Monaco), terminal, and development tools
+- **[AeroVault](../features/aerovault.md)** -- Authenticated encrypted file containers
+- **[AeroAgent](../features/aeroagent.md)** -- AI assistant with built-in tools for file management and code analysis
+- **[AeroTools](../features/aerotools.md)** -- Independent Security Tools, code editor (Monaco), terminal and AI launchers
 - **[Protocols Overview](../protocols/overview.md)** -- Guide to the supported protocols
 
 > **Next step:** Read the [Interface Overview](interface.md) to understand every panel, menu, and shortcut available in AeroFTP.

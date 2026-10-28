@@ -1,13 +1,13 @@
 # Installation
 
-AeroFTP is available for **Linux**, **Windows**, and **macOS**. All packages are built in a clean GitHub Actions CI environment and distributed through [GitHub Releases](https://github.com/axpnet/aeroftp/releases). AeroFTP is free and open-source with no license keys, subscriptions, or telemetry.
+AeroFTP is available for **Linux**, **Windows**, and **macOS**. All packages are built in a clean GitHub Actions CI environment and distributed through [GitHub Releases](https://github.com/axpdev-lab/aeroftp/releases). AeroFTP is free and open-source with no license keys, subscriptions, or telemetry.
 
 ## Supported Platforms
 
 | Platform | Formats | Install Method |
 | --- | --- | --- |
 | **Linux** | `.deb`, `.rpm`, `.AppImage`, `.snap`, AUR | Package manager, Snap Store, or direct download |
-| **Windows** | `.msi`, `.exe` | MSI installer (recommended) or NSIS executable |
+| **Windows** | `.msi`, `.exe`, portable `.zip` | MSI or NSIS installer, or extract the portable ZIP |
 | **macOS** | `.dmg` | Drag to Applications |
 
 ## System Requirements
@@ -26,12 +26,12 @@ AeroFTP is available for **Linux**, **Windows**, and **macOS**. All packages are
 ## Choose Your Platform
 
 - **[Linux](linux.md)** -- `.deb`, `.rpm`, `.AppImage`, Snap Store, or AUR (Arch)
-- **[Windows](windows.md)** -- `.msi` installer (recommended) or `.exe` NSIS bundle
+- **[Windows](windows.md)** -- `.msi` installer (recommended), `.exe` NSIS installer, or portable `.zip`
 - **[macOS](macos.md)** -- `.dmg` disk image
 
 ## Downloading
 
-All releases are published on the [GitHub Releases page](https://github.com/axpnet/aeroftp/releases). Each release includes:
+All releases are published on the [GitHub Releases page](https://github.com/axpdev-lab/aeroftp/releases). Each release includes:
 
 - Platform-specific installers and packages
 - A changelog describing all changes in the release
@@ -41,7 +41,7 @@ To download the latest version, visit the Releases page and select the appropria
 
 ## Verifying Downloads
 
-All release artifacts are built by GitHub Actions in a reproducible CI environment. To verify the integrity of a downloaded file, compare its SHA-256 checksum against the value published on the Releases page:
+Release artifacts are built by GitHub Actions with recorded build configuration. To verify the integrity of a downloaded file, compare its SHA-256 checksum against the value published on the Releases page:
 
 ```bash
 # Linux / macOS
@@ -57,10 +57,11 @@ If the checksum matches the value listed on the GitHub Releases page, the file h
 
 AeroFTP includes a built-in update checker that runs every 24 hours. When a new version is available, a non-intrusive notification appears with the option to download and install the update.
 
-- **AppImage (Linux)**: Full auto-update support. The app downloads the new AppImage, backs up the current version, replaces it, and restarts automatically.
+- **AppImage (Linux)**: Full auto-update support. The app downloads the new AppImage, atomically replaces the current AppImage after verification and restarts it.
 - **Snap (Linux)**: Updates are handled automatically by the Snap daemon.
-- **.deb / .rpm (Linux)**: The app downloads the new package and applies it using Polkit-authenticated system commands.
-- **Windows / macOS**: The app notifies you of the update and provides a download link.
+- **.deb / .rpm (Linux)**: The app downloads the matching package and requests installation through the system package tools and their authorization flow.
+- **Windows**: The app downloads the matching MSI, NSIS or portable ZIP, verifies it and offers **Install & Restart**.
+- **macOS**: The app downloads the DMG and opens it for manual installation.
 
 ## File Associations
 

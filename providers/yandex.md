@@ -6,14 +6,14 @@ AeroFTP connects to Yandex Disk via the official REST API with OAuth2 authentica
 
 ## Connection Settings
 
-Authentication is handled via OAuth2:
+You can configure an OAuth access token directly. To use the optional browser authorization flow, configure your own Client ID and Client Secret in Settings > Cloud Providers; AeroFTP uses its shared OAuth2 PKCE flow:
 
 1. Click **Connect** on the Yandex Disk protocol.
 2. A browser window opens to Yandex's authorization page.
 3. Sign in and approve access.
 4. Authorization completes automatically.
 
-OAuth tokens are stored encrypted in the OS keyring. To use your own OAuth credentials, enter a **Client ID** and **Client Secret** in Settings > Cloud Providers.
+OAuth tokens are stored encrypted in the Universal Credential Vault.
 
 ## Features
 

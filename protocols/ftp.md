@@ -12,7 +12,7 @@ FTP (File Transfer Protocol) is the original file transfer protocol, dating back
 | Host | Server hostname or IP | e.g. `ftp.example.com` or `192.168.1.100` |
 | Port | `21` (FTP/Explicit TLS) or `990` (Implicit TLS) | Auto-set when you change the encryption mode |
 | Username | Your FTP username | Often your hosting account name (cPanel, Plesk) |
-| Password | Your FTP password | Stored encrypted in the OS keyring via `keyring` crate |
+| Password | Your FTP password | Stored encrypted in the Universal Credential Vault |
 | Encryption | None / Explicit TLS / Implicit TLS | See detailed explanation below |
 
 When you select a saved FTP server, all fields are populated from the encrypted credential store. The password is never written to disk in plaintext.
@@ -100,28 +100,17 @@ AeroFTP is tested with the following FTP servers:
 
 ## CLI Usage
 
-The AeroFTP CLI supports FTP connections using URL syntax:
+The CLI uses saved FTP/FTPS profiles, including their TLS policy. Save the connection in AeroFTP first, then use its exact profile name:
 
 ```bash
-# List files on an FTP server with Explicit TLS
-aeroftp ls ftp://user@ftp.example.com/ --tls explicit
-
-# Download a file
-aeroftp get ftp://user@ftp.example.com/public_html/index.html ./
-
-# Upload a file
-aeroftp put ftp://user@ftp.example.com/public_html/ ./style.css
-
-# Recursive directory listing
-aeroftp tree ftp://user@ftp.example.com/public_html/ -d 3
-
-# Sync local directory to remote
-aeroftp sync ftp://user@ftp.example.com/public_html/ ./website/ --direction push
+aeroftp-cli ls --profile "My FTPS" /public_html/ --json
+aeroftp-cli get --profile "My FTPS" /public_html/index.html ./index.html
+aeroftp-cli put --profile "My FTPS" ./style.css /public_html/style.css
+aeroftp-cli tree --profile "My FTPS" /public_html/ -d 3
+aeroftp-cli sync --profile "My FTPS" ./website/ /public_html/ --direction upload --dry-run --json
 ```
 
-The `--tls` flag accepts `none`, `explicit`, or `implicit`. If omitted, AeroFTP defaults to `explicit`.
-
-For servers with self-signed certificates, add `--insecure` to skip certificate validation.
+Review the dry-run before executing a sync. Keep certificate verification enabled and configure trust for your server rather than routinely using an insecure flag.
 
 ## Common Issues
 
@@ -129,7 +118,7 @@ For servers with self-signed certificates, add `--insecure` to skip certificate 
 | ------- | ----- | -------- |
 | Directory listing works but transfers fail | Passive port range blocked by firewall | Open the server's passive port range in your firewall |
 | `530 Login authentication failed` | Wrong credentials or IP-restricted access | Verify credentials; check if the server restricts login by IP |
-| `SSL/TLS handshake failed` | Server does not support the requested TLS mode | Try a different encryption mode, or use `--insecure` for self-signed certs |
+| `SSL/TLS handshake failed` | Server does not support the requested TLS mode | Check the server's supported TLS mode and configure trust for its certificate while keeping verification enabled |
 | Garbled filenames | Server using Latin-1 encoding | AeroFTP sends `OPTS UTF8 ON` automatically; if the server ignores it, filenames may display incorrectly |
 | Connection timeout | Server behind a strict NAT or offline | Verify the server is reachable with `ping` or `telnet host 21` |
 | TLS downgrade warning | Server rejected AUTH TLS | The server does not support TLS. Use a different server or accept the risk |

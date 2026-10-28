@@ -2,28 +2,34 @@
 
 <ProviderPlanCard id="jottacloud" />
 
-AeroFTP connects to Jottacloud via WebDAV. Jottacloud is a Norwegian cloud storage service that provides 5 GB of free storage with data residency in Norway.
+AeroFTP v4.2.5 connects through its native **JFS REST API** provider, not a generic WebDAV preset. Authentication starts from a Personal Login Token and exchanges it through Jottacloud's OIDC flow. The resulting refresh token is saved in the encrypted credential vault.
 
-## Connection Settings
+## Connect
 
-| Field | Value | Notes |
-|-------|-------|-------|
-| Host | `jottacloud.com` | Pre-configured by the Jottacloud preset |
-| Username | Your Jottacloud username | |
-| Password | Your Jottacloud password | Or an app-specific password |
+1. Select **Jottacloud** in AeroFTP.
+2. Use **Generate Personal Login Token** to open Jottacloud's security page.
+3. Generate a token there and paste it into AeroFTP's token field.
+4. Connect and save the profile.
 
-Jottacloud is accessed through the WebDAV protocol. When you select the Jottacloud preset, AeroFTP configures the endpoint automatically.
+The form fills the JFS host and HTTPS port automatically. Do not enter your ordinary account password in place of the generated token. A saved refresh token can reconnect without spending the original login token again. Expired or revoked authorization can require generating a new token.
 
-## Features
+## Features and limits
 
-- **WebDAV Access**: Standard WebDAV file operations -- upload, download, rename, move, and delete.
-- **Norwegian Data Residency**: All data is stored in Norway, subject to Norwegian privacy laws.
-- **Unlimited Storage** (paid): Jottacloud's paid plans offer unlimited storage, making it attractive for large backups.
+- Browse folders, upload and download files, rename, move and delete.
+- Storage information reports used space and quota where returned by the account.
+- Download resume is available; upload resume is not the same capability.
+- The dedicated trash manager supports browsing, restoration and permanent deletion. Folder restore reports the children it restored and any failures.
+- Share-link creation and file-version browsing are not exposed by this provider.
+- AeroSync uses size and modification time when no comparable provider digest is available. The CLI `check --checksum` path falls back to size when it cannot obtain a comparable remote SHA-256 digest; it does not compare modification times. This provider does not expose a server-side checksum.
 
-## Tips
+A folder can be removed without recursion only when empty. Permanent deletion is separate from moving a live item to trash. Review the selected trash paths before purging.
 
-- Jottacloud's free tier provides 5 GB. The Personal plan offers unlimited storage for a monthly fee.
-- If you have 2FA enabled on your Jottacloud account, you may need to create an **app-specific password** in your account settings for WebDAV access.
-- Since Jottacloud uses WebDAV, it inherits the same characteristics as other WebDAV connections -- no trash API, no versioning API through this interface.
-- For AeroSync, use **size + modification time** compare mode. WebDAV access provides reliable file metadata.
-- Jottacloud is a good choice for users who prioritize Nordic data residency and privacy.
+## CLI
+
+```bash
+aeroftp-cli ls --profile "My Jottacloud" / --json
+aeroftp-cli get --profile "My Jottacloud" /report.pdf ./report.pdf
+aeroftp-cli sync --profile "My Jottacloud" ./Documents/ /Documents/ --direction upload --dry-run --json
+```
+
+Review the plan before executing sync. See [CLI Commands](/cli/commands) for flags and [Checksums](/protocols/checksums) for comparison limitations.

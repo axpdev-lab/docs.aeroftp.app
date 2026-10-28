@@ -18,9 +18,13 @@ Double-click any text file in the local or remote file panel to open it in the e
 | App Theme | Editor Theme |
 |-----------|-------------|
 | Light | Default Light |
-| Dark | GitHub Dark |
+| Dark | Monaco Dark |
 | Tokyo Night | Tokyo Night |
 | Cyber | Cyber (neon green on dark) |
+| True Dark | True Dark |
+| Green | Green |
+| Ice | Ice |
+| Red Horse | Red Horse |
 
 - **Find and replace** - standard Ctrl+F / Ctrl+H with regex support
 - **Minimap** - code overview on the right side of the editor

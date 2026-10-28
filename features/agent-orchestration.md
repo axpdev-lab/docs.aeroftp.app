@@ -6,7 +6,7 @@ description: "Let external AI agents delegate file and server work to AeroAgent 
 
 AeroAgent can be orchestrated by external AI agents - Claude Code, Codex, Cursor, Devin, or any tool that can invoke CLI commands. The external agent uses `aeroftp-cli agent` to delegate file operations, server management, and multi-protocol tasks to AeroAgent, which resolves credentials from the encrypted vault without ever exposing them.
 
-This page documents the orchestration capabilities, the CLI interface for external agents, and includes a verified field test report from a real orchestration session.
+This page describes AeroFTP 4.2.5 as checked on 26 October 2026. The dated field report below remains historical evidence for v3.2.0, not validation of the current release.
 
 ## Quick Start for External Agents
 
@@ -20,7 +20,7 @@ aeroftp-cli profiles --json
 # One-shot agent command
 aeroftp-cli agent --provider xai --model grok-3-mini \
   -m "List files on the Production server" \
-  --auto-approve all -y --json
+  --auto-approve high --json
 
 # Agent with vault-backed provider (no env vars needed)
 aeroftp-cli agent -m "Check disk usage on all servers"
@@ -71,19 +71,19 @@ Lists all saved server profiles from the encrypted vault. Returns names, protoco
 
 ### `server_exec`
 
-Executes read operations on any saved server. The backend resolves credentials internally.
+Executes the following read operations on a saved server supported by the active backend. The backend resolves credentials internally.
 
 | Operation | Description |
 |-----------|-------------|
-| `ls` | List directory contents (max 200 entries) |
+| `ls` | List directory contents with bounded pagination |
 | `cat` | Read file content (max 5 KB) |
 | `stat` | File metadata (size, permissions, modified time) |
-| `find` | Search by filename pattern (max 100 results) |
+| `find` | Search by filename pattern with bounded results |
 | `df` | Storage quota and usage |
 
-All operations create a temporary connection, execute, and disconnect. Credentials cross no process boundary.
+Credentials are resolved inside Rust and are not included in the operation result. Connection reuse and provider support depend on the surface and backend.
 
-Mutative operations (`put`, `get`, `rm`, `mv`, `mkdir`) are also exposed through `server_exec` with the same credential isolation: passwords are resolved from the vault inside Rust and never appear in CLI output, JSON, or the agent's transcript.
+`server_exec` explicitly refuses `put`, `get`, `rm`, `mv` and `mkdir`. Use dedicated tools such as `remote_upload`, `remote_download`, `remote_mkdir`, `remote_rename` and `remote_delete` where the surface exposes them; their own approval rules apply. GUI AeroAgent dispatch uses backend approval grants; the shared tool dispatcher does not enforce that GUI grant for inbound MCP or CLI callers. MCP authorization belongs to the client/host, while the CLI AI-agent loop applies its own approval policy.
 
 ## Native MCP Server
 
@@ -95,7 +95,7 @@ aeroftp-cli agent --mcp
 
 This mode exposes a remote-focused toolset directly to MCP clients such as Claude Desktop, Cursor, and VS Code. The current implementation includes:
 
-- 39 curated remote tools for listing, reading, uploading, downloading, renaming, deleting, quota checks, server info, share links, checksums, versions, and server-side copy
+- 78 wire tool names, including compatibility aliases, for file operations, sync/diff, cross-profile copy, profile authorization, diagnostics and error correction. See the exact [MCP catalog](/mcp/overview#tool-catalog); do not infer share-link or server-copy tools from provider capabilities.
 - MCP resources for saved profiles, vault availability, protocol capabilities, and active pooled connections
 - MCP prompts for deploy, backup, sync, and cleanup workflows
 - async stdio transport, connection pooling, request cancellation, rate limiting, and audit logging
@@ -108,28 +108,28 @@ External agents control the approval behavior:
 
 | Flag | Behavior |
 |------|----------|
-| `--auto-approve safe` | Only read-only tools execute automatically |
+| `--auto-approve safe` | Local metadata tools execute automatically; content-reading local tools and remote metadata still require a higher level or approval |
 | `--auto-approve medium` | Also remote listings and metadata, local writes, and remote writes that delete nothing (upload, download, mkdir, rename, edit) |
 | `--auto-approve high` | Also remote reads (`remote_read`, `server_exec`, file content sent to the model); never a delete, a trash, a sync control or the shell |
 | `--auto-approve all` or `-y` | Everything, including delete, trash, sync control and shell commands |
 
 The difference between `high` and `all` exists since AeroFTP v4.2.1: before, `high` was the same level as `all`.
 
-In non-interactive mode (no TTY), tools that require approval are denied rather than blocking.
+In non-interactive mode (no TTY), tools that require approval are denied rather than blocking. These flags govern the CLI AI-agent loop; MCP clients have their own permission controls. Use `--strict` (or `AEROFTP_STRICT=1`) when a generated command must fail on safety-relaxing flags: it refuses automatic approval above `safe`, including `-y`.
 
-## Security Guarantees
+## Security Boundaries
 
 - **Credentials never exposed**: The AI model sees profile names and operation results - never passwords, tokens, or API keys
-- **Vault encryption**: AES-256-GCM + Argon2id (128 MiB, t=4, p=4) protects all stored credentials
+- **Vault encryption**: AES-256-GCM protects stored secrets; OS-keyring or optional Argon2id master-password mode controls unlock
 - **Path validation**: Null bytes, traversal attacks, and sensitive system paths are blocked at the Rust backend level
-- **Shell denylist**: 35 regex patterns block dangerous commands (`sudo`, `systemctl`, `rm -rf /`, etc.)
+- **Shell denylist**: backend checks reject dangerous command patterns and shell metacharacters
 - **Sensitive path protection**: The agent cannot read `~/.config/aeroftp/vault.db`, `~/.ssh/`, or other sensitive directories
 
 For the complete credential isolation architecture, see [Credential Isolation](/credential-isolation).
 
 ---
 
-## Field Test Report
+## Historical Field Test Report
 
 The following is a verified report from a real orchestration session conducted on 29 March 2026, where an external AI agent (Claude Code, powered by Claude Opus 4.6) orchestrated AeroAgent via the CLI to perform a series of operations.
 
@@ -205,6 +205,6 @@ At no point did I receive, see, or handle any server password, OAuth token, or A
 
 AeroFTP's CLI agent orchestration is production-ready for read-only server operations and local file management. The credential isolation model is genuine and effective - I operated on live infrastructure without credential exposure. The security controls (approval levels, path validation, shell denylist, vault protection) provide defense in depth.
 
-Since then, native MCP server mode has been implemented as a first-class integration path for external MCP clients. The remaining roadmap items are mutative `server_exec`, richer JSON-RPC orchestration, cross-server operations, and deeper client-facing telemetry. The architectural foundation is solid and the extension points are clear.
+This assessment describes the March 2026 test environment. In 4.2.5, MCP and JSON-RPC orchestration are implemented; dedicated mutation tools and cross-profile transfer tools exist on supported surfaces. `server_exec` intentionally remains read-only. The archived limitations above are not the current release roadmap.
 
 **Claude Code (Claude Opus 4.6) - 29 March 2026**

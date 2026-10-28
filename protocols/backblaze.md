@@ -1,6 +1,6 @@
 ---
 title: Backblaze B2 Native API
-description: "Connect AeroFTP to Backblaze B2 with the native v4 API for first-class behavior: proper folder semantics, atomic renames, file versioning, and 24-hour token reauthorization."
+description: "Connect AeroFTP to Backblaze B2 with the native v4 API for first-class behavior: proper folder semantics, non-atomic server-side copy/delete renames, file versioning, and 24-hour token reauthorization."
 ---
 
 # Backblaze B2
@@ -15,7 +15,7 @@ Both options remain available. The native backend is recommended for new connect
 | ---------- | ------------ | ------------- |
 | Auth | `applicationKeyId` + `applicationKey` | Access Key + Secret Key (S3-style) |
 | Folders | Real prefix + delimiter listing, `.bzEmpty` placeholders | Emulated via `/` prefix |
-| Atomic rename | `b2_copy_file` ≤ 5 GB; chunked `b2_copy_part` workflow > 5 GB up to ~10 TB | Copy + delete, no native rename |
+| Rename (non-atomic) | Server-side copy, then source deletion; chunked copy for large files | Copy + delete, no native rename |
 | Large uploads | `start_large_file` workflow (5 MB-5 GB parts, 10 000 part cap) | S3 multipart |
 | File versioning | First-class (`b2_list_file_versions`, restore via server-side `b2_copy_file`) | First-class (S3 versioning) |
 | Share links | `b2_get_download_authorization` (1s-7d expiration, read-only) | S3 presigned URLs |
@@ -24,7 +24,7 @@ Both options remain available. The native backend is recommended for new connect
 | Throughput limits | Up to ~1 GB/s per file with chunked uploads | Same; multipart limits apply |
 | Cost surface | Dashboard storage + download bytes | Same |
 
-The native backend gives you a properly typed view of B2: when you list `/photos/` you get back the entries that actually live under that prefix, not whatever S3-emulation layer the gateway happens to materialize. Renames map onto a single `b2_copy_file` API call rather than a download-upload-delete round trip.
+The native backend gives you a properly typed view of B2: when you list `/photos/` you get back the entries that actually live under that prefix, not whatever S3-emulation layer the gateway happens to materialize. Renames copy the object server-side, then delete the source version. These are separate, non-atomic phases: if source deletion fails, AeroFTP reports an error and both names can remain. No file payload needs to pass through the client for this server-side copy.
 
 The S3-compatible preset is unchanged, it continues to dispatch through AeroFTP's S3 stack and benefits from the same multi-tab, multipart, and retry hardening as AWS S3.
 
@@ -32,8 +32,8 @@ The S3-compatible preset is unchanged, it continues to dispatch through AeroFTP'
 
 | Field | Value | Notes |
 | ----- | ----- | ----- |
-| Application Key ID | The `keyID` shown next to your application key in the B2 dashboard | Stored encrypted in the OS keyring |
-| Application Key | The `applicationKey` value (only shown once at creation) | Stored encrypted in the OS keyring |
+| Application Key ID | The `keyID` shown next to your application key in the B2 dashboard | Stored encrypted in the Universal Credential Vault |
+| Application Key | The `applicationKey` value (only shown once at creation) | Stored encrypted in the Universal Credential Vault |
 | Bucket | The bucket name (not the bucket ID) | AeroFTP resolves the bucket ID on connect |
 
 There is **no endpoint field**. The native backend calls `b2_authorize_account`, which returns the regional `apiUrl` and `downloadUrl` for your account; AeroFTP routes every subsequent call through those URLs automatically.
@@ -76,14 +76,14 @@ The in-memory variant (`download_to_bytes`, used by previews) issues a `Range: b
 
 ## Renames and Server-Side Copy
 
-`rename` is fully server-side regardless of file size, the client never streams bytes. The implementation picks the right B2 endpoint automatically:
+`rename` performs a server-side copy followed by source deletion; it is not atomic, and both names can exist between these phases. The client does not stream the payload. The implementation picks the right B2 endpoint automatically:
 
 - **≤ 5 GB**: single-shot `b2_copy_file` + `b2_delete_file_version` on the source. One round trip per phase.
 - **> 5 GB**: chunked `b2_copy_part` workflow: `b2_start_large_file` → loop of `b2_copy_part` with `Range: bytes=N-M` headers (one part per 100 MiB chunk by default) → `b2_finish_large_file` with the part SHA-1 array → `b2_delete_file_version` on the source. The 10 000-part cap and the 5 MB minimum-part rule from upload also apply here, giving an effective ceiling of ~1 TB at the default part size and ~10 TB if part size is bumped to 1 GiB. B2's hard ceiling on single files is 10 TB.
 
 If the chunked workflow fails mid-way, AeroFTP issues `b2_cancel_large_file` to release the parts already copied so they don't accrue storage charges.
 
-If the post-copy delete of the source fails, the new copy is left in place and AeroFTP emits a debug log noting the orphan source version. This matches the small-file path and keeps the rename operation idempotent at the destination.
+If source deletion fails after the copy, AeroFTP returns an error and both names can remain. Check both paths before retrying or removing either copy.
 
 The `contentSha1` field returned by `b2_copy_part` is the literal string `"none"` whenever the source was itself a chunked-uploaded large file (B2 has no whole-file hash to copy). `b2_finish_large_file` accepts `"none"` entries in `partSha1Array` and AeroFTP rounds them through unchanged.
 
@@ -143,27 +143,17 @@ B2 listings are paginated via `nextFileName`. The native backend follows the cur
 
 ## CLI Usage
 
-AeroFTP CLI reaches the native backend through the same connection profile selector used by the GUI:
+The native backend uses the saved connection profile's bucket and application key:
 
 ```bash
-# List the bucket root through a saved profile
-aeroftp ls --profile "My B2 Native" /
-
-# Upload, then verify the round trip
-aeroftp put --profile "My B2 Native" ./backup.tar.gz /backups/2026/
-aeroftp ls --profile "My B2 Native" /backups/2026/
-
-# Stream a large download to a local tree
-aeroftp get --profile "My B2 Native" /archive/2024/ ./local-archive/ --partial
-
-# Rename inside the bucket (server-side copy + source delete, no byte transfer)
-aeroftp mv --profile "My B2 Native" /reports/draft.pdf /reports/final.pdf
-
-# Bidirectional sync
-aeroftp sync --profile "My B2 Native" ./local /remote --watch
+aeroftp-cli ls --profile "My B2 Native" / --json
+aeroftp-cli put --profile "My B2 Native" ./backup.tar.gz /backups/2026/backup.tar.gz
+aeroftp-cli get --profile "My B2 Native" /backups/2026/backup.tar.gz ./backup-copy.tar.gz
+aeroftp-cli mv --profile "My B2 Native" /reports/draft.pdf /reports/final.pdf
+aeroftp-cli sync --profile "My B2 Native" ./local/ /remote/ --direction upload --dry-run --json
 ```
 
-For CI/CD, point the CLI at credentials via environment variables and use a dedicated bucket. The integration test harness does this: see [`src-tauri/tests/integration_b2.rs`](https://github.com/axpnet/aeroftp/blob/main/src-tauri/tests/integration_b2.rs) for the end-to-end pattern (connect, upload small + large, download, checksum match, rename, recursive cleanup).
+Listing the result confirms its presence, not full byte integrity. Verify a downloaded copy against the source when validating a backup. Review the dry-run before executing sync. The isolated integration harness is documented in [`integration_b2.rs`](https://github.com/axpdev-lab/aeroftp/blob/a6d3a126e83b5359f9dbeb1f85f021f5e0386368/src-tauri/tests/integration_b2.rs).
 
 ## Common Issues
 
@@ -181,7 +171,7 @@ For CI/CD, point the CLI at credentials via environment variables and use a dedi
 
 - Use a dedicated bucket per workflow (backups, builds, dataset shipments). B2 charges by stored bytes regardless of bucket count, and per-bucket Application Keys give you tight scoping.
 - B2's free tier covers 10 GB stored and 1 GB of downloads per day. The integration test suite uses ~250 MB in transient storage, well within the free quota.
-- For sync workloads, keep `compare_checksum=true` enabled. The native backend records B2's `contentLength` and `uploadTimestamp` in `RemoteEntry` so size-and-mtime comparisons are reliable, and when you opt into checksum compare AeroFTP scans the local side with streaming SHA-256 to match B2's per-object SHA-1 (no full re-download required).
+- The native backend records B2's `contentLength` as size and `uploadTimestamp` as `RemoteEntry.modified`. This timestamp is upload time, not the source file's modification time: listings do not read `src_last_modified_millis`, even when an upload wrote that metadata. Where sync falls back to size and timestamps, it therefore compares against remote upload time. B2 exposes SHA-1 rather than a digest comparable to the local SHA-256; CLI `check --checksum` and `reconcile --checksum` use their documented size fallback when no comparable digest is available. For full content validation, explicitly compute the same algorithm on both objects with `hashsum`; a remote hash can require a full download.
 - If you previously connected via the S3-compatible preset and want to migrate, save a new profile against the native backend; existing servers in the registry are renamed "Backblaze B2 (S3-compat)" with a legacy disclaimer but continue to work indefinitely.
 
 ## Related Documentation

@@ -9,7 +9,7 @@ const icons = {
 }
 
 export default defineConfig({
-  ignoreDeadLinks: true,
+  ignoreDeadLinks: false,
   title: 'AeroFTP Documentation',
   description: 'AeroFTP is a multi-protocol file manager supporting FTP, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA, ImageKit, Uploadcare, Cloudinary and 55+ cloud providers. Transfer, sync, encrypt from one app.',
   base: '/',
@@ -65,6 +65,7 @@ export default defineConfig({
     logo: '/logo.svg',
     siteTitle: 'AeroFTP',
     nav: [
+      { text: '4.2.5', link: '/releases/4.2.5' },
       { text: 'Guide', link: '/getting-started/installation' },
       { text: 'Reference', link: '/protocols/overview' },
       { text: 'Setup Guides', link: '/providers/' },

@@ -13,18 +13,21 @@ hero:
       link: /getting-started/installation
     - theme: alt
       text: View on GitHub
-      link: https://github.com/axpnet/aeroftp
+      link: https://github.com/axpdev-lab/aeroftp
+    - theme: alt
+      text: New in 4.2.5
+      link: /releases/4.2.5
 features:
   - icon:
       src: /icons/protocols.svg
       alt: Protocols
     title: Multi-Protocol
-    details: 7 transport protocols + 20+ native provider integrations + 40+ pre-configured presets - all native, no shellouts.
+    details: Native transports and provider APIs, saved profiles, presets and explicit vendor CLI or local-gateway modes.
   - icon:
       src: /icons/agent.svg
       alt: AeroAgent
     title: AeroAgent
-    details: AI-powered file management assistant with 43 specialized tools across 24 AI providers.
+    details: AI-assisted file operations with provider choice, scoped tools and approval controls; GUI, CLI and MCP have separate catalogs.
   - icon:
       src: /icons/vault.svg
       alt: AeroVault

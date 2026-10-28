@@ -26,7 +26,7 @@ AeroFTP is a third-party application and is not officially supported by Proton.
 | Session storage | AeroFTP's encrypted vault, per profile | Operating system secret store, managed by the CLI |
 | Root folder | My Files | Account sections; open **my-files** for your files |
 | Upload and download | Live progress | File start and confirmed completion |
-| Many small files | Native concurrent transfers | Automatic bulk transfers for suitable files since v4.2.4 |
+| Many small files | Up to five shared-session file/list workers; availability depends on the runner | Automatic bulk transfers for suitable files since v4.2.4 |
 | Storage quota and checksums | Quota and SHA-1 when available | No quota display or provider checksum |
 | Share links and server-side copies | Not available | Supported |
 
@@ -44,6 +44,10 @@ The browser page expires after ten minutes. Cancel it from AeroFTP or start a ne
 The native root `/` is **My Files**. Native mode supports browsing, file uploads and downloads with progress, folders, rename and move, trash and permanent deletion, SHA-1 checksums when available, and storage quota. Downloads verify the signed manifest before the downloaded content replaces its destination.
 
 Each saved profile keeps its own session. Duplicated profiles can share a session; signing out or deleting one does not revoke a session still used by another saved profile. Unlock the vault before using a saved native session.
+
+### Native concurrency
+
+The native provider can clone workers on one connection for transfers and listings, with a ceiling of five sessions. Workers share parent-folder discovery and can be reused across files. The runner and the caller's selected concurrency still determine whether work overlaps; an individual operation does not imply five simultaneous files. This differs from CLI mode's bounded subprocess bulk transfers.
 
 ### Native Limitations
 

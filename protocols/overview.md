@@ -1,14 +1,14 @@
 # Protocol Overview
 
-> Last updated: 2026-05-06 (v3.7.3)
+> Verified against AeroFTP v4.2.5 source, 2026-10-26. Provider plan figures are snapshots; confirm current terms with the provider.
 
 AeroFTP organizes integrations on three tiers, so what you see in the catalog is precise rather than vague:
 
 1. **7 transport protocols** - FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift. Native wire-level support, implemented in Rust with full streaming.
-2. **20+ native provider integrations** - dedicated OAuth2 / API key / SDK code paths per provider (Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, Google Photos, GitHub, GitLab, Immich, ImageKit, Uploadcare). Each provider's specific features (sharing, native delta sync, server-side copy, large-file chunking) are first-class instead of best-effort.
-3. **40+ pre-configured presets** - server URL, port, base path, password-generation deep-link auto-filled for compatible services on top of the protocols above. Visible in the Discover catalog (S3-compatible endpoints, WebDAV-compatible servers, SourceForge, etc.).
+2. **26 native provider integrations** - dedicated OAuth2 / API key / SDK code paths per provider (Backblaze B2, Box, Cloudinary, Drime Cloud, Dropbox, FileLu, Filen, 4shared, GitHub, GitLab, Google Drive, ImageKit, Immich, Internxt, Jottacloud, kDrive, Koofr, MEGA, OneDrive, OpenDrive, pCloud, Proton Drive, Twake Drive, Uploadcare, Yandex Disk, Zoho WorkDrive). Available sharing, server-side copy, chunking and sync capabilities depend on the backend and selected connection mode.
+3. **47 pre-configured presets** - server URL, port, base path, password-generation deep-link auto-filled for compatible services on top of the protocols above. Visible in the Discover catalog (S3-compatible endpoints, WebDAV-compatible servers, SourceForge, etc.).
 
-All credentials are encrypted in the AeroFTP Universal Vault (AES-256-GCM + Argon2id). Every integration plugs into AeroSync, AeroAgent, the CLI and the MCP server through the same `StorageProvider` trait.
+AeroFTP-managed credentials are encrypted in the Universal Vault; its passphrase protection depends on the selected [key mode](/security/credentials). Externally managed sessions, including official Proton CLI sessions, remain in the external client's own credential storage. The GUI, CLI, AeroAgent and MCP reuse the `StorageProvider` abstraction. A shared trait does not make every provider feature available on every surface.
 
 ## Protocol Comparison
 
@@ -24,44 +24,48 @@ All credentials are encrypted in the AeroFTP Universal Vault (AES-256-GCM + Argo
 | 6 | [Azure Blob](azure.md) | HMAC / SAS Token | HTTPS + SSE | Pay-as-you-go |
 | 7 | OpenStack Swift | Username + Password (Keystone v3) | HTTPS | Varies by provider |
 
-### Native Provider Integrations (OAuth2 PKCE)
+### Native Provider Integrations (Browser Authorization)
 
-Authenticated through the provider's OAuth2 PKCE flow. AeroFTP opens a browser window for authorization and stores tokens securely in the encrypted vault.
+These integrations use provider authorization or an existing authorized token, as identified in each row. For browser-based flows, AeroFTP opens the provider's authorization page and stores the resulting credentials in the encrypted vault.
 
 | Provider | Auth Method | Encryption | Free Storage |
 |----------|-------------|------------|-------------|
-| [Google Drive](google-drive.md) | OAuth2 PKCE | HTTPS + at-rest | 15 GB |
-| [Dropbox](dropbox.md) | OAuth2 PKCE | HTTPS + at-rest | 2 GB |
-| [OneDrive](onedrive.md) | OAuth2 PKCE | HTTPS + at-rest | 5 GB |
-| [Box](box.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
-| [pCloud Drive](pcloud.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
-| [Zoho WorkDrive](zoho.md) | OAuth2 PKCE (8 regional endpoints) | HTTPS + at-rest | Team plan |
-| [Koofr](koofr.md) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
-| [Yandex Disk](yandex.md) | OAuth2 Token | HTTPS | 5 GB |
-| [Internxt](internxt.md) | OAuth2 PKCE + zero-knowledge | Client-side AES-256-CTR | 1 GB |
-| [4shared](4shared.md) | OAuth 1.0 (HMAC-SHA1) | HTTPS | 15 GB |
+| [Google Drive](/providers/google-drive) | OAuth2 PKCE | HTTPS + at-rest | 15 GB |
+| [Dropbox](/providers/dropbox) | OAuth2 PKCE | HTTPS + at-rest | 2 GB |
+| [OneDrive](/providers/onedrive) | OAuth2 PKCE | HTTPS + at-rest | 5 GB |
+| [Box](/providers/box) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
+| [pCloud Drive](/providers/pcloud) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
+| [Zoho WorkDrive](/providers/zoho) | OAuth2 PKCE (8 regional endpoints) | HTTPS + at-rest | Team plan |
+| [Koofr](/providers/koofr) | OAuth2 PKCE | HTTPS + at-rest | 10 GB |
+| [Yandex Disk](/providers/yandex) | OAuth2 token; optional browser PKCE with your own client | HTTPS | 5 GB |
+| [Internxt](/providers/internxt) | OAuth2 PKCE + zero-knowledge | Client-side AES-256-CTR | 1 GB |
+| [4shared](/providers/4shared) | OAuth 1.0 (HMAC-SHA1) | HTTPS | 15 GB |
+| [Twake Drive](/providers/twake) | OAuth2 PKCE on your own instance | HTTPS | Self-hosted |
 
 ### Native Provider Integrations (API Key / Token / Session)
 
-Direct authentication via API keys, session tokens, or personal access tokens. No browser-based OAuth flow required.
+Authentication via passwords, API keys, session tokens or personal access tokens, with provider-specific sign-in. Proton native mode uses browser sign-in; official CLI mode uses the session managed by that external client.
 
 | Provider | Auth Method | Encryption | Free Storage |
 |----------|-------------|------------|-------------|
-| [MEGA](mega.md) | Password (Native API or MEGAcmd) | Client-side AES | 20 GB |
-| [Filen](filen.md) | Password (PBKDF2) + optional 2FA | Client-side AES-256-GCM | 10 GB |
-| [kDrive](kdrive.md) | API Token (Bearer) | HTTPS | 15 GB |
-| [Jottacloud](jottacloud.md) | Personal Login Token (auto-refresh 60s pre-expiry) | HTTPS | 5 GB |
+| [Proton Drive](/providers/proton-drive) | Browser sign-in (native), or official CLI session | Client-side encryption | See provider page |
+| [MEGA](/providers/mega) | Password (Native API or MEGAcmd) | Client-side AES | 20 GB |
+| [Filen](/providers/filen) | Account password + optional 2FA (auth v1/v2/v3) | Client-side AES-256-GCM | 10 GB |
+| [kDrive](/providers/kdrive) | API Token (Bearer) | HTTPS | 15 GB |
+| [Jottacloud](/providers/jottacloud) | Personal Login Token (auto-refresh 60s pre-expiry) | HTTPS | 5 GB |
 | [Drime Cloud](/providers/drime) | API Token (Bearer) | HTTPS | 20 GB |
-| [FileLu](filelu.md) | API Key | HTTPS | 1 GB |
-| [OpenDrive](opendrive.md) | Session Auth (user/pass) | HTTPS | 5 GB |
+| [FileLu](/providers/filelu) | API Key | HTTPS | 1 GB |
+| [OpenDrive](/providers/opendrive) | Session Auth (user/pass) | HTTPS | 5 GB |
 
 ### Native Provider Integrations (Developer Platforms)
 
 | Provider | Auth Method | Encryption | Notes |
 |----------|-------------|------------|-------|
-| [GitHub](github.md) | OAuth2 / PAT / App `.pem` (vaulted, AES-256-GCM) | HTTPS | Repository as filesystem; every upload/delete is a real Git commit |
+| [GitHub](/providers/github) | OAuth2 / PAT / App `.pem` (vaulted, AES-256-GCM) | HTTPS | Repository as filesystem; every upload/delete is a real Git commit |
 | [GitLab](/providers/gitlab) | PAT | HTTPS | Repository as filesystem |
 | [Immich](/providers/immich) | API Key (`x-api-key`) | HTTPS | Self-hosted photo library; media-only writes |
+
+The three native-provider comparison tables above are selected examples, not the complete provider catalog. They omit integrations such as Backblaze B2, Cloudinary and Uploadcare; the exact inventory at the top of this page and each provider guide define the full supported set.
 
 ## Protocol Categories
 
@@ -71,7 +75,7 @@ These connect to servers or buckets you control. You provide the hostname, port,
 
 - **FTP** - Traditional unencrypted file transfer. Suitable for legacy servers and shared hosting on trusted networks.
 - **FTPS** - FTP secured with TLS/SSL. Supports both Explicit (STARTTLS on port 21) and Implicit (port 990) modes. AeroFTP detects TLS downgrade attempts and warns the user.
-- **SFTP** - Secure file transfer over SSH. The recommended choice for self-hosted servers. Supports password and SSH key authentication with TOFU host key verification. Eligible for **delta sync** via [AeroRsync](/features/aerorsync) when key-auth + remote `rsync` are present.
+- **SFTP** - Secure file transfer over SSH. The recommended choice for self-hosted servers. Supports password and SSH key authentication with TOFU host key verification. Eligible for **delta sync** via [AeroRsync](/features/aerorsync) when key authentication or a saved password, remote `rsync`, and a pinned SSH host-key fingerprint are available. See the [complete delta prerequisites](/features/aerorsync).
 - **WebDAV** - HTTP-based file access over HTTPS. Used by Nextcloud, Seafile, and many NAS devices. Supports Basic and Digest authentication.
 - **S3** - Object storage using the S3 API. Works with AWS, Wasabi, Backblaze B2, and any S3-compatible endpoint.
 - **Azure Blob** - Enterprise object storage with HMAC signing or SAS tokens.
@@ -79,12 +83,15 @@ These connect to servers or buckets you control. You provide the hostname, port,
 
 ### Native Provider Integrations
 
-Each native provider has its own dedicated code path so its specific features (sharing, native delta sync, server-side copy, large-file chunking, trash management, versioning, labels) are first-class instead of best-effort.
+Each native provider has a dedicated implementation. Consult its page and runtime capabilities for sharing, server-side copy, chunking, trash, versioning and labels. Delta via rsync is an SFTP capability, not a universal native-provider feature.
 
-**OAuth2 PKCE flow:** Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Koofr, Yandex Disk, Internxt.
+**OAuth2 PKCE flow:** Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Koofr, Yandex Disk, Internxt, Twake Drive.
+**Yandex Disk:** accepts an OAuth access token; the optional browser flow uses the shared PKCE implementation with your configured client ID and secret.
 **OAuth 1.0 (HMAC-SHA1):** 4shared (RFC 5849).
 **Direct auth (API key / token / session):** MEGA, Filen, kDrive, Jottacloud, Drime Cloud, FileLu, OpenDrive.
-**Developer platforms:** GitHub, GitLab, Immich, SourceForge.
+**Developer platforms:** GitHub, GitLab, Immich.
+
+**SourceForge** uses an existing FTP/SFTP transport preset rather than a native provider integration.
 
 Highlights:
 
@@ -207,49 +214,36 @@ Not all providers expose a trash/recycle bin API. The following table shows whic
 
 ### AeroSync
 
-AeroSync supports bidirectional synchronization across all 7 transport protocols and the 20+ native provider integrations. AeroCloud background sync classifies providers by reliability through maturity badges visible in the setup wizard.
+AeroSync reuses provider operations for synchronization; available modes and behavior depend on the provider and the selected GUI or CLI path. AeroCloud background sync classifies providers by reliability through maturity badges visible in the setup wizard.
 
-AeroSync features available across the entire surface:
+The following features have provider and command-path limits:
 
 - Bidirectional and unidirectional sync (Mirror, Two-Way, Backup, Pull, Remote Backup)
 - Conflict resolution (keep local, keep remote, keep newer, skip, rename)
 - Transfer journal with checkpoint/resume
-- Post-transfer verification (size, mtime, SHA-256)
+- Post-transfer verification uses the metadata and comparable checksums the provider exposes; SHA-256 is not universally available. See [checksum capabilities](/protocols/checksums).
 - Configurable retry with exponential backoff
 - Bandwidth throttling
 - Dry-run mode with JSON / CSV export
-- **Delta sync via [AeroRsync](/features/aerorsync)** - eligible SFTP sessions transfer only the bytes that differ; cross-OS first-class on Linux/macOS/Windows since v3.6.1
+- **Delta sync via [AeroRsync](/features/aerorsync)** - eligible SFTP sessions only, with authentication, remote `rsync` and a pinned host key; other providers use their supported full-file paths.
 
-### CLI Support
+### CLI support
 
-All 7 transport protocols and 20+ native provider integrations are accessible from the `aeroftp-cli` command-line tool using either direct URL connections or saved vault profiles:
+Saved profiles let the CLI resolve supported server and provider credentials internally:
 
 ```bash
-aeroftp-cli ls sftp://user@myserver.com/path/
-aeroftp-cli get s3://mybucket/file.txt
-aeroftp-cli put ftp://user@host/upload/ ./local-file.txt
-aeroftp-cli sync ftp://user@host/ ./local-dir/
-aeroftp-cli tree webdav://user@nextcloud.example.com/remote.php/dav/files/user/
-aeroftp-cli ls --profile "My Google Drive" /     # OAuth provider via vault profile
+aeroftp-cli profiles --json
+aeroftp-cli ls --profile "My SFTP" /path/ --json
+aeroftp-cli get --profile "My S3" /file.txt ./file.txt
+aeroftp-cli put --profile "My FTPS" ./local-file.txt /upload/local-file.txt
+aeroftp-cli sync --profile "My FTPS" ./local-dir/ /remote-dir/ --direction upload --dry-run --json
+aeroftp-cli tree --profile "My Nextcloud" / -d 3
 ```
 
-The CLI ships **49+ subcommands** including: connection (`connect`, `ls`, `get`, `put`, `pget`, `mkdir`, `rm`, `mv`, `cp`, `cat`, `head`, `tail`, `touch`, `hashsum`, `check`, `stat`, `find`, `df`, `about`, `tree`, `link`, `edit`, `rcat`), sync (`sync`, `sync --watch`, `reconcile`, `sync-doctor`, `dedupe`, `cleanup`), cross-profile (`transfer`, `transfer-doctor`), benchmarking (`speed`, `speed-compare`), local servers (`serve http/webdav/ftp/sftp`), filesystem (`mount`, `ncdu`, `crypt`), automation (`batch`, `daemon`, `jobs`, `alias`, `completions`), import (`import rclone/winscp/filezilla`), agent surface (`agent`, `mcp`, `agent-bootstrap`, `agent-connect`, `agent-info`, `ai-models`, `profiles`).
+The command catalog, batch `.aeroftp-script` format, JSON output and semantic exit statuses are documented in [CLI Commands](/cli/commands) and [Batch scripting](/cli/batch-scripting). Run `aeroftp-cli agent-info --json` for discovery from the installed version.
 
-Batch scripting via `.aeroftp` files, glob pattern transfers, structured `--json` output, semantic exit codes (0&ndash;11), and `NO_COLOR` compliance. See **[CLI Commands](/cli/commands)** for the full reference.
+### AeroAgent saved-server operations
 
-### AeroAgent server_exec
+`server_exec` resolves saved profiles in Rust and exposes the read operations `ls`, `cat`, `stat`, `find` and `df`. Saved browser-authorized providers can work once their supported session exists in the vault; browser authorization is not a blanket ban on using them headlessly afterward. Reauthorization can still need the human.
 
-AeroAgent can execute file operations on saved servers through the `server_exec` tool. This tool resolves credentials from the vault in Rust and never exposes passwords to the AI model.
-
-| Category | Protocols | server_exec Support |
-|----------|-----------|-------------------|
-| Server Protocols | FTP, FTPS, SFTP, WebDAV, S3, Swift | Yes |
-| Direct Auth Cloud | MEGA, Azure, 4shared, Filen, Internxt, kDrive, Jottacloud, Drime Cloud, FileLu, Yandex Disk, OpenDrive | Yes |
-| OAuth Cloud | Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Koofr | Blocked (requires browser OAuth) |
-| Developer | GitHub, SourceForge | GitHub: Blocked (requires browser OAuth or manual PAT). SourceForge: Yes (via SFTP) |
-
-The `server_exec` tool supports 10 operations: `ls`, `cat`, `get`, `put`, `mkdir`, `rm`, `mv`, `stat`, `find`, and `df`. Server names are matched with fuzzy matching against saved server profiles.
-
----
-
-> Last updated: 2026-05-06 - AeroFTP v3.7.3
+Use dedicated remote upload, download, rename, mkdir and delete tools for their supported mutations, and inspect the approval policy for that entry point. See [AeroAgent](/features/aeroagent), [Agent orchestration](/features/agent-orchestration) and [MCP](/mcp/overview).

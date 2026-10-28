@@ -1,10 +1,10 @@
 ---
-description: "Client-side encryption over any server or provider: the remote holds only ciphertext, you browse the plain view."
+description: "Client-side encryption inside a bound overlay path: encrypted content and names on the remote, a decrypted view in AeroFTP."
 ---
 
 # AeroCrypt Overlay
 
-AeroCrypt is AeroFTP's **native client-side encryption overlay**. It turns any server, protocol or provider into a high-security, zero-knowledge store: the remote only ever holds ciphertext and obfuscated names, while the decrypted view is browsed exactly like a normal server in the standard dual panel.
+AeroCrypt is AeroFTP's **native client-side encryption overlay**. Inside the bound encrypted overlay scope, the remote stores ciphertext and obfuscated names, while AeroFTP shows a decrypted view in the standard dual panel. This protection applies to objects written through the overlay inside that scope; paths outside it remain plaintext.
 
 AeroCrypt is an **overlay**, not a container. One local file maps to one remote object (a per-file encrypted blob with an encrypted name), so an encrypted scope stays listable, navigable and syncable object by object. This is the opposite shape from [AeroVault](/security/encryption), which seals many files into a single `.aerovault` container. The two coexist on purpose: AeroVault for a sealed, portable bundle, AeroCrypt for an ongoing encrypted mirror on a provider you do not trust at rest.
 
@@ -22,9 +22,11 @@ There is **no default cipher**: you actively choose AeroCrypt (native) or [Rclon
 
 ## What AeroCrypt gives you
 
-- **Zero-knowledge on any backend.** AeroCrypt wraps the storage so the remote bucket only ever holds ciphertext and obfuscated names, on any of the supported backends, even the ones that offer no encryption of their own. On a provider that already encrypts at rest (Filen, MEGA, Internxt) it is a second independent layer keyed only by you, genuine double encryption where the key that matters never leaves your device.
+- **Zero-knowledge inside the encrypted scope.** Objects written through AeroCrypt inside the bound overlay path reach the remote as ciphertext with obfuscated names, even on a backend that offers no encryption of its own. This does not encrypt existing plaintext or paths outside that scope. On a provider that already encrypts at rest (Filen, MEGA, Internxt) it is a second independent layer keyed only by you, genuine double encryption where the key that matters never leaves your device.
 - **Browses like a normal server.** You unlock once, and from then on the decrypted folder reads, navigates, gets and puts exactly like a connected server in the dual panel, with clear names on your side and ciphertext on the provider's.
-- **AeroCrypt Profile (per-profile binding).** An overlay can be bound to a saved server profile so it auto-unlocks on connect, with a toggle in the connection form, per-session binding that survives a profile switch or reconnect, and edit-mode guards that lock the binding so it cannot be silently changed.
+- **AeroCrypt Profile (per-profile binding).** An overlay can be bound to a saved server profile so it auto-unlocks when the connection lands inside its scope, with a toggle in the connection form, per-session binding that survives a profile switch or reconnect, and edit-mode guards that lock the binding so it cannot be silently changed.
+
+The **Remote Path** determines where a connection opens. With a separate **Overlays Path**, an opening at the root or another folder outside that scope stays in plaintext; unlocking starts when you enter the encrypted folder. An empty Overlays Path uses the profile's Remote Path as its encrypted scope. Quick Connect classifies the path it actually opens, while retaining the linked profile's overlay scope.
 
 ## The AECR format (v3)
 

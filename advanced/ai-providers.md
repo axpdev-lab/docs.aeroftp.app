@@ -1,6 +1,6 @@
 # AI Provider Reference
 
-AeroAgent supports 24 AI providers. All providers use the OpenAI-compatible chat completions API unless noted otherwise.
+AeroFTP v4.2.5 defines 26 AI provider types, including custom endpoints. Most adapters use an OpenAI-compatible API; Anthropic and Gemini have native formats. A configured provider type does not guarantee that every model supports tools, vision or thinking.
 
 ## Provider Overview
 
@@ -24,31 +24,20 @@ AeroAgent supports 24 AI providers. All providers use the OpenAI-compatible chat
 | 16 | Cerebras | `cerebras` | `https://api.cerebras.ai/v1` | API Key |
 | 17 | SambaNova | `sambanova` | `https://api.sambanova.ai/v1` | API Key |
 | 18 | Fireworks AI | `fireworks` | `https://api.fireworks.ai/inference/v1` | API Key |
-| 19 | Custom | `custom` | User-defined | User-defined |
+| 19 | NVIDIA NIM | `nvidia` | `https://integrate.api.nvidia.com/v1` | API Key |
+| 20 | Z.AI | `zai` | `https://api.z.ai/api/paas/v4` | API Key |
+| 21 | Hyperbolic | `hyperbolic` | `https://api.hyperbolic.xyz/v1` | API Key |
+| 22 | Novita | `novita` | `https://api.novita.ai/v3/openai` | API Key |
+| 23 | Yi | `yi` | `https://api.lingyiwanwu.com/v1` | API Key |
+| 24 | Kilo Gateway | `kilo` | `https://api.kilo.ai/api/gateway` | API Key |
+| 25 | Amazon Bedrock | `bedrock` | `https://bedrock-runtime.<region>.amazonaws.com/openai/v1` | Bedrock API key |
+| 26 | Custom | `custom` | User-defined | User-defined |
 
-## Feature Matrix
+For Amazon Bedrock, replace `<region>` with your AWS Region and keep the `/openai/v1` suffix, for example `https://bedrock-runtime.eu-north-1.amazonaws.com/openai/v1` (the shipped preset). Use a Bedrock API key and a model/API supported in that Region. See the [official AWS endpoint guidance](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-responses-api.html); this is not an OpenAI API key or the plain regional host without its API path.
 
-| Provider | Streaming | Tools | Vision | Thinking | Structured Output |
-|----------|:---------:|:-----:|:------:|:--------:|:-----------------:|
-| OpenAI | Yes | Yes | Yes | Yes (o3) | Yes (`strict:true`) |
-| Anthropic | Yes | Yes | Yes | Yes | No |
-| Google Gemini | Yes | Yes | Yes | Yes | No |
-| xAI (Grok) | Yes | Yes | Yes | No | Yes (`strict:true`) |
-| OpenRouter | Yes | Yes | Yes | Varies | Yes (`strict:true`) |
-| Ollama | Yes | Yes | Yes | Varies | No |
-| Kimi | Yes | Yes | No | No | No |
-| Qwen | Yes | Yes | Yes | No | No |
-| DeepSeek | Yes | Yes | No | Yes | No |
-| Mistral | Yes | Yes | Yes | No | No |
-| Groq | Yes | Yes | Yes | No | No |
-| Perplexity | Yes | No | No | No | No |
-| Cohere | Yes | Text | No | No | No |
-| Together AI | Yes | Yes | Varies | No | No |
-| AI21 Labs | Yes | Yes | No | No | No |
-| Cerebras | Yes | Yes | No | No | No |
-| SambaNova | Yes | Yes | No | No | No |
-| Fireworks AI | Yes | Yes | Varies | No | No |
-| Custom | Yes | Configurable | Configurable | No | No |
+## Model capabilities
+
+Tools, vision, thinking, structured output and sampling controls depend on the selected model and adapter, rather than the provider name alone. AI Settings tracks capability discovery, explicit overrides and their source. Use the model's current capability record and test the operation you need. A native API feature listed in model metadata is not a promise that AeroAgent has implemented that feature.
 
 ## Models
 
@@ -61,7 +50,7 @@ For Ollama, the **Detect** button queries `GET /api/tags` to list locally instal
 ### Anthropic
 
 - Uses native Anthropic API format (not OpenAI-compatible)
-- **Prompt caching**: Supports `cache_control: { type: "ephemeral" }` for 90% read discount on cached prefixes
+- **Prompt caching**: Supports the adapter's `cache_control` mechanism; billing and eligibility depend on the provider and model
 - **System prompt**: Sent as top-level `system` field
 - **Thinking**: Native `thinking` blocks with configurable budget (0-100K tokens)
 

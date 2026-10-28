@@ -31,42 +31,27 @@ aeroftp-cli ls --profile "prod" /var/www/ --json
 aeroftp-cli profiles --json
 ```
 
-**Structured JSON output**: every command supports `--json`. Data goes to stdout, messages to stderr, so agents can pipe and parse cleanly.
+**Structured JSON output**: core commands support `--json` with command-specific envelopes. Data goes to stdout, messages to stderr, so agents can pipe and parse cleanly.
 
 ```bash
 # Output is machine-readable
 aeroftp-cli stat --profile "Server" /var/www/index.html --json
-# {"name":"index.html","size":4096,"type":"file","modified":"2026-03-15T10:30:00Z"}
+# The result contains status and an entry object; inspect the current schema.
 
 # Pipe-friendly
 aeroftp-cli cat --profile "Server" /config.ini | grep DB_HOST
 ```
 
-**Semantic exit codes**: agents know exactly what failed without parsing text.
+**Semantic exit codes**: use the contract for the command being run in the [CLI reference](/cli/commands). Codes are command-specific: `check` uses `6` for connection or authentication failures, while `agent-connect` uses `1` for a failed connection attempt. Inspect the JSON outcome as well as the exit code before retrying.
 
-| Code | Meaning |
-| ---- | ------- |
-| 0 | Success |
-| 1 | Connection error |
-| 2 | Not found |
-| 3 | Permission denied |
-| 4 | Transfer error |
-| 5 | Configuration error |
-| 6 | Authentication error |
-| 7 | Not supported |
-| 8 | Timeout |
-| 9 | Already exists (`--immutable`, `--no-clobber`) |
-| 10 | Server / parse error |
-| 11 | I/O error |
-
-**Batch scripting**: agents can generate `.aeroftp` scripts for multi-step operations with error handling.
+**Batch scripting**: agents can generate `.aeroftp-script` scripts for multi-step operations with error handling.
 
 ```bash
 SET source=/var/www/html
 ON_ERROR CONTINUE
-CONNECT sftp://admin@server.com
-GET {source}/database.sql ./backup/
-GET {source}/uploads/ ./backup/uploads/
+CONNECT --profile "Server"
+GET ${source}/database.sql ./backup/database.sql
+SYNC ./backup/uploads/ ${source}/uploads/ --direction download
 DISCONNECT
 ```
 
@@ -76,7 +61,7 @@ DISCONNECT
 
 | Agent / Framework | How it uses AeroFTP |
 | ----------------- | ------------------- |
-| **Claude Code** | Calls `aeroftp` CLI directly from terminal |
+| **Claude Code** | Calls `aeroftp-cli` from a terminal |
 | **Open Interpreter** | Shell execution in its environment |
 | **Cline / Continue** | Terminal tool calls in VS Code |
 | **Aider** | Deployment after code changes |
@@ -89,11 +74,11 @@ DISCONNECT
 | **AutoGPT / CrewAI** | Multi-agent frameworks with shell tools |
 | **LangChain / LangGraph** | Custom agents with subprocess tool |
 | **Computer Use** (Anthropic, OpenAI Operator) | Desktop automation, can use both GUI and CLI |
-| **MCP servers** | Model Context Protocol tools can wrap `aeroftp` commands |
+| **MCP servers** | Model Context Protocol tools can call the native AeroFTP MCP server |
 
 ## Real-World Scenarios
 
-These are not hypothetical. Every command below works today with the AeroFTP CLI.
+The following recipes use the current CLI grammar. They require configured profiles, suitable paths and provider support.
 
 ### "Build my app and deploy it to the server"
 
@@ -102,7 +87,7 @@ An AI coding agent (Claude Code, Aider, Cline) makes code changes, builds the pr
 ```bash
 # Agent edits code, runs build, then deploys
 npm run build
-aeroftp-cli put --profile "Production" ./dist/ /var/www/html/ --json
+aeroftp-cli put --profile "Production" ./dist/ /var/www/html/ -r --json
 # Verify deployment
 aeroftp-cli ls --profile "Production" /var/www/html/ --json | jq '.entries | length'
 ```
@@ -116,14 +101,14 @@ A scheduled agent (cron + Claude Code, or AutoGPT) compresses a project and uplo
 tar czf backup-$(date +%F).tar.gz ./project/
 aeroftp-cli put --profile "Google Drive" ./backup-*.tar.gz /backups/
 # Or sync an entire folder to S3
-aeroftp-cli sync --profile "AWS S3" ~/documents/ /backup/documents/ --json
+aeroftp-cli sync --profile "AWS S3" ~/documents/ /backup/documents/ --direction upload --json
 # Or to a NAS
-aeroftp-cli sync --profile "NAS" ~/photos/ /media/photos/ --json
+aeroftp-cli sync --profile "NAS" ~/photos/ /media/photos/ --direction upload --json
 ```
 
-### "Clone this repo, make changes, commit and push"
+### "Read and update files in a GitHub repository"
 
-AeroFTP supports GitHub as a storage protocol. An agent can read files, create commits, and even open pull requests, all through the same CLI or AeroAgent tools.
+AeroFTP supports GitHub as a storage protocol. An agent can read files and create file commits through the storage provider. This interface does not expose a general git clone, push or pull-request command.
 
 ```bash
 # List repo contents
@@ -141,24 +126,21 @@ Inside the GUI, AeroAgent can do the same through natural language: "read the RE
 An agent audits storage usage across every connected service in seconds.
 
 ```bash
-for profile in $(aeroftp-cli profiles --json | jq -r '.[].name'); do
+while IFS= read -r profile; do
   echo "=== $profile ==="
   aeroftp-cli df --profile "$profile" --json 2>/dev/null
-done
+done < <(aeroftp-cli profiles --json | jq -r '.[].name')
 ```
 
-Output for each profile includes used space, total space, and percentage. The agent can alert when any service is above 90%.
+Quota fields depend on provider support; some backends cannot supply a total or quota. The agent can alert when any service is above 90%.
 
-### "Download all PDFs from Dropbox and re-upload them encrypted to S3"
+### "Copy documents from Dropbox to an encrypted S3 overlay"
 
-Cross-provider file operations with encryption. The agent moves files between clouds, applying AeroVault encryption in between.
+Use an S3 profile already bound to AeroCrypt or rclone crypt. Verify its `cryptOverlay` field and confirm that `/encrypted-archive/` is inside the profile's configured **Overlays Path** before uploading; the overlay must unlock successfully. An absolute destination outside that scope passes through as plaintext. A plain S3 profile does not encrypt content automatically.
 
 ```bash
-# Download from Dropbox
-aeroftp-cli get --profile "Dropbox" "/contracts/*.pdf"
-# Encrypt locally (AeroVault CLI or any tool)
-# Re-upload to S3
-aeroftp-cli put --profile "AWS S3" ./contracts/ /encrypted-archive/
+aeroftp-cli get --profile "Dropbox" "/contracts/*.pdf" ./contracts/
+aeroftp-cli put --profile "Encrypted S3" ./contracts/ /encrypted-archive/ -r
 ```
 
 ### "Set up a new developer's environment"
@@ -167,12 +149,12 @@ An onboarding agent provisions a developer's access to multiple servers and sync
 
 ```bash
 # Pull configs from the team's shared WebDAV
-aeroftp-cli get --profile "Team WebDAV" /dev-configs/ ./configs/
+aeroftp-cli get --profile "Team WebDAV" /dev-configs/ ./configs/ -r
 # Deploy SSH configs, editor settings, etc.
 cp ./configs/.bashrc ~/
 cp ./configs/.gitconfig ~/
 # Pull project repos from GitHub
-aeroftp-cli get --profile "GitHub" /src/ ./workspace/
+aeroftp-cli get --profile "GitHub" /src/ ./workspace/ -r
 ```
 
 ### "Monitor my servers and alert me"
@@ -194,18 +176,18 @@ Moving from Google Drive to a self-hosted Nextcloud (WebDAV). The agent handles 
 
 ```bash
 # List everything on Google Drive
-aeroftp-cli ls --profile "Google Drive" / -r --json > inventory.json
+aeroftp-cli tree --profile "Google Drive" / -d 3 --json > inventory.json
 # Download all files
-aeroftp-cli get --profile "Google Drive" / ./migration/
+aeroftp-cli get --profile "Google Drive" / ./migration/ -r
 # Upload to Nextcloud
-aeroftp-cli put --profile "Nextcloud" ./migration/ / --json
+aeroftp-cli put --profile "Nextcloud" ./migration/ / -r --json
 # Verify
 aeroftp-cli df --profile "Nextcloud" --json
 ```
 
 ## AeroAgent: The Internal AI Assistant
 
-For users who prefer the GUI, AeroAgent provides the same file management capabilities through natural language. It supports 24 AI providers and 39 tools covering:
+For users who prefer the GUI, AeroAgent provides the same file management capabilities through natural language. Its GUI catalog includes tools covering:
 
 - **Local file ops**: list, read, write, delete, rename, search, edit, mkdir, move, copy, batch rename, trash, file info, disk usage, find duplicates, grep, head, tail, stat, diff, tree
 - **Remote server ops**: list, read, upload, download, delete, rename, mkdir, edit, search, batch upload/download, server exec
@@ -218,11 +200,11 @@ AeroAgent chains tool calls autonomously (up to 10 steps in normal mode, 50 in E
 
 ## CLI Command Reference
 
-Core commands all support `--json` and `--profile`:
+Core remote commands accept `--json` and saved profiles; inventory and batch commands have their own inputs:
 
-`connect` `ls` `get` `put` `mkdir` `rm` `mv` `cat` `head` `tail` `touch` `hashsum` `check` `stat` `find` `df` `about` `dedupe` `tree` `sync` `batch` `profiles` `agent-info`
+`connect` `ls` `get` `put` `mkdir` `rm` `mv` `cat` `head` `tail` `touch` `hashsum` `check` `reconcile` `stat` `find` `df` `about` `dedupe` `tree` `sync` `batch` `profiles` `agent-info` `agent-connect` `inventory`
 
-All commands work identically across FTP, FTPS, SFTP, WebDAV, S3, Google Drive, Dropbox, OneDrive, MEGA, and all other supported protocols. The agent does not need to know which protocol a profile uses.
+The command interface is shared, while capabilities and authentication differ by provider. Query discovery and handle unsupported operations explicitly. GUI control is exposed through `gui_state`, `gui_wait` and `gui_run` inside AeroAgent; external CLI and MCP clients do not yet have that GUI bridge, and there is no `aeroftp-cli gui` command.
 
 [Full CLI documentation →](/cli/commands)
 
@@ -231,5 +213,5 @@ All commands work identically across FTP, FTPS, SFTP, WebDAV, S3, Google Drive, 
 1. **Humans first, agents welcome**. The GUI remains the primary interface. Agent support is additive, not a compromise.
 2. **Credentials never exposed**. Agents use profile names. Passwords stay in the encrypted vault.
 3. **Structured by default**. `--json` is not an afterthought. Every command is designed for both human and machine consumption.
-4. **Protocol-agnostic**. Agents do not need to know whether a profile points to FTP, SFTP, S3, or Google Drive. The same commands work everywhere.
+4. **Protocol-agnostic**. Agents do not need to know whether a profile points to FTP, SFTP, S3, or Google Drive. Inspect capabilities and limitations before choosing an operation.
 5. **Fail loudly**. Semantic exit codes and stderr messages let agents handle errors programmatically.

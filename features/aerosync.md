@@ -1,282 +1,100 @@
 ---
-description: "Bidirectional sync across every protocol and provider, with conflict resolution, scheduling, throttling and resume."
+description: "Compare trees, review a sync plan, and run Backup, Update, Mirror or Two-way sync with explicit conflict policies."
 ---
 
 # AeroSync
 
-AeroSync is AeroFTP's professional file synchronization engine. It supports bidirectional sync across all transport protocols (FTP, FTPS, SFTP, WebDAV, S3, Azure Blob) and the **20+ native provider integrations** with conflict resolution, scheduling, bandwidth throttling, transfer journaling, and checkpoint-based resume. AeroSync operates through a two-tab interface: **Quick Sync** for common scenarios and **Advanced** for granular control over every aspect of the sync process.
+AeroSync compares two folders and turns the differences into a reviewable sync plan. In v4.2.5 the connected local/remote workflow has two tabs, **Compare** and **Plan**. When both sides are local, a third tab, **Local mirror**, runs local-only sync through `local_sync_run`: eligible files use AeroRsync's in-process `LocalDeltaTransport`, while smaller files or runs with delta disabled use plain copying. Remote sync runs from **Plan**.
 
-> **Delta sync** has its own eligibility rules and validation matrix. For the exact requirements, current support scope, and the meaning of the `delta` / `classic` badges, see [Delta Sync](/features/delta-sync). The engine behind it is [AeroRsync](/features/aerorsync) - a native Rust implementation of the rsync wire protocol 31 that ships **first-class on Windows** without any `rsync.exe` bundle since v3.6.1.
+Open AeroSync from the menu with the folders you want to compare already selected. A remote session must be connected for remote operations and the Templates, Multi-Path, Rollback snapshots, Sync journals and Scheduler launchers.
 
-## Quick Sync Tab
+## Compare
 
-The Quick Sync tab presents three preset cards that cover the most common synchronization scenarios. Select a card and click **Start** to begin immediately with sensible defaults.
+Start the recursive comparison explicitly. AeroSync does not read both complete trees just because you opened the dialog. The scan reports progress and can be stopped. A stopped or incomplete scan must not be treated as proof that the missing files should be deleted.
 
-![Quick Sync tab with three preset cards](/images/aerosync-quick-tab.png)
-<!-- SCREENSHOT: Quick Sync tab showing the Mirror, Two-Way, and Backup preset cards side by side -->
+The result groups files as only on the left, only on the right, newer on either side, identical, or conflicting. Review the paths, exclusions and metadata before opening **Plan**. Comparison settings and the later post-transfer verification policy are separate choices.
 
-### Mirror
+### Names and scan boundaries
 
-Produces an exact copy of your local directory on the remote server. Files that exist on the remote but not locally are deleted (orphan removal). This is ideal for deploying websites, publishing build artifacts, or maintaining a canonical remote copy.
+Unix filenames retain their literal spelling, including leading or trailing spaces and backslashes. Unicode-normalized matching is used only where sibling names identify one unambiguous counterpart. A collision between spellings, or a file/folder type collision, blocks affected paths and descendants from unsafe planning instead of selecting an arbitrary file.
 
-- **Direction:** Local to Remote
-- **Orphan deletion:** Enabled
-- **Verification:** Size only
-- **Use case:** Web deployment, content publishing
+The shared scanner defaults to a depth of 100 and a budget of 500,000 entries. Unreadable directories, limits, cancelled scans and paths outside the root are recorded as scan boundaries. A run is refused when it cannot safely bound the missing part of the source tree. Review the reported boundary rather than treating the partial listing as an empty folder.
 
-### Two-Way
+## Plan
 
-Synchronizes changes in both directions. Files modified locally are uploaded; files modified remotely are downloaded. Neither side deletes files from the other. When both copies have changed, the Conflict Resolution Center activates.
+Choose a mode and, for a one-way mode, its source and destination. The labels describe the real panel direction, such as **Local → Remote** or **Remote → Local**.
 
-- **Direction:** Bidirectional
-- **Orphan deletion:** Disabled
-- **Verification:** Size + modification time
-- **Use case:** Collaborative workflows, shared project folders
+| Mode | Copies and replacements | Destination-only files | Conflicts |
+| --- | --- | --- | --- |
+| **Backup** (default) | Copies missing files and newer source files; keeps a newer destination | Kept | Skipped by default |
+| **Update** | Copies missing files and newer source files; the selected conflict policy may choose either copy | Kept | Skipped by default; configurable |
+| **Mirror** | Makes the destination follow the source, including overwriting a newer destination | Deleted | Source wins; conflict selector is disabled |
+| **Two-way sync** | Copies missing files both ways and propagates the newer copy | Copied to the other side | Skipped by default; configurable |
 
-### Backup
+**Update is not an unconditional “never overwrite a newer file” mode.** A selected conflict policy can choose an older copy or the opposite side. Review the per-file actions shown by the plan. Mirror has its own source-wins behavior and does not use the conflict selector.
 
-Copies local files to the remote server without removing anything on the remote side. Uses SHA-256 checksum verification to guarantee data integrity after transfer. This is the safest preset for archival purposes.
+### Conflict policies
 
-- **Direction:** Local to Remote
-- **Orphan deletion:** Disabled
-- **Verification:** Full checksum (SHA-256)
-- **Use case:** Offsite backup, archival storage
+- **Skip** leaves both copies unchanged.
+- **Keep both** copies the source under a timestamped suffix.
+- **Keep newer / Keep older**: choose by modification time.
+- **Keep larger / Keep smaller**: choose by size.
 
-## Advanced Tab
+If the required metadata is absent or tied, the policy leaves the conflict unresolved. The plan lists copy, overwrite, delete, skip and conflict counts before execution. Destructive actions require confirmation.
 
-The Advanced tab provides full control over synchronization behavior through four collapsible accordion sections. Each section expands with a smooth CSS transition to reveal its settings.
+### Speed and verification
 
-![Advanced tab with accordion sections expanded](/images/aerosync-advanced-tab.png)
-<!-- SCREENSHOT: Advanced tab showing the four accordion sections (Direction, Compare, Transfer, Automation) with at least one expanded -->
+Speed modes set retry behavior and delta eligibility. They do not promise 2, 4, 8 or 16 concurrent file streams or compression in this GUI runner. **Normal** uses ordinary transfers; **Fast**, **Turbo** and **Extreme** request delta where the session supports it, currently eligible SFTP with remote rsync. See [Delta Sync](/features/delta-sync) and [AeroRsync](/features/aerorsync).
 
-### Direction Section
+Post-transfer verification offers **None**, **Size only**, **Size + mtime** and **Full checksum**. Available remote hashes depend on the provider; selecting checksum does not create a server-side SHA-256 capability. See [Checksums](/protocols/checksums) for algorithm and fallback limits.
 
-Choose the sync direction and configure orphan handling:
+**Maniac** is available only in the Cyber theme and needs explicit confirmation. It disables the journal, the regular verification and bandwidth cap, uses its own bounded retry policy, and performs a mandatory post-sync size/mtime verification pass. It does not disable every safety check.
 
-- **Local to Remote** - push local changes to the server
-- **Remote to Local** - pull remote changes to your machine
-- **Bidirectional** - sync changes in both directions
-- **Delete orphans** toggle - remove files on the destination that do not exist on the source
+### Trial runs, budgets and error correction
 
-### Compare Section
+For connected remote runs, the Plan tab offers a transfer budget in MB, where zero means unlimited. A canary run previews a sample selected randomly, by newest file or by largest file; it transfers nothing. Approving the result starts the real run.
 
-Define how AeroSync determines whether a file needs to be transferred:
+The Backup mode enables error correction at the Medium (15%) setting by default. Other modes start with it off. An `.aerocorrect` sidecar provides recovery data and costs additional storage and transfer bytes. See [Error Correction](/security/error-correction).
 
-- **overwrite_if_newer** - transfer only when the source file has a more recent modification time
-- **overwrite_if_different** - transfer when file size or checksum differs, regardless of timestamp
-- **skip_if_identical** - skip files where both size and SHA-256 hash match exactly
-- **Compare checksum** toggle - enable SHA-256 hashing during the scan phase (streaming 64 KB chunks)
+## Progress and results
 
-### Transfer Section
+Remote sync shows each file's current phase and result, with completion, skipped files, unresolved conflicts and verification failures. Progress reflects the work selected for this run. A delta badge means the file actually used delta; a classic fallback badge identifies a delta attempt that reverted to ordinary transfer.
 
-Control retry behavior, verification policies, and per-file timeouts:
+Local mirror shows the current path and processed/total file count. While it is running, the dialog keeps that tab mounted. Closing a busy run asks whether to stop it.
 
-- **Retry count** - number of retry attempts per file (default: 3)
-- **Retry delay** - base delay with exponential backoff (default: 500 ms, 2x multiplier, 10-second cap)
-- **Per-file timeout** - maximum time allowed for a single file transfer (default: 2 minutes)
-- **Post-transfer verification** - 4 policies: None, Size Only, Size + Mtime, Full (SHA-256 re-hash after transfer)
+## Exclusions and folder removal
 
-### Automation Section
+Exclude patterns are shared by Compare, Plan, Local mirror, templates and the CLI. A bare directory name such as `node_modules` excludes that directory's subtree; matching is case-insensitive. Invalid patterns are reported. Review old exclude lists if they were written for earlier, narrower matching rules. See [CLI sync](/cli/commands#sync).
 
-Configure scheduling, filesystem watching, and bandwidth limits within this section (see dedicated sections below for details).
+Mirror retains excluded, hidden or unfinished children and their parent folders. Directory deletion only removes empty directories. A failed versioned-backup move does not authorize deleting the original or its parent.
 
-## Sync Profiles
+## Versioned backup
 
-AeroSync ships with 5 built-in profiles. You can also create, save, and load custom profiles that bundle all settings into a single configuration.
+When enabled, versioned backup moves the destination copy, together with its `.aerocorrect` sidecar, before an overwrite or delete, on supported local and remote destinations:
 
-| Profile | Direction | Deletes Orphans | Verification | Primary Use |
-|---------|-----------|-----------------|--------------|-------------|
-| **Mirror** | Local to Remote | Yes | Size only | Deployment |
-| **Two-Way** | Bidirectional | No | Size + mtime | Collaboration |
-| **Backup** | Local to Remote | No | Full checksum | Archival |
-| **Pull** | Remote to Local | Yes | Size only | Content retrieval |
-| **Remote Backup** | Remote to Local | No | Full checksum | Disaster recovery |
-
-Custom profiles are saved to the vault database and can be selected from the dropdown in the SyncPanel header.
-
-## Speed Modes
-
-AeroSync offers five speed presets that automatically configure parallel streams, compression, and delta sync. Select a speed mode from the dropdown to apply its settings instantly.
-
-![Speed mode selector dropdown](/images/aerosync-speed-modes.png)
-<!-- SCREENSHOT: Speed mode selector showing all five options (Normal through Maniac) with the current selection highlighted -->
-
-| Mode | Parallel Streams | Compression | Delta Sync | Safety Checks |
-|------|-----------------|-------------|------------|---------------|
-| **Normal** | 1 | Off | Off | Full |
-| **Fast** | 2 | On | Off | Full |
-| **Turbo** | 4 | On | On | Full |
-| **Extreme** | 8 | On | On | Reduced |
-| **Maniac** | 16 | On | On | Disabled |
-
-> **Warning:** Maniac mode is a Cyber theme easter egg. It disables all safety checks for maximum throughput, including retry limits (`max_retries=0`). Post-sync verification runs automatically to compensate. A mandatory verification pass executes after every Maniac sync to catch any transfer errors.
-
-## Conflict Resolution Center
-
-When both the local and remote copies of a file have been modified since the last sync, AeroSync pauses and presents the Conflict Resolution Center. This interface lists every conflicting file with metadata from both sides (size, modification time, checksum) so you can make informed decisions.
-
-![Conflict Resolution Center with file list](/images/aerosync-conflicts.png)
-<!-- SCREENSHOT: Conflict Resolution Center showing a list of conflicting files with Keep Local / Keep Remote / Skip buttons per file, plus batch action buttons at the top -->
-
-### Per-File Resolution
-
-For each conflicting file, three options are available:
-
-- **Keep Local** - upload the local version, overwriting the remote copy
-- **Keep Remote** - download the remote version, overwriting the local copy
-- **Skip** - leave both versions untouched for this sync run
-
-### Batch Actions
-
-When dealing with many conflicts, batch actions resolve all files at once:
-
-- **Keep Newer All** - for each file, keep whichever version has the more recent modification time
-- **Keep Local All** - upload all local versions
-- **Keep Remote All** - download all remote versions
-- **Skip All** - leave all conflicting files untouched
-
-All conflict decisions are recorded in the transfer journal for auditing and reproducibility.
-
-## Scheduler
-
-Configure AeroSync to run automatically on a recurring basis. The scheduler UI provides intuitive controls for timing and scope.
-
-- **Interval selector** - choose a sync frequency from every 5 minutes up to every 24 hours
-- **Time window** - restrict sync operations to specific hours (e.g., 02:00 to 06:00) to avoid interfering with active work or peak bandwidth periods
-- **Day picker** - select which days of the week the scheduler should be active (weekdays only, weekends only, or custom)
-- **Pause / Resume** - temporarily suspend the scheduler with a single click; a live countdown displays the time until the next scheduled sync
-- **Overnight carry-over** - if a time window spans midnight (e.g., 23:00 to 03:00), AeroSync handles the day boundary correctly
-
-## Filesystem Watcher
-
-AeroSync can monitor local directories for real-time changes using inotify on Linux. A health indicator in the sync panel shows the watcher status:
-
-- **Active** (green) - watcher is running and monitoring all configured paths
-- **Warning** (yellow) - inotify watch count is approaching the system limit (`/proc/sys/fs/inotify/max_user_watches`)
-- **Inactive** (gray) - watcher is not running
-
-When the watcher detects file changes, it can trigger an immediate sync or queue changes for the next scheduled run, depending on your configuration.
-
-## Transfer Journal
-
-Every sync operation is logged to a persistent JSON journal stored in `~/.config/aeroftp/sync-journal/`. Journals are keyed by a hash of the local and remote path pair, ensuring each sync relationship maintains its own history.
-
-### Checkpoint and Resume
-
-If a sync operation is interrupted (application crash, network failure, manual cancellation), AeroSync detects the incomplete journal on the next run and displays a resume banner offering to continue from the last successfully transferred file.
-
-### SHA-256 Verification
-
-When the **Compare checksum** option is enabled, AeroSync computes SHA-256 hashes during the scan phase using streaming 64 KB chunk reads. This avoids loading entire files into memory and enables accurate change detection even when file timestamps are unreliable.
-
-### Journal Maintenance
-
-- **Auto-cleanup** - journals older than 30 days are automatically deleted when the sync panel opens
-- **Clear History** - a button with confirmation dialog to delete all journals at once
-- Journals use compact JSON serialization (no pretty-printing) to minimize disk usage
-
-## Bandwidth Control
-
-Limit upload and download speeds independently to prevent AeroSync from saturating your network connection. Available speed limits range from 128 KB/s to 10 MB/s, plus an "Unlimited" option.
-
-The bandwidth limiter auto-detects whether the active backend is FTP (where throttling is applied at the socket level) or a cloud provider API (where throttling is applied at the HTTP request level). Current limits are loaded from the server connection when the sync panel opens.
-
-## Multi-Path Sync Pairs
-
-Define multiple local-to-remote path mappings within a single sync configuration. Each pair syncs independently, allowing you to synchronize different directories to different remote locations in one operation. The Multi-Path Editor provides CRUD controls for adding, editing, and removing path pairs.
-
-## Versioned Backup (v4.2.1)
-
-When the versioned-backup switch is on, AeroSync keeps the old copy of every file a run is about to overwrite or delete - on **remote destinations too**, not only on local ones. Before the destination file is touched, the old copy is moved, together with its `.aerocorrect` error-correction sidecar, to:
-
-```
-<backup folder>/<date and time of the run>/<original path>
+```text
+<backup folder>/<run timestamp>/<original path>
 ```
 
-- Copies are **never overwritten**: a second copy of the same file in one run is kept as `name.1.ext`.
-- The backup folder, and every folder a nested one sits in, is **never compared**, so a later Mirror run cannot delete the old copies it holds.
-- The Plan tab says before the run how the server moves files into the backup folder, and keeps **Execute** off on a backend where the move cannot be guaranteed.
-- Exported sync scripts (`.aeroftp-script`, `.sh`, `.ps1`) carry the backup folder along with the compare's default exclusions.
+An existing backup is retained; another copy receives a suffix such as `name.1.ext`. The backup folder and its parent path are excluded from comparison. The Plan tab explains the backend's move behavior and disables execution where the required move cannot be guaranteed.
 
-## Folder Removal Safety (v4.2.1)
+## Templates and wrapper scripts
 
-A folder is removed only once it is empty, on every backend:
+The Templates dialog saves `.aerosync` files and exports executable `.aeroftp-script`, POSIX `.sh` and PowerShell `.ps1` wrappers. In v4.2.5 exports carry the live Plan mode, including **Update**, direction, comparison and verification settings, conflict policy, exclusions, speed, transfer budget, error correction, canary and versioned-backup settings where the format supports them.
 
-- **A Mirror keeps what it did not complete.** A destination folder that still holds a file whose versioned-backup move failed, or a file the compare excluded (for example `.env`), is kept, and the sync result lists each kept folder with the reason.
-- **Removing a folder without asking for recursion refuses a non-empty one on every backend** - native guards on Box, pCloud, OneDrive and the object stores, a listing check elsewhere. `aeroftp-cli rmdir` exits 9 on a full folder, FTP and SFTP included.
-- **`sync --delete` removes the directories its deletes emptied**, deepest first, on every backend, and fails when a removal is refused for another reason.
+Import applies the configuration to the live Plan controls. A GUI template must identify exactly one usable local/remote pair; zero or multiple usable pairs are refused rather than silently dropping paths. Multi-Path has its own editor.
 
-## Plan Tab Exclude Patterns (v4.2.1)
+Shell and PowerShell wrappers embed a `# AEROFTP-META { ... }` line. Import reads that metadata, not a reverse interpretation of a hand-edited script body. The dialog shows the matching CLI command, or a reason the current settings cannot be represented faithfully. A wrapper schedules nothing by itself: run it manually or through your operating system's scheduler.
 
-The Plan tab gains **exclude patterns for every path pair**, shared with the Local mirror tab and the templates, and shows the matching `aeroftp-cli sync` command for the same run - or the reason there is none.
+## Journals, scheduling and recovery
 
-Exclude patterns now follow one rule everywhere (Compare, Plan, Local mirror, AeroCloud and the CLI): a bare name such as `node_modules` excludes the whole directory of that name, matching is case-insensitive, and an invalid pattern is reported instead of matching nothing. Because patterns may now match *more* than before, review exclude lists written under the old, narrower reading. See [CLI Commands - sync](/cli/commands#sync) for the full matcher rules.
+The Sync journals launcher shows saved run history and interrupted remote runs can offer Resume or Discard. Check the report and remote state before resuming an uncertain transfer. [AeroCloud](/features/aerocloud) provides the separate continuous background-sync workflow.
 
-## Dry-Run Export
+The Scheduler, Multi-Path and Rollback snapshots launchers open their dedicated configuration dialogs. A rollback snapshot and a versioned backup serve different purposes; keep backups outside the data you intend Mirror to remove.
 
-Before executing a sync, run a dry-run to preview exactly what will happen. The dry-run scans both sides, computes the diff, and exports the planned operations as either:
+## Related documentation
 
-- **JSON** - structured format for programmatic analysis or scripting
-- **CSV** - tabular format for review in spreadsheet applications
-
-The dry-run report includes file paths, planned actions (upload, download, delete, skip), file sizes, and the reason for each decision.
-
-## Safety Score
-
-A visual badge in the sync panel header displays a **Safety Score** based on your current configuration. Configurations that delete orphans, disable verification, or use high parallelism receive lower scores, helping you understand the risk level before starting a sync.
-
-## Template Export and Import
-
-Save your entire sync configuration (profile, speed mode, paths, scheduler settings, bandwidth limits) as an `.aerosync` file. These portable template files can be:
-
-- Shared with team members for consistent sync setups
-- Backed up alongside your project
-- Imported on a different machine to replicate the same sync configuration
-
-Templates are exported and imported via Tauri's native file dialog.
-
-### Wrapper Script Export (v3.7.1)
-
-The Templates dialog can also emit the active configuration as a runnable wrapper script:
-
-| Format | Default on | Wraps |
-|--------|------------|-------|
-| **POSIX shell** (`.sh`) | Linux / macOS | `aeroftp-cli sync` |
-| **PowerShell** (`.ps1`) | Windows | `aeroftp-cli sync` |
-
-Generated scripts are self-contained: every AeroSync setting (profile, paths, direction, compare mode, retry policy, verification level, scheduler, bandwidth limit) is translated into the corresponding `aeroftp-cli` flag, and a single `# AEROFTP-META { ... }` JSON line is embedded as a comment so the file round-trips back into AeroSync without parsing the rest of the script.
-
-Round-trip rules:
-
-- Importing a `.sh` or `.ps1` reconstructs the AeroSync configuration from the embedded `# AEROFTP-META` line and ignores the rest of the script body.
-- Hand-edited script bodies are explicitly out of scope: AeroSync does not try to reverse-parse them.
-- The `# AEROFTP-META` line is the source of truth on import; the wrapping `aeroftp-cli sync` invocation is for execution only.
-
-This makes wrapper scripts equally usable as a CI/CD artifact, a cron job, a Windows scheduled task, or a manual `bash sync-prod.sh` invocation, while still being importable back into the GUI for editing.
-
-## Rollback Snapshots
-
-Create pre-sync snapshots of your data that can be restored if a sync produces unwanted results.
-
-- **Create snapshot** - save the current state before running a sync
-- **List snapshots** - view all available snapshots with timestamps and file counts
-- **Preview** - inspect the files contained in a snapshot before restoring
-- **Delete** - remove old snapshots to free disk space
-
-## Error Handling
-
-AeroSync classifies errors into 10 categories using a structured taxonomy. Each error carries a retryability hint that determines whether AeroSync will automatically retry the operation.
-
-The sync report groups errors by category with dedicated icons, showing retryable vs. non-retryable counts. This makes it straightforward to identify systemic issues (e.g., all failures are permission errors on a specific directory) versus transient problems (e.g., intermittent network timeouts).
-
-## Exponential Backoff Retry
-
-Failed transfers are retried automatically with configurable exponential backoff:
-
-- **Base delay:** 500 ms (configurable)
-- **Multiplier:** 2x per retry
-- **Maximum delay cap:** 10 seconds
-- **Default retries:** 3 per file
-- **Per-file timeout:** 2 minutes
-
-Delay values are guarded against NaN and Infinity to prevent runaway retry loops.
+- [CLI sync](/cli/commands#sync)
+- [Delta Sync](/features/delta-sync)
+- [Checksums and hashes](/protocols/checksums)
+- [DAG transfer engine](/architecture/dag-transfer-engine)

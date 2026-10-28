@@ -1,30 +1,30 @@
 ---
-description: "A code editor, an SSH terminal and the AI assistant in one tabbed panel at the bottom of the window."
+description: "Four independent launchers for Security Tools, the code editor, terminal and AI assistant in AeroFTP."
 ---
 
 # AeroTools
 
-AeroTools is AeroFTP's integrated development panel, combining a code editor, SSH terminal, and AI assistant in a tabbed interface at the bottom of the application window.
+AeroTools provides four independent launchers for Security Tools, the code editor, terminal and AI assistant. Each opens or closes its own panel or column in the application window.
 
 ## Panel Layout
 
-The AeroTools panel contains four tabs:
+The AeroTools panel has four launchers. Each toggles its own panel or column:
 
-| Tab | Component | Description |
+| Launcher | Component | Description |
 |-----|-----------|-------------|
-| **AeroTools** | Security Toolkit | Hashing, encryption, and password generation (Cyber theme only) |
+| **Security Tools** | Security Toolkit | Hashing, encryption, and password generation in every theme |
 | **Editor** | Monaco Editor | VS Code engine with syntax highlighting for 50+ languages |
-| **Terminal** | SSH Terminal | Remote shell with 8 terminal themes and multiple tabs |
-| **AI Agent** | AeroAgent | AI assistant with 39 tools across local files and the 7 transport protocols + 20+ native provider integrations |
+| **Terminal** | SSH Terminal | Local PTY and SSH sessions with multiple themes and tabs |
+| **AI Agent** | AeroAgent | AI assistant with built-in tools across local files and the 7 transport protocols + 20+ native provider integrations |
 
-The panel is resizable by dragging the separator between the file browser and the tools area. Each tab maintains its own state independently.
+The panel is resizable by dragging the separator between the file browser and the tools area. Each panel maintains its own state independently.
 
 ## Code Editor
 
 The code editor is powered by **Monaco** (the same engine used by VS Code), providing a professional editing experience for remote files.
 
 - **Syntax highlighting** for 50+ languages (JavaScript, TypeScript, Python, Rust, Go, HTML, CSS, JSON, YAML, etc.)
-- **4 editor themes** matching the app themes: Light, Dark, Tokyo Night, Cyber
+- **Editor themes** matching Light, Dark, True Dark, Tokyo Night, Cyber, Green, Ice and Red Horse
 - **Remote file editing**: right-click any file and choose "Edit" to open it in the editor. Changes are saved back to the remote server automatically.
 - **Bidirectional sync** with AeroAgent: edits made by the AI agent are reflected in the editor in real time, and vice versa.
 
@@ -34,7 +34,7 @@ For full details, see the [Code Editor documentation](code-editor.md).
 
 The integrated SSH terminal provides a remote shell directly within AeroFTP.
 
-- **8 terminal themes** that auto-sync with the app theme
+- **13 terminal themes**, with automatic mappings from all eight app themes
 - **Multiple tabs** for concurrent sessions
 - **xterm.js** based rendering with WebGL acceleration
 - **Full terminal emulation** including colors, cursor positioning, and scrollback
@@ -43,15 +43,15 @@ For full details, see the [Terminal documentation](terminal.md).
 
 ## AeroAgent
 
-The AI-powered assistant with **43 built-in tools** that work across local files and the AeroFTP provider backends (7 transports + 20+ native providers). Supports **24 AI providers** including OpenAI, Anthropic, Google Gemini, NVIDIA NIM, Z.AI (GLM), Yi, Hyperbolic, Novita, Cohere, Cerebras, SambaNova, Fireworks, and local models via Ollama.
+The AI-powered assistant with built-in tools that work across local files and the AeroFTP provider backends (7 transports + 20+ native providers). Supports **26 AI provider types** including OpenAI, Anthropic, Google Gemini, NVIDIA NIM, Z.AI (GLM), Yi, Hyperbolic, Novita, Cohere, Cerebras, SambaNova, Fireworks, and local models via Ollama.
 
 For full details, see the [AeroAgent documentation](aeroagent.md) and [AeroAgent Test Results](aeroagent-tests.md).
 
-## Security Toolkit (Cyber Theme)
+## Security Tools
 
-The Security Toolkit tab is available exclusively when the **Cyber** theme is active. It provides three modules for hashing, encryption, and password generation -- all running locally via Rust commands with zero network access.
+The **Security Tools** launcher sits beside Editor, Terminal and AeroAgent in every theme. It opens a column with Hash Forge, CryptoLab and Password Forge. Cyber also has a floating-window shortcut. The cryptographic operations run locally in Rust.
 
-> **Note:** Switch themes via the theme toggle in the titlebar (cycle: Auto, Light, Dark, Tokyo Night, Cyber).
+> Switch themes with the titlebar or Appearance settings. Security Tools remains available when the theme changes.
 
 ### Hash Forge
 

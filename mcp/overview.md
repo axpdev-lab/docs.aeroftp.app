@@ -1,41 +1,12 @@
 # MCP Server
 
-The AeroFTP MCP (Model Context Protocol) server exposes 39 file management tools to AI assistants via JSON-RPC over stdio. Most are registered under two names, one `aeroftp_`-prefixed and one `remote_`-prefixed, so a client lists 77 entries in total for those 39 capabilities. It connects Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client to AeroFTP's full integration surface - **7 transport protocols + 20+ native provider integrations + 40+ pre-configured presets** - without custom integration code.
+AeroFTP 4.2.5 provides a native Model Context Protocol server over stdio. It uses the Rust backend directly, with saved profiles, connection pooling, per-profile serialization, cancellation, schema validation, rate limits and audit events. It does not invoke an AI model itself.
 
-## What is MCP?
+The checked catalog contains **78 wire tool names**: 39 `aeroftp_*`, 36 `remote_*`, two `server_*` and `agent_connect`. The command inventory labels these 40 primary and 38 alias names using a namespace heuristic; this is not a count of independent capabilities. Use `tools/list` for the live schemas and [COMMAND-INVENTORY.json](https://github.com/axpdev-lab/aeroftp/blob/3a62301e589fffeb8b69fcdff7b5e95ff2b67288/docs/COMMAND-INVENTORY.json) for the checked snapshot. CLI agent tools and GUI AeroAgent tools are different catalogs.
 
-The [Model Context Protocol](https://modelcontextprotocol.io/) is an open standard that lets AI assistants call external tools through a structured JSON-RPC interface. Instead of generating shell commands, the AI calls typed tools with validated parameters and receives structured responses.
+## Setup
 
-AeroFTP implements an MCP server that wraps its CLI into 77 tools (39 primary plus 38 aliases) with connection pooling (auto-reset on stale handles), per-profile request serialization, schema validation, request cancellation, rate limiting, and audit logging.
-
-The official VS Code extension [`axpdev-lab.aeroftp-mcp`](https://marketplace.visualstudio.com/items?itemName=axpdev-lab.aeroftp-mcp) configures this server in one click for Claude Code, Claude Desktop, Cursor, and Windsurf simultaneously.
-
-## Quick Start
-
-### 1. Install AeroFTP
-
-The MCP server is included with every AeroFTP installation. See [CLI Installation](/cli/installation) for platform-specific instructions.
-
-```bash
-# Verify the CLI is available
-aeroftp-cli --version
-```
-
-### 2. Configure Your AI Tool
-
-#### VS Code Extension (Recommended)
-
-Install the [AeroFTP MCP Server](https://marketplace.visualstudio.com/items?itemName=axpdev-lab.aeroftp-mcp) extension from the VS Code Marketplace. It auto-detects installed AI tools and configures the MCP server with one click.
-
-```
-Ctrl+Shift+P → AeroFTP: Install MCP Server
-```
-
-The extension supports Claude Code, Claude Desktop, Cursor, and Windsurf simultaneously.
-
-#### Manual Configuration
-
-Add the following entry to your AI tool's MCP configuration file:
+Install the [CLI](/cli/installation), then configure an MCP client:
 
 ```json
 {
@@ -48,168 +19,92 @@ Add the following entry to your AI tool's MCP configuration file:
 }
 ```
 
-Configuration file locations:
+`aeroftp-cli agent --mcp` starts the same server. The official [VS Code extension](https://marketplace.visualstudio.com/items?itemName=axpdev-lab.aeroftp-mcp) can configure supported clients. If the CLI is not on the client's `PATH`, use its absolute executable path.
 
-| Tool | Config Path |
-|------|-------------|
-| **Claude Code** | `~/.claude/.mcp.json` |
-| **Claude Desktop** (Windows) | `%APPDATA%\Claude\claude_desktop_config.json` |
-| **Claude Desktop** (macOS) | `~/Library/Application Support/Claude/claude_desktop_config.json` |
-| **Cursor** | `~/.cursor/mcp.json` |
-| **Windsurf** | `~/.codeium/windsurf/mcp_config.json` |
+Start with `aeroftp_list_servers`, then call a file tool with the exact saved profile name or ID in `server`. `aeroftp_agent_connect` combines connection, capability, quota and path results; inspect each block rather than assuming a successful overall envelope means every feature is supported.
 
-### 3. Connect to a Server
+Create profiles in the GUI or with `profile-add`. `connect --save` is not supported. Browser-authorized profiles can use supported [headless authorization](/cli/commands#profile-add-and-headless-authorization); native Proton has its separate sign-in flow. The MCP `aeroftp_profile_auth` tool operates on an already saved profile with a nested `request` whose action is `configure`, `begin`, `finish`, `status` or `cancel`.
 
-Once configured, your AI assistant can use `list_profiles` to see your saved servers and `connect` to start a session.
+The MCP wire tools below and the similarly named CLI commands have distinct implementations and output schemas. Do not transfer the CLI comparison contract to MCP. With checksum comparison enabled, `aeroftp_reconcile` reads eligible equal-size remote files through a capped download and compares BLAKE3; oversized pairs retain a flagged size verdict and failed checksums are unverified/partial. `aeroftp_check_tree` instead uses comparable SHA-256 when available and falls back to size. These tools can therefore differ on equal-size content changes; their checksum behavior is not interchangeable.
 
-## Available Tools
+| Surface and operation | Comparison | Per-entry output metadata |
+| --- | --- | --- |
+| MCP `aeroftp_reconcile` | BLAKE3 over capped downloads for eligible equal-size pairs; flagged size fallback for oversized pairs | `compare_method`: `blake3` or `size`; failed hashes are unverified |
+| MCP `aeroftp_check_tree` | Comparable SHA-256 when available, otherwise size | Entry arrays include `compare_method` (nullable for entries without a comparison) |
+| CLI `reconcile --checksum` | Comparable SHA-256 on eligible paths, otherwise size | `compare_method`: `checksum` or `size` |
+| CLI `check --checksum` | Comparable SHA-256 when available, otherwise size | No per-entry `compare_method` field |
 
-The MCP server exposes the following curated tools (names use the `aeroftp_` prefix in the wire protocol; the table omits the prefix for brevity).
+MCP `summary_only` suppresses entry arrays. The output `compare_method` described here is not an input parameter. Source references: [MCP check-tree serialization](https://github.com/axpdev-lab/aeroftp/blob/58020c71c3843ccb705c80f8c7b7b33494b04139/src-tauri/src/mcp/tools.rs) and [shared agent/MCP reconcile implementation](https://github.com/axpdev-lab/aeroftp/blob/58020c71c3843ccb705c80f8c7b7b33494b04139/src-tauri/src/ai_core/remote_tools.rs).
 
-### Safe Tools (Read-Only)
+## Tool Catalog
 
-| Tool | Description |
-|------|-------------|
-| `list_servers` | List saved server profiles from the encrypted vault (names + protocol + tags + per-profile `auth_state` - never credentials). Every entry carries `cryptOverlay` (`aerocrypt`, `rclone-crypt`, or `null`) and `protocolClass` (`Crypt` for a profile bound to an encrypted overlay), so an agent can tell an encrypted remote from a plain one. Supports a `filter` arg |
-| `mcp_info` | Diagnostics about the running MCP process: version, supported protocols, capabilities |
-| `agent_connect` | Single-shot connect surface (added v3.6.6): one JSON envelope with `connect` + `capabilities` + `quota` + `path` blocks, replacing the boilerplate sequence `connect → about → df → ls /` |
-| `list_files` | List files and directories at a given path. Pagination, sort, files-only / dirs-only filters |
-| `read_file` | Read text file content. `preview_kb` argument for soft-truncation (added v3.5.9) |
-| `file_info` | File or directory metadata (size, mtime, permissions, hash) |
-| `search_files` | Search files by name pattern (glob), with pagination and sort |
-| `storage_quota` | Storage quota (used/free/total) |
-| `hashsum` | Streamed SHA-256 / SHA-1 / MD5 / BLAKE3 of a remote file (alias: `checksum`, added v3.5.9) |
-| `head` / `tail` | First or last N lines of a remote UTF-8 text file, default 50, cap 10000 (added v3.5.9) |
-| `tree` | Recursive directory tree, depth-capped (added v3.5.9) |
-| `check_tree` | Categorized local-vs-remote diff. `compare_method` argument supports `size` / `mtime` / `checksum` (added v3.6.0). Per-group caps `max_match` / `max_differ` / `max_missing_local` / `max_missing_remote` and `omit_match` switch (added v3.7.0) |
-| `sync_doctor` | Preflight risk summary with `suggested_next_command`. Lighter than `sync_tree dry_run=true` (added v3.7.0) |
-| `reconcile` | Categorized size-only diff variant of `check_tree` with `elapsed_secs` and `suggested_next_command` (added v3.7.0) |
-| `dedupe` | SHA-256 duplicate detection grouped per size, modes `newest` / `oldest` / `largest` / `smallest` / `list`, dry-run by default (added v3.7.0) |
-| `debug_snapshot` | Static diagnostic snapshot: host / runtime info plus the last N redacted `aeroftp.log` lines |
-| `debug_run_test` | Run one self-contained diagnostic probe (e.g. `known_hosts`) and return its result |
+Names below are exact wire names. Many also have compatibility aliases; retrieve `tools/list` instead of guessing an alias or adding an `aeroftp_` prefix to every tool.
 
-### Medium Tools (Write Operations)
+| Area | Tools |
+| --- | --- |
+| Discovery and lifecycle | `aeroftp_mcp_info`, `aeroftp_list_servers`, `aeroftp_agent_connect`, `aeroftp_profile_auth`, `aeroftp_close_connection` |
+| Remote listing and inspection | `aeroftp_list_files`, `aeroftp_read_file`, `aeroftp_file_info`, `aeroftp_search_files`, `aeroftp_storage_quota`, `aeroftp_hashsum`, `aeroftp_head`, `aeroftp_tail`, `aeroftp_tree` |
+| File writes | `aeroftp_download_file`, `aeroftp_upload_file`, `aeroftp_upload_many`, `aeroftp_create_directory`, `aeroftp_rename`, `aeroftp_edit`, `aeroftp_touch` |
+| Delete and maintenance | `aeroftp_delete`, `aeroftp_delete_many`, `aeroftp_cleanup`, `aeroftp_dedupe` |
+| Sync and comparison | `aeroftp_check_tree`, `aeroftp_sync_tree`, `aeroftp_sync_doctor`, `aeroftp_reconcile` |
+| Cross-profile copy | `aeroftp_transfer`, `aeroftp_transfer_tree` |
+| Versions and trash | `remote_versions`, `remote_trash` |
+| Read-only server wrapper | `server_exec` |
+| Diagnostics and measurements | `aeroftp_debug_snapshot`, `aeroftp_debug_run_test`, `aeroftp_speed`, `aeroftp_benchmark`, `aeroftp_transfer_stats` |
+| Error-correction sidecars | `aeroftp_correct_gen`, `aeroftp_correct_verify`, `aeroftp_correct_repair` |
 
-| Tool | Description |
-|------|-------------|
-| `download_file` | Download a remote file to a local path |
-| `upload_file` | Upload a local file. Supports `create_parents` for missing-directory auto-creation, `no_clobber` for skip-if-exists (added v3.5.9) |
-| `upload_many` | Batch upload from a `files: []` array (mirrors CLI `--files-from`). Returns per-file `status` (uploaded / skipped / error). Added v3.5.10 |
-| `create_directory` | Create a remote directory |
-| `rename` | Rename or move a file or directory |
-| `edit` | Find and replace in a remote text file without downloading it locally (added v3.5.10) |
-| `sync_tree` | Plan and execute a directory sync. Returns `plan[]` (per-file decision) and `plan_by_op` with caps; supports `dry_run` and pool-invalidate fix on apply |
-| `transfer` / `transfer_tree` | Cross-profile copy: single file or recursive directory between two saved profiles. Source and destination provider opened once and reused for the whole batch (added v3.7.0) |
-| `touch` | Create an empty file at a remote path, or report `action: "exists"` (added v3.7.0) |
-| `speed` | Throughput probe: random payload upload + download + SHA-256 integrity + cleanup. Caps 4 MiB default / 64 MiB max, iterations 1..3 (added v3.7.0) |
-| `benchmark` | Run the AeroFTP community benchmark suite against a saved profile and return the schema-v1 JSON report |
-| `close_connection` | Close the current pooled connection (forces reconnect on next call) |
+`server_exec` accepts only `ls`, `cat`, `stat`, `find` and `df`. It explicitly refuses `get`, `put`, `mkdir`, `rm` and `mv`; use the dedicated tools. Its high registry classification reflects credential-backed remote access and possible content disclosure, not support for destructive commands.
 
-### High Tools (Destructive)
+Provider support remains operation-specific. A profile exposes its `protocol`, `cryptOverlay` and `protocolClass`, and discovery reports capability information. A bound overlay encrypts uploaded names and content transparently; it is not equivalent to a plain remote. Authorize profiles first and inspect authentication state before transferring.
 
-| Tool | Description |
-|------|-------------|
-| `delete` | Permanently delete one or more remote entries (supports `recursive`) |
-| `delete_many` | Batch delete from an explicit list. Per-item `status` reporting |
-| `cleanup` | BFS scan for orphan `.aerotmp` partial-transfer files. Dry-run by default; deletes only when explicitly asked. Caps 100 k entries / depth 100 (added v3.7.0) |
-| `server_exec` | Execute a vault-backed server operation without exposing credentials to the model |
+## Schemas and Bounded Results
 
-## Rate Limits
+- `aeroftp_check_tree` accepts `checksum`, `one_way`, `files`, `exclude`, `max_depth`, per-group caps and `omit_match`. It does not accept `compare_method` as input; its per-entry output does contain that field. Checksum mode requests a server-side digest and can fall back to size comparison when unavailable.
+- Tree comparisons report `local_scan_incomplete` and `remote_scan_incomplete`, plus errors, truncation counters and bounded skipped/unseen-path lists. Missing on an incompletely scanned side does not prove a file was deleted. `summary_only` suppresses entry arrays.
+- `aeroftp_sync_tree` takes `local_dir`, `remote_dir`, `direction` (`upload`, `download`, `both`), `dry_run`, `delete_orphans`, conflict and delta policies. `delete_orphans` is one-way only. Its policy choices are not identical to all CLI sync flags.
+- A sync dry run returns `plan`, `plan_by_op`, totals, scan statistics and errors. An apply returns `summary` and errors. These are different result shapes. Delta details appear only when files actually used delta transfer.
+- `aeroftp_upload_many` returns individual results and summary totals. It normally processes a pooled session serially. Proton Drive in CLI mode can group local files sharing a destination folder into one native bulk call; native Proton API mode does not use that optimization.
+- `aeroftp_transfer_stats` reports the last DAG job seen by the current process, or `available: false`. The direct cross-profile tools do not run the DAG engine, so they do not populate those statistics.
 
-The MCP server enforces per-category rate limits to prevent runaway operations:
+Use a dry run to review a sync plan before applying it. Do not treat capped lists or a transport cancellation as a complete result.
 
-| Category | Limit | Tools |
-|----------|-------|-------|
-| **Read** | 60/min | list_servers, list_files, read_file, file_info, search_files, storage_quota, hashsum, head, tail, tree, check_tree, reconcile, sync_doctor, dedupe, mcp_info, agent_connect |
-| **Write** | 30/min | upload_file, upload_many, download_file, create_directory, rename, edit, sync_tree, transfer, transfer_tree, touch, speed, benchmark |
-| **Delete** | 10/min | delete, delete_many |
+## Rate Limits and Authorization
 
-When a rate limit is exceeded, the server returns an error with a `retry_after` hint.
+The MCP server uses token buckets shared by category, replenished continuously:
 
-## Supported Integrations
+| Category | Capacity / refill rate |
+| --- | --- |
+| Read-only | 1200 requests per minute |
+| Mutative | 400 requests per minute |
+| Destructive | 100 requests per minute |
 
-The MCP server inherits AeroFTP's full integration surface from the CLI. See [Protocol Overview](/protocols/overview) for the complete matrix.
+Aliases inherit the registry classification. Some diagnostic tools run probes that write temporary data even when their rate category is read-only; `aeroftp_benchmark` and `aeroftp_speed` exercise real uploads/downloads and cleanup. A rate category is not a human permission grant. Configure the MCP client's tool approval policy for the operations you intend to allow. The CLI agent's `--auto-approve` levels describe the AI-agent loop, not an MCP approval dialog.
 
-| Tier | Coverage |
-|------|----------|
-| **7 transport protocols** | FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift |
-| **20+ native provider integrations** | Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, GitHub, GitLab, Immich |
-| **40+ pre-configured presets** | AWS S3, Backblaze B2, Cloudflare R2, Wasabi, DigitalOcean Spaces, MinIO, Storj, IDrive e2, Hetzner Storage Box, Yandex Object Storage, Tencent COS, Alibaba OSS, Oracle Cloud, Nextcloud, Seafile, InfiniCLOUD, Jianguoyun, CloudMe, SourceForge, etc. |
+The human-readable rate-limit error message includes the retry interval in seconds (`Rate limit exceeded. Retry after ... seconds.`); there is no structured `retry_after` field. Wait for that interval rather than retrying in a tight loop.
 
-Saved profiles for OAuth providers (Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, Drime) are loaded from the encrypted vault automatically once authorized in the AeroFTP GUI - the MCP server never sees the underlying tokens.
+## Security and Audit Events
 
-## Security Model
+Saved-profile authentication resolves secrets inside Rust and does not return passwords or tokens in tool results. The universal vault uses encrypted storage, with OS-keyring or master-password unlock depending on configuration. Secret values explicitly supplied in `aeroftp_profile_auth` requests are still visible to the client that supplies them; the vault does not erase that client's copy.
 
-### Credential Isolation
+Remote paths allow absolute paths but reject traversal components, null bytes, control characters, leading `-` and oversized values. Local transfer paths also receive sensitive-path and symlink checks. These restrictions are not a filesystem sandbox for the whole client process.
 
-The MCP server never exposes credentials to the AI model. Server profiles are stored in AeroFTP's encrypted vault (AES-256-GCM + Argon2id) and resolved by name at connection time.
-
-### Audit Logging
-
-Every tool call is logged with timestamp, tool name, parameters, and result status. Logs are stored locally and never transmitted.
-
-### Input Validation
-
-All path parameters are validated against traversal attacks (`..`, absolute paths, null bytes). File sizes are capped to prevent memory exhaustion.
-
-## Agent Discovery
-
-Use `agent-info` to query the MCP server's capabilities programmatically:
-
-```bash
-aeroftp-cli agent-info --json 2>/dev/null
-```
-
-Returns a JSON object with:
-- Available tools with parameter schemas
-- Supported protocols
-- Exit code definitions
-- Safety rules and rate limits
-- Saved server profiles (names only)
+Audit events are written as JSON to stderr with timestamp, tool, server, path, status and duration. They omit file content and credentials. Paths and server identifiers are still operational metadata; the MCP client controls whether stderr is retained.
 
 ## Troubleshooting
 
-### MCP server not responding
-
-Verify the CLI is accessible:
-
 ```bash
 aeroftp-cli --version
+aeroftp-cli profiles --json
+aeroftp-cli agent-info --json
+aeroftp-cli inventory --json
 ```
 
-If using Snap, ensure the alias is active:
-
-```bash
-snap alias aeroftp aeroftp-cli
-```
-
-### Connection refused
-
-The MCP server requires a saved server profile. Create one in the AeroFTP desktop app or via the CLI:
-
-```bash
-aeroftp-cli connect sftp://user@host --save "My Server"
-```
-
-### Rate limit errors
-
-Reduce the frequency of tool calls or wait for the `retry_after` period. Rate limits reset every 60 seconds.
-
-## Recent Hardening (v3.5.4)
-
-Three independent audits surfaced 9 issues across pool, vault, serialization, and shutdown semantics. All resolved:
-
-- **S3 bucket fix from vault profiles**: `create_provider_from_vault` now reads `bucket`/`region`/`endpoint`/`path_style` from the saved profile options. Previously surfaced as "bucket required" on 10+ S3-backed profiles.
-- **Vault auto-init**: `McpServer::run()` initializes the Universal Vault automatically; falls back to `AEROFTP_MASTER_PASSWORD` when set. Subprocess MCP now sees credentials without manual unlock.
-- **Per-profile serialization**: `Arc<Mutex<HashMap<String, Arc<Mutex<()>>>>>` linearizes tool calls on the same profile while keeping cross-server calls parallel. Prevents wire interleaving on flaky servers.
-- **Shutdown drain**: `JoinSet` tracks spawned tasks; on EOF stdin, `drain_pending(10s)` lets in-flight responses complete before exit.
-- **Schema validation**: `inputSchema.required` checked before dispatch. Missing fields return MCP-standard `-32602 Invalid params` instead of generic errors.
-- **Top-level `mcp` subcommand**: `aeroftp-cli mcp` argv now matches what the VS Code extension registers, removing the need for nested subcommand routing.
+If the process will not start, check the executable path and its platform dependencies. If the vault is locked, unlock it through the configured flow; an unattended process must have a supported unlock method. If a tool reports authentication failure, authorize that profile again rather than repeatedly reconnecting. Restart an existing MCP process after replacing its executable so it uses the new release.
 
 ## Further Reading
 
-- [CLI Commands](/cli/commands) - Full CLI reference
-- [CLI Examples](/cli/examples) - Real-world usage patterns
-- [AeroRsync](/features/aerorsync) - Native rsync delta sync engine (used by sync_tree on SFTP)
-- [LLM Integration Guide](https://github.com/axpdev-lab/aeroftp/blob/main/docs/LLM-INTEGRATION-GUIDE.md) - Safe patterns and anti-patterns for AI integration
-- [Threat Model](https://github.com/axpdev-lab/aeroftp/blob/main/docs/THREAT-MODEL.md) - Security architecture documentation
+- [CLI Commands](/cli/commands)
+- [CLI Examples](/cli/examples)
+- [Agent Orchestration](/features/agent-orchestration)
+- [Credential Isolation](/credential-isolation)
+- [LLM Integration Guide](https://github.com/axpdev-lab/aeroftp/blob/main/docs/LLM-INTEGRATION-GUIDE.md)

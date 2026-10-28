@@ -1,6 +1,6 @@
 # Error Correction (`.aerocorrect`)
 
-AeroVault format v4 (format v3 plus error correction) adds a fourth wrapper to the stack: **error correction**. It writes a detached, par2-style Reed-Solomon recovery sidecar, the `.aerocorrect` file, that can repair bit rot in any byte stream: a sealed `.aerovault` container, a synced backup file, or an ordinary standalone file. On cloud backends durability is already redundant; on USB sticks, consumer NAS disks, optical media, and cold-storage archives, a single bad sector is the difference between an encrypted backup surviving and being gone. Error correction closes that gap.
+AeroVault's v4 wrapper-stack configuration (v3 plus error correction) adds **error correction** over the encrypted data. The container still uses `AEROVAULT3` magic and internal version 3; v4 here names the recovery configuration rather than a new container magic. Recovery can be embedded or stored in a detached, par2-style `.aerocorrect` sidecar that can repair bit rot in any byte stream: a sealed `.aerovault` container, a synced backup file, or an ordinary standalone file. On cloud backends durability is already redundant; on USB sticks, consumer NAS disks, optical media, and cold-storage archives, a single bad sector is the difference between an encrypted backup surviving and being gone. Error correction closes that gap.
 
 ::: tip Credit
 Error correction is the fourth wrapper in the design contributed by **Ehud Kirsh** in the AeroFTP [COMMUNITY ROADMAP thread (issue #162)](https://github.com/axpdev-lab/aeroftp/issues/162) and refined in the [Error Correction discussion (#276)](https://github.com/axpdev-lab/aeroftp/issues/276). The unified one-format-for-any-file `.aerocorrect` design, the placement model, and the overhead levels are his calls.
@@ -10,7 +10,7 @@ Error correction is the fourth wrapper in the design contributed by **Ehud Kirsh
 
 `.aerocorrect` is a detached Reed-Solomon parity sidecar for **any** byte stream. It protects the bytes of the target without embedding anything into it, so the same format repairs `.aerovault` containers, synced files, or ordinary files. The sidecar is **content-addressed**: it binds to the **SHA-256 of the protected content**, not to a path, vault salt, account, or provider identity. Move the file, rename it, copy it to another disk, and the same sidecar still verifies and repairs it.
 
-The magic bytes are `AEROCORR`. The format is shared byte-for-byte between the AeroFTP application (v4) and the standalone [`aerovault` crate](/advanced/aerovault-crate.html) (0.5.0), pinned by a cross-implementation fixture: a sidecar produced by one verifies and repairs with the other for the same file and overhead level.
+The magic bytes are `AEROCORR`. The format is shared byte-for-byte between the AeroFTP application (v4) and the standalone [`aerovault` crate](/advanced/aerovault-crate.html) (0.6.8), pinned by a cross-implementation fixture: a sidecar produced by one verifies and repairs with the other for the same file and overhead level.
 
 ## Where it sits in the wrapper stack
 
@@ -18,7 +18,7 @@ Error correction is the **last wrapper** in the AeroVault pipeline. It runs afte
 
 ![Where error correction sits in the wrapper stack](/images/error-correction/01-where-ec-sits.png)
 
-Because parity sits over the cipher blocks, redundancy is strictly for **recovery, not for trust**. Repair fixes damage *before* decryption; AES-256-GCM-SIV remains the sole authority on tampering. A repaired stream that an attacker forged still fails the authenticated decrypt.
+For encrypted AeroVault containers, parity covers the ciphertext and repair runs before authenticated decryption. AES-256-GCM-SIV detects forged encrypted content; parity alone does not authenticate it. Ordinary standalone or synced files may have no authenticated encryption, so their repair requires an independent trusted SHA-256 anchor to establish authenticity, as described below. Redundancy provides **recovery, not trust**.
 
 The definitive stage sequence of the full wrapper stack is:
 
@@ -40,13 +40,13 @@ For a vault the parity can live in three places (`RecoveryPlacement`):
 
 | Placement | Where parity lives | Effect on the container |
 | --------- | ------------------ | ----------------------- |
-| `detached` (default) | Sibling `.aerocorrect` file next to the container | Container stays byte-identical to a plain v3 vault |
-| `embedded` | A non-critical extension inside the container, recomputed on every seal | One self-contained file, parity travels with it |
+| `detached` (opt-in for vault creation) | Sibling `.aerocorrect` file next to the container | Container stays byte-identical to a plain v3 vault |
+| `embedded` (vault-create default; Change Mode when EC is enabled) | A non-critical extension inside the container, recomputed on every seal | One self-contained file, parity travels with it |
 | `both` | Sidecar **and** in-container extension | Redundant recovery surfaces |
 
-![Parity placement: detached sidecar by default](/images/error-correction/02-placement.png)
+![Example of detached sidecar placement](/images/error-correction/02-placement.png)
 
-The default is the detached sidecar because it keeps the container byte-identical to a plain v3 vault and lets you add or refresh parity later without rewriting the encrypted data. For `secret.aerovault` the default sidecar path is `secret.aerovault.aerocorrect`.
+GUI creation and CLI `vault create --error-correction` default to embedded placement; CLI creation can select another placement with `--recovery-placement`. Change Mode explicitly creates embedded parity when Error Correction is enabled for an Archive/v3 target. Detached sidecars remain useful for adding or refreshing parity without rewriting the container, and standalone `correct gen` creates a detached sidecar. For `secret.aerovault`, the conventional detached path is `secret.aerovault.aerocorrect`.
 
 A vault writes **exactly three segments** (windows) over its container file, in a fixed order, so each region's parity is found by position: a header window, a manifest (locator) window, and a data window. The header and manifest travel outside the container on purpose: a damaged header or manifest cannot self-locate its own recovery (a chicken-and-egg problem), so the sidecar lets the reader rebuild them and prove correctness by the header MAC and the manifest cipher.
 
@@ -129,17 +129,29 @@ aeroftp-cli vault strip-parity secret.aerovault
 
 ### Sync: `sync --error-correction`
 
-AeroSync shares the same `.aerocorrect` sidecar and overhead levels. Enable it on a sync job so each transferred file gets a sidecar:
+AeroSync shares the same `.aerocorrect` sidecar and overhead levels. In v4.2.5, CLI `sync --error-correction` generates sidecars after successful uploads, subject to the source-size and overhead limits:
 
 ```bash
 # Generate sidecars alongside the synced files
-aeroftp-cli sync ./local remote:backup --error-correction
+aeroftp-cli sync --profile "Backup" ./local /backup --direction upload --error-correction
 
 # Cap the parity overhead a small file is allowed to add (skips parity below the benefit threshold)
-aeroftp-cli sync ./local remote:backup --error-correction --ec-max-overhead 25
+aeroftp-cli sync --profile "Backup" ./local /backup --direction upload --error-correction --ec-max-overhead 25
 ```
 
-A bit-rotted remote backup is then repaired on the next pull from its sidecar, without needing the original.
+The CLI text EC summary omits low-benefit skips. They are reported per file on stderr unless quiet mode suppresses the messages, and in the `ec_skipped_low_benefit` JSON counter. Inspect these outputs before treating a backup as protected.
+
+CLI sync downloads do not automatically verify or repair files from sidecars. The separate desktop sync repair path requires an expected SHA-256 from the scanned item and skips repair if that hash is missing; an S3 MD5 does not satisfy this requirement.
+
+For explicit recovery, download both objects and supply a known-good SHA-256 obtained independently from a trusted source:
+
+```bash
+aeroftp-cli get --profile "Backup" /backup/report.bin ./report.bin
+aeroftp-cli get --profile "Backup" /backup/report.bin.aerocorrect ./report.bin.aerocorrect
+aeroftp-cli correct repair ./report.bin --parity ./report.bin.aerocorrect --expect-sha256 YOUR_64_HEX_SHA256
+```
+
+Replace the hash placeholder before running the command. A bare `correct repair` checks integrity against the sidecar's recorded hash; it does not establish authenticity if an attacker can replace both objects.
 
 ## Security and repair model
 
@@ -148,7 +160,7 @@ Repair is **fail-closed and all-or-nothing**.
 ![Recovery: file only versus file and sidecar both damaged](/images/error-correction/03-recovery.png)
 
 - **Re-verify before replace.** The rebuilt stream is re-verified against the bound content hash before the original is replaced. For a vault, every reconstructed region is additionally re-verified against the container's authenticated values (the header MAC and the manifest `cipher_hash`) before being persisted.
-- **A foreign or corrupt sidecar can only make a repair fail, never overwrite good data.** Because the gate is the authenticated re-verify, a stale or attacker-supplied sidecar cannot push bad bytes into a healthy file.
+- **Use an independent authenticity anchor.** Standalone repair without `--expect-sha256` trusts the sidecar's declared content hash. Supply a known-good SHA-256 to reject a substituted sidecar before writing. Vault repair additionally checks the container's authenticated values; sidecar checksums alone are not an authenticity proof.
 - **Atomic writes.** Repair writes to a temporary file and renames it into place, so a crash mid-repair never leaves a half-written original.
 - **All-or-nothing for vaults.** A vault is re-sealed only if *every* repaired block re-verifies; otherwise the file is left byte-for-byte untouched.
 
