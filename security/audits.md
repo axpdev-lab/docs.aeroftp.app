@@ -1,14 +1,15 @@
 # Security Audits
 
-AeroFTP undergoes regular independent security audits. This page tracks the historical audit archive.
+This page is the historical archive. A row here is what was recorded for that version. It is not a scan of AeroFTP 4.2.6, and the newest row is not the current state of `main`.
 
-For the **monthly self-hosted vulnerability pipeline** (current source of truth, reproducible by anyone with `npm run security:report`), see [Continuous Audit](./continuous-audit.md).
+The advisory list to read today is [`src-tauri/.cargo/audit.toml`](https://github.com/axpdev-lab/aeroftp/blob/aa0e4774541c8eeafe14b33b0c92427d7621e7d8/src-tauri/.cargo/audit.toml) on `main`. How that list is checked, and why the committed HTML report is a June 2026 snapshot, is [Continuous Audit](./continuous-audit.md). Pull-request review by CodeRabbit and Greptile is part of [Supply chain](./supply-chain), not an entry in the table below.
 
 ## Audit History
 
 | Version | Date | Auditors | Scope | Findings | Grade |
 | ------- | ---- | -------- | ----- | -------- | ----- |
-| v3.7.5 | May 2026 | Self-hosted pipeline (cargo audit + npm audit + osv-scanner) | Vulnerability scan against RustSec, npm registry, OSV with documented suppression list | 0 open / 25 suppressed (4 GHSA closed: CVE-2026-42184 + 2x openssl + rpassword) | 0 open |
+| v4.0.7 | 21 June 2026 | Self-hosted report committed on `main` | `cargo audit`, `npm audit`, `osv-scanner` | 0 open / 28 suppressed in that HTML file. The ignore list on `main` at `aa0e477` has 33 IDs and was not re-counted for this row | Snapshot |
+| v3.7.5 | May 2026 | Self-hosted pipeline (cargo audit + npm audit + osv-scanner) | Vulnerability scan against RustSec, npm registry, OSV with the suppression list of that month | 0 open / 25 suppressed, as written in May. GHSA-7gmj-67g7-phm9 is ignored again on current `main` | Snapshot |
 | v3.1.7 | March 2026 | GPT 5.4 + Claude Opus 4.6 | Desktop security (updater, plugin registry, AI approval, vault) | 4 findings (2 High, 2 Medium), all remediated | - |
 | v2.9.5 | 2026 | Claude Opus 4.6 + GPT 5.4 | Dual-engine 8-area audit | 117 findings (103 + 14), 9 cross-engine convergences, all P0-P2 remediated | A- |
 | v2.8.9 | 2026 | GPT 5.4 | Residual audit closure | 6 of 11 partial findings resolved (34/39 fixed, 5 partial, 0 open) | A- |
@@ -22,7 +23,7 @@ For the **monthly self-hosted vulnerability pipeline** (current source of truth,
 
 ## v3.1.7 Desktop Security Audit (March 2026)
 
-The most recent audit focused on four trust boundaries of the desktop application:
+This March 2026 review focused on four trust boundaries of the desktop application. Later rows in the table above are separate snapshots. They do not replace this write-up, and this write-up is not a review of 4.2.6.
 
 ### Findings and Remediation
 
@@ -68,7 +69,7 @@ First automated security assessment by [Aikido Security](https://aikido.dev):
 
 Across all audits:
 
-- **300+ individual findings** identified across 9 audits
-- **All P0 (critical) and P1 (high) findings** remediated
-- **Grade trajectory**: C+ (initial) to A- (current)
-- **Zero open findings** in the latest audit cycle (Aikido March 2026)
+- **300+ individual findings** identified across the audits in the table
+- **P0 and P1 findings recorded in those audits** were marked remediated in the write-ups
+- **Grade trajectory in those write-ups**: C+ at the start of the archive, A- on the later graded rows
+- The Aikido rows record 0 open issues in February and March 2026. That is not a claim about `main` in November 2026. Accepted RustSec IDs live in `audit.toml`

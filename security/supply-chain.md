@@ -8,7 +8,7 @@ Every release artifact is signed using [Sigstore](https://sigstore.dev) Cosign w
 
 | Property | Detail |
 | -------- | ------ |
-| **Signing tool** | Cosign v3.10.1 |
+| **Signing tool** | Cosign, installed by [`sigstore/cosign-installer`](https://github.com/sigstore/cosign-installer) pinned to `6f9f17788090df1f26f669e9d70d6ae9567deba6` (installer v4.1.2). The workflow does not pin a Cosign release |
 | **Identity** | GitHub Actions workflow (`build.yml`) bound to the release tag |
 | **OIDC issuer** | `https://token.actions.githubusercontent.com` |
 | **Bundle format** | `.sigstore.json` (Sigstore bundle v0.3) |
@@ -28,7 +28,7 @@ The desktop app verifies Sigstore bundles before installing any update:
 5. On success             →  Proceed to installation
 ```
 
-Verification uses the `sigstore` Rust crate (v0.13) with the production trust root. The identity is pinned to the exact workflow file and release tag:
+Verification uses the `sigstore` Rust crate (0.14.0 on `main` at `aa0e477`, 5 November 2026) with the production trust root. A bundle that does not verify is `VerificationFailed`: the caller deletes the artifact and the bundle and does not install. The identity is pinned to the exact workflow file and release tag:
 
 ```
 https://github.com/axpdev-lab/aeroftp/.github/workflows/build.yml@refs/tags/{VERSION}
@@ -67,7 +67,13 @@ The remote plugin registry is currently disabled until client-side cryptographic
 
 | Control | Detail |
 | ------- | ------ |
-| **GitHub Actions SHA pinning** | All third-party actions pinned to specific commit SHAs |
-| **Security regression script** | `.github/scripts/security-regression.cjs` runs on every build across all platforms |
-| **Dependency scanning** | Dependabot alerts enabled for both Rust (Cargo) and JavaScript (npm) |
-| **OIDC permissions** | `id-token: write` restricted to tag-triggered release jobs only |
+| **GitHub Actions SHA pinning** | Third-party actions in the workflows are pinned to commit SHAs |
+| **`cargo audit`** | [`.github/workflows/checks.yml`](https://github.com/axpdev-lab/aeroftp/blob/aa0e4774541c8eeafe14b33b0c92427d7621e7d8/.github/workflows/checks.yml) runs `cargo audit --deny warnings` on every pull request, every push to `main`, and every Monday at 06:00 UTC. A pull request does not fail the job on a new advisory. A push to `main` and the weekly run do |
+| **Dependabot** | Weekly pull requests, opened on Monday, for Cargo under `src-tauri`, for npm, and for GitHub Actions |
+| **Security regression script** | [`.github/scripts/security-regression.cjs`](https://github.com/axpdev-lab/aeroftp/blob/aa0e4774541c8eeafe14b33b0c92427d7621e7d8/.github/scripts/security-regression.cjs) runs in the local pre-push gate. It is not a step in `checks.yml` or `build.yml` |
+| **OIDC permissions** | `id-token: write` is set on the release jobs in `build.yml`. The Cosign steps that sign artifacts run on tag publication. `checks.yml` does not request that permission |
+| **CodeRabbit** | Reviews the diff of pull requests on [axpdev-lab/aeroftp](https://github.com/axpdev-lab/aeroftp) and on [axpdev-lab/docs.aeroftp.app](https://github.com/axpdev-lab/docs.aeroftp.app). A passing check is a review of that change. It is not a scan of RustSec, OSV, or the npm advisory database |
+| **Greptile** | Same role, on the same two repositories. A passing check is not a vulnerability scan and is not a dated audit report |
+| **Snyk and Socket** | Pull-request checks on `axpdev-lab/aeroftp`. Snyk looks at dependency manifests. Socket posts pull-request alerts and a project report. Both were passing on the merge of [#1507](https://github.com/axpdev-lab/aeroftp/pull/1507). They are per-commit checks |
+
+The self-hosted advisory pipeline is [Continuous Audit](./continuous-audit). A CodeRabbit or Greptile comment is a finding on that pull request's diff.
