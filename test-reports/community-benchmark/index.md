@@ -34,7 +34,9 @@ aeroftp-cli --profile "Your Profile" benchmark standard \
 
 Then open a new issue with the template and paste the block printed between `--- BEGIN BENCHMARK REPORT (paste into the GitHub Issue) ---` and `--- END BENCHMARK REPORT ---`.
 
-## Current benchmark behavior in v4.2.5
+## Benchmark behavior checked for v4.2.5
+
+4.2.6 did not publish a new community round. The notes below describe the 4.2.5 runner. They are not a new measurement.
 
 The latency row measures metadata round trips, not upload time divided by payload size. It performs one untimed warm-up `stat`, followed by five timed `stat` calls. Compare the same operation, connection mode and payload when interpreting throughput.
 

@@ -1,6 +1,6 @@
 # CLI Examples
 
-Recipes checked against AeroFTP 4.2.5 on 26 October 2026. These examples use existing saved profiles, so credentials stay out of command arguments. Discover exact names and IDs with `aeroftp-cli profiles --json`.
+Recipes checked against AeroFTP 4.2.5 on 26 October 2026. They were not re-run for 4.2.6. Coverage figures elsewhere on this site were. These examples use existing saved profiles, so credentials stay out of command arguments. Discover exact names and IDs with `aeroftp-cli profiles --json`.
 
 ## Connection and Discovery
 

@@ -6,7 +6,7 @@ description: "Browse, create and extract archives, local or remote, with optiona
 
 <ArchiveFormatCard />
 
-AeroFTP includes a full archive management system for browsing, creating, and extracting compressed archives. Both local and remote archives are supported across all 7 transport protocols and the 20+ native provider integrations. The system handles seven archive formats with optional AES-256 encryption for ZIP and 7z.
+AeroFTP includes a full archive management system for browsing, creating, and extracting compressed archives. Local archives and remote archives both work. A remote archive is downloaded first, which the 8 transport protocols (including SCP) and the 26 native integrations can do. The system handles seven archive formats with optional AES-256 encryption for ZIP and 7z.
 
 ## Supported Formats
 
@@ -38,7 +38,7 @@ Double-click any archive (local or remote) to open the Archive Browser. The brow
 
 ### Remote Archives
 
-When you double-click an archive on a remote server, AeroFTP downloads the archive to a temporary location and opens it in the Archive Browser. This works across all 7 transport protocols and the 20+ native provider integrations.
+When you double-click an archive on a remote server, AeroFTP downloads the archive to a temporary location and opens it in the Archive Browser. That download uses the same providers as the file panel, including SCP.
 
 ## Creating Archives
 

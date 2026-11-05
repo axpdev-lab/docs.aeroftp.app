@@ -4,9 +4,9 @@ description: "Compare trees, review a sync plan, and run Backup, Update, Mirror 
 
 # AeroSync
 
-AeroSync compares two folders and turns the differences into a reviewable sync plan. In v4.2.5 the connected local/remote workflow has two tabs, **Compare** and **Plan**. When both sides are local, a third tab, **Local mirror**, runs local-only sync through `local_sync_run`: eligible files use AeroRsync's in-process `LocalDeltaTransport`, while smaller files or runs with delta disabled use plain copying. Remote sync runs from **Plan**.
+AeroSync compares two folders and turns the differences into a reviewable sync plan. Compare and Plan are the working tabs. Templates, Multi-Path, Rollback snapshots, Sync journals and Scheduler appear only for a connected local and remote pair. Two local folders show Local mirror instead of those tabs. Local mirror runs through `local_sync_run`: eligible files use AeroRsync's in-process `LocalDeltaTransport`, while smaller files or runs with delta disabled use plain copying. Remote sync runs from Plan.
 
-Open AeroSync from the menu with the folders you want to compare already selected. A remote session must be connected for remote operations and the Templates, Multi-Path, Rollback snapshots, Sync journals and Scheduler launchers.
+Open AeroSync from the menu with the folders you want to compare already selected. A remote session must be connected for remote operations.
 
 ## Compare
 
@@ -31,7 +31,13 @@ Choose a mode and, for a one-way mode, its source and destination. The labels de
 | **Mirror** | Makes the destination follow the source, including overwriting a newer destination | Deleted | Source wins; conflict selector is disabled |
 | **Two-way sync** | Copies missing files both ways and propagates the newer copy | Copied to the other side | Skipped by default; configurable |
 
-**Update is not an unconditional “never overwrite a newer file” mode.** A selected conflict policy can choose an older copy or the opposite side. Review the per-file actions shown by the plan. Mirror has its own source-wins behavior and does not use the conflict selector.
+**Update is not an unconditional "never overwrite a newer file" mode.** A selected conflict policy can choose an older copy or the opposite side. Review the per-file actions shown by the plan. Mirror has its own source-wins behavior and does not use the conflict selector.
+
+### One-way Update with deletes (4.2.6)
+
+Mirror can keep a newer destination file and still delete files that exist only on the destination. In the GUI, choose **Mirror** and enable **Skip newer destination files (One-way Update)**. On the CLI that is `--direction upload` or `download`, together with `--update --delete`. The direction stays one-way: a newer destination file is not copied back. Deletes still ask for confirmation on a terminal. A non-interactive run that applies those deletes also needs `--max-delete N` or `N%`, or the CLI refuses it. `--dry-run` does not need the cap, because it deletes nothing.
+
+AeroCloud has the same switch under **Send Only** and **Receive Only**. Because AeroCloud runs in the background, it deletes only a destination-only file this device has already transferred and stabilized. A file this device has never synced, such as a photo another phone uploaded, is kept and listed for review. The stateless AeroSync plan and `sync --direction upload --update --delete` (or `download`) can still delete an untracked destination file, under the same confirmation and delete cap as Mirror. `--update` with the default `--direction both` is refused.
 
 ### Conflict policies
 

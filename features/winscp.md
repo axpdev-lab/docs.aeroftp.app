@@ -31,9 +31,9 @@ No vendor lock-in. Your data, your choice.
 
 | WinSCP FSProtocol | AeroFTP protocol | Credentials | Notes |
 |---|---|---|---|
-| 0 (SCP) | SFTP | Password (decoded + vault stored) | Mapped to SFTP for better compatibility |
-| 1 (SFTP + SCP fallback) | SFTP | Password (decoded + vault stored) | Standard SSH session |
-| 2 (SFTP only) | SFTP | Password (decoded + vault stored) | Standard SSH session |
+| 0 (SCP) | SCP | Password (decoded + vault stored) | Legacy SCP, since AeroFTP 4.2.6. See [SCP](/protocols/scp). |
+| 1 (SFTP + SCP fallback) | SFTP | Password (decoded + vault stored) | SFTP, and SCP fallback stays on |
+| 2 (SFTP only) | SFTP | Password (decoded + vault stored) | SFTP with SCP fallback off |
 | 5 + Ftps=0 (FTP) | FTP | Password (decoded + vault stored) | Plain FTP |
 | 5 + Ftps=1 (FTPS implicit) | FTPS | Password (decoded + vault stored) | Port 990 by default |
 | 5 + Ftps=2/3 (FTPS explicit) | FTPS | Password (decoded + vault stored) | Explicit TLS/SSL |
@@ -123,7 +123,7 @@ Not directly. Export them from WinSCP first using the steps above, then import t
 These use additional AES encryption on top of the standard obfuscation. Currently, AeroFTP can only import sessions using the standard obfuscation. Export without master password protection, or re-enter credentials manually.
 
 **Are SCP sessions supported?**
-Yes. SCP sessions (FSProtocol=0) are mapped to SFTP, which uses the same SSH transport with better feature support (directory listings, file attributes, resume).
+Yes. Since 4.2.6 a session with FSProtocol 0 imports as SCP and exports back as SCP. FSProtocol 1 is SFTP with the fallback on. FSProtocol 2 is SFTP with the fallback off. See [SCP](/protocols/scp) for what that protocol can and cannot do.
 
 **Can I round-trip profiles between AeroFTP and WinSCP?**
 Yes. Import from WinSCP, work in AeroFTP, and export back to WinSCP whenever you need. Protocol mappings and password encoding are fully reversible.

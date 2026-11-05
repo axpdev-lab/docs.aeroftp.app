@@ -1,28 +1,31 @@
 # Protocol Overview
 
-> Verified against AeroFTP v4.2.5 source, 2026-10-26. Provider plan figures are snapshots; confirm current terms with the provider.
+> Verified against AeroFTP v4.2.6, tag `v4.2.6`, inventory [`docs/PROVIDER-INVENTORY.json`](https://github.com/axpdev-lab/aeroftp/blob/v4.2.6/docs/PROVIDER-INVENTORY.json). Provider plan figures are snapshots; confirm current terms with the provider.
 
-AeroFTP organizes integrations on three tiers, so what you see in the catalog is precise rather than vague:
+The total is **70 connection methods** across **56 providers**. One company on two protocols counts twice. Add Services shows **78 tiles**: that screen also includes the blank forms and the AeroShare tile. The three lines under the total are not a sum of it.
 
-1. **7 transport protocols** - FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift. Native wire-level support, implemented in Rust with full streaming.
+1. **8 transport protocols** - FTP, FTPS, SFTP, SCP, WebDAV, S3, Azure Blob, OpenStack Swift. Native wire-level support, implemented in Rust with full streaming.
 2. **26 native provider integrations** - dedicated OAuth2 / API key / SDK code paths per provider (Backblaze B2, Box, Cloudinary, Drime Cloud, Dropbox, FileLu, Filen, 4shared, GitHub, GitLab, Google Drive, ImageKit, Immich, Internxt, Jottacloud, kDrive, Koofr, MEGA, OneDrive, OpenDrive, pCloud, Proton Drive, Twake Drive, Uploadcare, Yandex Disk, Zoho WorkDrive). Available sharing, server-side copy, chunking and sync capabilities depend on the backend and selected connection mode.
 3. **47 pre-configured presets** - server URL, port, base path, password-generation deep-link auto-filled for compatible services on top of the protocols above. Visible in the Discover catalog (S3-compatible endpoints, WebDAV-compatible servers, SourceForge, etc.).
+
+Each transport page opens with a short introduction: what the protocol is, when it was first published, who designed it, and how a transfer works.
 
 AeroFTP-managed credentials are encrypted in the Universal Vault; its passphrase protection depends on the selected [key mode](/security/credentials). Externally managed sessions, including official Proton CLI sessions, remain in the external client's own credential storage. The GUI, CLI, AeroAgent and MCP reuse the `StorageProvider` abstraction. A shared trait does not make every provider feature available on every surface.
 
 ## Protocol Comparison
 
-### Transport Protocols (7)
+### Transport Protocols (8)
 
 | # | Protocol | Auth Method | Encryption | Free Storage |
 |---|----------|-------------|------------|-------------|
 | 1 | [FTP](ftp.md) | Password | None | N/A (self-hosted) |
 | 2 | [FTPS](ftp.md) | Password | TLS/SSL (Explicit/Implicit) | N/A (self-hosted) |
 | 3 | [SFTP](sftp.md) | Password / SSH Key | SSH | N/A (self-hosted) |
-| 4 | [WebDAV](webdav.md) | Password (Basic + Digest) | HTTPS | Varies by provider |
-| 5 | [S3-Compatible](s3.md) | Access Key + Secret | HTTPS + SSE | Varies by provider |
-| 6 | [Azure Blob](azure.md) | HMAC / SAS Token | HTTPS + SSE | Pay-as-you-go |
-| 7 | OpenStack Swift | Username + Password (Keystone v3) | HTTPS | Varies by provider |
+| 4 | [SCP](scp.md) | Password / SSH Key | SSH | N/A (self-hosted) |
+| 5 | [WebDAV](webdav.md) | Password (Basic + Digest) | HTTPS | Varies by provider |
+| 6 | [S3-Compatible](s3.md) | Access Key + Secret | HTTPS + SSE | Varies by provider |
+| 7 | [Azure Blob](azure.md) | HMAC / SAS Token | HTTPS + SSE | Pay-as-you-go |
+| 8 | [OpenStack Swift](swift.md) | Username + Password (Keystone v3) | HTTPS (Blomp storage: plain HTTP) | Varies by provider |
 
 ### Native Provider Integrations (Browser Authorization)
 
@@ -74,12 +77,13 @@ The three native-provider comparison tables above are selected examples, not the
 These connect to servers or buckets you control. You provide the hostname, port, and credentials.
 
 - **FTP** - Traditional unencrypted file transfer. Suitable for legacy servers and shared hosting on trusted networks.
-- **FTPS** - FTP secured with TLS/SSL. Supports both Explicit (STARTTLS on port 21) and Implicit (port 990) modes. AeroFTP detects TLS downgrade attempts and warns the user.
+- **FTPS** - FTP secured with TLS/SSL. Supports both Explicit (STARTTLS on port 21) and Implicit (port 990) modes. If an explicit TLS upgrade fails, the connection stops. Plain FTP is the None mode.
 - **SFTP** - Secure file transfer over SSH. The recommended choice for self-hosted servers. Supports password and SSH key authentication with TOFU host key verification. Eligible for **delta sync** via [AeroRsync](/features/aerorsync) when key authentication or a saved password, remote `rsync`, and a pinned SSH host-key fingerprint are available. See the [complete delta prerequisites](/features/aerorsync).
+- **SCP** - The legacy SSH copy protocol, for a server that has no SFTP subsystem (a stock OpenWrt router is the usual case). Same login and host-key check as SFTP. An SFTP profile falls back to it by default. No delta sync. [AeroCloud setup](/features/aerocloud) does not offer it yet.
 - **WebDAV** - HTTP-based file access over HTTPS. Used by Nextcloud, Seafile, and many NAS devices. Supports Basic and Digest authentication.
 - **S3** - Object storage using the S3 API. Works with AWS, Wasabi, Backblaze B2, and any S3-compatible endpoint.
 - **Azure Blob** - Enterprise object storage with HMAC signing or SAS tokens.
-- **OpenStack Swift** - Object storage using the OpenStack Swift API. Works with Blomp, OVH, Rackspace, and any Swift-compatible endpoint, with one condition since v4.1.8: if authentication used HTTPS, a catalog that points object storage at a plain-HTTP host is refused rather than followed silently, because the storage endpoint carries the account's bearer token. Blomp connects because its preset declares that exception. Authenticates via Keystone v3 or TempAuth.
+- **OpenStack Swift** - Object storage using the OpenStack Swift API. See the [Swift page](swift.md). Works with Blomp, OVH, Rackspace, and any Swift-compatible endpoint, with one condition since v4.1.8: if authentication used HTTPS, a catalog that points object storage at a plain-HTTP host is refused rather than followed silently, because the storage endpoint carries the account's bearer token. Blomp connects because its preset declares that exception. Authenticates via Keystone v3 or TempAuth.
 
 ### Native Provider Integrations
 
@@ -173,6 +177,7 @@ Not all providers expose a trash/recycle bin API. The following table shows whic
 | kDrive | Yes | Yes | Yes |
 | Drime Cloud | Yes | Yes | Yes |
 | S3-Compatible | Yes (if bucket versioning enabled) | Yes | Yes |
+| FileLu | Yes | Yes | Yes |
 | All others | No | No | No |
 
 ### Share Links

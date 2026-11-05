@@ -15,8 +15,8 @@ hero:
       text: View on GitHub
       link: https://github.com/axpdev-lab/aeroftp
     - theme: alt
-      text: New in 4.2.5
-      link: /releases/4.2.5
+      text: New in 4.2.6
+      link: /releases/4.2.6
 features:
   - icon:
       src: /icons/protocols.svg
@@ -61,16 +61,21 @@ import SourceForgeReach from './.vitepress/theme/components/SourceForgeReach.vue
 
 <h2 align="center">Integrations</h2>
 
-<p align="center">AeroFTP organizes integrations on three tiers, so the catalog is precise rather than vague:</p>
+<p align="center">AeroFTP organizes integrations on three tiers. The total across them is one number:</p>
 
 <p align="center">
-  <strong>7 transport protocols</strong> &middot; <strong>20+ native provider integrations</strong> &middot; <strong>40+ pre-configured presets</strong>
+  <strong>70 connection methods</strong> across <strong>56 providers</strong>
 </p>
 
 <p align="center">
-  <em>Transports:</em> FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift - native wire-level support.<br>
-  <em>Native providers:</em> dedicated OAuth2 / API key / SDK code paths so each provider's specific features (sharing, native delta sync, server-side copy, large-file chunking) are first-class.<br>
-  <em>Presets:</em> server URL, port, base path, password-generation deep-link auto-filled for compatible services on top of the protocols above (S3-compatible endpoints, WebDAV-compatible servers, etc.).
+  <strong>8 transport protocols</strong> &middot; <strong>26 native integrations</strong> &middot; <strong>47 presets</strong><br>
+  Add Services shows <strong>78 tiles</strong>, including the blank forms and AeroShare.
+</p>
+
+<p align="center">
+  <em>Transports:</em> FTP, FTPS, SFTP, SCP, WebDAV, S3, Azure Blob, OpenStack Swift.<br>
+  <em>Native providers:</em> a dedicated code path per company, so sharing, chunking and server-side copy stay first-class where that provider has them.<br>
+  <em>Presets:</em> the form arrives already filled in. A company on two protocols counts as two connection methods, which is why 56 providers reach 70.
 </p>
 
 <table align="center">

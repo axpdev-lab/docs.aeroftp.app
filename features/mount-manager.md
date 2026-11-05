@@ -24,7 +24,7 @@ Each row in AeroMount represents a complete mount configuration that survives ac
 
 | Field in the editor | Purpose |
 |---------------------|---------|
-| **Profile picker** | Filterable list of saved server profiles (any of the 7 transport protocols + 20+ native provider integrations). Each row shows the profile name, protocol badge (e.g. `OPENDRIVE`, `FTP`), and saved host or path. |
+| **Profile picker** | Every saved profile, including SCP. Each row shows the profile name, protocol badge (e.g. `OPENDRIVE`, `FTP`, `SCP`), and saved host or path. The search box filters that text. It does not drop a protocol. |
 | **Display name** | Human-readable label for this mount (defaults to the profile name; rename freely). |
 | **Remote base path** | Subtree of the remote that becomes the root of the mount. `/` mounts the entire account. |
 | **Local mountpoint** | Local directory (Linux / macOS) or a drive letter (Windows). The default is `~/aeroftp-mounts/<slug>`. |
@@ -96,7 +96,7 @@ Because the CLI shares the same Rust backend as the GUI, opening a mount from Ae
 | **macOS** | macFUSE | `/Volumes/...`, any user-writable directory |
 | **Windows** | WebDAV bridge | Drive letter (`Z:`, `Y:`, etc.) or UNC path |
 
-All [supported integrations](/features/aerocloud#supported-integrations) that expose a hierarchical filesystem can be mounted (FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, plus 20+ native providers). The exceptions are GitHub and Drime Cloud, which are non-hierarchical by design and therefore not exposed in the mount picker.
+The mount picker lists every saved profile and filters only by the search text, so a saved SCP profile is included. On Linux and macOS, `aeroftp-cli mount` connects that profile and runs the FUSE session. There is no SCP exclusion on that path. GitHub and Drime Cloud remain a poor fit for a folder mount because they are not a hierarchical filesystem. [AeroCloud setup](/features/aerocloud#supported-integrations) is a separate list, and SCP is not in that wizard yet.
 
 ## Troubleshooting
 

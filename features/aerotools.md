@@ -15,7 +15,7 @@ The AeroTools panel has four launchers. Each toggles its own panel or column:
 | **Security Tools** | Security Toolkit | Hashing, encryption, and password generation in every theme |
 | **Editor** | Monaco Editor | VS Code engine with syntax highlighting for 50+ languages |
 | **Terminal** | SSH Terminal | Local PTY and SSH sessions with multiple themes and tabs |
-| **AI Agent** | AeroAgent | AI assistant with built-in tools across local files and the 7 transport protocols + 20+ native provider integrations |
+| **AI Agent** | AeroAgent | AI assistant with built-in tools across local files, the 8 transport protocols (including SCP) and the 26 native integrations |
 
 The panel is resizable by dragging the separator between the file browser and the tools area. Each panel maintains its own state independently.
 
@@ -43,7 +43,7 @@ For full details, see the [Terminal documentation](terminal.md).
 
 ## AeroAgent
 
-The AI-powered assistant with built-in tools that work across local files and the AeroFTP provider backends (7 transports + 20+ native providers). Supports **26 AI provider types** including OpenAI, Anthropic, Google Gemini, NVIDIA NIM, Z.AI (GLM), Yi, Hyperbolic, Novita, Cohere, Cerebras, SambaNova, Fireworks, and local models via Ollama.
+The assistant's tools work across local files and the AeroFTP provider backends (8 transports, including SCP, and 26 native integrations). It supports **26 AI provider types** including OpenAI, Anthropic, Google Gemini, NVIDIA NIM, Z.AI (GLM), Yi, Hyperbolic, Novita, Cohere, Cerebras, SambaNova, Fireworks, and local models via Ollama.
 
 For full details, see the [AeroAgent documentation](aeroagent.md) and [AeroAgent Test Results](aeroagent-tests.md).
 

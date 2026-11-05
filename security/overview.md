@@ -25,12 +25,12 @@ The Rust backend is the security authority. The web frontend can request operati
 
 ## Where AeroFTP Stands
 
-In the landscape of file transfer and cloud management tools, AeroFTP combines protocol breadth (7 transport protocols plus native provider integrations) with security depth typically found only in dedicated encryption tools:
+In the landscape of file transfer and cloud management tools, AeroFTP combines protocol breadth (8 transport protocols, including SCP, plus 26 native provider integrations) with security depth typically found only in dedicated encryption tools:
 
-- **OpenSSF Best Practices**: 100% passing criteria
-- **Aikido Security**: Top 5% benchmark, 0 open issues (March 2026)
-- **300+ security findings** identified and resolved across [9 independent audits](/security/audits)
-- **Zero unresolved CVEs** in application code
+- **OpenSSF Best Practices**: the badge recorded for the project. This page does not re-check that score
+- **Aikido Security**: February and March 2026 snapshots in the [audit archive](/security/audits). They are not a current subscription status
+- **300+ findings** recorded across the [audit archive](/security/audits)
+- **Accepted Rust advisories** are the ignore list in `src-tauri/.cargo/audit.toml`, checked by `cargo audit` in CI. See [Continuous Audit](/security/continuous-audit). This line is not a count of open CVEs
 
 ## Reporting Vulnerabilities
 

@@ -1,6 +1,10 @@
 # WebDAV
 
-WebDAV (Web Distributed Authoring and Versioning) extends HTTP with file management operations defined in RFC 4918. It is the standard remote file access protocol used by Nextcloud, Seafile, CloudMe, and many NAS devices. Because WebDAV runs over HTTP/HTTPS, it works through corporate firewalls and proxies that block other protocols.
+> WebDAV adds file operations to HTTP: list a folder, create one, move, copy, and lock. Yaron Goland, Jim Whitehead, Asad Faizi, Steve Carter, and Del Jensen published it as RFC 2518 in February 1999. Jim Whitehead led the working group at UC Irvine. The current specification is RFC 4918 (June 2007), edited by Lisa Dusseault.
+>
+> The client sends methods such as PROPFIND, MKCOL, GET, PUT, MOVE, and COPY to a URL. HTTPS carries the same requests and often works through networks that block FTP, but firewall and proxy policies can still reject WebDAV methods. AeroFTP supports Basic and Digest authentication, a streaming PUT, and presets that fill in the endpoint path.
+
+WebDAV is the remote file protocol used by Nextcloud, Seafile, CloudMe, and many NAS devices.
 
 AeroFTP's WebDAV implementation uses the `reqwest` HTTP client with `quick-xml` for parsing PROPFIND responses, supporting both Basic and Digest authentication, TLS certificate validation, and streaming uploads.
 

@@ -2,7 +2,7 @@
 
 Technical reference for the storage protocols and providers documented on this page, grouped by connection type. This page is a selection, not the catalogue: Blomp, GitLab, native Backblaze B2, Immich and Drime are supported too and have their own pages.
 
-AeroFTP v4.2.5 supports **7 transport protocols**, **26 native provider integrations** and **47 pre-configured presets**, reaching **56 providers** over **70 connection methods**. Those figures are generated from the code into [`docs/PROVIDER-INVENTORY.json`](https://github.com/axpdev-lab/aeroftp/blob/3a62301e589fffeb8b69fcdff7b5e95ff2b67288/docs/PROVIDER-INVENTORY.json) (the release inventory) and CI fails when they drift, so quote them from there rather than counting the tables on this page.
+AeroFTP v4.2.6 supports **8 transport protocols**, **26 native provider integrations** and **47 pre-configured presets**, reaching **56 providers** over **70 connection methods**. Add Services shows **78 tiles**, counting the blank forms and the AeroShare tile as well. Those figures are generated from the code into [`docs/PROVIDER-INVENTORY.json`](https://github.com/axpdev-lab/aeroftp/blob/v4.2.6/docs/PROVIDER-INVENTORY.json) at the `v4.2.6` tag, and CI fails when they drift, so quote them from there rather than counting the tables on this page.
 
 ## Server Protocols
 
@@ -12,7 +12,8 @@ Direct server connections using standard protocols.
 |----------|-----------|-------------|-------------|-----|
 | FTP | suppaftp 12.2.1 | Username/Password | 21 | Optional (FTPS) |
 | FTPS | suppaftp 12.2.1 | Username/Password | 21 / 990 | Explicit / Implicit |
-| SFTP | russh 0.64.1 | Password / Key / Agent | 22 | SSH (built-in) |
+| SFTP | russh 0.65.1 | Password / Key / Agent | 22 | SSH (built-in) |
+| SCP | russh 0.65.1 | Password / Key | 22 | SSH (built-in) |
 | WebDAV | reqwest 0.13 | Username/Password | 443 | HTTPS |
 | S3-Compatible | reqwest 0.13 | Access Key + Secret (HMAC-SHA256) | 443 | HTTPS |
 
@@ -24,7 +25,7 @@ Direct server connections using standard protocols.
 | Commands | MLSD, MLST, FEAT, PASV, EPSV |
 | TLS modes | None, Explicit (STARTTLS), Implicit, ExplicitIfAvailable |
 | Upload | Streaming via `STOR` |
-| Special | TLS downgrade detection with security warning |
+| Special | A failed explicit TLS upgrade stops the connection. Plaintext is the None mode |
 
 ### SFTP
 
@@ -33,7 +34,16 @@ Direct server connections using standard protocols.
 | API | SSH File Transfer Protocol v3 |
 | Auth | Password, private key (RSA/Ed25519/ECDSA), SSH agent |
 | Upload | Streaming |
-| Special | TOFU host key verification (PuTTY-style dialog), symlink directory detection |
+| Special | TOFU host key verification (PuTTY-style dialog), symlink directory detection. Falls back to SCP when the server has no SFTP subsystem, unless the profile disables that. |
+
+### SCP
+
+| Feature | Details |
+|---------|---------|
+| API | Legacy `scp -t` / `scp -f`, plus a POSIX shell for listings |
+| Auth | The same SSH login as SFTP |
+| Upload | Whole file. An interrupted upload restarts. A download can resume. |
+| Special | For SSH servers without SFTP, including stock OpenWrt. See [SCP](/protocols/scp). |
 
 ### WebDAV
 
@@ -295,7 +305,7 @@ All protocols implement a unified `StorageProvider` trait. Its core operations i
 | Crate | Version | Used By |
 |-------|---------|---------|
 | suppaftp | 12.2.1 (pinned fork) | FTP, FTPS |
-| russh | 0.64.1 | SFTP |
+| russh | 0.65.1 | SFTP and SCP |
 | ssh2 | 0.9 (vendored OpenSSL) | SFTP upload backend (some embedded servers) |
 | reqwest | 0.13 | All HTTP-based protocols |
 | quick-xml | 0.42 (v4.2.1) | WebDAV, Azure Blob, S3 |
@@ -303,5 +313,5 @@ All protocols implement a unified `StorageProvider` trait. Its core operations i
 | secrecy | 0.10 | All credential handling |
 
 ::: info FTP dependency
-AeroFTP v4.2.5 uses suppaftp 12.2.1 pinned to a reviewed fork revision in `src-tauri/Cargo.toml`. The FTP control-reply bound and implicit-FTPS protected data connections are retained. For exact dependency revisions, use the release's `Cargo.lock` and manifest.
+AeroFTP v4.2.6 uses suppaftp 12.2.1 pinned to a reviewed fork revision in `src-tauri/Cargo.toml`. The FTP control-reply bound and implicit-FTPS protected data connections are retained. For exact dependency revisions, use the release's `Cargo.lock` and manifest.
 :::

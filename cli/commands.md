@@ -1,8 +1,8 @@
 # CLI Commands
 
-Command reference for AeroFTP 4.2.5, checked against the source on 26 October 2026. It shares the same Rust backend as the desktop app, with direct URL support for core protocols, saved-profile access for GUI-authorized providers, structured JSON output, and Unix pipeline compatibility.
+Command reference for AeroFTP 4.2.6. The command list below was checked against the 4.2.5 source on 26 October 2026. The coverage line, SCP, and profile import were updated for 4.2.6. It shares the same Rust backend as the desktop app, with direct URL support for core protocols, saved-profile access for GUI-authorized providers, structured JSON output, and Unix pipeline compatibility.
 
-> **Coverage**: 7 transport protocols (FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, OpenStack Swift) + 20+ native provider integrations + 40+ pre-configured presets. See [Protocol Overview](/protocols/overview) for the full integration matrix.
+> **Coverage**: 8 transport protocols (FTP, FTPS, SFTP, SCP, WebDAV, S3, Azure Blob, OpenStack Swift), 26 native provider integrations, and 47 presets. The total is 70 connection methods across 56 providers. See [Protocol Overview](/protocols/overview).
 
 ## Connection Methods
 
@@ -581,7 +581,7 @@ aeroftp-cli serve webdav /srv/share
 
 Every mode listens on loopback by default; a non-loopback `--addr` is refused unless `--allow-remote-bind` is given. On a loopback address no login is asked unless you set one. On any other address a login is always required: HTTP and WebDAV take `--auth-token`, generated and printed at start when it is not given; FTP and SFTP take `--auth-user` and `--auth-password`, where a missing user is `aeroftp` and a missing password is generated and printed at start. With a local folder, the folder is the jail root and nothing outside it can be reached.
 
-Any FTP/SFTP/WebDAV/HTTP client can now access AeroFTP's 7 transport protocols and 20+ native provider integrations (plus the GitHub repository backend) as if they were standard local servers.
+Any FTP/SFTP/WebDAV/HTTP client can then reach a saved AeroFTP profile, including SCP and the native provider integrations, as if it were a local server. GitHub remains a repository backend with its own write rules.
 
 ### daemon
 
@@ -741,7 +741,7 @@ For supported browser-authorized providers, `profile-auth SELECTOR --request-jso
 aeroftp-cli profile-auth "Google Drive" --request-json-file ./auth-status.json --json
 ```
 
-Profile maintenance also includes `profile-set-password`, `profile-duplicate`, `profile-convert-mode`, `profile-duplicate-mode`, `profile-export` and `profile-import`. Use their `--help` for the current flags. Import skips existing profiles instead of overwriting them.
+Profile maintenance also includes `profile-set-password`, `profile-duplicate`, `profile-convert-mode`, `profile-duplicate-mode`, `profile-export` and `profile-import`. Use their `--help` for the current flags. Since 4.2.6, `profile-import` takes `--on-existing skip|overwrite|duplicate`. The default is `skip`, which leaves an existing profile alone. `overwrite` replaces it. `duplicate` adds the file's copy beside it. A profile the file points at a different server is not overwritten, so its stored secrets stay put. Use `duplicate`, or delete the profile first.
 
 ### profile-add: Proton Drive
 
