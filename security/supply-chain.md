@@ -31,10 +31,10 @@ The desktop app verifies Sigstore bundles before installing any update:
 Verification uses the `sigstore` Rust crate (0.14.0 on `main` at `aa0e477`, 5 November 2026) with the production trust root. A bundle that does not verify is `VerificationFailed`: the caller deletes the artifact and the bundle and does not install. The identity is pinned to the exact workflow file and release tag:
 
 ```
-https://github.com/axpdev-lab/aeroftp/.github/workflows/build.yml@refs/tags/{VERSION}
+https://github.com/axpdev-lab/aeroftp/.github/workflows/build.yml@refs/tags/v{VERSION}
 ```
 
-This means an artifact signed by a different workflow, a different repository, or a fork will be rejected.
+`{VERSION}` is the release number, so the tag is `v{VERSION}`, as in `v4.2.6`. The updater appends the GitHub release tag, which already includes that `v`. An artifact signed by a different workflow, a different repository, or a fork will be rejected.
 
 ## Linux Privileged Install Hardening
 

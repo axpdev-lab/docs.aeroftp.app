@@ -72,4 +72,5 @@ Across all audits:
 - **300+ individual findings** identified across the audits in the table
 - **P0 and P1 findings recorded in those audits** were marked remediated in the write-ups
 - **Grades shown in the table**: A- on the graded rows. This archive does not publish a source for a C+ grade
+- The repository [SECURITY.md](https://github.com/axpdev-lab/aeroftp/blob/aa0e4774541c8eeafe14b33b0c92427d7621e7d8/SECURITY.md) on `aa0e477` still says 7 transport protocols, 25+ native integrations, and 9 audits. Those sentences are behind this archive and the 4.2.6 inventory on [Security Overview](/security/overview)
 - The Aikido rows record 0 open issues in February and March 2026. That is not a claim about `main` in November 2026. Accepted RustSec IDs live in `audit.toml`
