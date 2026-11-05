@@ -29,7 +29,7 @@ The three sources do not fully overlap. `osv-scanner` is the broadest because it
 
 ## Suppression List
 
-Every accepted advisory lives in [`src-tauri/.cargo/audit.toml`](https://github.com/axpdev-lab/aeroftp/blob/aa0e4774541c8eeafe14b33b0c92427d7621e7d8/src-tauri/.cargo/audit.toml) with an inline rationale. That file is the list to read. A reviewer can accept an entry or object to that entry. An advisory is not ignored without a written justification in the file.
+Every accepted advisory lives in [`src-tauri/.cargo/audit.toml`](https://github.com/axpdev-lab/aeroftp/blob/main/src-tauri/.cargo/audit.toml) with an inline rationale. That file on `main` is the list to read. A reviewer can accept an entry or object to that entry. An advisory is not ignored without a written justification in the file.
 
 On `main` at `aa0e477` (5 November 2026) the ignore list has 33 IDs. The newest review note inside the file is 24 October 2026. This page does not copy those rationales. Groups the file still documents include the Marvin RSA advisory (RUSTSEC-2023-0071), the unmaintained GTK3 and WebKitGTK stack, build-only Tauri crates, the two remaining iroh unmaintained crates plus `n0-error`, the Tauri-transitive `quick-xml` copies, the unmaintained zbus 5 and zbus 4 lines, and the unpatched `crypto-bigint` 0.5.5 copy.
 
@@ -62,7 +62,7 @@ Past Aikido Security audit PDFs are kept in the repository for archival comparis
 - [March 2026 - Aikido Security](https://github.com/axpdev-lab/aeroftp/blob/main/docs/Security%20Audit%20Report%20axpdev-lab%20-%20March%202026.pdf) - Top 5% benchmark, 0 open issues, OWASP / ISO 27001 / CIS / NIS2 / GDPR
 - [February 2026 - Aikido Security](https://github.com/axpdev-lab/aeroftp/blob/main/docs/Security%20Audit%20Report%20axpnet%20-%20February%202026.pdf) - Top 5% benchmark, 0 open issues
 
-These reports remain useful as historical evidence. They are not produced on a recurring cadence. The self-hosted commands above are how someone reproduces a scan from the repository. CI does not write a new HTML report, and the file on `main` is the June 2026 snapshot.
+These reports remain useful as historical evidence. They are not produced on a recurring cadence. The self-hosted commands above are how someone reproduces a scan from the repository. `cargo-audit` and `osv-scanner` must already be installed. The script does not install them. If either is missing, that scan is marked skipped and the summary can still say "No open vulnerabilities". Read the skipped badges before treating the report as a complete scan. CI does not write a new HTML report, and the file on `main` is the June 2026 snapshot.
 
 ## Why Self-Hosted
 

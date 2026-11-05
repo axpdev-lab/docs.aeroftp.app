@@ -52,6 +52,7 @@ This eliminates TOCTOU (time-of-check-to-time-of-use) attacks where the file cou
 Users can independently verify any release artifact using Cosign:
 
 ```bash
+VERSION=4.2.6
 cosign verify-blob \
   --bundle "AeroFTP_${VERSION}_amd64.deb.sigstore.json" \
   --certificate-identity "https://github.com/axpdev-lab/aeroftp/.github/workflows/build.yml@refs/tags/v${VERSION}" \

@@ -2,7 +2,7 @@
 
 This page is the historical archive. A row here is what was recorded for that version. It is not a scan of AeroFTP 4.2.6, and the newest row is not the current state of `main`.
 
-The advisory list to read today is [`src-tauri/.cargo/audit.toml`](https://github.com/axpdev-lab/aeroftp/blob/aa0e4774541c8eeafe14b33b0c92427d7621e7d8/src-tauri/.cargo/audit.toml) on `main`. How that list is checked, and why the committed HTML report is a June 2026 snapshot, is [Continuous Audit](./continuous-audit.md). Pull-request review by CodeRabbit and Greptile is part of [Supply chain](./supply-chain), not an entry in the table below.
+The advisory list to read today is [`src-tauri/.cargo/audit.toml`](https://github.com/axpdev-lab/aeroftp/blob/main/src-tauri/.cargo/audit.toml) on `main`. The count of 33 IDs below was read at `aa0e477`. How that list is checked, and why the committed HTML report is a June 2026 snapshot, is [Continuous Audit](./continuous-audit.md). Pull-request review by CodeRabbit and Greptile is part of [Supply chain](./supply-chain), not an entry in the table below.
 
 ## Audit History
 

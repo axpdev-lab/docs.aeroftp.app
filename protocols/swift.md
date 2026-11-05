@@ -7,7 +7,7 @@ description: OpenStack Swift in AeroFTP, the object-storage API from Rackspace a
 
 > Swift is the object-storage API in OpenStack: an HTTP API for objects stored in containers. An account holds containers, and a container holds objects. The service came from Rackspace Cloud Files. Rackspace released it with NASA as one of the two original OpenStack projects, at OpenStack Austin in October 2010. AeroFTP speaks it as its own transport, next to S3 and Azure Blob. The usual preset is [Blomp](/providers/blomp).
 >
-> The client authenticates to Keystone, or to the older TempAuth, and receives a storage URL plus a token. Listing, upload, and download are ordinary HTTP calls to that URL. If the login used HTTPS, a catalog entry that points the storage host at plain HTTP is refused, because that URL would carry the account token. Blomp's preset is the declared exception to that rule, since v4.1.8.
+> The client authenticates to Keystone, or to the older TempAuth, and receives a storage URL plus a token. Listing, upload, and download are ordinary HTTP calls to that URL. If the login used HTTPS, a catalog entry that points the storage host at plain HTTP is refused, because that URL would carry the account token. A profile that is not Blomp can accept that plain HTTP storage URL only when `allow_cleartext_storage_endpoint` is set. That choice sends the account token and the file bytes unencrypted. Blomp's preset is the declared exception to that rule, since v4.1.8.
 >
 > **Warning:** Blomp publishes object storage at `http://swiftproxy.acs.ai.net:8080`. That host offers no TLS. The account token and the file bytes cross the network unencrypted. Use the preset only if you accept that.
 
