@@ -126,7 +126,7 @@ The decrypted payload contains a `servers` array:
 
 - **`explicit`** (recommended): AUTH TLS on port 21
 - **`implicit`**: TLS on port 990
-- **`explicit_if_available`**: Try TLS, fall back to plaintext
+- **`explicit_if_available`**: Try TLS. If the upgrade fails, the connection stops
 - **`none`**: No encryption (not recommended)
 
 ### SFTP Options

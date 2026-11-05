@@ -264,7 +264,7 @@ For SFTP connections, AeroFTP implements Trust On First Use (TOFU) host key veri
 
 ### FTP TLS Downgrade Detection
 
-When connecting via FTP with `ExplicitIfAvailable` TLS mode, AeroFTP attempts a TLS upgrade. If the upgrade fails (server does not support STARTTLS), the connection falls back to plaintext FTP. In this case, a `tls_downgraded` flag is set internally and a security warning is logged. The UI displays a TLS badge that dynamically hides when encryption is set to "none".
+When connecting via FTP with `ExplicitIfAvailable` TLS mode, AeroFTP attempts a TLS upgrade. If the upgrade fails, the connection stops. Credentials are not sent over plaintext. Choose **None** only when you intend to connect without TLS.
 
 > **Warning:** Plain FTP transmits credentials and data in cleartext. Always prefer SFTP or FTPS when available.
 

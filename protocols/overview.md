@@ -77,7 +77,7 @@ The three native-provider comparison tables above are selected examples, not the
 These connect to servers or buckets you control. You provide the hostname, port, and credentials.
 
 - **FTP** - Traditional unencrypted file transfer. Suitable for legacy servers and shared hosting on trusted networks.
-- **FTPS** - FTP secured with TLS/SSL. Supports both Explicit (STARTTLS on port 21) and Implicit (port 990) modes. AeroFTP detects TLS downgrade attempts and warns the user.
+- **FTPS** - FTP secured with TLS/SSL. Supports both Explicit (STARTTLS on port 21) and Implicit (port 990) modes. If an explicit TLS upgrade fails, the connection stops. Plain FTP is the None mode.
 - **SFTP** - Secure file transfer over SSH. The recommended choice for self-hosted servers. Supports password and SSH key authentication with TOFU host key verification. Eligible for **delta sync** via [AeroRsync](/features/aerorsync) when key authentication or a saved password, remote `rsync`, and a pinned SSH host-key fingerprint are available. See the [complete delta prerequisites](/features/aerorsync).
 - **SCP** - The legacy SSH copy protocol, for a server that has no SFTP subsystem (a stock OpenWrt router is the usual case). Same login and host-key check as SFTP. An SFTP profile falls back to it by default. No delta sync. [AeroCloud setup](/features/aerocloud) does not offer it yet.
 - **WebDAV** - HTTP-based file access over HTTPS. Used by Nextcloud, Seafile, and many NAS devices. Supports Basic and Digest authentication.

@@ -25,7 +25,7 @@ Direct server connections using standard protocols.
 | Commands | MLSD, MLST, FEAT, PASV, EPSV |
 | TLS modes | None, Explicit (STARTTLS), Implicit, ExplicitIfAvailable |
 | Upload | Streaming via `STOR` |
-| Special | TLS downgrade detection with security warning |
+| Special | A failed explicit TLS upgrade stops the connection. Plaintext is the None mode |
 
 ### SFTP
 
