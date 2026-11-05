@@ -1,6 +1,10 @@
 # FTP / FTPS
 
-FTP (File Transfer Protocol) is the original file transfer protocol, dating back to 1971 and standardized in RFC 959. Despite its age, FTP remains the default protocol for web hosting providers, embedded devices, and legacy enterprise systems. AeroFTP provides a modern FTP/FTPS client built on the `suppaftp` library with full TLS support, automatic feature detection, and transfer resumption.
+> FTP is a two-connection file protocol. Commands travel on a control channel, and the file bytes travel on a separate data channel. Abhay Bhushan published it as RFC 114 on 16 April 1971. The current base is RFC 959 (October 1985), written by Jon Postel and Joyce Reynolds. Explicit FTPS is RFC 4217 (2005), by Paul Ford-Hutchinson. Implicit FTPS on port 990 is a convention from the 1990s, not that RFC.
+>
+> The client logs in on port 21, asks the server for a passive data port, and transfers one file on that second connection. FTPS wraps the same commands in TLS. AeroFTP uses `suppaftp` 12.2.1, passive mode only, and offers explicit TLS, implicit TLS, or none, with a warning if a server strips the TLS upgrade.
+
+FTP remains the default protocol for a lot of web hosting, embedded devices, and older enterprise systems. AeroFTP's client detects server features and can resume a transfer.
 
 ## Connection Settings
 

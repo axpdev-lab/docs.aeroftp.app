@@ -1,8 +1,12 @@
 # SFTP
 
-SFTP (SSH File Transfer Protocol) provides encrypted file transfer over an SSH channel. Unlike FTP/FTPS, which layer encryption on top of a separate protocol, SFTP runs entirely within SSH -- there is a single encrypted connection for both commands and data. This makes SFTP the recommended protocol for connecting to Linux servers, Unix systems, NAS devices, and any host running an SSH daemon.
+> SFTP is a file protocol that runs as a subsystem inside one SSH connection. It is not FTP, and it is not the legacy [SCP](/protocols/scp) protocol. The IETF Secure Shell working group drafted it from 2001. The version almost every client implements is version 3, and it was never published as an RFC. The protocol grew out of Tatu Ylönen's SSH (1995) and the later secsh drafts. OpenSSH made version 3 the common dialect.
+>
+> After the SSH login, the client opens an `sftp` subsystem channel. Listings, reads, and writes are binary packets on that one channel. AeroFTP uses `russh` 0.65.1 and `russh-sftp` 2.1. Login starts with `none`, then the password or the key. If the server has no SFTP subsystem, the same connection can continue over SCP unless the profile turns that off.
 
-AeroFTP's SFTP implementation is built on the `russh` library (v0.64.1), supporting modern key exchange algorithms, host key verification, and streaming transfers with no file size limit.
+SFTP is the recommended protocol for a Linux server, a Unix host, or a NAS that runs an SSH daemon. Commands and data share one encrypted connection, so there is no second port to open in the firewall.
+
+AeroFTP's client supports current key exchange, host-key verification, and streaming transfers with no file-size limit of its own.
 
 ## Connection Settings
 

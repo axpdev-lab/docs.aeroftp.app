@@ -1,6 +1,10 @@
 # Azure Blob Storage
 
-AeroFTP connects to Microsoft Azure Blob Storage using access key authentication. Azure Blob is an enterprise-grade object storage service suitable for large-scale data storage.
+> Azure Blob Storage is an HTTP API for blobs inside containers on a storage account. Microsoft announced Windows Azure storage in October 2008, and the service became generally available in February 2010.
+>
+> The client signs each request with the account's shared key (HMAC), or presents a Shared Access Signature that already carries the permission and the expiry. AeroFTP connects with an account name plus an access key, or with a SAS token. Listings page with `NextMarker`.
+
+Azure Blob is the enterprise object store on Microsoft Azure. AeroFTP connects with the account key.
 
 ## Connection Settings
 

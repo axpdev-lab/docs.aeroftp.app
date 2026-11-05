@@ -24,7 +24,7 @@ Each row in AeroMount represents a complete mount configuration that survives ac
 
 | Field in the editor | Purpose |
 |---------------------|---------|
-| **Profile picker** | Filterable list of saved server profiles (any of the 7 transport protocols + 20+ native provider integrations). Each row shows the profile name, protocol badge (e.g. `OPENDRIVE`, `FTP`), and saved host or path. |
+| **Profile picker** | Filterable list of saved profiles on the mount surface below. Each row shows the profile name, protocol badge (e.g. `OPENDRIVE`, `FTP`), and saved host or path. SCP is not in this list. |
 | **Display name** | Human-readable label for this mount (defaults to the profile name; rename freely). |
 | **Remote base path** | Subtree of the remote that becomes the root of the mount. `/` mounts the entire account. |
 | **Local mountpoint** | Local directory (Linux / macOS) or a drive letter (Windows). The default is `~/aeroftp-mounts/<slug>`. |
@@ -96,7 +96,7 @@ Because the CLI shares the same Rust backend as the GUI, opening a mount from Ae
 | **macOS** | macFUSE | `/Volumes/...`, any user-writable directory |
 | **Windows** | WebDAV bridge | Drive letter (`Z:`, `Y:`, etc.) or UNC path |
 
-All [supported integrations](/features/aerocloud#supported-integrations) that expose a hierarchical filesystem can be mounted (FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, plus 20+ native providers). The exceptions are GitHub and Drime Cloud, which are non-hierarchical by design and therefore not exposed in the mount picker.
+The mount picker follows the [AeroCloud sync surface](/features/aerocloud#supported-integrations): FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, and the native providers in that table. GitHub and Drime Cloud stay out because they are not a hierarchical filesystem. SCP is a transport in 4.2.6 and is not offered here.
 
 ## Troubleshooting
 

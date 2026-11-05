@@ -2,9 +2,9 @@
 
 The `aeroftp-cli` command-line interface is a standalone Rust binary built from the same codebase as the AeroFTP desktop application. It provides full scriptable access to AeroFTP's three integration tiers without opening its graphical interface. Browser sign-in and OS-specific integrations have their own requirements:
 
-- **Core transport protocols**: FTP, FTPS, SFTP, WebDAV, S3, Azure Blob
-- **20+ native provider integrations**: Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, GitHub, GitLab, Immich, and more
-- **40+ pre-configured presets**: AWS S3, Backblaze B2, Cloudflare R2, Wasabi, Storj, MinIO, Hetzner Storage Box, Nextcloud, Seafile, InfiniCLOUD, Jianguoyun, CloudMe, SourceForge, etc.
+- **8 transport protocols**: FTP, FTPS, SFTP, SCP, WebDAV, S3, Azure Blob, OpenStack Swift
+- **26 native provider integrations**: Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, GitHub, GitLab, Immich, and the rest of the [inventory](/protocols/overview)
+- **47 presets**: AWS S3, Backblaze B2, Cloudflare R2, Wasabi, Storj, MinIO, Hetzner Storage Box, Nextcloud, Seafile, InfiniCLOUD, Jianguoyun, CloudMe, SourceForge, and the others in the catalog
 
 URL-based connections are available for the transport protocols and direct-auth native providers. OAuth-based providers (Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, Drime) are accessed via vault `--profile` after GUI or supported headless authorization. See [profile setup](/cli/commands#profile-add-and-headless-authorization).
 

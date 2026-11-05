@@ -4,7 +4,7 @@ description: "An AI assistant for file management, code editing and server opera
 
 # AeroAgent
 
-AeroAgent is AeroFTP's assistant for natural-language file management, code editing and server operations. In AeroFTP 4.2.5 it supports built-in provider presets, local models and custom endpoints. GUI AeroAgent, the CLI agent and the native MCP server share backend components but expose different tool catalogs and runtime capabilities. Query [`aeroftp-cli inventory --json`](/cli/commands#inventory-generated-command-catalog) for CLI/MCP inventory and use the GUI's tool settings for desktop tools.
+AeroAgent is AeroFTP's assistant for natural-language file management, code editing and server operations. In AeroFTP 4.2.6 it supports built-in provider presets, local models and custom endpoints. GUI AeroAgent, the CLI agent and the native MCP server share backend components but expose different tool catalogs and runtime capabilities. Query [`aeroftp-cli inventory --json`](/cli/commands#inventory-generated-command-catalog) for CLI/MCP inventory and use the GUI's tool settings for desktop tools.
 
 ## Welcome Screen
 

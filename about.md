@@ -1,17 +1,17 @@
 ---
 title: About AeroFTP
-description: AeroFTP 4.2.5, the Axpdev Lab team, its architecture, distribution channels and documentation sources.
+description: AeroFTP 4.2.6, the Axpdev Lab team, its architecture, distribution channels and documentation sources.
 ---
 
 # About & Credits
 
-## AeroFTP 4.2.5
+## AeroFTP 4.2.6
 
-AeroFTP is a free, open-source desktop file manager built with Rust, Tauri 2, React and TypeScript. This documentation targets **v4.2.5** and is published with that release. Its publication date is recorded on [GitHub Releases](https://github.com/axpdev-lab/aeroftp/releases).
+AeroFTP is a free, open-source desktop file manager built with Rust, Tauri 2, React and TypeScript. This documentation targets **v4.2.6** and is published with that release. Its publication date is recorded on [GitHub Releases](https://github.com/axpdev-lab/aeroftp/releases).
 
 The desktop app, `aeroftp-cli` and the bundled MCP server share backend components. Available operations still depend on the provider, connection mode and command path: a shared backend does not make every operation or concurrency setting available on every surface.
 
-See [what changed in 4.2.5](/releases/4.2.5), the [protocol overview](/protocols/overview), [provider setup guides](/providers/), [CLI reference](/cli/commands) and [MCP catalog](/mcp/overview).
+See [what changed in 4.2.6](/releases/4.2.6), the [protocol overview](/protocols/overview), [provider setup guides](/providers/), [CLI reference](/cli/commands) and [MCP catalog](/mcp/overview).
 
 ## Links
 
@@ -68,7 +68,7 @@ The source manifests are the dependency reference: [`src-tauri/Cargo.toml`](http
 
 ## Security and Evidence
 
-Security claims, accepted limits and dated verification results are recorded in the [security overview](/security/overview), [audit archive](/security/audits) and [test reports](/test-reports/). A report applies to the versions and scenarios it names; a historical result is not a fresh test of 4.2.5.
+Security claims, accepted limits and dated verification results are recorded in the [security overview](/security/overview), [audit archive](/security/audits) and [test reports](/test-reports/). A report applies to the versions and scenarios it names; a historical result is not a fresh test of 4.2.6.
 
 Report vulnerabilities through the [private disclosure channels](/security/reporting).
 

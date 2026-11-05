@@ -88,7 +88,7 @@ Recovery protection must be selected again for the rebuilt file. Converting v3 t
 
 ## Remote Vault Support
 
-AeroVault can open `.aerovault` files stored on remote servers across any of AeroFTP's 7 transport protocols and 20+ native provider integrations.
+AeroVault can open `.aerovault` files stored on a remote server the file panel can download, including the 8 transport protocols (SCP included) and the 26 native integrations.
 
 The workflow is:
 

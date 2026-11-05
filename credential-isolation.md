@@ -1,6 +1,6 @@
 # AI Agent Credential Isolation
 
-AeroFTP 4.2.5 lets agents operate on saved profiles without receiving the profile's password or tokens in tool responses. The agent supplies a profile name or ID and a path; Rust resolves authentication and performs the operation.
+AeroFTP 4.2.6 lets agents operate on saved profiles without receiving the profile's password or tokens in tool responses. The agent supplies a profile name or ID and a path; Rust resolves authentication and performs the operation.
 
 ## The Boundary
 

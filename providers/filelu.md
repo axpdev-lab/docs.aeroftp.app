@@ -21,7 +21,7 @@ FileLu is unusual because AeroFTP supports it through multiple connection modes.
 
 ## Which Mode Should You Use?
 
-Choose **FileLu API** if you want the FileLu-specific integration path.
+Choose **FileLu API** if you want the FileLu-specific integration path. Since 4.2.6 that path can list, download, restore, and permanently delete an earlier version of a file. The version id stays bound to the file you selected.
 
 Choose **S3** if you want object-storage workflows.
 

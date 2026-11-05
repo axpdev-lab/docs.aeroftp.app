@@ -1,6 +1,6 @@
 # Batch Scripting
 
-AeroFTP 4.2.5 runs checked, line-oriented `.aeroftp-script` files. The whole script is parsed before any operation starts: unknown commands, unsupported flags, undefined variables and malformed quoting fail with exit 5 before line 1 runs. `.aeroftp` is reserved for encrypted profile backups and is refused by `batch`.
+AeroFTP 4.2.6 runs checked, line-oriented `.aeroftp-script` files. The grammar below was checked for 4.2.5 on 26 October 2026. 4.2.6 did not announce a batch-format change. The whole script is parsed before any operation starts: unknown commands, unsupported flags, undefined variables and malformed quoting fail with exit 5 before line 1 runs. `.aeroftp` is reserved for encrypted profile backups and is refused by `batch`.
 
 ```bash
 aeroftp-cli batch deploy.aeroftp-script
