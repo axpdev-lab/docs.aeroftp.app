@@ -2,7 +2,7 @@
 
 > FTP is a two-connection file protocol. Commands travel on a control channel, and the file bytes travel on a separate data channel. Abhay Bhushan published it as RFC 114 on 16 April 1971. The current base is RFC 959 (October 1985), written by Jon Postel and Joyce Reynolds. Explicit FTPS is RFC 4217 (2005), by Paul Ford-Hutchinson. Implicit FTPS on port 990 is a convention from the 1990s, not that RFC.
 >
-> The client logs in on port 21, asks the server for a passive data port, and transfers one file on that second connection. FTPS wraps the same commands in TLS. AeroFTP uses `suppaftp` 12.2.1, passive mode only, and offers explicit TLS, implicit TLS, or none, with a warning if a server strips the TLS upgrade.
+> The client logs in on port 21, asks the server for a passive data port, and transfers one file on that second connection. FTPS wraps the same commands in TLS. AeroFTP uses `suppaftp` 12.2.1, passive mode only, and offers explicit TLS, implicit TLS, or none. If an explicit TLS upgrade fails, the connection stops. Plain FTP requires choosing None.
 
 FTP remains the default protocol for a lot of web hosting, embedded devices, and older enterprise systems. AeroFTP's client detects server features and can resume a transfer.
 
@@ -51,14 +51,7 @@ Implicit TLS is less common than Explicit TLS but provides a marginally stronger
 
 ## TLS Downgrade Detection
 
-If you select **Explicit TLS (if available)** and the server rejects the `AUTH TLS` command, AeroFTP does not silently fall back to plain FTP. Instead, it:
-
-1. Flags the connection internally as `tls_downgraded`
-2. Logs a security warning with the server's response
-3. Continues the connection over plain FTP so you can still access your files
-4. Displays a visible security indicator so you know the session is unencrypted
-
-This prevents a class of attack where a man-in-the-middle strips the TLS upgrade. You will always know when your connection is not encrypted.
+If you select **Explicit TLS (if available)** and the server rejects the `AUTH TLS` command, AeroFTP does not continue over plain FTP. The connection fails with an error that names the failed upgrade and tells you to choose **None** if you intend to connect without TLS. Plaintext is only the mode you select yourself.
 
 ## Feature Detection (FEAT / MLSD / MLST)
 
@@ -125,4 +118,4 @@ Review the dry-run before executing a sync. Keep certificate verification enable
 | `SSL/TLS handshake failed` | Server does not support the requested TLS mode | Check the server's supported TLS mode and configure trust for its certificate while keeping verification enabled |
 | Garbled filenames | Server using Latin-1 encoding | AeroFTP sends `OPTS UTF8 ON` automatically; if the server ignores it, filenames may display incorrectly |
 | Connection timeout | Server behind a strict NAT or offline | Verify the server is reachable with `ping` or `telnet host 21` |
-| TLS downgrade warning | Server rejected AUTH TLS | The server does not support TLS. Use a different server or accept the risk |
+| Explicit TLS upgrade failed | Server rejected AUTH TLS | The connection stops. Choose None only when you want plaintext FTP |

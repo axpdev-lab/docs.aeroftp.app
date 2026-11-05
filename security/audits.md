@@ -71,5 +71,5 @@ Across all audits:
 
 - **300+ individual findings** identified across the audits in the table
 - **P0 and P1 findings recorded in those audits** were marked remediated in the write-ups
-- **Grade trajectory in those write-ups**: C+ at the start of the archive, A- on the later graded rows
+- **Grades shown in the table**: A- on the graded rows. This archive does not publish a source for a C+ grade
 - The Aikido rows record 0 open issues in February and March 2026. That is not a claim about `main` in November 2026. Accepted RustSec IDs live in `audit.toml`

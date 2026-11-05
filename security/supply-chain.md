@@ -8,7 +8,7 @@ Every release artifact is signed using [Sigstore](https://sigstore.dev) Cosign w
 
 | Property | Detail |
 | -------- | ------ |
-| **Signing tool** | Cosign, installed by [`sigstore/cosign-installer`](https://github.com/sigstore/cosign-installer) pinned to `6f9f17788090df1f26f669e9d70d6ae9567deba6` (installer v4.1.2). The workflow does not pin a Cosign release |
+| **Signing tool** | Cosign v3.0.6, the default of [`sigstore/cosign-installer`](https://github.com/sigstore/cosign-installer) pinned to `6f9f17788090df1f26f669e9d70d6ae9567deba6` (installer v4.1.2). `build.yml` does not override that default |
 | **Identity** | GitHub Actions workflow (`build.yml`) bound to the release tag |
 | **OIDC issuer** | `https://token.actions.githubusercontent.com` |
 | **Bundle format** | `.sigstore.json` (Sigstore bundle v0.3) |
@@ -53,11 +53,13 @@ Users can independently verify any release artifact using Cosign:
 
 ```bash
 cosign verify-blob \
-  --bundle AeroFTP_<version>_amd64.deb.sigstore.json \
-  --certificate-identity-regexp "https://github.com/axpdev-lab/aeroftp/" \
+  --bundle "AeroFTP_${VERSION}_amd64.deb.sigstore.json" \
+  --certificate-identity "https://github.com/axpdev-lab/aeroftp/.github/workflows/build.yml@refs/tags/v${VERSION}" \
   --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
-  AeroFTP_<version>_amd64.deb
+  "AeroFTP_${VERSION}_amd64.deb"
 ```
+
+`VERSION` is the release number, as in the repository README. The identity is the `build.yml` workflow at that tag. A signature from another workflow or another ref does not match.
 
 ## Plugin Registry
 
@@ -68,7 +70,7 @@ The remote plugin registry is currently disabled until client-side cryptographic
 | Control | Detail |
 | ------- | ------ |
 | **GitHub Actions SHA pinning** | Third-party actions in the workflows are pinned to commit SHAs |
-| **`cargo audit`** | [`.github/workflows/checks.yml`](https://github.com/axpdev-lab/aeroftp/blob/aa0e4774541c8eeafe14b33b0c92427d7621e7d8/.github/workflows/checks.yml) runs `cargo audit --deny warnings` on every pull request, every push to `main`, and every Monday at 06:00 UTC. A pull request does not fail the job on a new advisory. A push to `main` and the weekly run do |
+| **`cargo audit`** | [`.github/workflows/checks.yml`](https://github.com/axpdev-lab/aeroftp/blob/aa0e4774541c8eeafe14b33b0c92427d7621e7d8/.github/workflows/checks.yml) runs `cargo audit --deny warnings` on every pull request, every push to `main`, and every Monday at 06:00 UTC. On a pull request the whole step is non-blocking, including a registry failure, a tool failure, and an audit warning. A push to `main` and the weekly run fail the job |
 | **Dependabot** | Weekly pull requests, opened on Monday, for Cargo under `src-tauri`, for npm, and for GitHub Actions |
 | **Security regression script** | [`.github/scripts/security-regression.cjs`](https://github.com/axpdev-lab/aeroftp/blob/aa0e4774541c8eeafe14b33b0c92427d7621e7d8/.github/scripts/security-regression.cjs) runs in the local pre-push gate. It is not a step in `checks.yml` or `build.yml` |
 | **OIDC permissions** | `id-token: write` is set on the release jobs in `build.yml`. The Cosign steps that sign artifacts run on tag publication. `checks.yml` does not request that permission |

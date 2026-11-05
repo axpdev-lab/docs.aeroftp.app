@@ -37,7 +37,7 @@ Choose a mode and, for a one-way mode, its source and destination. The labels de
 
 Mirror can keep a newer destination file and still delete files that exist only on the destination. In the GUI, choose **Mirror** and enable **Skip newer destination files (One-way Update)**. On the CLI that is `--direction upload` or `download`, together with `--update --delete`. The direction stays one-way: a newer destination file is not copied back. Deletes still ask for confirmation on a terminal. A non-interactive run that applies those deletes also needs `--max-delete N` or `N%`, or the CLI refuses it. `--dry-run` does not need the cap, because it deletes nothing.
 
-AeroCloud has the same switch under **Send Only** and **Receive Only**. Because AeroCloud runs in the background, it deletes only a destination-only file this device has already transferred and stabilized. A file this device has never synced, such as a photo another phone uploaded, is kept and listed for review. The stateless AeroSync plan and `sync --update --delete` can still delete an untracked destination file, under the same confirmation and delete cap as Mirror.
+AeroCloud has the same switch under **Send Only** and **Receive Only**. Because AeroCloud runs in the background, it deletes only a destination-only file this device has already transferred and stabilized. A file this device has never synced, such as a photo another phone uploaded, is kept and listed for review. The stateless AeroSync plan and `sync --direction upload --update --delete` (or `download`) can still delete an untracked destination file, under the same confirmation and delete cap as Mirror. `--update` with the default `--direction both` is refused.
 
 ### Conflict policies
 

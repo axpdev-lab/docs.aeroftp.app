@@ -177,6 +177,7 @@ Not all providers expose a trash/recycle bin API. The following table shows whic
 | kDrive | Yes | Yes | Yes |
 | Drime Cloud | Yes | Yes | Yes |
 | S3-Compatible | Yes (if bucket versioning enabled) | Yes | Yes |
+| FileLu | Yes | Yes | Yes |
 | All others | No | No | No |
 
 ### Share Links
