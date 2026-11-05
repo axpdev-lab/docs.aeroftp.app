@@ -25,7 +25,7 @@ AeroFTP-managed credentials are encrypted in the Universal Vault; its passphrase
 | 5 | [WebDAV](webdav.md) | Password (Basic + Digest) | HTTPS | Varies by provider |
 | 6 | [S3-Compatible](s3.md) | Access Key + Secret | HTTPS + SSE | Varies by provider |
 | 7 | [Azure Blob](azure.md) | HMAC / SAS Token | HTTPS + SSE | Pay-as-you-go |
-| 8 | [OpenStack Swift](swift.md) | Username + Password (Keystone v3) | HTTPS | Varies by provider |
+| 8 | [OpenStack Swift](swift.md) | Username + Password (Keystone v3) | HTTPS (Blomp storage: plain HTTP) | Varies by provider |
 
 ### Native Provider Integrations (Browser Authorization)
 

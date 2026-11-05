@@ -2,7 +2,7 @@
 
 > FTP is a two-connection file protocol. Commands travel on a control channel, and the file bytes travel on a separate data channel. Abhay Bhushan published it as RFC 114 on 16 April 1971. The current base is RFC 959 (October 1985), written by Jon Postel and Joyce Reynolds. Explicit FTPS is RFC 4217 (2005), by Paul Ford-Hutchinson. Implicit FTPS on port 990 is a convention from the 1990s, not that RFC.
 >
-> The client logs in on port 21, asks the server for a passive data port, and transfers one file on that second connection. FTPS wraps the same commands in TLS. AeroFTP uses `suppaftp` 12.2.1, passive mode only, and offers explicit TLS, implicit TLS, or none. If an explicit TLS upgrade fails, the connection stops. Plain FTP requires choosing None.
+> The client logs in on port 21, asks the server for a passive data port, and transfers one file on that second connection. FTPS wraps the same commands in TLS. AeroFTP uses `suppaftp` 12.2.1 and passive mode only. The modes are None, Explicit TLS, Explicit TLS if available, and Implicit TLS. If an explicit TLS upgrade fails, the connection stops. Plain FTP requires choosing None.
 
 FTP remains the default protocol for a lot of web hosting, embedded devices, and older enterprise systems. AeroFTP's client detects server features and can resume a transfer.
 
@@ -17,13 +17,13 @@ FTP remains the default protocol for a lot of web hosting, embedded devices, and
 | Port | `21` (FTP/Explicit TLS) or `990` (Implicit TLS) | Auto-set when you change the encryption mode |
 | Username | Your FTP username | Often your hosting account name (cPanel, Plesk) |
 | Password | Your FTP password | Stored encrypted in the Universal Credential Vault |
-| Encryption | None / Explicit TLS / Implicit TLS | See detailed explanation below |
+| Encryption | None / Explicit TLS / Explicit TLS if available / Implicit TLS | See detailed explanation below |
 
 When you select a saved FTP server, all fields are populated from the encrypted credential store. The password is never written to disk in plaintext.
 
 ## Encryption Modes
 
-AeroFTP offers three encryption options. Choosing the right one depends on your server configuration.
+AeroFTP offers four encryption options. Choosing the right one depends on your server configuration.
 
 ### None (Plain FTP) -- Not Recommended
 
@@ -40,6 +40,14 @@ AeroFTP offers three encryption options. Choosing the right one depends on your 
 - **Use case**: The vast majority of hosting providers, cPanel, Plesk, and any modern FTP server.
 
 This is the most compatible secure option. The initial handshake is unencrypted (just enough to negotiate TLS), after which all traffic -- including credentials -- is encrypted. Most shared hosting providers configure Explicit TLS by default.
+
+### Explicit TLS if available
+
+- **Port**: 21
+- **Security**: AeroFTP tries the `AUTH TLS` upgrade. If the server rejects it, the connection stops. Credentials are not sent over plaintext. Choose **None** when you intend to connect without TLS.
+- **Use case**: A server that should offer TLS, where a silent drop to plain FTP is not acceptable.
+
+The GUI label is "Use explicit FTP over TLS if available". The saved value is `explicit_if_available`. A failed upgrade returns the same kind of connection error as required Explicit TLS, with wording that tells you to choose None for plaintext.
 
 ### Implicit TLS (FTPS on port 990)
 
