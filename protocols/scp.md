@@ -45,6 +45,6 @@ A name that contains a newline or a NUL is refused. SCP cannot transfer that bas
 
 ## Where SCP does not appear yet
 
-[AeroCloud setup](/features/aerocloud) does not offer an SCP profile. The [mount list](/features/mount-manager) does not include SCP. File transfer, sync, and the CLI do.
+[AeroCloud setup](/features/aerocloud) does not offer an SCP profile. A saved SCP profile can be mounted: the [mount picker](/features/mount-manager) lists every saved profile, and on Linux and macOS the mount command runs it through the same FUSE session as the other providers. File transfer, sync, and the CLI do as well.
 
 WinSCP sessions map the way WinSCP defines them: 0 is SCP, 1 is SFTP with the fallback on, 2 is SFTP with it off. Export writes the same values back. See the [WinSCP bridge](/features/winscp).

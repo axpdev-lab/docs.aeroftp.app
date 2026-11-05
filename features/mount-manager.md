@@ -24,7 +24,7 @@ Each row in AeroMount represents a complete mount configuration that survives ac
 
 | Field in the editor | Purpose |
 |---------------------|---------|
-| **Profile picker** | Filterable list of saved profiles on the mount surface below. Each row shows the profile name, protocol badge (e.g. `OPENDRIVE`, `FTP`), and saved host or path. SCP is not in this list. |
+| **Profile picker** | Every saved profile, including SCP. Each row shows the profile name, protocol badge (e.g. `OPENDRIVE`, `FTP`, `SCP`), and saved host or path. The search box filters that text. It does not drop a protocol. |
 | **Display name** | Human-readable label for this mount (defaults to the profile name; rename freely). |
 | **Remote base path** | Subtree of the remote that becomes the root of the mount. `/` mounts the entire account. |
 | **Local mountpoint** | Local directory (Linux / macOS) or a drive letter (Windows). The default is `~/aeroftp-mounts/<slug>`. |
@@ -96,7 +96,7 @@ Because the CLI shares the same Rust backend as the GUI, opening a mount from Ae
 | **macOS** | macFUSE | `/Volumes/...`, any user-writable directory |
 | **Windows** | WebDAV bridge | Drive letter (`Z:`, `Y:`, etc.) or UNC path |
 
-The mount picker follows the [AeroCloud sync surface](/features/aerocloud#supported-integrations): FTP, FTPS, SFTP, WebDAV, S3, Azure Blob, and the native providers in that table. GitHub and Drime Cloud stay out because they are not a hierarchical filesystem. SCP is a transport in 4.2.6 and is not offered here.
+The mount picker lists every saved profile and filters only by the search text, so a saved SCP profile is included. On Linux and macOS, `aeroftp-cli mount` connects that profile and runs the FUSE session. There is no SCP exclusion on that path. GitHub and Drime Cloud remain a poor fit for a folder mount because they are not a hierarchical filesystem. [AeroCloud setup](/features/aerocloud#supported-integrations) is a separate list, and SCP is not in that wizard yet.
 
 ## Troubleshooting
 

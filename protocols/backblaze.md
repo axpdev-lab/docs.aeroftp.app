@@ -9,7 +9,7 @@ description: "Connect AeroFTP to Backblaze B2 with the native v4 API for first-c
 >
 > The client exchanges an application key for a token that lasts about a day, then calls named operations such as `b2_list_file_names` and `b2_upload_file`. A large file is a start, parts, then finish sequence. In AeroFTP the native v4 API is the recommended new connection. The [S3 preset](/protocols/s3) remains for a config that already speaks S3.
 
-Backblaze B2 has been one of AeroFTP's object stores since v1.0, first through that S3 preset. The native API is the path that has real folders, atomic renames, and file versions.
+Backblaze B2 has been one of AeroFTP's object stores since v1.0, first through that S3 preset. The native API is the path that has prefix folders, non-atomic server-side copy/delete renames, and file versions.
 
 Both options remain available. The native backend is recommended for new connections and for any workflow that uses folders, renames, or versions; the S3-compatible preset stays useful for tools that already standardize on S3 (e.g. shared rclone configs).
 
