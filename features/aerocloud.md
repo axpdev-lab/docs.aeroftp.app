@@ -20,10 +20,8 @@ AeroCloud supports the sync surface exposed by the desktop wizard. The maturity 
 | WebDAV family | Username / Password | Stable | Covers generic WebDAV plus hosted variants such as Nextcloud, Seafile, TAB.DIGITAL, Felicloud, CloudMe, InfiniCLOUD, Jianguoyun, and similar presets. |
 | S3 family | Access Key / Secret | Stable | Covers AWS S3, Cloudflare R2, Backblaze S3, Wasabi, DigitalOcean Spaces, MinIO, Oracle Cloud, S3Drive, and similar S3-compatible presets. |
 | Azure Blob | Connection string / SAS | Stable | Treated as a first-class object-storage sync target in the wizard. |
-| Google Drive | OAuth 2.0 PKCE | Stable | Native Google API path with strong sync behavior. |
 | Dropbox | OAuth 2.0 PKCE | Stable | Native Dropbox API path with strong sync behavior. |
 | OneDrive | OAuth 2.0 PKCE | Stable | Native Microsoft Graph path with strong sync behavior. |
-| Jottacloud | Username / Password | Stable | Native provider with no wizard caveat. |
 | kDrive | OAuth 2.0 | Stable | Native provider with no wizard caveat. |
 | Koofr | OAuth 2.0 PKCE | Stable | Native provider with no wizard caveat. |
 | OpenDrive | Session auth | Stable | Native provider with no wizard caveat. |
@@ -35,7 +33,8 @@ AeroCloud supports the sync surface exposed by the desktop wizard. The maturity 
 | Filen | Email / Password + optional 2FA | Beta | End-to-end encryption adds sync overhead. |
 | Internxt | OAuth 2.0 PKCE | Beta | End-to-end encryption adds sync overhead. |
 | FileLu | API key / saved profile | Beta | Region latency can vary; sync uses hash comparison. |
-| 4shared | OAuth 1.0 | Alpha | Manual re-authorization is required if the token is revoked. |
+
+The wizard also offers Backblaze B2 (native API), ImageKit, Uploadcare and Cloudinary. Google Drive, Jottacloud and 4shared are wired in the sync backend but stay out of the wizard until a saved profile passes the live connect check the wizard list is built from (`AEROCLOUD_OFFERED` in `src/components/AeroCloudProtocols.tsx`); Proton Drive and Twake Drive have not been through that check yet. OpenStack Swift and SCP are not offered.
 
 ### How To Read The Matrix
 
