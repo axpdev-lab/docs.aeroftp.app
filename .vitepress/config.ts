@@ -143,6 +143,7 @@ export default defineConfig({
                 { text: 'S3Drive', link: '/providers/s3drive' },
                 { text: 'Storj', link: '/providers/storj' },
                 { text: 'Tencent Cloud COS', link: '/providers/tencent-cloud-cos' },
+                { text: 'Tigris', link: '/providers/tigris' },
                 { text: 'Wasabi', link: '/providers/wasabi' },
                 { text: 'Yandex Object Storage', link: '/providers/yandex-object-storage' },
               ],

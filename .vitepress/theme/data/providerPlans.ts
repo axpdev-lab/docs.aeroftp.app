@@ -193,6 +193,21 @@ export const providerPlans: Record<string, ProviderPlan> = {
     sourceUrl: 'https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-provision',
     checked: '2026-09-24',
   },
+  // Free tier (5 GB, no card required) owner-confirmed 2026-11-06. No prices on purpose.
+  'tigris': {
+    id: 'tigris',
+    name: 'Tigris',
+    category: 'S3-compatible',
+    badges: ['FREE'],
+    storage: '5 GB free, no card required for the free tier.',
+    limits: 'A card is needed beyond the free tier, or to make a bucket public.',
+    billing: 'Usage beyond the free tier is billed pay-as-you-go; see the Tigris pricing page.',
+    bestFor: 'Globally distributed S3 storage with a fixed endpoint and no region to pick.',
+    costTip: 'Listing a bucket is a Class A request at Tigris, so avoid frequent full scans of a large bucket.',
+    sourceLabel: 'Tigris pricing',
+    sourceUrl: 'https://www.tigrisdata.com/pricing/',
+    checked: '2026-11-06',
+  },
   'drivehq': {
     id: 'drivehq',
     name: 'DriveHQ',
