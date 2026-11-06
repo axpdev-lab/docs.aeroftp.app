@@ -85,6 +85,7 @@ Each provider guide now starts with a **Plan snapshot** that separates storage q
 | <img src="/icons/providers/filelu.png" width="20" /> | FileLu S3 | FileLu via S3 endpoint | [Setup guide](/providers/filelu) |
 | <img src="/icons/providers/quotaless.png" width="20" /> | Quotaless S3 | Quotaless via S3 endpoint | [Setup guide](/providers/quotaless) |
 | <img src="/icons/providers/s3drive.png" width="20" /> | S3Drive | Storj-backed S3 front-end | [Setup guide](/providers/s3drive) |
+| <img src="/icons/providers/tigris.png" width="20" /> | Tigris | Globally distributed S3 with a fixed endpoint | [Setup guide](/providers/tigris) |
 
 ## WebDAV (Nextcloud-as-a-Service & friends)
 
