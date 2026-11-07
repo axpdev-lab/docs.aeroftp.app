@@ -66,7 +66,7 @@ The AeroCloud wizard syncs a local folder with a server you have already saved i
 
 ### Step 2 - Select Server
 
-A searchable list of your saved profiles. Only profiles whose protocol is in the table above are listed; the wizard says how many others it hid. If no saved profile can be used, it offers to open My Servers.
+A searchable list of your saved profiles. Only profiles of an integration the wizard offers are listed (the table above plus Backblaze B2, ImageKit, Uploadcare and Cloudinary); the wizard says how many others it hid. If no saved profile can be used, it offers to open My Servers.
 
 Under the list, choose the **remote folder**: a sub-folder of the profile's starting folder that mirrors the local one. AeroCloud creates it if it does not exist. When the chosen integration has a sync caveat, the wizard shows it here.
 
