@@ -208,8 +208,8 @@ export const providerPlans: Record<string, ProviderPlan> = {
     sourceUrl: 'https://www.tigrisdata.com/pricing/',
     checked: '2026-11-06',
   },
-  'fastly': {
-    id: 'fastly',
+  'fastly-object-storage': {
+    id: 'fastly-object-storage',
     name: 'Fastly Object Storage',
     category: 'S3-compatible',
     badges: ['FREE', 'CARD'],

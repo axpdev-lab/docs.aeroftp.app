@@ -5,7 +5,7 @@ description: Connect Fastly Object Storage to AeroFTP with the built-in S3 prese
 
 # Fastly Object Storage
 
-<ProviderPlanCard id="fastly" />
+<ProviderPlanCard id="fastly-object-storage" />
 
 Fastly Object Storage is an S3-compatible object store with regional endpoints. AeroFTP includes a dedicated **Fastly Object Storage** preset with path-style addressing and region-aware signing.
 
