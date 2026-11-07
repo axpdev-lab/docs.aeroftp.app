@@ -132,6 +132,7 @@ export default defineConfig({
                 { text: 'Cloudflare R2', link: '/providers/cloudflare-r2' },
                 { text: 'DigitalOcean Spaces', link: '/providers/digitalocean-spaces' },
                 { text: 'Filebase', link: '/providers/filebase' },
+                { text: 'Fastly Object Storage', link: '/providers/fastly-object-storage' },
                 { text: 'FileLu S3', link: '/providers/filelu' },
                 { text: 'Google Cloud Storage', link: '/providers/google-cloud-storage' },
                 { text: 'IBM Cloud Object Storage', link: '/providers/ibm-cloud-object-storage' },
