@@ -57,7 +57,7 @@ When background sync is active:
 
 ## Setup Wizard
 
-The AeroCloud wizard syncs a local folder with a server you have already saved in My Servers. It does not create connections: add and test the server first, then run the wizard. It has three steps.
+Since AeroFTP 4.2.4 the AeroCloud wizard syncs a local folder with a server you have already saved in My Servers (AeroFTP 4.2.3 and earlier used a four-step wizard with protocol selection and connection fields). It does not create connections: add and test the server first, then run the wizard. It has three steps.
 
 ### Step 1 - Choose Folder
 
@@ -68,7 +68,7 @@ The AeroCloud wizard syncs a local folder with a server you have already saved i
 
 A searchable list of your saved profiles. Only profiles of an integration the wizard offers are listed (the table above plus Backblaze B2, ImageKit, Uploadcare and Cloudinary); the wizard says how many others it hid. If no saved profile can be used, it offers to open My Servers.
 
-Under the list, choose the **remote folder**: a sub-folder of the profile's starting folder that mirrors the local one. AeroCloud creates it if it does not exist. When the chosen integration has a sync caveat, the wizard shows it here.
+Under the list, choose the **remote folder**: a sub-folder (`cloud` by default) that mirrors the local one. Its base is the profile's starting folder, or, when the profile has an AeroCrypt overlay, the folder the overlay is bound to. AeroCloud creates the sub-folder if it does not exist, except on Uploadcare, which has no folders: clear the field there so AeroCloud syncs at the profile's base. When the chosen integration has a sync caveat, the wizard shows it here.
 
 ### Step 3 - Sync Settings
 
