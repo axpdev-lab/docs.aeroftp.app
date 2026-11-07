@@ -20,10 +20,8 @@ AeroCloud supports the sync surface exposed by the desktop wizard. The maturity 
 | WebDAV family | Username / Password | Stable | Covers generic WebDAV plus hosted variants such as Nextcloud, Seafile, TAB.DIGITAL, Felicloud, CloudMe, InfiniCLOUD, Jianguoyun, and similar presets. |
 | S3 family | Access Key / Secret | Stable | Covers AWS S3, Cloudflare R2, Backblaze S3, Wasabi, DigitalOcean Spaces, MinIO, Oracle Cloud, S3Drive, and similar S3-compatible presets. |
 | Azure Blob | Connection string / SAS | Stable | Treated as a first-class object-storage sync target in the wizard. |
-| Google Drive | OAuth 2.0 PKCE | Stable | Native Google API path with strong sync behavior. |
 | Dropbox | OAuth 2.0 PKCE | Stable | Native Dropbox API path with strong sync behavior. |
 | OneDrive | OAuth 2.0 PKCE | Stable | Native Microsoft Graph path with strong sync behavior. |
-| Jottacloud | Username / Password | Stable | Native provider with no wizard caveat. |
 | kDrive | OAuth 2.0 | Stable | Native provider with no wizard caveat. |
 | Koofr | OAuth 2.0 PKCE | Stable | Native provider with no wizard caveat. |
 | OpenDrive | Session auth | Stable | Native provider with no wizard caveat. |
@@ -35,7 +33,8 @@ AeroCloud supports the sync surface exposed by the desktop wizard. The maturity 
 | Filen | Email / Password + optional 2FA | Beta | End-to-end encryption adds sync overhead. |
 | Internxt | OAuth 2.0 PKCE | Beta | End-to-end encryption adds sync overhead. |
 | FileLu | API key / saved profile | Beta | Region latency can vary; sync uses hash comparison. |
-| 4shared | OAuth 1.0 | Alpha | Manual re-authorization is required if the token is revoked. |
+
+The wizard also offers Backblaze B2 (native API), ImageKit, Uploadcare and Cloudinary. Google Drive, Jottacloud and 4shared are wired in the sync backend but stay out of the wizard until a saved profile passes the live connect check the wizard list is built from (`AEROCLOUD_OFFERED` in `src/components/AeroCloudProtocols.tsx`); Proton Drive and Twake Drive have not been through that check yet. OpenStack Swift and SCP are not offered.
 
 ### How To Read The Matrix
 
@@ -56,39 +55,26 @@ When background sync is active:
 - **Filesystem watcher** (inotify on Linux) detects local changes in real time
 - All transfers use the same **circuit breaker** and **retry policies** as interactive transfers
 
-## 4-Step Setup Wizard
+## Setup Wizard
 
-The CloudPanel wizard guides you through connecting a new cloud provider in four steps.
+Since AeroFTP 4.2.4 the AeroCloud wizard syncs a local folder with a server you have already saved in My Servers (AeroFTP 4.2.3 and earlier used a four-step wizard with protocol selection and connection fields). It does not create connections: add and test the server first, then run the wizard. It has three steps.
 
-### Step 1 - Select Protocol
+### Step 1 - Choose Folder
 
-A grid of protocol cards organized into three groups:
+- **Cloud name**, the name shown in the tab
+- **Local folder**, the folder on this computer that AeroCloud keeps in sync
 
-- **Servers** - FTP, FTPS, SFTP, WebDAV
-- **Cloud** - S3, Azure Blob, MEGA, Filen, Internxt, kDrive, Jottacloud, Koofr, OpenDrive, Yandex Disk, FileLu
-- **OAuth** - Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, 4shared
+### Step 2 - Select Server
 
-### Step 2 - Connection Fields
+A searchable list of your saved profiles. Only profiles of an integration the wizard offers are listed (the table above plus Backblaze B2, ImageKit, Uploadcare and Cloudinary); the wizard says how many others it hid. If no saved profile can be used, it offers to open My Servers.
 
-Dynamic form fields based on the selected protocol:
+Under the list, choose the **remote folder**: a sub-folder (`cloud` by default) that mirrors the local one. Its base is the profile's starting folder, or, when the profile has an AeroCrypt overlay, the folder the overlay is bound to. AeroCloud creates the sub-folder if it does not exist, except on Uploadcare, which has no folders: clear the field there so AeroCloud syncs at the profile's base. When the chosen integration has a sync caveat, the wizard shows it here.
 
-- **Server protocols**: Host, port, username, password, path, TLS mode
-- **OAuth providers**: Client ID / Secret (optional for built-in apps), region selector (Zoho)
-- **API providers**: API key, email, password, 2FA code (Filen)
-- **S3**: Endpoint, region, bucket, access key, secret key, path style toggle
+### Step 3 - Sync Settings
 
-### Step 3 - Authorize (OAuth only)
-
-For OAuth providers, click **Authorize** to open the browser-based consent flow. AeroFTP receives the callback, exchanges the code for tokens, and stores them in the encrypted vault.
-
-### Step 4 - Sync Settings
-
-Configure the sync behavior for this connection:
-
-- **Local folder** to sync
-- **Remote path** (root or subdirectory)
-- **Sync direction** (push, pull, bidirectional)
-- **Sync interval** (manual, 5 min, 15 min, 1 hour, etc.)
+- **Sync on file change**, real-time sync from the filesystem watcher
+- **Sync interval**, from 1 minute to 1440 minutes, or from 1 hour to 168 hours
+- A **summary** of the profile, the local folder and the remote folder before you confirm
 
 ## Native OS File Manager Badges
 
