@@ -9,7 +9,7 @@ description: Connect Fastly Object Storage to AeroFTP with the built-in S3 prese
 
 Fastly Object Storage is an S3-compatible object store with regional endpoints. AeroFTP includes a dedicated **Fastly Object Storage** preset with path-style addressing and region-aware signing.
 
-The free allowance is 5 GB. Fastly asks for a card when you sign up.
+The free allowance is 5 GB. Fastly asks for a card when you sign up. Each month also includes 1,000 Class A and 10,000 Class B operations; usage beyond each allowance is billed separately. See [Fastly pricing](https://www.fastly.com/pricing).
 
 ::: info Availability
 The Fastly preset ships in AeroFTP 4.2.7. On earlier versions, use the generic **S3 Compatible** form with the regional endpoint, path-style addressing and your bucket.
