@@ -1,12 +1,12 @@
 # Protocol Overview
 
-> Verified against AeroFTP v4.2.6, tag `v4.2.6`, inventory [`docs/PROVIDER-INVENTORY.json`](https://github.com/axpdev-lab/aeroftp/blob/v4.2.6/docs/PROVIDER-INVENTORY.json). Provider plan figures are snapshots; confirm current terms with the provider.
+> Verified against AeroFTP v4.2.7, tag `v4.2.7`, inventory [`docs/PROVIDER-INVENTORY.json`](https://github.com/axpdev-lab/aeroftp/blob/v4.2.7/docs/PROVIDER-INVENTORY.json). Provider plan figures are snapshots; confirm current terms with the provider.
 
-The total is **70 connection methods** across **56 providers**. One company on two protocols counts twice. Add Services shows **78 tiles**: that screen also includes the blank forms and the AeroShare tile. The three lines under the total are not a sum of it.
+The total is **72 connection methods** across **58 providers**. One company on two protocols counts twice. Add Services shows **80 tiles**: that screen also includes the blank forms and the AeroShare tile. The three lines under the total are not a sum of it.
 
 1. **8 transport protocols** - FTP, FTPS, SFTP, SCP, WebDAV, S3, Azure Blob, OpenStack Swift. Native wire-level support, implemented in Rust with full streaming.
 2. **26 native provider integrations** - dedicated OAuth2 / API key / SDK code paths per provider (Backblaze B2, Box, Cloudinary, Drime Cloud, Dropbox, FileLu, Filen, 4shared, GitHub, GitLab, Google Drive, ImageKit, Immich, Internxt, Jottacloud, kDrive, Koofr, MEGA, OneDrive, OpenDrive, pCloud, Proton Drive, Twake Drive, Uploadcare, Yandex Disk, Zoho WorkDrive). Available sharing, server-side copy, chunking and sync capabilities depend on the backend and selected connection mode.
-3. **47 pre-configured presets** - server URL, port, base path, password-generation deep-link auto-filled for compatible services on top of the protocols above. Visible in the Discover catalog (S3-compatible endpoints, WebDAV-compatible servers, SourceForge, etc.).
+3. **49 pre-configured presets** - server URL, port, base path, password-generation deep-link auto-filled for compatible services on top of the protocols above. Visible in the Discover catalog (S3-compatible endpoints, WebDAV-compatible servers, SourceForge, etc.).
 
 Each transport page opens with a short introduction: what the protocol is, when it was first published, who designed it, and how a transfer works.
 

@@ -1,6 +1,6 @@
 # AI Provider Reference
 
-AeroFTP v4.2.6 defines 26 AI provider types, including custom endpoints. Most adapters use an OpenAI-compatible API; Anthropic and Gemini have native formats. A configured provider type does not guarantee that every model supports tools, vision or thinking.
+AeroFTP v4.2.7 defines 26 AI provider types, including custom endpoints. Most adapters use an OpenAI-compatible API; Anthropic and Gemini have native formats. A configured provider type does not guarantee that every model supports tools, vision or thinking.
 
 ## Provider Overview
 

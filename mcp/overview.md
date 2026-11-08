@@ -1,8 +1,8 @@
 # MCP Server
 
-AeroFTP 4.2.6 provides a native Model Context Protocol server over stdio. It uses the Rust backend directly, with saved profiles, connection pooling, per-profile serialization, cancellation, schema validation, rate limits and audit events. It does not invoke an AI model itself.
+AeroFTP 4.2.7 provides a native Model Context Protocol server over stdio. It uses the Rust backend directly, with saved profiles, connection pooling, per-profile serialization, cancellation, schema validation, rate limits and audit events. It does not invoke an AI model itself.
 
-The checked catalog contains **78 wire tool names**: 39 `aeroftp_*`, 36 `remote_*`, two `server_*` and `agent_connect`. The command inventory labels these 40 primary and 38 alias names using a namespace heuristic; this is not a count of independent capabilities. Use `tools/list` for the live schemas and [COMMAND-INVENTORY.json](https://github.com/axpdev-lab/aeroftp/blob/v4.2.6/docs/COMMAND-INVENTORY.json) for the snapshot committed at tag v4.2.6. That file still records `"app_version": "4.2.5"`. CLI agent tools and GUI AeroAgent tools are different catalogs. 78 here is the MCP wire catalog, not the 78 Add Services tiles.
+The checked catalog contains **78 wire tool names**: 39 `aeroftp_*`, 36 `remote_*`, two `server_*` and `agent_connect`. The command inventory labels these 40 primary and 38 alias names using a namespace heuristic; this is not a count of independent capabilities. Use `tools/list` for the live schemas and [COMMAND-INVENTORY.json](https://github.com/axpdev-lab/aeroftp/blob/v4.2.7/docs/COMMAND-INVENTORY.json) for the snapshot committed at tag v4.2.7. CLI agent tools and GUI AeroAgent tools are different catalogs. 78 here is the MCP wire catalog, not the 80 Add Services tiles.
 
 ## Setup
 

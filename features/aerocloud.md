@@ -4,7 +4,7 @@ description: "Turn any server into a private cloud: background sync from the tra
 
 # AeroCloud
 
-AeroCloud turns a supported server into a private personal cloud. The wizard offers the sync surface in the table below, with maturity badges for each one. SCP is a transport in AeroFTP 4.2.6 and is not in that wizard yet. Background sync from the system tray, native file manager badges, selective sync, file versioning (`.aeroversions/`), `.aeroignore` patterns.
+AeroCloud turns a supported server into a private personal cloud. The wizard offers the sync surface in the table below, with maturity badges for each one. SCP is a transport in AeroFTP and is not in that wizard yet. Background sync from the system tray, native file manager badges, selective sync, file versioning (`.aeroversions/`), `.aeroignore` patterns.
 
 ## Supported Integrations
 

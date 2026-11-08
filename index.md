@@ -15,8 +15,8 @@ hero:
       text: View on GitHub
       link: https://github.com/axpdev-lab/aeroftp
     - theme: alt
-      text: New in 4.2.6
-      link: /releases/4.2.6
+      text: New in 4.2.7
+      link: /releases/4.2.7
 features:
   - icon:
       src: /icons/protocols.svg
@@ -64,12 +64,12 @@ import SourceForgeReach from './.vitepress/theme/components/SourceForgeReach.vue
 <p align="center">AeroFTP organizes integrations on three tiers. The total across them is one number:</p>
 
 <p align="center">
-  <strong>70 connection methods</strong> across <strong>56 providers</strong>
+  <strong>72 connection methods</strong> across <strong>58 providers</strong>
 </p>
 
 <p align="center">
-  <strong>8 transport protocols</strong> &middot; <strong>26 native integrations</strong> &middot; <strong>47 presets</strong><br>
-  Add Services shows <strong>78 tiles</strong>, including the blank forms and AeroShare.
+  <strong>8 transport protocols</strong> &middot; <strong>26 native integrations</strong> &middot; <strong>49 presets</strong><br>
+  Add Services shows <strong>80 tiles</strong>, including the blank forms and AeroShare.
 </p>
 
 <p align="center">

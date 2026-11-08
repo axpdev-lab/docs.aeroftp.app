@@ -5,7 +5,7 @@ description: Provider-specific setup guides with endpoints, credentials, ports, 
 
 # Integrations
 
-AeroFTP connects through **70 connection methods** across **56 providers**: cloud storage, developer platforms, and self-hosted services. Add Services shows 78 tiles. Each guide covers provider-specific setup with exact endpoints, credential paths, and recommended defaults. The split is on the [protocol overview](/protocols/overview).
+AeroFTP connects through **72 connection methods** across **58 providers**: cloud storage, developer platforms, and self-hosted services. Add Services shows 80 tiles. Each guide covers provider-specific setup with exact endpoints, credential paths, and recommended defaults. The split is on the [protocol overview](/protocols/overview).
 
 For protocol-level technical reference, see [Technical Reference](/protocols/overview).
 

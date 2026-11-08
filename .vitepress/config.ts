@@ -11,7 +11,7 @@ const icons = {
 export default defineConfig({
   ignoreDeadLinks: false,
   title: 'AeroFTP Documentation',
-  description: 'AeroFTP is a multi-protocol file manager: 8 transport protocols including SCP, 70 connection methods across 56 providers. Transfer, sync, encrypt from one app.',
+  description: 'AeroFTP is a multi-protocol file manager: 8 transport protocols including SCP, 72 connection methods across 58 providers. Transfer, sync, encrypt from one app.',
   base: '/',
   sitemap: { hostname: 'https://docs.aeroftp.app' },
   head: [
@@ -32,13 +32,13 @@ export default defineConfig({
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:site_name', content: 'AeroFTP Documentation' }],
     ['meta', { property: 'og:title', content: 'AeroFTP - Multi-Protocol File Manager Documentation' }],
-    ['meta', { property: 'og:description', content: '70 connection methods across 56 providers, over FTP, FTPS, SFTP, SCP, WebDAV, S3, Azure Blob, OpenStack Swift, and native APIs. Transfer, sync, encrypt from one app.' }],
+    ['meta', { property: 'og:description', content: '72 connection methods across 58 providers, over FTP, FTPS, SFTP, SCP, WebDAV, S3, Azure Blob, OpenStack Swift, and native APIs. Transfer, sync, encrypt from one app.' }],
     ['meta', { property: 'og:image', content: 'https://docs.aeroftp.app/logo.png' }],
     ['meta', { property: 'og:url', content: 'https://docs.aeroftp.app' }],
     // Twitter Card
     ['meta', { name: 'twitter:card', content: 'summary' }],
     ['meta', { name: 'twitter:title', content: 'AeroFTP Documentation' }],
-    ['meta', { name: 'twitter:description', content: 'Multi-protocol file manager: 70 connection methods across 56 providers, including FTP, SFTP, SCP, S3 and Google Drive' }],
+    ['meta', { name: 'twitter:description', content: 'Multi-protocol file manager: 72 connection methods across 58 providers, including FTP, SFTP, SCP, S3 and Google Drive' }],
     ['meta', { name: 'twitter:image', content: 'https://docs.aeroftp.app/logo.png' }],
     // Theme
     ['meta', { name: 'theme-color', content: '#3b82f6' }],
@@ -51,7 +51,7 @@ export default defineConfig({
       operatingSystem: 'Windows, macOS, Linux',
       url: 'https://aeroftp.app',
       downloadUrl: 'https://github.com/axpdev-lab/aeroftp/releases',
-      description: 'Multi-protocol file manager with 8 transport protocols, including SCP, and 70 connection methods across 56 providers, plus an AI assistant, encryption and sync.',
+      description: 'Multi-protocol file manager with 8 transport protocols, including SCP, and 72 connection methods across 58 providers, plus an AI assistant, encryption and sync.',
       license: 'https://www.gnu.org/licenses/gpl-3.0.html',
       author: { '@type': 'Organization', name: 'axpdev-lab', url: 'https://axpdev.it' },
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -65,7 +65,7 @@ export default defineConfig({
     logo: '/logo.svg',
     siteTitle: 'AeroFTP',
     nav: [
-      { text: '4.2.6', link: '/releases/4.2.6' },
+      { text: '4.2.7', link: '/releases/4.2.7' },
       { text: 'Guide', link: '/getting-started/installation' },
       { text: 'Reference', link: '/protocols/overview' },
       { text: 'Setup Guides', link: '/providers/' },

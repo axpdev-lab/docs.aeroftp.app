@@ -1,8 +1,8 @@
 # CLI Commands
 
-Command reference for AeroFTP 4.2.6. The command list below was checked against the 4.2.5 source on 26 October 2026. The coverage line, SCP, and profile import were updated for 4.2.6. It shares the same Rust backend as the desktop app, with direct URL support for core protocols, saved-profile access for GUI-authorized providers, structured JSON output, and Unix pipeline compatibility.
+Command reference for AeroFTP 4.2.7. The command list below was checked against the 4.2.5 source on 26 October 2026. The coverage line, SCP, profile import, and preset additions were updated for 4.2.7. It shares the same Rust backend as the desktop app, with direct URL support for core protocols, saved-profile access for GUI-authorized providers, structured JSON output, and Unix pipeline compatibility.
 
-> **Coverage**: 8 transport protocols (FTP, FTPS, SFTP, SCP, WebDAV, S3, Azure Blob, OpenStack Swift), 26 native provider integrations, and 47 presets. The total is 70 connection methods across 56 providers. See [Protocol Overview](/protocols/overview).
+> **Coverage**: 8 transport protocols (FTP, FTPS, SFTP, SCP, WebDAV, S3, Azure Blob, OpenStack Swift), 26 native provider integrations, and 49 presets. The total is 72 connection methods across 58 providers. See [Protocol Overview](/protocols/overview).
 
 ## Connection Methods
 

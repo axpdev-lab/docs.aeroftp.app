@@ -6,7 +6,7 @@ description: "Let external AI agents delegate file and server work to AeroAgent 
 
 AeroAgent can be orchestrated by external AI agents - Claude Code, Codex, Cursor, Devin, or any tool that can invoke CLI commands. The external agent uses `aeroftp-cli agent` to delegate file operations, server management, and multi-protocol tasks to AeroAgent, which resolves credentials from the encrypted vault without ever exposing them.
 
-This page describes AeroFTP 4.2.6. The body was checked on 26 October 2026 for 4.2.5. The MCP wire catalog is still 78 names at the 4.2.6 tag. The dated field report below remains historical evidence for v3.2.0, not validation of the current release.
+This page describes AeroFTP 4.2.7. The body was checked on 26 October 2026 for 4.2.5. The MCP wire catalog is still 78 names at the 4.2.7 tag. The dated field report below remains historical evidence for v3.2.0, not validation of the current release.
 
 ## Quick Start for External Agents
 

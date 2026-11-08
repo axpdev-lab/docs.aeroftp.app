@@ -34,7 +34,7 @@ Verification uses the `sigstore` Rust crate (0.14.0 on `main` at `aa0e477`, 5 No
 https://github.com/axpdev-lab/aeroftp/.github/workflows/build.yml@refs/tags/v{VERSION}
 ```
 
-`{VERSION}` is the release number, so the tag is `v{VERSION}`, as in `v4.2.6`. The updater appends the GitHub release tag, which already includes that `v`. An artifact signed by a different workflow, a different repository, or a fork will be rejected.
+`{VERSION}` is the release number, so the tag is `v{VERSION}`, as in `v4.2.7`. The updater appends the GitHub release tag, which already includes that `v`. An artifact signed by a different workflow, a different repository, or a fork will be rejected.
 
 ## Linux Privileged Install Hardening
 
@@ -52,7 +52,7 @@ This eliminates TOCTOU (time-of-check-to-time-of-use) attacks where the file cou
 Users can independently verify any release artifact using Cosign:
 
 ```bash
-VERSION=4.2.6
+VERSION=4.2.7
 cosign verify-blob \
   --bundle "AeroFTP_${VERSION}_amd64.deb.sigstore.json" \
   --certificate-identity "https://github.com/axpdev-lab/aeroftp/.github/workflows/build.yml@refs/tags/v${VERSION}" \
