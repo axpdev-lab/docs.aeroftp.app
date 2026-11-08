@@ -169,6 +169,17 @@
   border-radius: 8px;
 }
 
+.vp-doc table.provider-grid {
+  display: table !important;
+  width: 100% !important;
+  margin: 0 auto 1.5rem auto !important;
+}
+
+.vp-doc table.provider-grid td {
+  text-align: center;
+  vertical-align: top;
+}
+
 .dark .vp-doc table th {
   background-color: var(--vp-c-bg-soft);
 }

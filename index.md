@@ -75,10 +75,10 @@ import SourceForgeReach from './.vitepress/theme/components/SourceForgeReach.vue
 <p align="center">
   <em>Transports:</em> FTP, FTPS, SFTP, SCP, WebDAV, S3, Azure Blob, OpenStack Swift.<br>
   <em>Native providers:</em> a dedicated code path per company, so sharing, chunking and server-side copy stay first-class where that provider has them.<br>
-  <em>Presets:</em> the form arrives already filled in. A company on two protocols counts as two connection methods, which is why 56 providers reach 70.
+  <em>Presets:</em> the form arrives already filled in. A company on two protocols counts as two connection methods, which is why 58 providers reach 72.
 </p>
 
-<table align="center">
+<table class="provider-grid" align="center" style="width: 100%; margin: 0 auto 1.5rem auto;">
   <tr>
     <td align="center" width="80"><a href="/providers/google-drive"><img src="/icons/providers/Google_Drive.png" width="36" alt="Google Drive" /></a><br><sub>Google Drive</sub></td>
     <td align="center" width="80"><a href="/providers/onedrive" title="Microsoft OneDrive"><img src="/icons/providers/onedrive.png" width="36" alt="OneDrive" /></a><br><sub>OneDrive</sub></td>
