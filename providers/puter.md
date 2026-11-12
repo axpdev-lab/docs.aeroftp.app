@@ -52,6 +52,8 @@ Puter also accepts an auth token as the password. For token auth:
 
 The preset fills `{username}` with the login name, so with the literal `-token` username the path would point at a user that does not exist; overriding Server keeps the real username in the path. Token auth is recommended for sustained sessions and AeroSync, because it does not expire the way an appended 2FA code does.
 
+To create the auth token, sign in at [puter.com](https://puter.com), open the dashboard **Account** page and create an API token in the token section. The [Puter auth token tutorial](https://developer.puter.com/tutorials/puter-auth-token/) walks through it step by step. Store the token securely; it is shown when created.
+
 ## Features
 
 - **File operations**: upload, download, rename, move, and delete files and folders
