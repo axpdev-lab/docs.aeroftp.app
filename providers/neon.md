@@ -29,7 +29,7 @@ The Neon Object Storage preset ships in AeroFTP 4.2.8. On earlier versions, use 
 The Neon CLI can also create the credentials: `neon credentials create --scope storage:read --scope storage:write`.
 
 ::: tip Per-branch endpoints
-Every branch has its own endpoint host. When you connect to a different branch, copy its endpoint from the Console again; the same credentials work, but the endpoint changes.
+Every branch has its own endpoint host. When you connect to a different branch, copy its endpoint from the Console again. Credentials are valid on the branch they were issued on and that branch's descendants: on a parent or sibling branch Neon returns `403 AccessDenied`, so select credentials issued on the target branch or one of its ancestors.
 :::
 
 ## How to Connect
@@ -64,7 +64,7 @@ Every branch has its own endpoint host. When you connect to a different branch, 
 
 - **Signature or authorization errors**: check that the access key and secret come from the same Neon project and branch scope, and that the endpoint belongs to that branch.
 - **Region mismatch**: the endpoint already contains the cell and region; pick the region option that matches the endpoint suffix, or leave the default when unsure.
-- **Bucket not found**: buckets are created in the Neon Console Storage tab, not through the S3 API.
+- **Bucket not found**: create the bucket on the target branch first, through the Neon Console Storage tab, the Neon CLI, the Neon API or the S3 API (`CreateBucket` is supported).
 
 ## Related Documentation
 

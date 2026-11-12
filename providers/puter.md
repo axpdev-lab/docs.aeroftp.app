@@ -40,17 +40,17 @@ The server URL `https://dav.puter.com/{username}` is configured automatically: t
 | Server | `https://dav.puter.com/{username}` | Auto-configured from username |
 | Port | 443 | HTTPS |
 | Username | Your Puter username | |
-| Password | Your Puter password | With 2FA enabled, append the current 2FA code to the password |
+| Password | Your Puter password | With 2FA enabled, append the current 6-digit code. The code expires, so token auth is better for sustained sessions and sync (see below) |
 
 ## Token auth
 
 Puter also accepts an auth token as the password. For token auth:
 
-1. Use `<your-username>-token` as the **username** (for example `alice-token`).
+1. Use the literal username `-token` (dash followed by "token", nothing before it).
 2. Paste the auth token as the **password**.
-3. Open the profile's **Advanced** settings and set **Server** to `https://dav.puter.com/<your-username>` without the `-token` suffix.
+3. Open the profile's **Advanced** settings and set **Server** to `https://dav.puter.com/<your-username>` with your real account username.
 
-The preset fills `{username}` with the login name, so with a `-token` username the path would point at a user that does not exist; overriding Server keeps the real username in the path.
+The preset fills `{username}` with the login name, so with the literal `-token` username the path would point at a user that does not exist; overriding Server keeps the real username in the path. Token auth is recommended for sustained sessions and AeroSync, because it does not expire the way an appended 2FA code does.
 
 ## Features
 
@@ -61,7 +61,7 @@ The preset fills `{username}` with the login name, so with a `-token` username t
 ## Tips
 
 - The WebDAV endpoint includes your username in the path. AeroFTP fills this in automatically when you select the Puter preset.
-- With two-factor authentication enabled, append the current 2FA code to your password when connecting.
+- With two-factor authentication enabled, append the current 6-digit 2FA code to your password when connecting. The saved code expires, so later requests can fail; use [token auth](#token-auth) for sessions and sync that must stay connected.
 
 ## Related Documentation
 
