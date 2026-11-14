@@ -51,7 +51,7 @@ The server URL `https://lifetimecloud.me/dav/{username}/` is configured automati
 
 ## Tips
 
-- Always authenticate WebDAV with the token generated in [lifetimecloud.me/profile](https://lifetimecloud.me/profile); account passwords fail with HTTP 401/403.
+- Always authenticate WebDAV with the token generated in [lifetimecloud.me/profile](https://lifetimecloud.me/profile), not with your account password.
 - Keep trial uploads under 50 MB per file and 50 files total when testing on the 1 GB trial account.
 - If exporting a profile or configuring another tool manually, replace `{username}` with your actual LifetimeCloud username in `https://lifetimecloud.me/dav/{username}/`.
 
