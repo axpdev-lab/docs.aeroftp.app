@@ -33,13 +33,23 @@ test('the Puter plan row and card resolve to the published guide', () => {
   assert.match(guide, /<ProviderPlanCard id="puter" \/>/)
 })
 
-test('the LifetimeCloud plan row carries the TRIAL badge and resolves to the published guide', () => {
+test('the LifetimeCloud plan row is a FREE plan with no time limit and resolves to the published guide', () => {
   const id = 'lifetimecloud'
   const plan = providerPlans[id]
   assert.ok(plan, 'the plan card finds its LifetimeCloud entry')
   assert.equal(plan.id, id)
-  assert.ok(plan.badges.includes('TRIAL'), 'LifetimeCloud must carry TRIAL badge')
-  assert.ok(!plan.badges.includes('FREE'), 'LifetimeCloud must not carry FREE badge')
+  // 1 GB, no card, no time limit, only usage limits: a free plan, never a
+  // trial, and no wording a reader could take for a temporary account.
+  assert.deepEqual(plan.badges, ['FREE'])
+  assert.match(plan.storage, /no time limit/i)
+  for (const field of ['storage', 'limits', 'billing', 'costTip']) {
+    assert.doesNotMatch(plan[field], /trial/i, `${field} must not describe a trial`)
+    assert.doesNotMatch(
+      plan[field],
+      /\b\d+[- ](day|week|month|year)s?\b(?! of version| \(last)|expires?\b|expiration|temporary|until\b/i,
+      `${field} must not suggest a time limit`
+    )
+  }
   assert.equal(`/providers/${plan.id}`, '/providers/lifetimecloud')
   const guide = readFileSync(new URL(`../providers/${id}.md`, import.meta.url), 'utf8')
   assert.match(guide, /<ProviderPlanCard id="lifetimecloud" \/>/)

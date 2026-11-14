@@ -9,7 +9,7 @@ description: Connect LifetimeCloud storage to AeroFTP with the built-in WebDAV p
 
 LifetimeCloud provides cloud storage accessible over standard WebDAV. AeroFTP includes a dedicated **LifetimeCloud** preset with the endpoint pre-configured, so you only enter your username and WebDAV token.
 
-The 1 GB trial account requires no card and includes WebDAV access (up to 50 MB per file, max 50 files, family sharing for 2 members, 1 year of version history from the web or desktop client, and 30 days / last 3 versions via WebDAV).
+The free plan gives you 1 GB with no time limit and needs no card. It includes WebDAV access and allows up to 50 MB per file and 50 files, family sharing for 2 members, 1 year of version history from the web or desktop client, and 30 days (last 3 versions) via WebDAV.
 
 ::: info Availability
 The LifetimeCloud preset ships in AeroFTP 4.2.8. On earlier versions, use the generic **WebDAV** form with the server `https://lifetimecloud.me/dav/<your-username>/` and port 443.
@@ -52,7 +52,8 @@ The server URL `https://lifetimecloud.me/dav/{username}/` is configured automati
 ## Tips
 
 - Always authenticate WebDAV with the token generated in [lifetimecloud.me/profile](https://lifetimecloud.me/profile), not with your account password.
-- Keep trial uploads under 50 MB per file and 50 files total when testing on the 1 GB trial account.
+- On the free plan, keep each upload under 50 MB and the account under 50 files in total.
+- Files uploaded from the LifetimeCloud website or apps are listed over WebDAV but download as encrypted data that a WebDAV client cannot open: download those from the website.
 - If exporting a profile or configuring another tool manually, replace `{username}` with your actual LifetimeCloud username in `https://lifetimecloud.me/dav/{username}/`.
 
 ## Related Documentation
