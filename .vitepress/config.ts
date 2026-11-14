@@ -160,6 +160,7 @@ export default defineConfig({
                 { text: 'InfiniCLOUD', link: '/providers/infinicloud' },
                 { text: 'Jianguoyun', link: '/providers/jianguoyun' },
                 { text: 'Koofr (WebDAV)', link: '/providers/koofr' },
+                { text: 'LifetimeCloud', link: '/providers/lifetimecloud' },
                 { text: 'Mail.ru Cloud', link: '/providers/mailru-cloud' },
                 { text: 'Nextcloud', link: '/providers/nextcloud' },
                 { text: 'Puter', link: '/providers/puter' },

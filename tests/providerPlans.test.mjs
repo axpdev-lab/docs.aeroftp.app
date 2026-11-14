@@ -32,3 +32,15 @@ test('the Puter plan row and card resolve to the published guide', () => {
   const guide = readFileSync(new URL(`../providers/${id}.md`, import.meta.url), 'utf8')
   assert.match(guide, /<ProviderPlanCard id="puter" \/>/)
 })
+
+test('the LifetimeCloud plan row carries the TRIAL badge and resolves to the published guide', () => {
+  const id = 'lifetimecloud'
+  const plan = providerPlans[id]
+  assert.ok(plan, 'the plan card finds its LifetimeCloud entry')
+  assert.equal(plan.id, id)
+  assert.ok(plan.badges.includes('TRIAL'), 'LifetimeCloud must carry TRIAL badge')
+  assert.ok(!plan.badges.includes('FREE'), 'LifetimeCloud must not carry FREE badge')
+  assert.equal(`/providers/${plan.id}`, '/providers/lifetimecloud')
+  const guide = readFileSync(new URL(`../providers/${id}.md`, import.meta.url), 'utf8')
+  assert.match(guide, /<ProviderPlanCard id="lifetimecloud" \/>/)
+})
