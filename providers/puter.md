@@ -9,9 +9,9 @@ description: Connect Puter cloud storage to AeroFTP with the built-in WebDAV pre
 
 Puter is a cloud platform whose storage is reachable over WebDAV. AeroFTP includes a dedicated **Puter** preset with the endpoint pre-configured, so you only enter your username and password.
 
-The trial account gives you 25 MB of storage and needs no card. It is meant for trying the service, not as a free plan for real use.
+The free plan gives you 25 MB of storage and needs no card. It is very limited: use it to try and evaluate Puter with a few small files, not for real storage. For backups or a photo library you need a paid Puter plan.
 
-<!-- Trial allowance (25 MB, no card required) confirmed in the provider task card; called a trial, not a free plan (owner, 2026-11-14). Prices and other figures are left out on purpose. -->
+<!-- Free plan (25 MB, no card required) as Puter publishes it on puter.com/pricing, checked 2026-11-14. Prices and other figures are left out on purpose. -->
 
 ::: info Availability
 The Puter preset ships in AeroFTP 4.2.8. On earlier versions, use the generic **WebDAV** form with the server `https://dav.puter.com/<your-username>` and port 443.
