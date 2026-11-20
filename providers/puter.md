@@ -48,9 +48,9 @@ Puter also accepts an auth token as the password. For token auth:
 
 1. Use the literal username `-token` (dash followed by "token", nothing before it).
 2. Paste the auth token as the **password**.
-3. Open the profile's **Advanced** settings and set **Server** to `https://dav.puter.com/<your-username>` with your real account username.
+3. Under **Advanced**, click **Edit**, then **Edit anyway**, and set **Endpoint URL** to `https://dav.puter.com/<your-username>` with your real account username.
 
-The preset fills `{username}` with the login name, so with the literal `-token` username the path would point at a user that does not exist; overriding Server keeps the real username in the path. Token auth is recommended for sustained sessions and AeroSync, because it does not expire the way an appended 2FA code does.
+The preset fills `{username}` with the login name, so with the literal `-token` username the path would point at a user that does not exist; setting the Endpoint URL keeps the real username in the path. Token auth is recommended for sustained sessions and AeroSync, because it does not expire the way an appended 2FA code does.
 
 To create the auth token, sign in at [puter.com](https://puter.com), open the dashboard **Account** page and create an API token in the token section. The [Puter auth token tutorial](https://developer.puter.com/tutorials/puter-auth-token/) walks through it step by step. Store the token securely; it is shown when created.
 
