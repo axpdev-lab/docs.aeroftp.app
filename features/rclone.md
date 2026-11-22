@@ -29,6 +29,8 @@ This bridge page covers profile interoperability through `rclone.conf`. If you n
 - Use it to share configurations, set up rclone on a server, or simply keep a portable backup
 - Available in the GUI (Settings > Export/Import > Export to rclone)
 
+Use **rclone 1.76.0 or newer** with exported configurations. Earlier releases can disclose OpenStack Swift credentials on redirects ([GHSA-m97j-7x65-wh93](https://github.com/rclone/rclone/security/advisories/GHSA-m97j-7x65-wh93)) and have authentication-proxy flaws when an exported remote is exposed through `rclone serve ... --auth-proxy` ([GHSA-66qv-66mg-9h74](https://github.com/rclone/rclone/security/advisories/GHSA-66qv-66mg-9h74), [GHSA-vmgx-g9c5-669p](https://github.com/rclone/rclone/security/advisories/GHSA-vmgx-g9c5-669p)). The recommendation does not block import or export, and older rclone versions still read the configuration.
+
 The OAuth export needs all three credentials in the vault, which is the case for a profile you authorised in AeroFTP with your own OAuth app. When one of them is missing, the remote is still written and a comment tells you to run `rclone config reconnect <remote>:` before use, rather than emitting a silently broken half-remote. Jottacloud is the one exception in shape: it carries an OIDC refresh token that rclone exchanges on first use, so no interactive re-login is needed there either.
 
 Keep in mind that AeroFTP and rclone use different redirect URIs. Register both under the same app in the provider's developer console so one `client_id` and `client_secret` pair works in both tools.
