@@ -298,6 +298,7 @@ export default defineConfig({
           collapsed: true,
           items: [
             { text: 'Installation', link: '/cli/installation' },
+            { text: 'Launch arguments', link: '/cli/launch-arguments' },
             { text: 'Commands', link: '/cli/commands' },
             { text: 'Batch Scripting', link: '/cli/batch-scripting' },
             { text: 'Examples', link: '/cli/examples' },

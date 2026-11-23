@@ -6,7 +6,7 @@ The `aeroftp-cli` command-line interface is a standalone Rust binary built from 
 - **26 native provider integrations**: Google Drive, Dropbox, OneDrive, MEGA, Box, pCloud, Filen, Zoho WorkDrive, Internxt, kDrive, Koofr, Jottacloud, FileLu, Yandex Disk, OpenDrive, 4shared, Drime Cloud, GitHub, GitLab, Immich, and the rest of the [inventory](/protocols/overview)
 - **47 presets**: AWS S3, Backblaze B2, Cloudflare R2, Wasabi, Storj, MinIO, Hetzner Storage Box, Nextcloud, Seafile, InfiniCLOUD, Jianguoyun, CloudMe, SourceForge, and the others in the catalog
 
-URL-based connections are available for the transport protocols and direct-auth native providers. OAuth-based providers (Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, Drime) are accessed via vault `--profile` after GUI or supported headless authorization. See [profile setup](/cli/commands#profile-add-and-headless-authorization).
+URL-based connections are available for the transport protocols and direct-auth native providers. The desktop app accepts the same URLs. See [Launch arguments](/cli/launch-arguments). OAuth-based providers (Google Drive, Dropbox, OneDrive, Box, pCloud, Zoho WorkDrive, Yandex Disk, 4shared, Drime) are accessed via vault `--profile` after GUI or supported headless authorization. See [profile setup](/cli/commands#profile-add-and-headless-authorization).
 
 ## Included with Every Desktop Package
 
