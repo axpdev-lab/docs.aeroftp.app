@@ -122,9 +122,10 @@ import SourceForgeReach from './.vitepress/theme/components/SourceForgeReach.vue
     <td align="center"><a href="/providers/filebase"><img src="/icons/providers/filebase.png" width="36" alt="Filebase" /></a><br><sub>Filebase</sub></td>
     <td align="center"><a href="/providers/tigris"><img src="/icons/providers/tigris.png" width="36" alt="Tigris Data" /></a><br><sub>Tigris Data</sub></td>
     <td align="center"><a href="/providers/fastly-object-storage"><img src="/icons/providers/fastly.png" width="36" alt="Fastly" /></a><br><sub>Fastly</sub></td>
-    <td align="center"><a href="/providers/minio"><img src="/icons/providers/minio.png" width="36" alt="MinIO" /></a><br><sub>MinIO</sub></td>
+    <td align="center"><a href="/providers/neon"><img src="/icons/providers/neon.png" width="36" alt="Neon Object Storage" /></a><br><sub>Neon Object Storage</sub></td>
   </tr>
   <tr>
+    <td align="center"><a href="/providers/minio"><img src="/icons/providers/minio.png" width="36" alt="MinIO" /></a><br><sub>MinIO</sub></td>
     <td align="center"><a href="/providers/yandex-object-storage"><img src="/icons/providers/yandexcloud.png" width="36" alt="Yandex Object Storage" /></a><br><sub>Yandex Object Storage</sub></td>
     <td align="center"><a href="/providers/s3drive"><img src="/icons/providers/s3drive.png" width="36" alt="S3Drive" /></a><br><sub>S3Drive</sub></td>
     <td align="center"><a href="/providers/quotaless"><img src="/icons/providers/quotaless.png" width="36" alt="Quotaless" /></a><br><sub>Quotaless</sub></td>
@@ -133,20 +134,22 @@ import SourceForgeReach from './.vitepress/theme/components/SourceForgeReach.vue
     <td align="center"><a href="/providers/felicloud"><img src="/icons/providers/felicloud.png" width="36" alt="Felicloud" /></a><br><sub>Felicloud</sub></td>
     <td align="center"><a href="/providers/tabdigital"><img src="/icons/providers/tabdigital.png" width="36" alt="TAB.DIGITAL" /></a><br><sub>TAB.DIGITAL</sub></td>
     <td align="center"><a href="/providers/cloudme"><img src="/icons/providers/cloudme.png" width="36" alt="CloudMe" /></a><br><sub>CloudMe</sub></td>
-    <td align="center"><a href="/providers/infinicloud"><img src="/icons/providers/infiniCloud.png" width="36" alt="InfiniCloud" /></a><br><sub>InfiniCloud</sub></td>
   </tr>
   <tr>
+    <td align="center"><a href="/providers/puter"><img src="/icons/providers/puter.png" width="36" alt="Puter" /></a><br><sub>Puter</sub></td>
+    <td align="center"><a href="/providers/infinicloud"><img src="/icons/providers/infiniCloud.png" width="36" alt="InfiniCloud" /></a><br><sub>InfiniCloud</sub></td>
     <td align="center"><a href="/providers/jianguoyun"><img src="/icons/providers/jianguoyun.png" width="36" alt="Jianguoyun" /></a><br><sub>Jianguoyun</sub></td>
     <td align="center"><a href="/providers/seafile"><img src="/icons/providers/seafile.png" width="36" alt="Seafile" /></a><br><sub>Seafile</sub></td>
     <td align="center"><a href="/providers/drivehq"><img src="/icons/providers/drivehq.png" width="36" alt="DriveHQ" /></a><br><sub>DriveHQ</sub></td>
     <td align="center"><a href="/providers/mailru-cloud"><img src="/icons/providers/mailru-cloud.png" width="36" alt="Mail.ru Cloud" /></a><br><sub>Mail.ru Cloud</sub></td>
+    <td align="center"><a href="/providers/lifetimecloud"><img src="/icons/providers/lifetimecloud.png" width="36" alt="LifetimeCloud" /></a><br><sub>LifetimeCloud</sub></td>
     <td align="center"><a href="/providers/hetzner-storage-box"><img src="/icons/providers/hetzner.png" width="36" alt="Hetzner Storage Box" /></a><br><sub>Hetzner Storage Box</sub></td>
     <td align="center"><a href="/providers/github"><img src="/icons/providers/github.png" width="36" alt="GitHub" /></a><br><sub>GitHub</sub></td>
+  </tr>
+  <tr>
     <td align="center"><a href="/providers/gitlab"><img src="/icons/providers/gitlab.png" width="36" alt="GitLab" /></a><br><sub>GitLab</sub></td>
     <td align="center"><a href="/providers/sourceforge"><img src="/icons/providers/sourceforge.png" width="36" alt="SourceForge" /></a><br><sub>SourceForge</sub></td>
     <td align="center"><a href="/providers/immich"><img src="/icons/providers/immich.png" width="36" alt="Immich" /></a><br><sub>Immich</sub></td>
-  </tr>
-  <tr>
     <td align="center"><a href="/providers/pixelunion"><img src="/icons/providers/pixelunion.png" width="36" alt="PixelUnion" /></a><br><sub>PixelUnion</sub></td>
     <td align="center"><a href="/providers/imagekit"><img src="/icons/providers/imagekit.png" width="36" alt="ImageKit" /></a><br><sub>ImageKit</sub></td>
     <td align="center"><a href="/providers/uploadcare"><img src="/icons/providers/uploadcare.png" width="36" alt="Uploadcare" /></a><br><sub>Uploadcare</sub></td>
