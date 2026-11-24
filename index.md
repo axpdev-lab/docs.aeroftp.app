@@ -61,15 +61,13 @@ import SourceForgeReach from './.vitepress/theme/components/SourceForgeReach.vue
 
 <h2 align="center">Integrations</h2>
 
-<p align="center">AeroFTP organizes integrations on three tiers. The total across them is one number:</p>
+<h3 align="center">63 storage backends, 75 connection methods</h3>
 
-<p align="center">
-  <strong>75 connection methods</strong> across <strong>61 providers</strong>
-</p>
+<p align="center">AeroFTP organizes integrations on three tiers.</p>
 
 <p align="center">
   <strong>8 transport protocols</strong> &middot; <strong>26 native integrations</strong> &middot; <strong>52 presets</strong><br>
-  Add Services shows <strong>84 tiles</strong>, including the blank forms and AeroShare.
+  <strong>61 providers</strong>. Add Services shows <strong>84 tiles</strong>, including the blank forms and AeroShare.
 </p>
 
 <p align="center">
