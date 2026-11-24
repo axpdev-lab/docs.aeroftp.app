@@ -15,8 +15,8 @@ hero:
       text: View on GitHub
       link: https://github.com/axpdev-lab/aeroftp
     - theme: alt
-      text: New in 4.2.7
-      link: /releases/4.2.7
+      text: New in 4.2.8
+      link: /releases/4.2.8
 features:
   - icon:
       src: /icons/protocols.svg
@@ -64,18 +64,18 @@ import SourceForgeReach from './.vitepress/theme/components/SourceForgeReach.vue
 <p align="center">AeroFTP organizes integrations on three tiers. The total across them is one number:</p>
 
 <p align="center">
-  <strong>72 connection methods</strong> across <strong>58 providers</strong>
+  <strong>75 connection methods</strong> across <strong>61 providers</strong>
 </p>
 
 <p align="center">
-  <strong>8 transport protocols</strong> &middot; <strong>26 native integrations</strong> &middot; <strong>49 presets</strong><br>
-  Add Services shows <strong>80 tiles</strong>, including the blank forms and AeroShare.
+  <strong>8 transport protocols</strong> &middot; <strong>26 native integrations</strong> &middot; <strong>52 presets</strong><br>
+  Add Services shows <strong>84 tiles</strong>, including the blank forms and AeroShare.
 </p>
 
 <p align="center">
   <em>Transports:</em> FTP, FTPS, SFTP, SCP, WebDAV, S3, Azure Blob, OpenStack Swift.<br>
   <em>Native providers:</em> a dedicated code path per company, so sharing, chunking and server-side copy stay first-class where that provider has them.<br>
-  <em>Presets:</em> the form arrives already filled in. A company on two protocols counts as two connection methods, which is why 58 providers reach 72.
+  <em>Presets:</em> the form arrives already filled in. A company on two protocols counts as two connection methods, which is why 61 providers reach 75.
 </p>
 
 <div class="provider-grid-wrapper">
